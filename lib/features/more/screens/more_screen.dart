@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../shared/providers/theme_mode_provider.dart';
+import '../../../shared/theme/app_theme.dart';
+import '../../auth/logout.dart';
 
 class MoreScreen extends ConsumerWidget {
   const MoreScreen({super.key});
@@ -46,6 +48,18 @@ class MoreScreen extends ConsumerWidget {
               applicationLegalese: '© Codeantech',
             );
           }),
+          const Divider(height: 24),
+          ListTile(
+            leading: const Icon(Icons.logout_rounded, color: AppColors.danger),
+            title: const Text(
+              'Log out',
+              style: TextStyle(
+                color: AppColors.danger,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            onTap: () => performLogout(ref, context),
+          ),
           const SizedBox(height: 24),
           Center(
             child: Text(

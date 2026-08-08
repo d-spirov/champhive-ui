@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../shared/models/club.dart';
 import '../../auth/providers/auth_provider.dart';
 
-const _selectedClubKey = 'selected_club_id';
+const _selectedClubKey = selectedClubPrefsKey;
 
 final myClubsProvider = FutureProvider.autoDispose<List<ClubSummary>>((ref) async {
   final auth = ref.watch(authNotifierProvider);
@@ -42,6 +42,12 @@ class SelectedClubNotifier extends StateNotifier<String?> {
     state = clubId;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_selectedClubKey, clubId);
+  }
+
+  Future<void> clear() async {
+    state = null;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_selectedClubKey);
   }
 
   void _ensureValidSelection(List<ClubSummary> clubs) {

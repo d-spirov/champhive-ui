@@ -17,6 +17,16 @@ Architecture mirrors [ParkHive](../parking/park_hive): feature-first UI + Riverp
 
 Use real credentials on the Log In form (iOS/Android). Web login may need same-site CORS later because CSRF cookie must be readable.
 
+## App icon
+
+ParkHive-style vector hexagon + H. Regenerate:
+
+```bash
+dart run tools/generate_app_icon.dart
+dart run tools/add_icon_padding.dart
+dart run flutter_launcher_icons
+```
+
 ## Run
 
 ```bash

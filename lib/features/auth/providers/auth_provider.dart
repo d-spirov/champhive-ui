@@ -12,6 +12,7 @@ import '../../../shared/utils/api_error_message.dart';
 const _sessionFlagKey = 'auth_session_active';
 const _emailKey = 'auth_email';
 const _demoKey = 'auth_demo_mode';
+const selectedClubPrefsKey = 'selected_club_id';
 
 bool _isAuthPath(String path) {
   final p = path.toLowerCase();
@@ -148,6 +149,10 @@ class AuthNotifier extends StateNotifier<AuthState> {
         debugPrint('[Auth] bootstrap failed: $e');
       }
       await _clearLocalSession();
+      try {
+        final api = await _api;
+        await api.clearCookies();
+      } catch (_) {}
       state = state.copyWith(initialized: true, clearUser: true);
     }
   }
@@ -229,14 +234,27 @@ class AuthNotifier extends StateNotifier<AuthState> {
     }
   }
 
+  /// Clears remote session (best-effort), cookies, and local auth flags.
   Future<void> logout() async {
-    try {
-      final api = await _api;
-      await api.logout();
-      await api.clearCookies();
-    } catch (_) {}
+    final wasDemo = state.user?.id == 'demo';
+
+    // Wipe local auth first so UI / redirects can't race a half-logged-out state.
     await _clearLocalSession();
     state = state.copyWith(clearUser: true, clearError: true, isLoading: false);
+
+    try {
+      final api = await _api;
+      if (!wasDemo) {
+        try {
+          await api.logout();
+        } catch (e) {
+          if (kDebugMode) debugPrint('[Auth] remote logout failed: $e');
+        }
+      }
+      await api.clearCookies();
+    } catch (e) {
+      if (kDebugMode) debugPrint('[Auth] logout cleanup failed: $e');
+    }
   }
 
   Future<void> _markSession({required String email, required bool demo}) async {
@@ -255,6 +273,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     await prefs.remove(_sessionFlagKey);
     await prefs.remove(_emailKey);
     await prefs.remove(_demoKey);
+    await prefs.remove(selectedClubPrefsKey);
   }
 }
 

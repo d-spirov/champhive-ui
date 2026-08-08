@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../features/auth/providers/auth_provider.dart';
+import '../auth/logout.dart';
+import '../auth/providers/auth_provider.dart';
 import '../../shared/theme/app_theme.dart';
 import '../../shared/widgets/ui_bits.dart';
 
@@ -23,7 +24,9 @@ class AppDrawer extends ConsumerWidget {
           children: [
             Container(
               padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
-              color: isDark ? AppColors.darkNavy : AppColors.lightPrimary.withValues(alpha: 0.08),
+              color: isDark
+                  ? AppColors.darkNavy
+                  : AppColors.lightPrimary.withValues(alpha: 0.08),
               child: Row(
                 children: [
                   AvatarCircle(label: name, size: 56),
@@ -79,13 +82,12 @@ class AppDrawer extends ConsumerWidget {
               leading: const Icon(Icons.logout_rounded, color: AppColors.danger),
               title: const Text(
                 'Log out',
-                style: TextStyle(color: AppColors.danger, fontWeight: FontWeight.w600),
+                style: TextStyle(
+                  color: AppColors.danger,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-              onTap: () async {
-                Navigator.of(context).pop();
-                await ref.read(authNotifierProvider.notifier).logout();
-                if (context.mounted) context.go('/login');
-              },
+              onTap: () => performLogout(ref, context),
             ),
             const SizedBox(height: 8),
           ],
@@ -104,7 +106,9 @@ class AppDrawer extends ConsumerWidget {
     return ListTile(
       leading: Icon(icon),
       title: Text(label),
-      trailing: badge > 0 ? UnreadBadge(count: badge) : const Icon(Icons.chevron_right, size: 18),
+      trailing: badge > 0
+          ? UnreadBadge(count: badge)
+          : const Icon(Icons.chevron_right, size: 18),
       onTap: () {
         Navigator.of(context).pop();
         context.go(path);

@@ -44,17 +44,20 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       body: Container(
         width: double.infinity,
         color: bg,
-        child: const Center(
+        child: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TeamHiveLogo(
                 size: 96,
                 showWordmark: true,
+                showShadow: false,
+                isDark: isDark,
+                backgroundColor: bg,
                 wordmarkColor: Colors.white,
               ),
-              SizedBox(height: 28),
-              CircularProgressIndicator(color: Colors.white),
+              const SizedBox(height: 28),
+              const CircularProgressIndicator(color: Colors.white),
             ],
           ),
         ),
