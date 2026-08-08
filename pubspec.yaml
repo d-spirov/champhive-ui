@@ -1,0 +1,44 @@
+name: team_hive
+description: "TeamHive - Sport club management by Codeantech."
+homepage: https://codeantech.com
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.10.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # Navigation
+  go_router: ^13.0.0
+
+  # State management
+  flutter_riverpod: ^2.5.0
+
+  # HTTP / API
+  dio: ^5.4.0
+  cookie_jar: ^4.0.8
+  dio_cookie_manager: ^3.1.1
+  path_provider: ^2.1.4
+
+  # Local storage
+  shared_preferences: ^2.2.0
+
+  cupertino_icons: ^1.0.8
+  google_fonts: ^6.2.1
+  intl: any
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  generate: true
+  uses-material-design: true
+  assets:
+    - assets/images/
