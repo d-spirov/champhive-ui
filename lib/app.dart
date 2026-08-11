@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'features/attendance/screens/attendance_history_screen.dart';
+import 'features/attendance/screens/attendance_saved_screen.dart';
+import 'features/attendance/screens/mark_attendance_screen.dart';
 import 'features/auth/providers/auth_provider.dart';
 import 'features/auth/session_expired_handler.dart';
 import 'features/auth/screens/login_screen.dart';
@@ -9,6 +12,7 @@ import 'features/auth/screens/register_screen.dart';
 import 'features/auth/screens/splash_screen.dart';
 import 'features/calendar/screens/calendar_screen.dart';
 import 'features/clubs/screens/club_details_screen.dart';
+import 'features/events/screens/event_detail_screen.dart';
 import 'features/home/screens/home_dashboard_screen.dart';
 import 'features/messages/screens/messages_screen.dart';
 import 'features/more/screens/more_screen.dart';
@@ -19,6 +23,7 @@ import 'features/stats/screens/statistics_screen.dart';
 import 'features/teams/screens/team_details_screen.dart';
 import 'features/teams/screens/teams_screen.dart';
 import 'l10n/app_localizations.dart';
+import 'shared/models/event_attendance.dart';
 import 'shared/providers/theme_mode_provider.dart';
 import 'shared/theme/app_theme.dart';
 
@@ -126,6 +131,35 @@ class _AppState extends ConsumerState<App> {
         GoRoute(
           path: '/statistics',
           builder: (context, state) => const StatisticsScreen(),
+        ),
+        GoRoute(
+          path: '/events/:eventId',
+          builder: (context, state) => EventDetailScreen(
+            eventId: state.pathParameters['eventId']!,
+          ),
+          routes: [
+            GoRoute(
+              path: 'attendance',
+              builder: (context, state) => MarkAttendanceScreen(
+                eventId: state.pathParameters['eventId']!,
+              ),
+              routes: [
+                GoRoute(
+                  path: 'saved',
+                  builder: (context, state) => AttendanceSavedScreen(
+                    eventId: state.pathParameters['eventId']!,
+                    session: state.extra is AttendanceSession
+                        ? state.extra as AttendanceSession
+                        : null,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+        GoRoute(
+          path: '/attendance/history',
+          builder: (context, state) => const AttendanceHistoryScreen(),
         ),
       ],
     );

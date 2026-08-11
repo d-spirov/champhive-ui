@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../attendance/widgets/attendance_ui.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../../clubs/providers/clubs_provider.dart';
+import '../../events/providers/events_provider.dart';
 import '../../shell/main_shell.dart';
 import '../../../shared/demo/demo_data.dart';
 import '../../../shared/models/club.dart';
@@ -30,13 +32,21 @@ class HomeDashboardScreen extends ConsumerWidget {
         ? user!.firstName
         : (user?.displayName ?? 'Coach');
     final clubsAsync = ref.watch(myClubsProvider);
-    final events = DemoData.events.take(3).toList();
+    final eventsAsync = ref.watch(clubEventsProvider);
 
     return Scaffold(
       appBar: shellAppBar(
         context,
         title: '${_greeting()}, $first! 👋',
         actions: [
+          IconButton(
+            onPressed: () => context.push('/attendance/history'),
+            icon: Icon(
+              Icons.how_to_reg_outlined,
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
+            tooltip: 'Attendance',
+          ),
           IconButton(
             onPressed: () {},
             icon: Badge(
@@ -54,7 +64,11 @@ class HomeDashboardScreen extends ConsumerWidget {
         onRefresh: () async {
           if (!isDemo) {
             ref.invalidate(myClubsProvider);
-            await ref.read(myClubsProvider.future);
+            ref.invalidate(clubEventsProvider);
+            await Future.wait([
+              ref.read(myClubsProvider.future),
+              ref.read(clubEventsProvider.future),
+            ]);
           }
         },
         child: ListView(
@@ -114,17 +128,74 @@ class HomeDashboardScreen extends ConsumerWidget {
               ),
             ],
             const SizedBox(height: 24),
-            const SectionHeader(title: 'Upcoming events'),
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(14, 14, 14, 6),
-                child: Column(
-                  children: [
-                    for (final e in events) EventListTile(event: e),
-                  ],
-                ),
-              ),
+            SectionHeader(
+              title: "Today's schedule",
+              actionLabel: isDemo ? null : 'History',
+              onAction: isDemo
+                  ? null
+                  : () => context.push('/attendance/history'),
             ),
+            if (isDemo)
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(14, 14, 14, 6),
+                  child: Column(
+                    children: [
+                      for (final e in DemoData.events.take(3))
+                        EventListTile(event: e),
+                    ],
+                  ),
+                ),
+              )
+            else
+              eventsAsync.when(
+                loading: () => const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 24),
+                  child: Center(child: CircularProgressIndicator()),
+                ),
+                error: (e, _) => Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Text(
+                      apiErrorMessage(e, fallback: 'Could not load events'),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                data: (events) {
+                  final upcoming = events
+                      .where((e) => !e.startAt.isBefore(
+                            DateTime.now().subtract(const Duration(hours: 2)),
+                          ))
+                      .take(5)
+                      .toList();
+                  if (upcoming.isEmpty) {
+                    return const Card(
+                      child: Padding(
+                        padding: EdgeInsets.all(20),
+                        child: Text(
+                          'No upcoming events. Open Calendar to browse.',
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    );
+                  }
+                  return Card(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(14, 8, 14, 8),
+                      child: Column(
+                        children: [
+                          for (final e in upcoming)
+                            ClubEventListTile(
+                              event: e,
+                              onTap: () => context.push('/events/${e.id}'),
+                            ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
             if (isDemo) ...[
               const SizedBox(height: 24),
               const SectionHeader(title: 'Recent activity'),

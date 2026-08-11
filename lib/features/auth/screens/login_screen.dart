@@ -27,9 +27,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         children: [
           // Full-bleed stadium — same composition as the ChampHive welcome mock.
           Image.asset(
-            'assets/images/stadium_dark.jpg',
+            'assets/images/basketball_court.jpg',
             fit: BoxFit.cover,
-            alignment: const Alignment(0, -0.15),
+            alignment: const Alignment(0, -0.1),
+            errorBuilder: (_, _, _) => Image.asset(
+              'assets/images/stadium_dark.jpg',
+              fit: BoxFit.cover,
+              alignment: const Alignment(0, -0.15),
+            ),
           ),
           // Soft vignette: keep the pitch visible, darken edges for type/buttons.
           DecoratedBox(

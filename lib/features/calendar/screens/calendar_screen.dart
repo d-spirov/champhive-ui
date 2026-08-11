@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../auth/providers/auth_provider.dart';
+import '../../events/providers/events_provider.dart';
+import '../../attendance/widgets/attendance_ui.dart';
 import '../../../shared/demo/demo_data.dart';
+import '../../../shared/utils/api_error_message.dart';
 import '../../../shared/widgets/ui_bits.dart';
 
-class CalendarScreen extends StatefulWidget {
+class CalendarScreen extends ConsumerStatefulWidget {
   const CalendarScreen({super.key});
 
   @override
-  State<CalendarScreen> createState() => _CalendarScreenState();
+  ConsumerState<CalendarScreen> createState() => _CalendarScreenState();
 }
 
-class _CalendarScreenState extends State<CalendarScreen> {
+class _CalendarScreenState extends ConsumerState<CalendarScreen> {
   late DateTime _selected;
 
   @override
@@ -22,19 +28,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDemo = ref.watch(authNotifierProvider).user?.id == 'demo';
+    final eventsAsync = ref.watch(clubEventsProvider);
+
     final days = List.generate(14, (i) {
-      final base = DateTime.now().subtract(Duration(days: DateTime.now().weekday - 1));
+      final base =
+          DateTime.now().subtract(Duration(days: DateTime.now().weekday - 1));
       return DateTime(base.year, base.month, base.day).add(Duration(days: i));
     });
-
-    final dayEvents = DemoData.events.where((e) {
-      return e.start.year == _selected.year &&
-          e.start.month == _selected.month &&
-          e.start.day == _selected.day;
-    }).toList();
-
-    // Also show all upcoming if selected day empty for nicer demo
-    final shown = dayEvents.isEmpty ? DemoData.events : dayEvents;
 
     return Scaffold(
       appBar: AppBar(
@@ -44,8 +45,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
         ),
         title: Text(_monthLabel(_selected)),
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.calendar_today_outlined)),
-          IconButton(onPressed: () {}, icon: const Icon(Icons.view_agenda_outlined)),
+          IconButton(
+            onPressed: () => context.push('/attendance/history'),
+            icon: const Icon(Icons.how_to_reg_outlined),
+            tooltip: 'Attendance',
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -120,22 +124,88 @@ class _CalendarScreenState extends State<CalendarScreen> {
             ),
           ),
           Expanded(
-            child: ListView(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 88),
-              children: [
-                SectionHeader(title: _dayLabel(_selected)),
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(14, 14, 14, 6),
-                    child: Column(
-                      children: [
-                        for (final e in shown) EventListTile(event: e),
-                      ],
+            child: isDemo
+                ? _DemoAgenda(selected: _selected)
+                : eventsAsync.when(
+                    loading: () =>
+                        const Center(child: CircularProgressIndicator()),
+                    error: (e, _) => Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(24),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              apiErrorMessage(
+                                e,
+                                fallback: 'Could not load events',
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 12),
+                            FilledButton(
+                              onPressed: () =>
+                                  ref.invalidate(clubEventsProvider),
+                              child: const Text('Retry'),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
+                    data: (events) {
+                      final dayEvents = events.where((e) {
+                        return e.startAt.year == _selected.year &&
+                            e.startAt.month == _selected.month &&
+                            e.startAt.day == _selected.day;
+                      }).toList();
+                      final shown =
+                          dayEvents.isEmpty ? events.take(8).toList() : dayEvents;
+                      return RefreshIndicator(
+                        onRefresh: () async {
+                          ref.invalidate(clubEventsProvider);
+                          await ref.read(clubEventsProvider.future);
+                        },
+                        child: ListView(
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          padding: const EdgeInsets.fromLTRB(16, 8, 16, 88),
+                          children: [
+                            SectionHeader(
+                              title: dayEvents.isEmpty
+                                  ? 'Upcoming'
+                                  : _dayLabel(_selected),
+                            ),
+                            if (shown.isEmpty)
+                              const Card(
+                                child: Padding(
+                                  padding: EdgeInsets.all(20),
+                                  child: Text(
+                                    'No events in this range.',
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              )
+                            else
+                              Card(
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(14, 8, 14, 8),
+                                  child: Column(
+                                    children: [
+                                      for (final e in shown)
+                                        ClubEventListTile(
+                                          event: e,
+                                          onTap: () =>
+                                              context.push('/events/${e.id}'),
+                                        ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                      );
+                    },
                   ),
-                ),
-              ],
-            ),
           ),
         ],
       ),
@@ -161,5 +231,38 @@ class _CalendarScreenState extends State<CalendarScreen> {
       'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
     ];
     return '${_weekday(dt.weekday)}, ${dt.day} ${months[dt.month - 1]}';
+  }
+}
+
+class _DemoAgenda extends StatelessWidget {
+  const _DemoAgenda({required this.selected});
+
+  final DateTime selected;
+
+  @override
+  Widget build(BuildContext context) {
+    final dayEvents = DemoData.events.where((e) {
+      return e.start.year == selected.year &&
+          e.start.month == selected.month &&
+          e.start.day == selected.day;
+    }).toList();
+    final shown = dayEvents.isEmpty ? DemoData.events : dayEvents;
+
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 88),
+      children: [
+        SectionHeader(title: 'Demo schedule'),
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(14, 14, 14, 6),
+            child: Column(
+              children: [
+                for (final e in shown) EventListTile(event: e),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }

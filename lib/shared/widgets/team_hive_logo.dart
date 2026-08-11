@@ -100,29 +100,29 @@ class TeamHiveLogoPainter extends CustomPainter {
   final bool isDark;
 
   static const _lightStroke = [
-    Color(0xFF86EFAC),
-    Color(0xFF4ADE80),
-    Color(0xFF22C55E),
-    Color(0xFF15803D),
+    Color(0xFFFFB86B),
+    Color(0xFFFF8A1F),
+    Color(0xFFFF7A00),
+    Color(0xFFC2410C),
   ];
 
   static const _darkStroke = [
-    Color(0xFFFDE68A),
-    Color(0xFFF5C518),
-    Color(0xFFE0B000),
-    Color(0xFFA16207),
+    Color(0xFFFFB86B),
+    Color(0xFFFF8A1F),
+    Color(0xFFFF7A00),
+    Color(0xFF9A3412),
   ];
 
   static const _lightLetter = [
-    Color(0xFF16A34A),
-    Color(0xFF0D9488),
-    Color(0xFF14532D),
+    Color(0xFF1C1917),
+    Color(0xFF292524),
+    Color(0xFF0C0A09),
   ];
 
   static const _darkLetter = [
-    Color(0xFFF5C518),
-    Color(0xFFE0B000),
-    Color(0xFF854D0E),
+    Color(0xFFFFF7ED),
+    Color(0xFFFFEDD5),
+    Color(0xFFFDBA74),
   ];
 
   @override

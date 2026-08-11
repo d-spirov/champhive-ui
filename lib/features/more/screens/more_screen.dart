@@ -35,6 +35,12 @@ class MoreScreen extends ConsumerWidget {
           _tile(context, Icons.notifications_outlined, 'Notifications', () {}),
           _tile(
             context,
+            Icons.how_to_reg_outlined,
+            'Attendance',
+            () => context.push('/attendance/history'),
+          ),
+          _tile(
+            context,
             Icons.bar_chart_rounded,
             'Statistics',
             () => context.push('/statistics'),
@@ -76,8 +82,8 @@ class MoreScreen extends ConsumerWidget {
 
   String _themeLabel(ThemeMode mode) {
     return switch (mode) {
-      ThemeMode.light => 'Light (green)',
-      ThemeMode.dark => 'Dark (navy & gold)',
+      ThemeMode.light => 'Light (orange)',
+      ThemeMode.dark => 'Dark (court)',
       ThemeMode.system => 'System',
     };
   }

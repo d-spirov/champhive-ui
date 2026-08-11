@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-/// Design tokens matching ChampHive light (green) and dark (navy/gold) mocks.
+/// Design tokens — basketball ChampHive (orange) + dark court navy.
 class AppColors {
   AppColors._();
 
-  // Light
-  static const Color lightPrimary = Color(0xFF22C55E);
-  static const Color lightPrimaryDark = Color(0xFF16A34A);
+  // Light (basketball)
+  static const Color lightPrimary = Color(0xFFFF7A00);
+  static const Color lightPrimaryDark = Color(0xFFE56700);
   static const Color lightBg = Color(0xFFF7F8FA);
   static const Color lightSurface = Color(0xFFFFFFFF);
   static const Color lightText = Color(0xFF0F172A);
@@ -15,20 +15,24 @@ class AppColors {
   static const Color lightBorder = Color(0xFFE2E8F0);
 
   // Dark
-  static const Color darkPrimary = Color(0xFFF5C518);
-  static const Color darkPrimaryDark = Color(0xFFE0B000);
-  static const Color darkBg = Color(0xFF071427);
-  static const Color darkSurface = Color(0xFF0E1F3D);
-  static const Color darkCard = Color(0xFF13284D);
+  static const Color darkPrimary = Color(0xFFFF8A1F);
+  static const Color darkPrimaryDark = Color(0xFFFF7A00);
+  static const Color darkBg = Color(0xFF0A0A0A);
+  static const Color darkSurface = Color(0xFF171717);
+  static const Color darkCard = Color(0xFF1F1F1F);
   static const Color darkText = Color(0xFFFFFFFF);
-  static const Color darkMuted = Color(0xFF94A3B8);
-  static const Color darkBorder = Color(0xFF1E3A5F);
-  static const Color darkNavy = Color(0xFF0B1C3E);
+  static const Color darkMuted = Color(0xFFA3A3A3);
+  static const Color darkBorder = Color(0xFF2E2E2E);
+  static const Color darkNavy = Color(0xFF111111);
 
-  // Event accents (shared)
-  static const Color training = Color(0xFF3B82F6);
+  // Event / attendance accents
+  static const Color training = Color(0xFFFF7A00);
   static const Color meeting = Color(0xFF8B5CF6);
-  static const Color match = Color(0xFF22C55E);
+  static const Color match = Color(0xFF2563EB);
+  static const Color present = Color(0xFF22C55E);
+  static const Color late = Color(0xFFFF7A00);
+  static const Color absent = Color(0xFFEF4444);
+  static const Color excused = Color(0xFF94A3B8);
   static const Color danger = Color(0xFFEF4444);
   static const Color badge = Color(0xFFEF4444);
 }

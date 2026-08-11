@@ -60,8 +60,9 @@ class AppDrawer extends ConsumerWidget {
                   _item(context, Icons.calendar_month_outlined, 'Calendar', '/calendar'),
                   _item(context, Icons.groups_outlined, 'Teams', '/teams'),
                   _item(context, Icons.sports_outlined, 'Players', '/players'),
-                  _item(context, Icons.fitness_center_outlined, 'Training', '/calendar'),
-                  _item(context, Icons.sports_soccer_outlined, 'Matches', '/calendar'),
+                  _item(context, Icons.sports_basketball_outlined, 'Training', '/calendar'),
+                  _item(context, Icons.how_to_reg_outlined, 'Attendance', '/attendance/history'),
+                  _item(context, Icons.emoji_events_outlined, 'Matches', '/calendar'),
                   _item(context, Icons.bar_chart_rounded, 'Statistics', '/statistics'),
                   _item(context, Icons.payments_outlined, 'Payments', '/more'),
                   _item(

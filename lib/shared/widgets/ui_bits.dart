@@ -21,7 +21,7 @@ IconData eventTypeIcon(DemoEventType type) {
     case DemoEventType.meeting:
       return Icons.groups_rounded;
     case DemoEventType.match:
-      return Icons.sports_soccer_rounded;
+      return Icons.sports_basketball_rounded;
   }
 }
 

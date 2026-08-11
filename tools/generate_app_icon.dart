@@ -67,10 +67,10 @@ List<math.Point<double>> _hexPoints(double cx, double cy, double radius) {
 img.ColorRgb8 _strokeColorAtY(double y, double height) {
   const stops = [0.0, 0.35, 0.65, 1.0];
   const colors = [
-    [0x86, 0xEF, 0xAC],
-    [0x4A, 0xDE, 0x80],
-    [0x22, 0xC5, 0x5E],
-    [0x15, 0x80, 0x3D],
+    [0xFF, 0xB8, 0x6B],
+    [0xFF, 0x8A, 0x1F],
+    [0xFF, 0x7A, 0x00],
+    [0xC2, 0x41, 0x0C],
   ];
   final t = (y / height).clamp(0.0, 1.0);
   var i = 0;
@@ -92,16 +92,16 @@ img.ColorRgb8 _letterColorAt(double x, double y, double size) {
   if (t < 0.5) {
     final local = t / 0.5;
     return img.ColorRgb8(
-      (0x16 + (0x0D - 0x16) * local).round(),
-      (0xA3 + (0x94 - 0xA3) * local).round(),
-      (0x4A + (0x88 - 0x4A) * local).round(),
+      (0x1C + (0x29 - 0x1C) * local).round(),
+      (0x19 + (0x25 - 0x19) * local).round(),
+      (0x17 + (0x24 - 0x17) * local).round(),
     );
   }
   final local = (t - 0.5) / 0.5;
   return img.ColorRgb8(
-    (0x0D + (0x14 - 0x0D) * local).round(),
-    (0x94 + (0x53 - 0x94) * local).round(),
-    (0x88 + (0x2D - 0x88) * local).round(),
+    (0x29 + (0x0C - 0x29) * local).round(),
+    (0x25 + (0x0A - 0x25) * local).round(),
+    (0x24 + (0x09 - 0x24) * local).round(),
   );
 }
 
