@@ -20,6 +20,12 @@ class AttendanceSavedScreen extends StatelessWidget {
     final summary = session?.summary ?? const AttendanceSummaryCounts();
 
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.close_rounded),
+          onPressed: () => context.go('/events/$eventId'),
+        ),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),

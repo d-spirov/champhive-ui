@@ -129,7 +129,7 @@ class HomeDashboardScreen extends ConsumerWidget {
             ],
             const SizedBox(height: 24),
             SectionHeader(
-              title: "Today's schedule",
+              title: 'Upcoming',
               actionLabel: isDemo ? null : 'History',
               onAction: isDemo
                   ? null
@@ -163,18 +163,30 @@ class HomeDashboardScreen extends ConsumerWidget {
                   ),
                 ),
                 data: (events) {
-                  final upcoming = events
-                      .where((e) => !e.startAt.isBefore(
-                            DateTime.now().subtract(const Duration(hours: 2)),
-                          ))
-                      .take(5)
+                  final now = DateTime.now();
+                  final startOfToday = DateTime(now.year, now.month, now.day);
+                  final endOfToday = startOfToday.add(const Duration(days: 1));
+
+                  final today = events
+                      .where((e) =>
+                          !e.startAt.isBefore(startOfToday) &&
+                          e.startAt.isBefore(endOfToday))
                       .toList();
-                  if (upcoming.isEmpty) {
+
+                  // Prefer today's events; otherwise next few upcoming.
+                  final shown = today.isNotEmpty
+                      ? today
+                      : events
+                          .where((e) => !e.startAt.isBefore(now))
+                          .take(5)
+                          .toList();
+
+                  if (shown.isEmpty) {
                     return const Card(
                       child: Padding(
                         padding: EdgeInsets.all(20),
                         child: Text(
-                          'No upcoming events. Open Calendar to browse.',
+                          'No events today. Open Calendar to browse.',
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -184,8 +196,25 @@ class HomeDashboardScreen extends ConsumerWidget {
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(14, 8, 14, 8),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          for (final e in upcoming)
+                          if (today.isEmpty)
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 4, 0, 8),
+                              child: Text(
+                                'Nothing today — next up',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelMedium
+                                    ?.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface
+                                          .withValues(alpha: 0.55),
+                                    ),
+                              ),
+                            ),
+                          for (final e in shown)
                             ClubEventListTile(
                               event: e,
                               onTap: () => context.push('/events/${e.id}'),

@@ -2,11 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../attendance/widgets/attendance_ui.dart';
 import '../../events/providers/events_provider.dart';
 import '../../../shared/models/event_attendance.dart';
 import '../../../shared/theme/app_theme.dart';
 import '../../../shared/utils/api_error_message.dart';
-import '../../attendance/widgets/attendance_ui.dart';
+
+void popOrGoHome(BuildContext context) {
+  if (context.canPop()) {
+    context.pop();
+  } else {
+    context.go('/home');
+  }
+}
 
 class EventDetailScreen extends ConsumerWidget {
   const EventDetailScreen({super.key, required this.eventId});
@@ -17,14 +25,32 @@ class EventDetailScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final async = ref.watch(eventDetailProvider(eventId));
 
-    return Scaffold(
-      body: async.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => _ErrorBody(
+    return async.when(
+      loading: () => Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_rounded),
+            onPressed: () => popOrGoHome(context),
+          ),
+          title: const Text('Event'),
+        ),
+        body: const Center(child: CircularProgressIndicator()),
+      ),
+      error: (e, _) => Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_rounded),
+            onPressed: () => popOrGoHome(context),
+          ),
+          title: const Text('Event'),
+        ),
+        body: _ErrorBody(
           message: apiErrorMessage(e, fallback: 'Could not load event'),
           onRetry: () => ref.invalidate(eventDetailProvider(eventId)),
         ),
-        data: (event) => _EventDetailBody(event: event),
+      ),
+      data: (event) => Scaffold(
+        body: _EventDetailBody(event: event),
       ),
     );
   }
@@ -45,6 +71,14 @@ class _EventDetailBody extends StatelessWidget {
         SliverAppBar(
           expandedHeight: 200,
           pinned: true,
+          automaticallyImplyLeading: false,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_rounded, color: Colors.white),
+            style: IconButton.styleFrom(
+              backgroundColor: Colors.black.withValues(alpha: 0.4),
+            ),
+            onPressed: () => popOrGoHome(context),
+          ),
           flexibleSpace: FlexibleSpaceBar(
             background: Stack(
               fit: StackFit.expand,

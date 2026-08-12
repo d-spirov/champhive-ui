@@ -158,8 +158,6 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                             e.startAt.month == _selected.month &&
                             e.startAt.day == _selected.day;
                       }).toList();
-                      final shown =
-                          dayEvents.isEmpty ? events.take(8).toList() : dayEvents;
                       return RefreshIndicator(
                         onRefresh: () async {
                           ref.invalidate(clubEventsProvider);
@@ -169,17 +167,13 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                           physics: const AlwaysScrollableScrollPhysics(),
                           padding: const EdgeInsets.fromLTRB(16, 8, 16, 88),
                           children: [
-                            SectionHeader(
-                              title: dayEvents.isEmpty
-                                  ? 'Upcoming'
-                                  : _dayLabel(_selected),
-                            ),
-                            if (shown.isEmpty)
+                            SectionHeader(title: _dayLabel(_selected)),
+                            if (dayEvents.isEmpty)
                               const Card(
                                 child: Padding(
                                   padding: EdgeInsets.all(20),
                                   child: Text(
-                                    'No events in this range.',
+                                    'No events on this day.',
                                     textAlign: TextAlign.center,
                                   ),
                                 ),
@@ -191,7 +185,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                                       const EdgeInsets.fromLTRB(14, 8, 14, 8),
                                   child: Column(
                                     children: [
-                                      for (final e in shown)
+                                      for (final e in dayEvents)
                                         ClubEventListTile(
                                           event: e,
                                           onTap: () =>

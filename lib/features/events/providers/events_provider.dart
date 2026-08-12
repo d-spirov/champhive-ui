@@ -78,9 +78,27 @@ final attendanceSessionProvider = FutureProvider.autoDispose
     throw StateError('No club selected');
   }
   await ref.watch(authApiProvider.future);
-  return ref
-      .watch(attendanceApiProvider)
-      .getAttendance(clubId: clubId, eventId: eventId);
+  final api = ref.watch(attendanceApiProvider);
+
+  var session = await api.getAttendance(clubId: clubId, eventId: eventId);
+
+  // Pull active players from the event's team roster into the attendance list.
+  // Backend snapshot is add-only; refresh is safe and picks up new members.
+  final canRefresh = session.canManageParticipants &&
+      session.attendanceEnabled &&
+      session.attendanceState != AttendanceState.finalized;
+  if (canRefresh) {
+    try {
+      session = await api.refreshParticipants(
+        clubId: clubId,
+        eventId: eventId,
+      );
+    } catch (_) {
+      // Keep the GET result if refresh isn't allowed / fails (e.g. meetings).
+    }
+  }
+
+  return session;
 });
 
 final attendanceDashboardProvider =

@@ -327,6 +327,8 @@ class AttendanceSession {
     required this.canMark,
     required this.canFinalize,
     required this.canOpen,
+    required this.canManageParticipants,
+    this.attendanceEnabled = true,
     this.timezone,
     this.allDay = false,
   });
@@ -337,12 +339,14 @@ class AttendanceSession {
   final DateTime startAt;
   final String? timezone;
   final bool allDay;
+  final bool attendanceEnabled;
   final AttendanceState attendanceState;
   final AttendanceSummaryCounts summary;
   final List<AttendanceParticipant> participants;
   final bool canMark;
   final bool canFinalize;
   final bool canOpen;
+  final bool canManageParticipants;
 
   factory AttendanceSession.fromJson(Map<String, dynamic> json) {
     final event = json['event'] is Map
@@ -370,6 +374,7 @@ class AttendanceSession {
           DateTime.now(),
       timezone: event['timezone'] as String?,
       allDay: event['allDay'] as bool? ?? false,
+      attendanceEnabled: event['attendanceEnabled'] as bool? ?? true,
       attendanceState: parseAttendanceState(event['attendanceState'] as String?),
       summary: AttendanceSummaryCounts.fromJson(
         json['summary'] is Map
@@ -380,6 +385,8 @@ class AttendanceSession {
       canMark: permissions['canMarkAttendance'] as bool? ?? false,
       canFinalize: permissions['canFinalize'] as bool? ?? false,
       canOpen: permissions['canOpen'] as bool? ?? false,
+      canManageParticipants:
+          permissions['canManageParticipants'] as bool? ?? false,
     );
   }
 }
@@ -388,21 +395,23 @@ class AttendanceUpdate {
   const AttendanceUpdate({
     required this.participantId,
     required this.status,
-    required this.version,
+    this.version,
     this.reason,
     this.note,
   });
 
   final String participantId;
   final AttendanceStatus status;
-  final int version;
+  final int? version;
   final AbsenceReason? reason;
   final String? note;
 
   Map<String, dynamic> toJson() => {
         'participantId': participantId,
         'status': status.apiValue,
-        'version': version,
+        // Version is optional on the API; omitting avoids stale optimistic-lock
+        // conflicts after roster refresh / open.
+        if (version != null) 'version': version,
         if (reason != null) 'reason': reason!.apiValue,
         if (note != null && note!.isNotEmpty) 'note': note,
       };

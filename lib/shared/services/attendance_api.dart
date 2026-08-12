@@ -41,6 +41,17 @@ class AttendanceApi {
     return _parseSession(response);
   }
 
+  /// Snapshots active roster players from the event's team(s) into participants.
+  Future<AttendanceSession> refreshParticipants({
+    required String clubId,
+    required String eventId,
+  }) async {
+    final response = await _dio.post<dynamic>(
+      '/api/v1/clubs/$clubId/events/$eventId/participants/refresh',
+    );
+    return _parseSession(response);
+  }
+
   Future<AttendanceSession> finalizeAttendance({
     required String clubId,
     required String eventId,

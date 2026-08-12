@@ -7,8 +7,8 @@ import '../../events/providers/events_provider.dart';
 import '../../../shared/models/event_attendance.dart';
 import '../../../shared/theme/app_theme.dart';
 import '../../../shared/utils/api_error_message.dart';
-import '../../../shared/widgets/ui_bits.dart';
 import '../widgets/attendance_ui.dart';
+import '../../players/widgets/player_avatar.dart';
 
 class MarkAttendanceScreen extends ConsumerStatefulWidget {
   const MarkAttendanceScreen({super.key, required this.eventId});
@@ -74,15 +74,23 @@ class _MarkAttendanceScreenState extends ConsumerState<MarkAttendanceScreen>
     );
   }
 
-  Future<void> _cycleStatus(AttendanceParticipant player) async {
-    final next = nextAttendanceStatus(player.status);
-    if (statusNeedsNote(next)) {
+  Future<void> _pickStatus(AttendanceParticipant player) async {
+    final selected = await showModalBottomSheet<AttendanceStatus>(
+      context: context,
+      builder: (ctx) => _StatusPickerSheet(
+        playerName: player.displayName,
+        current: player.status,
+      ),
+    );
+    if (selected == null || !mounted) return;
+
+    if (statusNeedsNote(selected)) {
       final result = await showModalBottomSheet<_NoteResult>(
         context: context,
         isScrollControlled: true,
         builder: (ctx) => _AttendanceNoteSheet(
           playerName: player.displayName,
-          status: next,
+          status: selected,
           initialReason: player.reason,
           initialNote: player.note,
         ),
@@ -90,40 +98,53 @@ class _MarkAttendanceScreenState extends ConsumerState<MarkAttendanceScreen>
       if (result == null || !mounted) return;
       setState(() {
         _draft![player.id] = player.copyWith(
-          status: next,
+          status: selected,
           reason: result.reason,
           note: result.note,
         );
       });
       return;
     }
+
     setState(() {
       _draft![player.id] = player.copyWith(
-        status: next,
+        status: selected,
         clearReason: true,
         clearNote: true,
       );
     });
   }
 
-  Future<void> _ensureOpen(AttendanceSession session) async {
-    if (session.attendanceState != AttendanceState.notOpen) return;
-    if (!session.canOpen) {
-      throw StateError('Attendance is not open for marking');
-    }
-    final clubId = ref.read(selectedClubIdProvider);
-    if (clubId == null) throw StateError('No club selected');
-    final opened = await ref.read(attendanceApiProvider).openAttendance(
-          clubId: clubId,
-          eventId: widget.eventId,
-        );
-    _syncFromSession(opened);
-  }
-
   Future<void> _save() async {
-    final session = _session;
+    final baseline = _session;
     final draft = _draft;
-    if (session == null || draft == null || _saving) return;
+    if (baseline == null || draft == null || _saving) return;
+
+    // Capture marks before any API call — opening attendance must not wipe them.
+    final updates = <AttendanceUpdate>[];
+    for (final original in baseline.participants) {
+      final edited = draft[original.id];
+      if (edited == null) continue;
+      final changed = edited.status != original.status ||
+          edited.reason != original.reason ||
+          (edited.note ?? '') != (original.note ?? '');
+      if (!changed) continue;
+      updates.add(
+        AttendanceUpdate(
+          participantId: edited.id,
+          status: edited.status,
+          reason: statusNeedsNote(edited.status) ? edited.reason : null,
+          note: edited.note,
+        ),
+      );
+    }
+
+    if (updates.isEmpty) {
+      setState(() {
+        _localError = 'Mark at least one player before saving.';
+      });
+      return;
+    }
 
     setState(() {
       _saving = true;
@@ -131,51 +152,81 @@ class _MarkAttendanceScreenState extends ConsumerState<MarkAttendanceScreen>
     });
 
     try {
-      await _ensureOpen(session);
+      final clubId = ref.read(selectedClubIdProvider);
+      if (clubId == null) {
+        throw StateError('No club selected');
+      }
+      final api = ref.read(attendanceApiProvider);
 
-      final updates = <AttendanceUpdate>[];
-      for (final original in session.participants) {
-        final edited = draft[original.id];
-        if (edited == null) continue;
-        final changed = edited.status != original.status ||
-            edited.reason != original.reason ||
-            (edited.note ?? '') != (original.note ?? '');
-        if (!changed) continue;
-        updates.add(
-          AttendanceUpdate(
-            participantId: edited.id,
-            status: edited.status,
-            version: edited.version,
-            reason: edited.reason,
-            note: edited.note,
-          ),
+      var state = baseline.attendanceState;
+      if (state == AttendanceState.notOpen) {
+        if (!baseline.canOpen) {
+          throw StateError(
+            'Attendance is not open yet. An admin or head coach must open it first.',
+          );
+        }
+        final opened = await api.openAttendance(
+          clubId: clubId,
+          eventId: widget.eventId,
+        );
+        // Keep local marks; only refresh session metadata.
+        if (mounted) {
+          setState(() {
+            _session = AttendanceSession(
+              eventId: opened.eventId,
+              title: opened.title,
+              type: opened.type,
+              startAt: opened.startAt,
+              attendanceState: opened.attendanceState,
+              summary: opened.summary,
+              participants: baseline.participants,
+              canMark: opened.canMark,
+              canFinalize: opened.canFinalize,
+              canOpen: opened.canOpen,
+              canManageParticipants: opened.canManageParticipants,
+              attendanceEnabled: opened.attendanceEnabled,
+              timezone: opened.timezone,
+              allDay: opened.allDay,
+            );
+          });
+        }
+        state = opened.attendanceState;
+      }
+
+      if (state == AttendanceState.notOpen) {
+        throw StateError('Attendance is not open for marking yet.');
+      }
+      if (state == AttendanceState.finalized) {
+        throw StateError(
+          'Attendance is finalized. An administrator must reopen it.',
         );
       }
 
-      final clubId = ref.read(selectedClubIdProvider);
-      if (clubId == null) throw StateError('No club selected');
-
-      AttendanceSession saved = session;
-      if (updates.isNotEmpty) {
-        saved = await ref.read(attendanceApiProvider).saveAttendance(
-              clubId: clubId,
-              eventId: widget.eventId,
-              updates: updates,
-            );
-      }
+      final saved = await api.saveAttendance(
+        clubId: clubId,
+        eventId: widget.eventId,
+        updates: updates,
+      );
 
       ref.invalidate(attendanceSessionProvider(widget.eventId));
       if (!mounted) return;
-      context.pushReplacement(
+      context.go(
         '/events/${widget.eventId}/attendance/saved',
         extra: saved,
       );
     } catch (e) {
       if (!mounted) return;
+      final message = apiErrorMessage(
+        e,
+        fallback: 'Could not save attendance',
+      );
       setState(() {
-        _localError = apiErrorMessage(e, fallback: 'Could not save attendance');
+        _localError = message;
         _saving = false;
       });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message)),
+      );
     }
   }
 
@@ -186,6 +237,16 @@ class _MarkAttendanceScreenState extends ConsumerState<MarkAttendanceScreen>
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_rounded),
+          onPressed: () {
+            if (context.canPop()) {
+              context.pop();
+            } else {
+              context.go('/events/${widget.eventId}');
+            }
+          },
+        ),
         title: const Text('Mark Attendance'),
         bottom: TabBar(
           controller: _tabs,
@@ -260,7 +321,15 @@ class _MarkAttendanceScreenState extends ConsumerState<MarkAttendanceScreen>
                       canMark: session.canMark ||
                           (session.attendanceState == AttendanceState.notOpen &&
                               session.canOpen),
-                      onTap: _cycleStatus,
+                      onTap: _pickStatus,
+                      canRefresh: session.canManageParticipants &&
+                          session.attendanceEnabled &&
+                          session.attendanceState != AttendanceState.finalized,
+                      onRefresh: () => ref.invalidate(
+                        attendanceSessionProvider(widget.eventId),
+                      ),
+                      attendanceEnabled: session.attendanceEnabled,
+                      teamNames: event?.teams ?? const [],
                     ),
                     _SummaryTab(players: players, counts: counts),
                   ],
@@ -269,7 +338,11 @@ class _MarkAttendanceScreenState extends ConsumerState<MarkAttendanceScreen>
               _StickyFooter(
                 counts: counts,
                 saving: _saving,
-                enabled: (session.canMark || session.canOpen) && !_saving,
+                enabled: !_saving &&
+                    (session.canMark ||
+                        session.canOpen ||
+                        (_session?.canMark ?? false) ||
+                        (_session?.canOpen ?? false)),
                 onSave: _save,
               ),
             ],
@@ -289,6 +362,7 @@ class _SessionHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final muted = Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6);
+    final teams = event?.teams ?? const <String>[];
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
       child: Column(
@@ -298,6 +372,15 @@ class _SessionHeader extends StatelessWidget {
             session.title,
             style: Theme.of(context).textTheme.titleMedium,
           ),
+          if (teams.isNotEmpty) ...[
+            const SizedBox(height: 2),
+            Text(
+              teams.join(', '),
+              style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+            ),
+          ],
           const SizedBox(height: 4),
           Text(
             [
@@ -306,6 +389,11 @@ class _SessionHeader extends StatelessWidget {
               if (event != null) event!.location.display,
             ].join(' · '),
             style: Theme.of(context).textTheme.bodySmall?.copyWith(color: muted),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            'Tap a player → Present, Late, Absent, or Excused',
+            style: Theme.of(context).textTheme.labelMedium?.copyWith(color: muted),
           ),
         ],
       ),
@@ -318,16 +406,47 @@ class _PlayersTab extends StatelessWidget {
     required this.players,
     required this.canMark,
     required this.onTap,
+    required this.canRefresh,
+    required this.onRefresh,
+    required this.attendanceEnabled,
+    this.teamNames = const [],
   });
 
   final List<AttendanceParticipant> players;
   final bool canMark;
   final Future<void> Function(AttendanceParticipant) onTap;
+  final bool canRefresh;
+  final VoidCallback onRefresh;
+  final bool attendanceEnabled;
+  final List<String> teamNames;
 
   @override
   Widget build(BuildContext context) {
     if (players.isEmpty) {
-      return const Center(child: Text('No participants for this event.'));
+      final teamLabel =
+          teamNames.isEmpty ? 'this event’s team' : teamNames.join(', ');
+      final message = !attendanceEnabled
+          ? 'Attendance is not enabled for this event.'
+          : 'No players found on $teamLabel.\n'
+              'Make sure the event is linked to a team with an active roster.';
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(message, textAlign: TextAlign.center),
+              if (canRefresh) ...[
+                const SizedBox(height: 16),
+                FilledButton.tonal(
+                  onPressed: onRefresh,
+                  child: const Text('Load team roster'),
+                ),
+              ],
+            ],
+          ),
+        ),
+      );
     }
     return ListView.separated(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
@@ -337,9 +456,18 @@ class _PlayersTab extends StatelessWidget {
         final p = players[index];
         return ListTile(
           contentPadding: EdgeInsets.zero,
-          leading: AvatarCircle(label: p.displayName),
+          leading: PlayerAvatar(
+            playerId: p.playerId,
+            label: p.displayName,
+            hasPhoto: p.hasPhoto,
+          ),
           title: Text(p.displayName),
-          subtitle: p.teamName != null ? Text(p.teamName!) : null,
+          subtitle: Text(
+            [
+              if (p.teamName != null) p.teamName!,
+              p.status.label,
+            ].join(' · '),
+          ),
           trailing: AttendanceStatusBadge(status: p.status),
           onTap: canMark ? () => onTap(p) : null,
         );
@@ -513,6 +641,58 @@ class _StickyFooter extends StatelessWidget {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _StatusPickerSheet extends StatelessWidget {
+  const _StatusPickerSheet({
+    required this.playerName,
+    required this.current,
+  });
+
+  final String playerName;
+  final AttendanceStatus current;
+
+  static const _options = [
+    AttendanceStatus.present,
+    AttendanceStatus.late,
+    AttendanceStatus.absent,
+    AttendanceStatus.excused,
+    AttendanceStatus.notMarked,
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(8, 12, 8, 16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
+              child: Text(
+                'Mark $playerName',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+            ),
+            for (final status in _options)
+              ListTile(
+                leading: AttendanceStatusBadge(status: status),
+                title: Text(status.label),
+                trailing: current == status
+                    ? Icon(
+                        Icons.check_rounded,
+                        color: Theme.of(context).colorScheme.primary,
+                      )
+                    : null,
+                onTap: () => Navigator.pop(context, status),
+              ),
+          ],
         ),
       ),
     );
