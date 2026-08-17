@@ -201,7 +201,7 @@ class _PlayersTab extends StatelessWidget {
             title: Text(p.name),
             subtitle: Text('${p.position} · #${p.number}'),
             trailing: const Icon(Icons.chevron_right_rounded),
-            onTap: () => context.push('/players/${p.id}'),
+            onTap: () => context.push('/members/${p.id}'),
           ),
         );
       },

@@ -40,7 +40,7 @@ class _PlayersListScreenState extends ConsumerState<PlayersListScreen> {
     return Scaffold(
       drawer: const AppDrawer(),
       appBar: AppBar(
-        title: const Text('Players'),
+        title: const Text('Members'),
       ),
       body: Column(
         children: [
@@ -48,7 +48,7 @@ class _PlayersListScreenState extends ConsumerState<PlayersListScreen> {
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
             child: AppSearchField(
               controller: _search,
-              hintText: 'Search players',
+              hintText: 'Search members',
               onChanged: (value) {
                 _debounce?.cancel();
                 _debounce = Timer(const Duration(milliseconds: 350), () {
@@ -62,7 +62,7 @@ class _PlayersListScreenState extends ConsumerState<PlayersListScreen> {
                 ? _DemoPlayersList()
                 : clubId == null
                     ? const Center(
-                        child: Text('Select a club to view players.'),
+                        child: Text('Select a club to view members.'),
                       )
                     : playersAsync.when(
                         loading: () =>
@@ -76,7 +76,7 @@ class _PlayersListScreenState extends ConsumerState<PlayersListScreen> {
                                 Text(
                                   apiErrorMessage(
                                     e,
-                                    fallback: 'Could not load players',
+                                    fallback: 'Could not load members',
                                   ),
                                   textAlign: TextAlign.center,
                                 ),
@@ -93,7 +93,7 @@ class _PlayersListScreenState extends ConsumerState<PlayersListScreen> {
                         data: (players) {
                           if (players.isEmpty) {
                             return const Center(
-                              child: Text('No players found for this club.'),
+                              child: Text('No members found for this club.'),
                             );
                           }
                           return RefreshIndicator(
@@ -122,7 +122,7 @@ class _PlayersListScreenState extends ConsumerState<PlayersListScreen> {
                                       Icons.chevron_right_rounded,
                                     ),
                                     onTap: () =>
-                                        context.push('/players/${p.id}'),
+                                        context.push('/members/${p.id}'),
                                   ),
                                 );
                               },
@@ -180,7 +180,7 @@ class _DemoPlayersList extends StatelessWidget {
             title: Text(p.name),
             subtitle: Text('${p.position} · #${p.number}'),
             trailing: const Icon(Icons.chevron_right_rounded),
-            onTap: () => context.push('/players/${p.id}'),
+            onTap: () => context.push('/members/${p.id}'),
           ),
         );
       },

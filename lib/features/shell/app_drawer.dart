@@ -57,12 +57,10 @@ class AppDrawer extends ConsumerWidget {
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 children: [
                   _item(context, Icons.home_outlined, 'Home', '/home'),
-                  _item(context, Icons.calendar_month_outlined, 'Calendar', '/calendar'),
-                  _item(context, Icons.groups_outlined, 'Teams', '/teams'),
-                  _item(context, Icons.sports_outlined, 'Players', '/players'),
-                  _item(context, Icons.sports_basketball_outlined, 'Training', '/calendar'),
+                  _item(context, Icons.sports_outlined, 'Members', '/members'),
+                  _item(context, Icons.calendar_month_outlined, 'Schedule', '/calendar'),
                   _item(context, Icons.how_to_reg_outlined, 'Attendance', '/attendance/history'),
-                  _item(context, Icons.emoji_events_outlined, 'Matches', '/calendar'),
+                  _item(context, Icons.groups_outlined, 'Teams', '/teams'),
                   _item(context, Icons.bar_chart_rounded, 'Statistics', '/statistics'),
                   _item(context, Icons.payments_outlined, 'Payments', '/more'),
                   _item(

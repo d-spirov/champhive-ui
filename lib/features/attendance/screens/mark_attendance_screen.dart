@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../clubs/providers/clubs_provider.dart';
+import '../../auth/providers/auth_provider.dart';
 import '../../events/providers/events_provider.dart';
 import '../../../shared/models/event_attendance.dart';
 import '../../../shared/theme/app_theme.dart';
@@ -13,6 +13,7 @@ import '../../players/widgets/player_avatar.dart';
 class MarkAttendanceScreen extends ConsumerStatefulWidget {
   const MarkAttendanceScreen({super.key, required this.eventId});
 
+  /// Opaque occurrence id (route param still named eventId for go_router).
   final String eventId;
 
   @override
@@ -27,6 +28,8 @@ class _MarkAttendanceScreenState extends ConsumerState<MarkAttendanceScreen>
   AttendanceSession? _session;
   bool _saving = false;
   String? _localError;
+
+  String get _occurrenceId => widget.eventId;
 
   @override
   void initState() {
@@ -48,71 +51,107 @@ class _MarkAttendanceScreenState extends ConsumerState<MarkAttendanceScreen>
   }
 
   AttendanceSummaryCounts _counts() {
-    final players = _draft?.values.toList() ?? const [];
-    var present = 0, absent = 0, late = 0, excused = 0, notMarked = 0;
-    for (final p in players) {
-      switch (p.status) {
-        case AttendanceStatus.present:
-          present++;
-        case AttendanceStatus.absent:
-          absent++;
-        case AttendanceStatus.late:
-          late++;
-        case AttendanceStatus.excused:
-          excused++;
-        case AttendanceStatus.notMarked:
-          notMarked++;
-      }
-    }
-    return AttendanceSummaryCounts(
-      total: players.length,
-      present: present,
-      absent: absent,
-      late: late,
-      excused: excused,
-      notMarked: notMarked,
+    return AttendanceSummaryCounts.fromParticipants(
+      _draft?.values.toList() ?? const [],
     );
   }
 
-  Future<void> _pickStatus(AttendanceParticipant player) async {
+  Future<void> _pickStatus(AttendanceParticipant member) async {
+    if (!(_session?.canMark ?? false) || _saving) return;
+
     final selected = await showModalBottomSheet<AttendanceStatus>(
       context: context,
       builder: (ctx) => _StatusPickerSheet(
-        playerName: player.displayName,
-        current: player.status,
+        memberName: member.displayName,
+        current: member.status,
       ),
     );
     if (selected == null || !mounted) return;
 
-    if (statusNeedsNote(selected)) {
-      final result = await showModalBottomSheet<_NoteResult>(
-        context: context,
-        isScrollControlled: true,
-        builder: (ctx) => _AttendanceNoteSheet(
-          playerName: player.displayName,
-          status: selected,
-          initialReason: player.reason,
-          initialNote: player.note,
-        ),
-      );
-      if (result == null || !mounted) return;
+    if (selected == AttendanceStatus.notMarked) {
       setState(() {
-        _draft![player.id] = player.copyWith(
-          status: selected,
-          reason: result.reason,
-          note: result.note,
-        );
+        _localError =
+            'Unmarked cannot be saved to the server. Choose Present, Late, Absent, or Excused.';
       });
       return;
     }
 
-    setState(() {
-      _draft![player.id] = player.copyWith(
-        status: selected,
-        clearReason: true,
-        clearNote: true,
+    String? note = member.note;
+    if (statusOffersNote(selected)) {
+      final result = await showModalBottomSheet<String?>(
+        context: context,
+        isScrollControlled: true,
+        builder: (ctx) => _OptionalNoteSheet(
+          memberName: member.displayName,
+          status: selected,
+          initialNote: member.note,
+        ),
       );
+      if (!mounted) return;
+      if (result == null) return; // dismissed — don't save
+      note = result.isEmpty ? null : result;
+    } else {
+      note = null;
+    }
+
+    // Optimistic UI, then persist via attendance batch API.
+    setState(() {
+      _draft![member.id] = member.copyWith(
+        status: selected,
+        note: note,
+        clearReason: true,
+        clearNote: note == null,
+      );
+      _saving = true;
+      _localError = null;
     });
+
+    try {
+      await ref.watch(authApiProvider.future);
+      final api = ref.read(attendanceApiProvider);
+      final result = await api.saveMemberStatus(
+        occurrenceId: _occurrenceId,
+        memberId: member.memberId,
+        status: selected,
+        note: note,
+      );
+
+      if (!mounted) return;
+      setState(() {
+        _syncFromSession(result.session);
+        _saving = false;
+      });
+      ref.invalidate(occurrenceAttendanceReportProvider(_occurrenceId));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('${member.displayName} → ${selected.label}'),
+          duration: const Duration(seconds: 1),
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      // Roll back optimistic mark to last known session.
+      final baseline = _session;
+      AttendanceParticipant? original;
+      if (baseline != null) {
+        for (final p in baseline.participants) {
+          if (p.id == member.id) {
+            original = p;
+            break;
+          }
+        }
+      }
+      setState(() {
+        if (original != null) {
+          _draft![member.id] = original;
+        }
+        _saving = false;
+        _localError = apiErrorMessage(e, fallback: 'Could not save status');
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(_localError!)),
+      );
+    }
   }
 
   Future<void> _save() async {
@@ -120,11 +159,10 @@ class _MarkAttendanceScreenState extends ConsumerState<MarkAttendanceScreen>
     final draft = _draft;
     if (baseline == null || draft == null || _saving) return;
 
-    if (!baseline.canMark ||
-        baseline.attendanceState != AttendanceState.open) {
+    if (!baseline.canMark) {
       setState(() {
         _localError =
-            'Attendance is locked for this session. An admin can temporarily reopen it.';
+            'Attendance is locked for this session. An admin can reopen it temporarily.';
       });
       return;
     }
@@ -136,14 +174,12 @@ class _MarkAttendanceScreenState extends ConsumerState<MarkAttendanceScreen>
       if (edited == null) continue;
       if (!edited.status.isMarkable) continue;
       final changed = edited.status != original.status ||
-          edited.reason != original.reason ||
           (edited.note ?? '') != (original.note ?? '');
       if (!changed) continue;
       updates.add(
         AttendanceUpdate(
           participantId: edited.memberId,
           status: edited.status,
-          reason: statusNeedsNote(edited.status) ? edited.reason : null,
           note: edited.note,
           recordedAtClientUtc: nowUtc,
           clientRecordId: newClientRecordId(),
@@ -153,7 +189,7 @@ class _MarkAttendanceScreenState extends ConsumerState<MarkAttendanceScreen>
 
     if (updates.isEmpty) {
       setState(() {
-        _localError = 'Mark at least one player before saving.';
+        _localError = 'All marks are already saved.';
       });
       return;
     }
@@ -164,22 +200,19 @@ class _MarkAttendanceScreenState extends ConsumerState<MarkAttendanceScreen>
     });
 
     try {
-      final clubId = ref.read(selectedClubIdProvider);
-      if (clubId == null) {
-        throw StateError('No club selected');
-      }
+      await ref.watch(authApiProvider.future);
       final api = ref.read(attendanceApiProvider);
-      final saved = await api.saveAttendance(
-        clubId: clubId,
-        eventId: widget.eventId,
+      final result = await api.saveAttendance(
+        occurrenceId: _occurrenceId,
         updates: updates,
       );
 
-      ref.invalidate(attendanceSessionProvider(widget.eventId));
+      ref.invalidate(attendanceSessionProvider(_occurrenceId));
+      ref.invalidate(occurrenceAttendanceReportProvider(_occurrenceId));
       if (!mounted) return;
       context.go(
-        '/events/${widget.eventId}/attendance/saved',
-        extra: saved,
+        '/occurrences/$_occurrenceId/attendance/saved',
+        extra: result,
       );
     } catch (e) {
       if (!mounted) return;
@@ -199,8 +232,8 @@ class _MarkAttendanceScreenState extends ConsumerState<MarkAttendanceScreen>
 
   @override
   Widget build(BuildContext context) {
-    final async = ref.watch(attendanceSessionProvider(widget.eventId));
-    final eventAsync = ref.watch(eventDetailProvider(widget.eventId));
+    final async = ref.watch(attendanceSessionProvider(_occurrenceId));
+    final occurrenceAsync = ref.watch(eventDetailProvider(_occurrenceId));
 
     return Scaffold(
       appBar: AppBar(
@@ -210,11 +243,11 @@ class _MarkAttendanceScreenState extends ConsumerState<MarkAttendanceScreen>
             if (context.canPop()) {
               context.pop();
             } else {
-              context.go('/events/${widget.eventId}');
+              context.go('/occurrences/$_occurrenceId');
             }
           },
         ),
-        title: const Text('Mark Attendance'),
+        title: const Text('Take attendance'),
         bottom: TabBar(
           controller: _tabs,
           labelColor: Theme.of(context).colorScheme.primary,
@@ -224,8 +257,8 @@ class _MarkAttendanceScreenState extends ConsumerState<MarkAttendanceScreen>
           tabs: [
             Tab(
               text: _draft == null
-                  ? 'Players'
-                  : 'Players (${_draft!.length})',
+                  ? 'Roster'
+                  : 'Roster (${_draft!.length})',
             ),
             const Tab(text: 'Summary'),
           ],
@@ -240,13 +273,13 @@ class _MarkAttendanceScreenState extends ConsumerState<MarkAttendanceScreen>
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  apiErrorMessage(e, fallback: 'Could not load attendance'),
+                  apiErrorMessage(e, fallback: 'Could not load roster'),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 16),
                 FilledButton(
                   onPressed: () =>
-                      ref.invalidate(attendanceSessionProvider(widget.eventId)),
+                      ref.invalidate(attendanceSessionProvider(_occurrenceId)),
                   child: const Text('Retry'),
                 ),
               ],
@@ -261,14 +294,30 @@ class _MarkAttendanceScreenState extends ConsumerState<MarkAttendanceScreen>
             });
           }
 
-          final event = eventAsync.valueOrNull;
+          final occurrence = occurrenceAsync.valueOrNull;
           final counts = _counts();
-          final players = (_draft?.values.toList() ?? session.participants)
+          final members = (_draft?.values.toList() ?? session.participants)
             ..sort((a, b) => a.displayName.compareTo(b.displayName));
 
           return Column(
             children: [
-              _SessionHeader(session: session, event: event),
+              _SessionHeader(session: session, occurrence: occurrence),
+              if (!session.canMark)
+                MaterialBanner(
+                  content: Text(
+                    session.isCanceled
+                        ? 'This session was canceled — marks are not accepted.'
+                        : 'Attendance is locked. You can still review the roster; ask an admin to reopen if you need to edit.',
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => context.push(
+                        '/occurrences/$_occurrenceId/attendance/report',
+                      ),
+                      child: const Text('Report'),
+                    ),
+                  ],
+                ),
               if (_localError != null)
                 MaterialBanner(
                   content: Text(_localError!),
@@ -283,21 +332,20 @@ class _MarkAttendanceScreenState extends ConsumerState<MarkAttendanceScreen>
                 child: TabBarView(
                   controller: _tabs,
                   children: [
-                    _PlayersTab(
-                      players: players,
+                    _RosterTab(
+                      members: members,
                       canMark: session.canMark,
                       onTap: _pickStatus,
-                      canRefresh: true,
                       onRefresh: () => ref.invalidate(
-                        attendanceSessionProvider(widget.eventId),
+                        attendanceSessionProvider(_occurrenceId),
                       ),
-                      attendanceEnabled: session.attendanceEnabled,
-                      teamNames: event?.teams ??
-                          (session.scopeName != null
-                              ? [session.scopeName!]
-                              : const []),
+                      scopeName: session.scopeName ??
+                          occurrence?.scopeName ??
+                          (occurrence?.teams.isNotEmpty == true
+                              ? occurrence!.teams.join(', ')
+                              : null),
                     ),
-                    _SummaryTab(players: players, counts: counts),
+                    _SummaryTab(members: members, counts: counts),
                   ],
                 ),
               ),
@@ -316,15 +364,15 @@ class _MarkAttendanceScreenState extends ConsumerState<MarkAttendanceScreen>
 }
 
 class _SessionHeader extends StatelessWidget {
-  const _SessionHeader({required this.session, this.event});
+  const _SessionHeader({required this.session, this.occurrence});
 
   final AttendanceSession session;
-  final ClubEvent? event;
+  final ClubEvent? occurrence;
 
   @override
   Widget build(BuildContext context) {
     final muted = Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6);
-    final teams = event?.teams ?? const <String>[];
+    final scope = session.scopeName ?? occurrence?.scopeName;
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
       child: Column(
@@ -334,10 +382,10 @@ class _SessionHeader extends StatelessWidget {
             session.title,
             style: Theme.of(context).textTheme.titleMedium,
           ),
-          if (teams.isNotEmpty) ...[
+          if (scope != null && scope.isNotEmpty) ...[
             const SizedBox(height: 2),
             Text(
-              teams.join(', '),
+              scope,
               style: Theme.of(context).textTheme.labelLarge?.copyWith(
                     color: Theme.of(context).colorScheme.primary,
                   ),
@@ -347,14 +395,19 @@ class _SessionHeader extends StatelessWidget {
           Text(
             [
               formatEventDate(session.startAt),
-              formatEventTimeRange(session.startAt, event?.endAt),
-              if (event != null) event!.location.display,
+              formatEventTimeRange(session.startAt, occurrence?.endAt ?? session.endAt),
+              if (session.location != null && session.location!.isNotEmpty)
+                session.location!
+              else if (occurrence != null)
+                occurrence!.location.display,
             ].join(' · '),
             style: Theme.of(context).textTheme.bodySmall?.copyWith(color: muted),
           ),
           const SizedBox(height: 6),
           Text(
-            'Tap a player → Present, Late, Absent, or Excused',
+            session.canMark
+                ? 'Tap a member to mark — status saves to the server immediately'
+                : session.lockStatusLabel,
             style: Theme.of(context).textTheme.labelMedium?.copyWith(color: muted),
           ),
         ],
@@ -363,85 +416,82 @@ class _SessionHeader extends StatelessWidget {
   }
 }
 
-class _PlayersTab extends StatelessWidget {
-  const _PlayersTab({
-    required this.players,
+class _RosterTab extends StatelessWidget {
+  const _RosterTab({
+    required this.members,
     required this.canMark,
     required this.onTap,
-    required this.canRefresh,
     required this.onRefresh,
-    required this.attendanceEnabled,
-    this.teamNames = const [],
+    this.scopeName,
   });
 
-  final List<AttendanceParticipant> players;
+  final List<AttendanceParticipant> members;
   final bool canMark;
   final Future<void> Function(AttendanceParticipant) onTap;
-  final bool canRefresh;
   final VoidCallback onRefresh;
-  final bool attendanceEnabled;
-  final List<String> teamNames;
+  final String? scopeName;
 
   @override
   Widget build(BuildContext context) {
-    if (players.isEmpty) {
-      final teamLabel =
-          teamNames.isEmpty ? 'this event’s team' : teamNames.join(', ');
-      final message = !attendanceEnabled
-          ? 'Attendance is not enabled for this event.'
-          : 'No players found on $teamLabel.\n'
-              'Make sure the event is linked to a team with an active roster.';
+    if (members.isEmpty) {
+      final scope = scopeName ?? 'this session';
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(24),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(message, textAlign: TextAlign.center),
-              if (canRefresh) ...[
-                const SizedBox(height: 16),
-                FilledButton.tonal(
-                  onPressed: onRefresh,
-                  child: const Text('Load team roster'),
-                ),
-              ],
+              Text(
+                'No members on the roster for $scope.',
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              FilledButton.tonal(
+                onPressed: onRefresh,
+                child: const Text('Reload roster'),
+              ),
             ],
           ),
         ),
       );
     }
-    return ListView.separated(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-      itemCount: players.length,
-      separatorBuilder: (_, _) => const Divider(height: 1),
-      itemBuilder: (context, index) {
-        final p = players[index];
-        return ListTile(
-          contentPadding: EdgeInsets.zero,
-          leading: PlayerAvatar(
-            playerId: p.playerId,
-            label: p.displayName,
-            hasPhoto: p.hasPhoto,
-          ),
-          title: Text(p.displayName),
-          subtitle: Text(
-            [
-              if (p.teamName != null) p.teamName!,
-              p.status.label,
-            ].join(' · '),
-          ),
-          trailing: AttendanceStatusBadge(status: p.status),
-          onTap: canMark ? () => onTap(p) : null,
-        );
-      },
+    return RefreshIndicator(
+      onRefresh: () async => onRefresh(),
+      child: ListView.separated(
+        padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+        itemCount: members.length,
+        separatorBuilder: (_, _) => const Divider(height: 1),
+        itemBuilder: (context, index) {
+          final p = members[index];
+          return ListTile(
+            contentPadding: EdgeInsets.zero,
+            leading: PlayerAvatar(
+              playerId: p.playerId,
+              label: p.displayName,
+              hasPhoto: p.hasPhoto,
+            ),
+            title: Text(p.displayName),
+            subtitle: Text(
+              [
+                if (p.rsvpStatus != null && p.rsvpStatus != 'noResponse')
+                  'RSVP: ${p.rsvpStatus}',
+                if (p.teamName != null) p.teamName!,
+                p.status.label,
+              ].where((s) => s.isNotEmpty).join(' · '),
+            ),
+            trailing: AttendanceStatusBadge(status: p.status),
+            onTap: canMark ? () => onTap(p) : null,
+          );
+        },
+      ),
     );
   }
 }
 
 class _SummaryTab extends StatelessWidget {
-  const _SummaryTab({required this.players, required this.counts});
+  const _SummaryTab({required this.members, required this.counts});
 
-  final List<AttendanceParticipant> players;
+  final List<AttendanceParticipant> members;
   final AttendanceSummaryCounts counts;
 
   @override
@@ -468,7 +518,7 @@ class _SummaryTab extends StatelessWidget {
         ]) ...[
           _Group(
             status: status,
-            players: players.where((p) => p.status == status).toList(),
+            members: members.where((p) => p.status == status).toList(),
           ),
         ],
       ],
@@ -505,14 +555,14 @@ class _Stat extends StatelessWidget {
 }
 
 class _Group extends StatelessWidget {
-  const _Group({required this.status, required this.players});
+  const _Group({required this.status, required this.members});
 
   final AttendanceStatus status;
-  final List<AttendanceParticipant> players;
+  final List<AttendanceParticipant> members;
 
   @override
   Widget build(BuildContext context) {
-    if (players.isEmpty) return const SizedBox.shrink();
+    if (members.isEmpty) return const SizedBox.shrink();
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Column(
@@ -523,13 +573,13 @@ class _Group extends StatelessWidget {
               AttendanceStatusBadge(status: status, size: 22),
               const SizedBox(width: 8),
               Text(
-                '${status.label} (${players.length})',
+                '${status.label} (${members.length})',
                 style: Theme.of(context).textTheme.titleSmall,
               ),
             ],
           ),
           const SizedBox(height: 8),
-          for (final p in players)
+          for (final p in members)
             Padding(
               padding: const EdgeInsets.only(left: 8, bottom: 6),
               child: Text(
@@ -599,7 +649,7 @@ class _StickyFooter extends StatelessWidget {
                         width: 22,
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
-                    : const Text('Save Attendance'),
+                    : const Text('Save remaining'),
               ),
             ],
           ),
@@ -611,11 +661,11 @@ class _StickyFooter extends StatelessWidget {
 
 class _StatusPickerSheet extends StatelessWidget {
   const _StatusPickerSheet({
-    required this.playerName,
+    required this.memberName,
     required this.current,
   });
 
-  final String playerName;
+  final String memberName;
   final AttendanceStatus current;
 
   static const _options = [
@@ -638,7 +688,7 @@ class _StatusPickerSheet extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
               child: Text(
-                'Mark $playerName',
+                'Mark $memberName',
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             ),
@@ -661,32 +711,22 @@ class _StatusPickerSheet extends StatelessWidget {
   }
 }
 
-class _NoteResult {
-  const _NoteResult({this.reason, this.note});
-
-  final AbsenceReason? reason;
-  final String? note;
-}
-
-class _AttendanceNoteSheet extends StatefulWidget {
-  const _AttendanceNoteSheet({
-    required this.playerName,
+class _OptionalNoteSheet extends StatefulWidget {
+  const _OptionalNoteSheet({
+    required this.memberName,
     required this.status,
-    this.initialReason,
     this.initialNote,
   });
 
-  final String playerName;
+  final String memberName;
   final AttendanceStatus status;
-  final AbsenceReason? initialReason;
   final String? initialNote;
 
   @override
-  State<_AttendanceNoteSheet> createState() => _AttendanceNoteSheetState();
+  State<_OptionalNoteSheet> createState() => _OptionalNoteSheetState();
 }
 
-class _AttendanceNoteSheetState extends State<_AttendanceNoteSheet> {
-  late AbsenceReason? _reason = widget.initialReason ?? AbsenceReason.injury;
+class _OptionalNoteSheetState extends State<_OptionalNoteSheet> {
   late final TextEditingController _note;
 
   @override
@@ -714,20 +754,13 @@ class _AttendanceNoteSheetState extends State<_AttendanceNoteSheet> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                '${widget.playerName} · ${widget.status.label}',
+                '${widget.memberName} · ${widget.status.label}',
                 style: Theme.of(context).textTheme.titleMedium,
               ),
-              const SizedBox(height: 16),
-              DropdownButtonFormField<AbsenceReason>(
-                initialValue: _reason,
-                decoration: const InputDecoration(
-                  labelText: 'Reason (Required)',
-                ),
-                items: [
-                  for (final r in AbsenceReason.values)
-                    DropdownMenuItem(value: r, child: Text(r.label)),
-                ],
-                onChanged: (v) => setState(() => _reason = v),
+              const SizedBox(height: 8),
+              Text(
+                'Optional note (synced with the mark)',
+                style: Theme.of(context).textTheme.bodySmall,
               ),
               const SizedBox(height: 12),
               TextField(
@@ -735,24 +768,18 @@ class _AttendanceNoteSheetState extends State<_AttendanceNoteSheet> {
                 maxLines: 3,
                 maxLength: 500,
                 decoration: const InputDecoration(
-                  labelText: 'Notes (Optional)',
+                  labelText: 'Note',
                   alignLabelWithHint: true,
                 ),
               ),
               const SizedBox(height: 8),
               FilledButton(
-                onPressed: _reason == null
-                    ? null
-                    : () => Navigator.pop(
-                          context,
-                          _NoteResult(
-                            reason: _reason,
-                            note: _note.text.trim().isEmpty
-                                ? null
-                                : _note.text.trim(),
-                          ),
-                        ),
-                child: const Text('Save Note'),
+                onPressed: () => Navigator.pop(context, _note.text.trim()),
+                child: const Text('Continue'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context, ''),
+                child: const Text('Skip note'),
               ),
             ],
           ),

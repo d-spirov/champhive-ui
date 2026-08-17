@@ -474,9 +474,6 @@ class AttendanceSession {
     required this.summary,
     required this.participants,
     required this.canMark,
-    required this.canFinalize,
-    required this.canOpen,
-    required this.canManageParticipants,
     this.attendanceEnabled = true,
     this.timezone,
     this.allDay = false,
@@ -484,6 +481,9 @@ class AttendanceSession {
     this.location,
     this.scopeName,
     this.maxBatchEntries = 500,
+    this.attendanceLockAtUtc,
+    this.attendanceUnlockedUntilUtc,
+    this.occurrenceStatus,
   });
 
   final String eventId;
@@ -498,14 +498,23 @@ class AttendanceSession {
   final AttendanceSummaryCounts summary;
   final List<AttendanceParticipant> participants;
   final bool canMark;
-  final bool canFinalize;
-  final bool canOpen;
-  final bool canManageParticipants;
   final String? location;
   final String? scopeName;
   final int maxBatchEntries;
+  final DateTime? attendanceLockAtUtc;
+  final DateTime? attendanceUnlockedUntilUtc;
+  final String? occurrenceStatus;
 
   String get occurrenceId => eventId;
+
+  bool get isCanceled =>
+      (occurrenceStatus ?? '').toLowerCase() == 'canceled';
+
+  String get lockStatusLabel {
+    if (isCanceled) return 'Canceled — attendance closed';
+    if (canMark) return 'Attendance open';
+    return 'Attendance locked';
+  }
 
   factory AttendanceSession.fromRosterSnapshot(Map<String, dynamic> json) {
     final entriesRaw = json['entries'];
@@ -525,6 +534,7 @@ class AttendanceSession {
     }
     final open = json['attendanceOpen'] as bool? ?? false;
     final type = parseEventType(json['type'] as String?);
+    final status = json['status'] as String?;
     final start = DateTime.tryParse(json['startsAtUtc'] as String? ?? '')
             ?.toLocal() ??
         DateTime.now();
@@ -532,7 +542,7 @@ class AttendanceSession {
         DateTime.tryParse(json['endsAtUtc'] as String? ?? '')?.toLocal();
     return AttendanceSession(
       eventId: json['occurrenceId']?.toString() ?? '',
-      title: json['title'] as String? ?? 'Event',
+      title: json['title'] as String? ?? 'Session',
       type: type,
       startAt: start,
       endAt: end,
@@ -540,17 +550,21 @@ class AttendanceSession {
       attendanceEnabled: true,
       attendanceState: parseAttendanceState(
         attendanceOpen: open,
-        occurrenceStatus: json['status'] as String?,
+        occurrenceStatus: status,
       ),
       summary: AttendanceSummaryCounts.fromParticipants(participants),
       participants: participants,
       canMark: open,
-      canFinalize: false,
-      canOpen: false,
-      canManageParticipants: false,
       location: json['location'] as String?,
       scopeName: scopeName,
       maxBatchEntries: (json['maxBatchEntries'] as num?)?.toInt() ?? 500,
+      attendanceLockAtUtc: DateTime.tryParse(
+        json['attendanceLockAtUtc'] as String? ?? '',
+      )?.toLocal(),
+      attendanceUnlockedUntilUtc: DateTime.tryParse(
+        json['attendanceUnlockedUntilUtc'] as String? ?? '',
+      )?.toLocal(),
+      occurrenceStatus: status,
     );
   }
 
@@ -571,9 +585,10 @@ class AttendanceSession {
       }
     }
     final open = json['attendanceOpen'] as bool? ?? false;
+    final status = json['status'] as String?;
     return AttendanceSession(
       eventId: json['occurrenceId']?.toString() ?? '',
-      title: json['title'] as String? ?? 'Event',
+      title: json['title'] as String? ?? 'Session',
       type: EventType.other,
       startAt: DateTime.tryParse(json['startsAtUtc'] as String? ?? '')
               ?.toLocal() ??
@@ -582,7 +597,7 @@ class AttendanceSession {
       attendanceEnabled: true,
       attendanceState: parseAttendanceState(
         attendanceOpen: open,
-        occurrenceStatus: json['status'] as String?,
+        occurrenceStatus: status,
       ),
       summary: AttendanceSummaryCounts(
         total: participants.length,
@@ -594,64 +609,32 @@ class AttendanceSession {
       ),
       participants: participants,
       canMark: open,
-      canFinalize: false,
-      canOpen: false,
-      canManageParticipants: false,
+      attendanceLockAtUtc: DateTime.tryParse(
+        json['attendanceLockAtUtc'] as String? ?? '',
+      )?.toLocal(),
+      attendanceUnlockedUntilUtc: DateTime.tryParse(
+        json['attendanceUnlockedUntilUtc'] as String? ?? '',
+      )?.toLocal(),
+      occurrenceStatus: status,
     );
   }
 
   factory AttendanceSession.fromJson(Map<String, dynamic> json) {
-    if (json.containsKey('entries') && json.containsKey('attendanceOpen')) {
-      if (json.containsKey('snapshotAtUtc') || json.containsKey('syncWindowDays')) {
-        return AttendanceSession.fromRosterSnapshot(json);
-      }
-      return AttendanceSession.fromOccurrenceAttendance(json);
+    if (json.containsKey('snapshotAtUtc') || json.containsKey('syncWindowDays')) {
+      return AttendanceSession.fromRosterSnapshot(json);
     }
-    final event = json['event'] is Map
-        ? Map<String, dynamic>.from(json['event'] as Map)
-        : const <String, dynamic>{};
-    final permissions = json['permissions'] is Map
-        ? Map<String, dynamic>.from(json['permissions'] as Map)
-        : const <String, dynamic>{};
-    final participantsRaw = json['participants'];
-    final participants = <AttendanceParticipant>[];
-    if (participantsRaw is List) {
-      for (final p in participantsRaw) {
-        if (p is Map) {
-          participants.add(
-            AttendanceParticipant.fromJson(Map<String, dynamic>.from(p)),
-          );
-        }
-      }
-    }
-    return AttendanceSession(
-      eventId: event['id']?.toString() ?? '',
-      title: event['title'] as String? ?? 'Event',
-      type: parseEventType(event['type'] as String?),
-      startAt: DateTime.tryParse(event['startAt'] as String? ?? '')?.toLocal() ??
-          DateTime.now(),
-      timezone: event['timezone'] as String?,
-      allDay: event['allDay'] as bool? ?? false,
-      attendanceEnabled: event['attendanceEnabled'] as bool? ?? true,
-      attendanceState: switch ((event['attendanceState'] as String? ?? '')
-          .toUpperCase()) {
-        'OPEN' => AttendanceState.open,
-        'FINALIZED' => AttendanceState.finalized,
-        _ => AttendanceState.notOpen,
-      },
-      summary: AttendanceSummaryCounts.fromJson(
-        json['summary'] is Map
-            ? Map<String, dynamic>.from(json['summary'] as Map)
-            : null,
-      ),
-      participants: participants,
-      canMark: permissions['canMarkAttendance'] as bool? ?? false,
-      canFinalize: permissions['canFinalize'] as bool? ?? false,
-      canOpen: permissions['canOpen'] as bool? ?? false,
-      canManageParticipants:
-          permissions['canManageParticipants'] as bool? ?? false,
-    );
+    return AttendanceSession.fromOccurrenceAttendance(json);
   }
+}
+
+class AttendanceSaveResult {
+  const AttendanceSaveResult({
+    required this.batch,
+    required this.session,
+  });
+
+  final AttendanceBatchResult batch;
+  final AttendanceSession session;
 }
 
 class AttendanceUpdate {
@@ -676,12 +659,7 @@ class AttendanceUpdate {
   Map<String, dynamic> toBatchEntry({
     required String occurrenceId,
   }) {
-    final noteParts = <String>[];
-    if (reason != null) noteParts.add(reason!.label);
-    if (note != null && note!.trim().isNotEmpty) noteParts.add(note!.trim());
-    final combinedNote =
-        noteParts.isEmpty ? null : noteParts.join(' — ');
-
+    final trimmed = note?.trim();
     return {
       'clientRecordId': clientRecordId ?? newClientRecordId(),
       'occurrenceId': occurrenceId,
@@ -689,7 +667,7 @@ class AttendanceUpdate {
       'status': status.apiValue,
       'recordedAtClientUtc':
           (recordedAtClientUtc ?? DateTime.now().toUtc()).toIso8601String(),
-      'note': ?combinedNote,
+      'note': ?trimmed,
     };
   }
 }

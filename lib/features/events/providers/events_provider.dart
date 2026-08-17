@@ -72,15 +72,25 @@ final eventDetailProvider =
 });
 
 final attendanceSessionProvider = FutureProvider.autoDispose
-    .family<AttendanceSession, String>((ref, eventId) async {
-  ref.watch(selectedClubIdProvider); // rebuild when club changes
+    .family<AttendanceSession, String>((ref, occurrenceId) async {
+  ref.watch(selectedClubIdProvider);
   await ref.watch(authApiProvider.future);
   final api = ref.watch(attendanceApiProvider);
-  return api.getRosterSnapshot(occurrenceId: eventId);
+  return api.getRosterSnapshot(occurrenceId: occurrenceId);
 });
 
-/// Upcoming schedule items that can still accept attendance marks.
-final attendanceDashboardProvider =
+/// Server attendance report for an occurrence (works after lock too).
+final occurrenceAttendanceReportProvider = FutureProvider.autoDispose
+    .family<AttendanceSession, String>((ref, occurrenceId) async {
+  ref.watch(selectedClubIdProvider);
+  await ref.watch(authApiProvider.future);
+  return ref
+      .watch(attendanceApiProvider)
+      .getOccurrenceAttendance(occurrenceId: occurrenceId);
+});
+
+/// Upcoming schedule items still inside the typical attendance window.
+final openAttendanceOccurrencesProvider =
     FutureProvider.autoDispose<List<ClubEvent>>((ref) async {
   final events = await ref.watch(clubEventsProvider.future);
   final now = DateTime.now();
@@ -88,7 +98,6 @@ final attendanceDashboardProvider =
       .where((e) {
         final status = (e.status ?? '').toLowerCase();
         if (status == 'canceled') return false;
-        // Show recent + near-future sessions (72h lock window after start).
         final lockAt = e.startAt.add(const Duration(hours: 72));
         return lockAt.isAfter(now);
       })

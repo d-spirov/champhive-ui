@@ -157,7 +157,7 @@ class HomeDashboardScreen extends ConsumerWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(16),
                     child: Text(
-                      apiErrorMessage(e, fallback: 'Could not load events'),
+                      apiErrorMessage(e, fallback: 'Could not load schedule'),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -186,7 +186,7 @@ class HomeDashboardScreen extends ConsumerWidget {
                       child: Padding(
                         padding: EdgeInsets.all(20),
                         child: Text(
-                          'No events today. Open Calendar to browse.',
+                          'Nothing on the schedule today. Open Calendar to browse.',
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -217,7 +217,7 @@ class HomeDashboardScreen extends ConsumerWidget {
                           for (final e in shown)
                             ClubEventListTile(
                               event: e,
-                              onTap: () => context.push('/events/${e.id}'),
+                              onTap: () => context.push('/occurrences/${e.id}'),
                             ),
                         ],
                       ),
@@ -241,7 +241,7 @@ class HomeDashboardScreen extends ConsumerWidget {
                           DemoData.activities[i].whenLabel,
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
-                        onTap: () => context.push('/players/${DemoData.player.id}'),
+                        onTap: () => context.push('/members/${DemoData.player.id}'),
                       ),
                     ],
                   ],

@@ -189,7 +189,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                                         ClubEventListTile(
                                           event: e,
                                           onTap: () =>
-                                              context.push('/events/${e.id}'),
+                                              context.push('/occurrences/${e.id}'),
                                         ),
                                     ],
                                   ),

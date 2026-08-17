@@ -11,10 +11,13 @@ Architecture mirrors [ParkHive](../parking/park_hive): feature-first UI + Riverp
 - OpenAPI: https://api.champhive.app/openapi/v1.json  
 - Auth: Bearer JWT access token + rotating refresh (`client: "mobile"`)
 
-### Wired today
-- Login / register / logout / session restore (`POST /api/v1/auth/*`, `GET /api/v1/me`)
-- Home → clubs from `/me` grants + `GET /api/v1/clubs/{id}`
-- Members (`/clubs/{id}/members`), schedule occurrences, attendance batch
+### Live app flows (ClubPlatform)
+1. Login → `GET /me` → clubs from grants  
+2. Calendar / home → club **schedule occurrences**  
+3. Session detail → open/locked from **roster-snapshot**  
+4. Take attendance → mark roster → **POST /attendance/batch**  
+5. Report → `GET /occurrences/{id}/attendance`  
+6. Members → `GET /clubs/{id}/members` (+ photo)
 
 ## App icon
 

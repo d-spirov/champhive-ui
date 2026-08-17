@@ -82,6 +82,9 @@ bool statusNeedsNote(AttendanceStatus status) {
       status == AttendanceStatus.excused;
 }
 
+/// New API only has an optional free-text note — never a required reason enum.
+bool statusOffersNote(AttendanceStatus status) => statusNeedsNote(status);
+
 String formatEventTimeRange(DateTime start, DateTime? end) {
   final a = _fmtTime(start);
   if (end == null) return a;

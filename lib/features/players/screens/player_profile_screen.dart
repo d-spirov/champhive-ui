@@ -26,11 +26,11 @@ class PlayerProfileScreen extends ConsumerWidget {
 
     return async.when(
       loading: () => Scaffold(
-        appBar: AppBar(title: const Text('Player Profile')),
+        appBar: AppBar(title: const Text('Member')),
         body: const Center(child: CircularProgressIndicator()),
       ),
       error: (e, _) => Scaffold(
-        appBar: AppBar(title: const Text('Player Profile')),
+        appBar: AppBar(title: const Text('Member')),
         body: Center(
           child: Padding(
             padding: const EdgeInsets.all(24),
@@ -38,7 +38,7 @@ class PlayerProfileScreen extends ConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  apiErrorMessage(e, fallback: 'Could not load player'),
+                  apiErrorMessage(e, fallback: 'Could not load member'),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 12),

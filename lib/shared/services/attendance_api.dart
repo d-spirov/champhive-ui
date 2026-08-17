@@ -7,7 +7,7 @@ class AttendanceApi {
 
   final Dio _dio;
 
-  /// Prefetch call before marking — roster + open/lock window.
+  /// Prefetch before marking — roster + open/lock window.
   Future<AttendanceSession> getRosterSnapshot({
     required String occurrenceId,
   }) async {
@@ -38,14 +38,6 @@ class AttendanceApi {
     );
   }
 
-  /// Legacy-shaped helper used by screens: prefer roster snapshot for marking.
-  Future<AttendanceSession> getAttendance({
-    required String clubId,
-    required String eventId,
-  }) {
-    return getRosterSnapshot(occurrenceId: eventId);
-  }
-
   Future<AttendanceBatchResult> saveBatch({
     required List<Map<String, dynamic>> entries,
   }) async {
@@ -65,35 +57,56 @@ class AttendanceApi {
     return AttendanceBatchResult.fromJson(Map<String, dynamic>.from(raw));
   }
 
-  Future<AttendanceSession> saveAttendance({
-    required String clubId,
-    required String eventId,
+  /// Posts one or more marks to `POST /api/v1/attendance/batch`, then refreshes
+  /// the roster snapshot so the UI matches server truth.
+  Future<AttendanceSaveResult> saveAttendance({
+    required String occurrenceId,
     required List<AttendanceUpdate> updates,
   }) async {
     final entries = updates
         .where((u) => u.status.isMarkable)
-        .map((u) => u.toBatchEntry(occurrenceId: eventId))
+        .map((u) => u.toBatchEntry(occurrenceId: occurrenceId))
         .toList();
     if (entries.isEmpty) {
-      throw StateError('Mark at least one player before saving.');
+      throw StateError('Mark at least one member before saving.');
     }
 
     final batch = await saveBatch(entries: entries);
     if (batch.hasRejects) {
-      final firstReject = batch.results.cast<AttendanceEntryResult?>().firstWhere(
-            (r) => r?.outcome == 'rejected',
-            orElse: () => null,
-          );
-      final reason = firstReject?.reason;
+      final rejected = batch.results.where((r) => r.outcome == 'rejected');
+      final first = rejected.isEmpty ? null : rejected.first;
+      final reason = first?.reason;
       throw StateError(
         reason != null && reason.isNotEmpty
-            ? 'Some marks were rejected ($reason).'
-            : 'Some attendance marks were rejected.',
+            ? 'Could not save mark ($reason).'
+            : 'Could not save attendance mark.',
       );
     }
 
-    // Re-fetch roster so the saved screen / UI sees server truth.
-    return getRosterSnapshot(occurrenceId: eventId);
+    final session = await getRosterSnapshot(occurrenceId: occurrenceId);
+    return AttendanceSaveResult(batch: batch, session: session);
+  }
+
+  /// Convenience: persist a single member status immediately.
+  Future<AttendanceSaveResult> saveMemberStatus({
+    required String occurrenceId,
+    required String memberId,
+    required AttendanceStatus status,
+    String? note,
+    DateTime? recordedAtClientUtc,
+  }) {
+    return saveAttendance(
+      occurrenceId: occurrenceId,
+      updates: [
+        AttendanceUpdate(
+          participantId: memberId,
+          status: status,
+          note: note,
+          recordedAtClientUtc: recordedAtClientUtc ?? DateTime.now().toUtc(),
+          clientRecordId: newClientRecordId(),
+        ),
+      ],
+    );
   }
 
   AttendanceSession _parseRoster(Response<dynamic> response) {

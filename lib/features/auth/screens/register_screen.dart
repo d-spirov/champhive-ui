@@ -18,7 +18,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _emailController = TextEditingController();
-  final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmController = TextEditingController();
   bool _obscure = true;
@@ -28,7 +27,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     _firstNameController.dispose();
     _lastNameController.dispose();
     _emailController.dispose();
-    _phoneController.dispose();
     _passwordController.dispose();
     _confirmController.dispose();
     super.dispose();
@@ -41,7 +39,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
           password: _passwordController.text,
           firstName: _firstNameController.text.trim(),
           lastName: _lastNameController.text.trim(),
-          phone: _phoneController.text.trim(),
         );
     if (!mounted) return;
     if (ok) {
@@ -99,12 +96,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         if (!v.contains('@')) return 'Please enter a valid email';
                         return null;
                       },
-                    ),
-                    const SizedBox(height: 12),
-                    TextFormField(
-                      controller: _phoneController,
-                      keyboardType: TextInputType.phone,
-                      decoration: const InputDecoration(labelText: 'Phone'),
                     ),
                     const SizedBox(height: 12),
                     TextFormField(
@@ -172,7 +163,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'By continuing you agree to TeamHive terms.',
+                      'Accounts are normally created via invite. Sign-up may be ops-only on this API.',
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: AppColors.lightMuted,

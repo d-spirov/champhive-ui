@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'features/attendance/screens/attendance_history_screen.dart';
+import 'features/attendance/screens/attendance_report_screen.dart';
 import 'features/attendance/screens/attendance_saved_screen.dart';
 import 'features/attendance/screens/mark_attendance_screen.dart';
 import 'features/auth/providers/auth_provider.dart';
@@ -119,39 +120,81 @@ class _AppState extends ConsumerState<App> {
           ),
         ),
         GoRoute(
-          path: '/players',
+          path: '/members',
           builder: (context, state) => const PlayersListScreen(),
         ),
         GoRoute(
-          path: '/players/:playerId',
+          path: '/members/:memberId',
           builder: (context, state) => PlayerProfileScreen(
-            playerId: state.pathParameters['playerId']!,
+            playerId: state.pathParameters['memberId']!,
           ),
+        ),
+        // Legacy aliases
+        GoRoute(
+          path: '/players',
+          redirect: (context, state) => '/members',
+        ),
+        GoRoute(
+          path: '/players/:playerId',
+          redirect: (context, state) =>
+              '/members/${state.pathParameters['playerId']}',
         ),
         GoRoute(
           path: '/statistics',
           builder: (context, state) => const StatisticsScreen(),
         ),
         GoRoute(
-          path: '/events/:eventId',
+          path: '/occurrences/:occurrenceId',
           builder: (context, state) => EventDetailScreen(
-            eventId: state.pathParameters['eventId']!,
+            eventId: state.pathParameters['occurrenceId']!,
           ),
           routes: [
             GoRoute(
               path: 'attendance',
               builder: (context, state) => MarkAttendanceScreen(
-                eventId: state.pathParameters['eventId']!,
+                eventId: state.pathParameters['occurrenceId']!,
               ),
               routes: [
                 GoRoute(
                   path: 'saved',
-                  builder: (context, state) => AttendanceSavedScreen(
-                    eventId: state.pathParameters['eventId']!,
-                    session: state.extra is AttendanceSession
-                        ? state.extra as AttendanceSession
-                        : null,
+                  builder: (context, state) {
+                    final extra = state.extra;
+                    return AttendanceSavedScreen(
+                      eventId: state.pathParameters['occurrenceId']!,
+                      result: extra is AttendanceSaveResult ? extra : null,
+                      session: extra is AttendanceSession ? extra : null,
+                    );
+                  },
+                ),
+                GoRoute(
+                  path: 'report',
+                  builder: (context, state) => AttendanceReportScreen(
+                    occurrenceId: state.pathParameters['occurrenceId']!,
                   ),
+                ),
+              ],
+            ),
+          ],
+        ),
+        GoRoute(
+          path: '/events/:eventId',
+          redirect: (context, state) =>
+              '/occurrences/${state.pathParameters['eventId']}',
+          routes: [
+            GoRoute(
+              path: 'attendance',
+              redirect: (context, state) =>
+                  '/occurrences/${state.pathParameters['eventId']}/attendance',
+              routes: [
+                GoRoute(
+                  path: 'saved',
+                  redirect: (context, state) =>
+                      '/occurrences/${state.pathParameters['eventId']}/attendance/saved',
+                ),
+                GoRoute(
+                  path: 'report',
+                  redirect: (context, state) =>
+                      '/occurrences/${state.pathParameters['eventId']}/attendance/report',
                 ),
               ],
             ),

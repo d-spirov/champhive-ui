@@ -9,21 +9,27 @@ class AttendanceSavedScreen extends StatelessWidget {
   const AttendanceSavedScreen({
     super.key,
     required this.eventId,
+    this.result,
     this.session,
   });
 
   final String eventId;
+  final AttendanceSaveResult? result;
   final AttendanceSession? session;
 
   @override
   Widget build(BuildContext context) {
-    final summary = session?.summary ?? const AttendanceSummaryCounts();
+    final summary =
+        result?.session.summary ?? session?.summary ?? const AttendanceSummaryCounts();
+    final batch = result?.batch;
+    final rejected = batch?.rejected ?? 0;
+    final applied = (batch?.applied ?? 0) + (batch?.alreadyApplied ?? 0);
 
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.close_rounded),
-          onPressed: () => context.go('/events/$eventId'),
+          onPressed: () => context.go('/occurrences/$eventId'),
         ),
       ),
       body: SafeArea(
@@ -36,45 +42,32 @@ class AttendanceSavedScreen extends StatelessWidget {
                 width: 120,
                 height: 120,
                 decoration: BoxDecoration(
-                  color: AppColors.present.withValues(alpha: 0.15),
+                  color: (rejected > 0 ? AppColors.late : AppColors.present)
+                      .withValues(alpha: 0.15),
                   shape: BoxShape.circle,
                 ),
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Icon(
-                      Icons.sports_basketball_rounded,
-                      size: 56,
-                      color: AppColors.training,
-                    ),
-                    Positioned(
-                      right: 18,
-                      bottom: 18,
-                      child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: const BoxDecoration(
-                          color: AppColors.present,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.check_rounded,
-                          color: Colors.white,
-                          size: 18,
-                        ),
-                      ),
-                    ),
-                  ],
+                child: Icon(
+                  rejected > 0
+                      ? Icons.warning_amber_rounded
+                      : Icons.check_circle_rounded,
+                  size: 64,
+                  color: rejected > 0 ? AppColors.late : AppColors.present,
                 ),
               ),
               const SizedBox(height: 28),
               Text(
-                'Attendance Saved!',
+                rejected > 0 ? 'Attendance partially synced' : 'Attendance synced',
                 style: Theme.of(context).textTheme.headlineSmall,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 10),
               Text(
-                'Training attendance has been successfully recorded.',
+                batch == null
+                    ? 'Marks were sent to the club platform.'
+                    : rejected > 0
+                        ? '$applied applied · $rejected rejected'
+                            '${batch.supersededByNewer > 0 ? ' · ${batch.supersededByNewer} superseded' : ''}'
+                        : '$applied mark${applied == 1 ? '' : 's'} applied to the server.',
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       color: Theme.of(context)
                           .colorScheme
@@ -107,13 +100,18 @@ class AttendanceSavedScreen extends StatelessWidget {
               ),
               const Spacer(),
               FilledButton(
-                onPressed: () => context.go('/events/$eventId'),
-                child: const Text('Done'),
+                onPressed: () => context.go('/occurrences/$eventId'),
+                child: const Text('Back to session'),
               ),
               const SizedBox(height: 8),
               TextButton(
+                onPressed: () =>
+                    context.push('/occurrences/$eventId/attendance/report'),
+                child: const Text('View report'),
+              ),
+              TextButton(
                 onPressed: () => context.push('/attendance/history'),
-                child: const Text('View Attendance History'),
+                child: const Text('Attendance history'),
               ),
             ],
           ),

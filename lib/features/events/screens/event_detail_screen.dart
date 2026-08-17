@@ -16,14 +16,17 @@ void popOrGoHome(BuildContext context) {
   }
 }
 
+/// Schedule occurrence detail (ClubPlatform).
 class EventDetailScreen extends ConsumerWidget {
   const EventDetailScreen({super.key, required this.eventId});
 
+  /// Opaque occurrence id.
   final String eventId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final async = ref.watch(eventDetailProvider(eventId));
+    final rosterAsync = ref.watch(attendanceSessionProvider(eventId));
 
     return async.when(
       loading: () => Scaffold(
@@ -32,7 +35,7 @@ class EventDetailScreen extends ConsumerWidget {
             icon: const Icon(Icons.arrow_back_rounded),
             onPressed: () => popOrGoHome(context),
           ),
-          title: const Text('Event'),
+          title: const Text('Session'),
         ),
         body: const Center(child: CircularProgressIndicator()),
       ),
@@ -42,29 +45,47 @@ class EventDetailScreen extends ConsumerWidget {
             icon: const Icon(Icons.arrow_back_rounded),
             onPressed: () => popOrGoHome(context),
           ),
-          title: const Text('Event'),
+          title: const Text('Session'),
         ),
         body: _ErrorBody(
-          message: apiErrorMessage(e, fallback: 'Could not load event'),
+          message: apiErrorMessage(e, fallback: 'Could not load session'),
           onRetry: () => ref.invalidate(eventDetailProvider(eventId)),
         ),
       ),
-      data: (event) => Scaffold(
-        body: _EventDetailBody(event: event),
+      data: (occurrence) => Scaffold(
+        body: _OccurrenceBody(
+          occurrence: occurrence,
+          roster: rosterAsync.valueOrNull,
+          onRetryRoster: () =>
+              ref.invalidate(attendanceSessionProvider(eventId)),
+        ),
       ),
     );
   }
 }
 
-class _EventDetailBody extends StatelessWidget {
-  const _EventDetailBody({required this.event});
+class _OccurrenceBody extends StatelessWidget {
+  const _OccurrenceBody({
+    required this.occurrence,
+    required this.roster,
+    required this.onRetryRoster,
+  });
 
-  final ClubEvent event;
+  final ClubEvent occurrence;
+  final AttendanceSession? roster;
+  final VoidCallback onRetryRoster;
 
   @override
   Widget build(BuildContext context) {
-    final color = clubEventTypeColor(event.type);
-    final teams = event.teams.isEmpty ? null : event.teams.join(', ');
+    final color = clubEventTypeColor(occurrence.type);
+    final scope = occurrence.scopeName ??
+        (occurrence.teams.isEmpty ? null : occurrence.teams.join(', '));
+    final canceled = (occurrence.status ?? '').toLowerCase() == 'canceled';
+    final snapshot = roster;
+    final open = snapshot?.canMark ?? false;
+    final lockLabel = snapshot?.lockStatusLabel ??
+        (canceled ? 'Canceled' : 'Loading attendance status…');
+    final lockAt = snapshot?.attendanceLockAtUtc;
 
     return CustomScrollView(
       slivers: [
@@ -111,13 +132,40 @@ class _EventDetailBody extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  event.title.isNotEmpty ? event.title : event.type.label,
+                  occurrence.title.isNotEmpty
+                      ? occurrence.title
+                      : occurrence.type.label,
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
-                if (teams != null) ...[
-                  const SizedBox(height: 6),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    Chip(
+                      label: Text(occurrence.type.label),
+                      visualDensity: VisualDensity.compact,
+                    ),
+                    if (occurrence.status != null)
+                      Chip(
+                        label: Text(occurrence.status!),
+                        visualDensity: VisualDensity.compact,
+                      ),
+                    Chip(
+                      avatar: Icon(
+                        open ? Icons.lock_open_rounded : Icons.lock_rounded,
+                        size: 16,
+                        color: open ? AppColors.present : AppColors.absent,
+                      ),
+                      label: Text(lockLabel),
+                      visualDensity: VisualDensity.compact,
+                    ),
+                  ],
+                ),
+                if (scope != null) ...[
+                  const SizedBox(height: 10),
                   Text(
-                    teams,
+                    scope,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           color: Theme.of(context).colorScheme.primary,
                         ),
@@ -126,26 +174,41 @@ class _EventDetailBody extends StatelessWidget {
                 const SizedBox(height: 20),
                 _MetaRow(
                   icon: Icons.calendar_today_outlined,
-                  label: formatEventDate(event.startAt),
+                  label: formatEventDate(occurrence.startAt),
                 ),
                 _MetaRow(
                   icon: Icons.schedule_outlined,
-                  label: formatEventTimeRange(event.startAt, event.endAt),
+                  label: formatEventTimeRange(
+                    occurrence.startAt,
+                    occurrence.endAt,
+                  ),
                 ),
                 _MetaRow(
                   icon: Icons.place_outlined,
-                  label: event.location.display,
+                  label: occurrence.location.display,
                 ),
-                if (event.description != null &&
-                    event.description!.trim().isNotEmpty) ...[
+                if (occurrence.timezone != null &&
+                    occurrence.timezone!.isNotEmpty)
+                  _MetaRow(
+                    icon: Icons.public_outlined,
+                    label: occurrence.timezone!,
+                  ),
+                if (lockAt != null)
+                  _MetaRow(
+                    icon: Icons.timer_outlined,
+                    label:
+                        'Marks accepted until ${formatEventDate(lockAt)} · ${formatEventTimeRange(lockAt, null)}',
+                  ),
+                if (occurrence.description != null &&
+                    occurrence.description!.trim().isNotEmpty) ...[
                   const SizedBox(height: 16),
                   Text(
-                    'Focus',
+                    'Notes',
                     style: Theme.of(context).textTheme.titleSmall,
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    event.description!,
+                    occurrence.description!,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: Theme.of(context)
                               .colorScheme
@@ -155,21 +218,54 @@ class _EventDetailBody extends StatelessWidget {
                   ),
                 ],
                 const SizedBox(height: 28),
+                if (!canceled && open)
+                  _ActionTile(
+                    icon: Icons.how_to_reg_rounded,
+                    title: 'Take attendance',
+                    subtitle: snapshot == null
+                        ? 'Load roster and mark members'
+                        : '${snapshot.participants.length} on roster · tap to mark',
+                    color: AppColors.training,
+                    onTap: () => context.push(
+                      '/occurrences/${occurrence.id}/attendance',
+                    ),
+                  )
+                else if (!canceled)
+                  _ActionTile(
+                    icon: Icons.lock_rounded,
+                    title: 'Attendance locked',
+                    subtitle:
+                        'View the report, or ask an admin to reopen temporarily',
+                    color: AppColors.meeting,
+                    onTap: () => context.push(
+                      '/occurrences/${occurrence.id}/attendance/report',
+                    ),
+                  ),
+                const SizedBox(height: 12),
                 _ActionTile(
-                  icon: Icons.how_to_reg_rounded,
-                  title: 'Mark Attendance',
-                  subtitle: 'Record who showed up',
-                  color: AppColors.training,
-                  onTap: () => context.push('/events/${event.id}/attendance'),
+                  icon: Icons.assignment_outlined,
+                  title: 'Attendance report',
+                  subtitle: 'Roster with present / late / absent / excused',
+                  color: AppColors.match,
+                  onTap: () => context.push(
+                    '/occurrences/${occurrence.id}/attendance/report',
+                  ),
                 ),
                 const SizedBox(height: 12),
                 _ActionTile(
                   icon: Icons.history_rounded,
-                  title: 'Attendance History',
-                  subtitle: 'Past sessions for this club',
+                  title: 'Attendance history',
+                  subtitle: 'Past and open sessions for this club',
                   color: AppColors.meeting,
                   onTap: () => context.push('/attendance/history'),
                 ),
+                if (snapshot == null) ...[
+                  const SizedBox(height: 16),
+                  TextButton(
+                    onPressed: onRetryRoster,
+                    child: const Text('Refresh attendance status'),
+                  ),
+                ],
               ],
             ),
           ),
