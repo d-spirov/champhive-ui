@@ -1,49 +1,40 @@
-import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
-import 'package:dio_cookie_manager/dio_cookie_manager.dart';
-import 'package:flutter/foundation.dart';
-import 'package:path_provider/path_provider.dart';
 
 import '../models/user.dart';
 import 'api_client.dart';
-import 'auth_api_stub.dart'
-    if (dart.library.html) 'auth_api_web.dart'
-    if (dart.library.io) 'auth_api_io.dart';
-import 'csrf_interceptor.dart';
+import 'auth_interceptor.dart';
+import 'token_store.dart';
 
-/// Auth against ChampHive cookie session (`champhive_at` + `champhive_rt`).
+/// Auth against TeamHive ClubPlatform Bearer JWT.
 ///
-/// Login/register return [User] in the body; tokens are HttpOnly cookies.
-/// Mutating calls need CSRF (`XSRF-TOKEN` → `X-XSRF-TOKEN`).
+/// Mobile must send `client: "mobile"` so refresh tokens are returned in the body.
 class AuthApi {
-  AuthApi(this._dio, {this.cookieJar});
+  AuthApi(this._dio, this._tokenStore);
 
   final Dio _dio;
-  final CookieJar? cookieJar;
+  final TokenStore _tokenStore;
 
-  static Future<AuthApi> create() async {
+  static Future<AuthApi> create({
+    required Future<void> Function() onSessionExpired,
+  }) async {
+    final tokenStore = await TokenStore.create();
     final dio = createApiDio();
-    configureAuthHttpClient(dio);
 
-    CookieJar? jar;
-    if (!kIsWeb) {
-      final dir = await getApplicationSupportDirectory();
-      jar = PersistCookieJar(
-        storage: FileStorage('${dir.path}/cookies'),
-      );
-      dio.interceptors.add(CookieManager(jar));
-    }
-
-    dio.interceptors.add(CsrfInterceptor(dio, cookieJar: jar));
-    return AuthApi(dio, cookieJar: jar);
+    late final AuthApi api;
+    api = AuthApi(dio, tokenStore);
+    dio.interceptors.add(
+      AuthInterceptor(
+        dio: dio,
+        tokenStore: tokenStore,
+        refreshTokens: api._refreshPair,
+        onSessionExpired: onSessionExpired,
+      ),
+    );
+    return api;
   }
 
   Dio get dio => _dio;
-
-  /// Ensures the CSRF cookie exists (safe to call before login).
-  Future<void> ensureCsrf() async {
-    await _dio.get<void>('/api/v1/auth/csrf');
-  }
+  TokenStore get tokenStore => _tokenStore;
 
   Future<User> login({
     required String email,
@@ -54,14 +45,11 @@ class AuthApi {
       data: {
         'email': email,
         'password': password,
+        'client': apiClientMobile,
       },
-      options: Options(
-        headers: const {
-          'User-Agent': 'TeamHive/1.0 (Flutter)',
-        },
-      ),
     );
-    return _requireUser(response);
+    await _persistTokens(response);
+    return currentUser();
   }
 
   Future<User> register({
@@ -69,54 +57,88 @@ class AuthApi {
     required String password,
     required String firstName,
     required String lastName,
-    String? phone,
+    String locale = 'en',
   }) async {
-    final response = await _dio.post<dynamic>(
+    await _dio.post<dynamic>(
       '/api/v1/auth/register',
       data: {
         'email': email,
         'password': password,
         'firstName': firstName,
         'lastName': lastName,
-        if (phone != null && phone.isNotEmpty) 'phone': phone,
+        'locale': locale,
       },
-      options: Options(
-        headers: const {
-          'User-Agent': 'TeamHive/1.0 (Flutter)',
-        },
-      ),
     );
-    return _requireUser(response);
+    // Register may not return tokens — log in immediately for mobile UX.
+    return login(email: email, password: password);
   }
 
   Future<void> refresh() async {
-    await _dio.post<dynamic>(
+    final pair = await _refreshPair();
+    if (pair == null) {
+      throw StateError('Session expired');
+    }
+  }
+
+  Future<TokenPair?> _refreshPair() async {
+    final refresh = _tokenStore.refreshToken;
+    if (refresh == null || refresh.isEmpty) return null;
+
+    final response = await _dio.post<dynamic>(
       '/api/v1/auth/refresh',
-      options: Options(
-        headers: const {
-          'User-Agent': 'TeamHive/1.0 (Flutter)',
-        },
-      ),
+      data: {
+        'refreshToken': refresh,
+        'client': apiClientMobile,
+      },
     );
+    return _persistTokens(response);
   }
 
   Future<void> logout() async {
     try {
-      await _dio.post<dynamic>('/api/v1/auth/logout');
+      await _dio.post<dynamic>(
+        '/api/v1/auth/logout',
+        data: {
+          'refreshToken': _tokenStore.refreshToken,
+        },
+      );
     } catch (_) {
-      // Best-effort — local session is cleared by the caller either way.
+      // Best-effort — local tokens are cleared by the caller either way.
     }
   }
 
   Future<User> currentUser() async {
-    final response = await _dio.get<dynamic>('/api/v1/users/me');
+    final response = await _dio.get<dynamic>('/api/v1/me');
     return _requireUser(response);
   }
 
-  Future<void> clearCookies() async {
-    final jar = cookieJar;
-    if (jar == null) return;
-    await jar.deleteAll();
+  Future<void> clearTokens() => _tokenStore.clear();
+
+  Future<TokenPair> _persistTokens(Response<dynamic> response) async {
+    final raw = response.data;
+    if (raw is! Map) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        type: DioExceptionType.badResponse,
+        response: response,
+        message: 'Empty token response',
+      );
+    }
+    final pair = TokenPair.fromJson(Map<String, dynamic>.from(raw));
+    if (pair.accessToken.isEmpty) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        type: DioExceptionType.badResponse,
+        response: response,
+        message: 'Missing access token',
+      );
+    }
+    await _tokenStore.save(
+      accessToken: pair.accessToken,
+      accessTokenExpiresAtUtc: pair.accessTokenExpiresAtUtc,
+      refreshToken: pair.refreshToken,
+    );
+    return pair;
   }
 
   User _requireUser(Response<dynamic> response) {
@@ -126,9 +148,9 @@ class AuthApi {
         requestOptions: response.requestOptions,
         type: DioExceptionType.badResponse,
         response: response,
-        message: 'Empty auth response',
+        message: 'Empty me response',
       );
     }
-    return User.fromJson(Map<String, dynamic>.from(raw));
+    return User.fromMeJson(Map<String, dynamic>.from(raw));
   }
 }

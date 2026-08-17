@@ -9,6 +9,8 @@ class ClubSummary {
     this.status,
     this.currentUserRoles = const [],
     this.hasLogo = false,
+    this.logoUrl,
+    this.timeZone,
   });
 
   final String id;
@@ -20,9 +22,12 @@ class ClubSummary {
   final String? status;
   final List<String> currentUserRoles;
   final bool hasLogo;
+  final String? logoUrl;
+  final String? timeZone;
 
   factory ClubSummary.fromJson(Map<String, dynamic> json) {
     final roles = json['currentUserRoles'];
+    final logoUrl = json['logoUrl'] as String?;
     return ClubSummary(
       id: json['id']?.toString() ?? '',
       name: json['name'] as String? ?? '',
@@ -34,7 +39,23 @@ class ClubSummary {
       currentUserRoles: roles is List
           ? roles.map((e) => e.toString()).toList()
           : const [],
-      hasLogo: json['hasLogo'] as bool? ?? false,
+      logoUrl: logoUrl,
+      hasLogo: json['hasLogo'] as bool? ??
+          (logoUrl != null && logoUrl.isNotEmpty),
+      timeZone: json['timeZone'] as String? ?? json['timezone'] as String?,
+    );
+  }
+
+  factory ClubSummary.fromClub(Club club, {List<String> roles = const []}) {
+    return ClubSummary(
+      id: club.id,
+      name: club.name,
+      city: club.city,
+      countryCode: club.countryCode,
+      currentUserRoles: roles.isNotEmpty ? roles : club.currentUserRoles,
+      logoUrl: club.logoUrl,
+      hasLogo: club.hasLogo,
+      timeZone: club.timezone,
     );
   }
 }
@@ -54,6 +75,9 @@ class Club {
     this.status,
     this.currentUserRoles = const [],
     this.hasLogo = false,
+    this.logoUrl,
+    this.address,
+    this.defaultLocale,
     this.createdAt,
     this.updatedAt,
   });
@@ -71,11 +95,15 @@ class Club {
   final String? status;
   final List<String> currentUserRoles;
   final bool hasLogo;
+  final String? logoUrl;
+  final String? address;
+  final String? defaultLocale;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
   factory Club.fromJson(Map<String, dynamic> json) {
     final roles = json['currentUserRoles'];
+    final logoUrl = json['logoUrl'] as String?;
     return Club(
       id: json['id']?.toString() ?? '',
       name: json['name'] as String? ?? '',
@@ -83,17 +111,22 @@ class Club {
       sportType: json['sportType'] as String?,
       countryCode: json['countryCode'] as String?,
       city: json['city'] as String?,
-      timezone: json['timezone'] as String?,
-      currency: json['currency'] as String?,
-      contactEmail: json['contactEmail'] as String?,
-      contactPhone: json['contactPhone'] as String?,
+      timezone: json['timeZone'] as String? ?? json['timezone'] as String?,
+      currency:
+          json['defaultCurrency'] as String? ?? json['currency'] as String?,
+      contactEmail: json['email'] as String? ?? json['contactEmail'] as String?,
+      contactPhone: json['phone'] as String? ?? json['contactPhone'] as String?,
       status: json['status'] as String?,
       currentUserRoles: roles is List
           ? roles.map((e) => e.toString()).toList()
           : const [],
-      hasLogo: json['hasLogo'] as bool? ?? false,
-      createdAt: _parseDate(json['createdAt']),
-      updatedAt: _parseDate(json['updatedAt']),
+      logoUrl: logoUrl,
+      hasLogo: json['hasLogo'] as bool? ??
+          (logoUrl != null && logoUrl.isNotEmpty),
+      address: json['address'] as String?,
+      defaultLocale: json['defaultLocale'] as String?,
+      createdAt: _parseDate(json['createdAtUtc'] ?? json['createdAt']),
+      updatedAt: _parseDate(json['updatedAtUtc'] ?? json['updatedAt']),
     );
   }
 

@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,18 +13,11 @@ const _emailKey = 'auth_email';
 const _demoKey = 'auth_demo_mode';
 const selectedClubPrefsKey = 'selected_club_id';
 
-bool _isAuthPath(String path) {
-  final p = path.toLowerCase();
-  return p.contains('/auth/login') ||
-      p.contains('/auth/register') ||
-      p.contains('/auth/refresh') ||
-      p.contains('/auth/logout') ||
-      p.contains('/auth/csrf');
-}
-
-/// Shared AuthApi (owns cookie jar + Dio).
+/// Shared AuthApi (owns Dio + Bearer token store).
 final authApiProvider = FutureProvider<AuthApi>((ref) async {
-  return AuthApi.create();
+  return AuthApi.create(
+    onSessionExpired: () => SessionExpiredHandler.instance.handle(),
+  );
 });
 
 final clubsApiProvider = Provider<ClubsApi>((ref) {
@@ -33,49 +25,8 @@ final clubsApiProvider = Provider<ClubsApi>((ref) {
   if (authApi == null) {
     throw StateError('AuthApi is not ready yet');
   }
-
-  final dio = authApi.dio;
-  // Ensure the session-expired interceptor is only added once.
-  final alreadyWired = dio.interceptors.any((i) => i is _SessionInterceptor);
-  if (!alreadyWired) {
-    dio.interceptors.add(_SessionInterceptor(ref));
-  }
-  return ClubsApi(dio);
+  return ClubsApi(authApi.dio);
 });
-
-class _SessionInterceptor extends Interceptor {
-  _SessionInterceptor(this.ref);
-
-  final Ref ref;
-  bool _refreshing = false;
-
-  @override
-  void onError(DioException err, ErrorInterceptorHandler handler) async {
-    final code = err.response?.statusCode;
-    final path = err.requestOptions.uri.path;
-
-    if (code == 401 && !_isAuthPath(path)) {
-      if (!_refreshing) {
-        _refreshing = true;
-        try {
-          final authApi = await ref.read(authApiProvider.future);
-          await authApi.refresh();
-          final response = await authApi.dio.fetch(err.requestOptions);
-          handler.resolve(response);
-          return;
-        } catch (_) {
-          await SessionExpiredHandler.instance.handle();
-        } finally {
-          _refreshing = false;
-        }
-      } else {
-        await SessionExpiredHandler.instance.handle();
-      }
-    }
-
-    handler.next(err);
-  }
-}
 
 class AuthState {
   const AuthState({
@@ -142,6 +93,21 @@ class AuthNotifier extends StateNotifier<AuthState> {
       }
 
       final api = await _api;
+      if (!api.tokenStore.hasTokens) {
+        await _clearLocalSession();
+        state = state.copyWith(initialized: true, clearUser: true);
+        return;
+      }
+
+      // Prefer refresh when access is expired before hitting /me.
+      if (api.tokenStore.isAccessExpired) {
+        try {
+          await api.refresh();
+        } catch (_) {
+          // Fall through — /me may still work if access is briefly valid.
+        }
+      }
+
       final user = await api.currentUser();
       state = state.copyWith(user: user, initialized: true, clearError: true);
     } catch (e) {
@@ -151,7 +117,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
       await _clearLocalSession();
       try {
         final api = await _api;
-        await api.clearCookies();
+        await api.clearTokens();
       } catch (_) {}
       state = state.copyWith(initialized: true, clearUser: true);
     }
@@ -206,6 +172,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     required String firstName,
     required String lastName,
     String? phone,
+    String locale = 'en',
   }) async {
     state = state.copyWith(isLoading: true, clearError: true);
     try {
@@ -215,7 +182,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
         password: password,
         firstName: firstName,
         lastName: lastName,
-        phone: phone,
+        locale: locale,
       );
       await _markSession(email: email, demo: false);
       state = state.copyWith(
@@ -234,7 +201,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     }
   }
 
-  /// Clears remote session (best-effort), cookies, and local auth flags.
+  /// Clears remote session (best-effort), tokens, and local auth flags.
   Future<void> logout() async {
     final wasDemo = state.user?.id == 'demo';
 
@@ -251,7 +218,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
           if (kDebugMode) debugPrint('[Auth] remote logout failed: $e');
         }
       }
-      await api.clearCookies();
+      await api.clearTokens();
     } catch (e) {
       if (kDebugMode) debugPrint('[Auth] logout cleanup failed: $e');
     }

@@ -1,20 +1,30 @@
 import 'package:dio/dio.dart';
 
 import '../models/club.dart';
+import '../models/user.dart';
 
 class ClubsApi {
   ClubsApi(this._dio);
 
   final Dio _dio;
 
-  Future<List<ClubSummary>> listMyClubs() async {
-    final response = await _dio.get<dynamic>('/api/v1/users/me/clubs');
-    return _parseClubList(response);
-  }
+  /// Resolve the caller's clubs from `/me` grants, then fetch each club card.
+  Future<List<ClubSummary>> listMyClubs(User me) async {
+    final ids = me.clubIds.toList()..sort();
+    if (ids.isEmpty) return const [];
 
-  Future<List<ClubSummary>> listClubs() async {
-    final response = await _dio.get<dynamic>('/api/v1/clubs');
-    return _parseClubList(response);
+    final clubs = <ClubSummary>[];
+    for (final id in ids) {
+      try {
+        final club = await getClub(id);
+        clubs.add(
+          ClubSummary.fromClub(club, roles: me.rolesForClub(id)),
+        );
+      } catch (_) {
+        // Skip clubs the caller can no longer read.
+      }
+    }
+    return clubs;
   }
 
   Future<Club> getClub(String clubId) async {
@@ -29,18 +39,5 @@ class ClubsApi {
       );
     }
     return Club.fromJson(Map<String, dynamic>.from(raw));
-  }
-
-  List<ClubSummary> _parseClubList(Response<dynamic> response) {
-    final raw = response.data;
-    final list = raw is List
-        ? raw
-        : (raw is Map && raw['content'] is List)
-            ? raw['content'] as List
-            : const [];
-    return list
-        .whereType<Map>()
-        .map((e) => ClubSummary.fromJson(Map<String, dynamic>.from(e)))
-        .toList();
   }
 }

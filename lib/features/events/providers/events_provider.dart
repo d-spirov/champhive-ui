@@ -22,7 +22,7 @@ final attendanceApiProvider = Provider<AttendanceApi>((ref) {
   return AttendanceApi(authApi.dio);
 });
 
-/// Upcoming + recent club events for the selected club (last 7 / next 21 days).
+/// Club schedule occurrences for the selected club (last 7 / next 21 days).
 final clubEventsProvider = FutureProvider.autoDispose<List<ClubEvent>>((ref) async {
   final auth = ref.watch(authNotifierProvider);
   if (!auth.isAuthenticated || auth.user?.id == 'demo') {
@@ -73,42 +73,24 @@ final eventDetailProvider =
 
 final attendanceSessionProvider = FutureProvider.autoDispose
     .family<AttendanceSession, String>((ref, eventId) async {
-  final clubId = ref.watch(selectedClubIdProvider);
-  if (clubId == null) {
-    throw StateError('No club selected');
-  }
+  ref.watch(selectedClubIdProvider); // rebuild when club changes
   await ref.watch(authApiProvider.future);
   final api = ref.watch(attendanceApiProvider);
-
-  var session = await api.getAttendance(clubId: clubId, eventId: eventId);
-
-  // Pull active players from the event's team roster into the attendance list.
-  // Backend snapshot is add-only; refresh is safe and picks up new members.
-  final canRefresh = session.canManageParticipants &&
-      session.attendanceEnabled &&
-      session.attendanceState != AttendanceState.finalized;
-  if (canRefresh) {
-    try {
-      session = await api.refreshParticipants(
-        clubId: clubId,
-        eventId: eventId,
-      );
-    } catch (_) {
-      // Keep the GET result if refresh isn't allowed / fails (e.g. meetings).
-    }
-  }
-
-  return session;
+  return api.getRosterSnapshot(occurrenceId: eventId);
 });
 
+/// Upcoming schedule items that can still accept attendance marks.
 final attendanceDashboardProvider =
-    FutureProvider.autoDispose<List<AttendanceEventCard>>((ref) async {
-  final auth = ref.watch(authNotifierProvider);
-  if (!auth.isAuthenticated || auth.user?.id == 'demo') {
-    return const [];
-  }
-  final clubId = ref.watch(selectedClubIdProvider);
-  if (clubId == null) return const [];
-  await ref.watch(authApiProvider.future);
-  return ref.watch(attendanceApiProvider).listDashboardCards(clubId: clubId);
+    FutureProvider.autoDispose<List<ClubEvent>>((ref) async {
+  final events = await ref.watch(clubEventsProvider.future);
+  final now = DateTime.now();
+  return events
+      .where((e) {
+        final status = (e.status ?? '').toLowerCase();
+        if (status == 'canceled') return false;
+        // Show recent + near-future sessions (72h lock window after start).
+        final lockAt = e.startAt.add(const Duration(hours: 72));
+        return lockAt.isAfter(now);
+      })
+      .toList();
 });

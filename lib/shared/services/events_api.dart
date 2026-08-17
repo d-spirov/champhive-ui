@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 
 import '../models/event_attendance.dart';
 
+/// Club schedule of occurrences (replaces the old events list API).
 class EventsApi {
   EventsApi(this._dio);
 
@@ -18,25 +19,23 @@ class EventsApi {
     String sort = 'asc',
   }) async {
     final response = await _dio.get<dynamic>(
-      '/api/v1/clubs/$clubId/events',
+      '/api/v1/clubs/$clubId/schedule',
       queryParameters: {
         if (from != null) 'from': from.toUtc().toIso8601String(),
         if (to != null) 'to': to.toUtc().toIso8601String(),
-        'teamId': ?teamId,
-        'eventType': ?eventType?.apiValue,
-        'page': page,
-        'size': size,
-        'sort': sort,
       },
     );
-    final raw = response.data;
-    final list = raw is Map && raw['content'] is List
-        ? raw['content'] as List
-        : (raw is List ? raw : const []);
-    return list
-        .whereType<Map>()
-        .map((e) => ClubEvent.fromJson(Map<String, dynamic>.from(e)))
-        .toList();
+    var items = _parseOccurrences(response);
+    if (eventType != null) {
+      items = items.where((e) => e.type == eventType).toList();
+    }
+    if (sort == 'desc') {
+      items = items.reversed.toList();
+    }
+    if (size > 0 && items.length > size) {
+      items = items.take(size).toList();
+    }
+    return items;
   }
 
   Future<ClubEvent> getEvent({
@@ -44,7 +43,7 @@ class EventsApi {
     required String eventId,
   }) async {
     final response = await _dio.get<dynamic>(
-      '/api/v1/clubs/$clubId/events/$eventId',
+      '/api/v1/occurrences/$eventId',
     );
     final raw = response.data;
     if (raw is! Map) {
@@ -52,9 +51,20 @@ class EventsApi {
         requestOptions: response.requestOptions,
         type: DioExceptionType.badResponse,
         response: response,
-        message: 'Empty event response',
+        message: 'Empty occurrence response',
       );
     }
-    return ClubEvent.fromJson(Map<String, dynamic>.from(raw));
+    return ClubEvent.fromOccurrenceJson(Map<String, dynamic>.from(raw));
+  }
+
+  List<ClubEvent> _parseOccurrences(Response<dynamic> response) {
+    final raw = response.data;
+    final list = raw is Map && raw['items'] is List
+        ? raw['items'] as List
+        : (raw is List ? raw : const []);
+    return list
+        .whereType<Map>()
+        .map((e) => ClubEvent.fromOccurrenceJson(Map<String, dynamic>.from(e)))
+        .toList();
   }
 }

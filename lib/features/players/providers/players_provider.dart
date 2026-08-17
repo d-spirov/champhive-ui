@@ -31,7 +31,8 @@ final clubPlayersProvider =
   return ref.watch(playersApiProvider).listPlayers(
         clubId: clubId,
         search: search.isEmpty ? null : search,
-        size: 100,
+        status: 'active',
+        pageSize: 100,
       );
 });
 
@@ -48,7 +49,7 @@ final playerDetailProvider =
       );
 });
 
-/// Loads player photo bytes through the authenticated Dio client.
+/// Loads member photo bytes through the authenticated Dio client.
 final playerPhotoProvider =
     FutureProvider.autoDispose.family<Uint8List?, String>((ref, playerId) async {
   final auth = ref.watch(authNotifierProvider);
@@ -59,8 +60,19 @@ final playerPhotoProvider =
   if (clubId == null) return null;
 
   await ref.watch(authApiProvider.future);
+  String? photoUrl;
+  final listed = ref.watch(clubPlayersProvider).valueOrNull;
+  if (listed != null) {
+    for (final p in listed) {
+      if (p.id == playerId) {
+        photoUrl = p.photoUrl;
+        break;
+      }
+    }
+  }
   return ref.watch(playersApiProvider).getPhotoBytes(
         clubId: clubId,
         playerId: playerId,
+        photoUrl: photoUrl,
       );
 });

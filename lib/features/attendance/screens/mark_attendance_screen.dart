@@ -120,21 +120,33 @@ class _MarkAttendanceScreenState extends ConsumerState<MarkAttendanceScreen>
     final draft = _draft;
     if (baseline == null || draft == null || _saving) return;
 
-    // Capture marks before any API call — opening attendance must not wipe them.
+    if (!baseline.canMark ||
+        baseline.attendanceState != AttendanceState.open) {
+      setState(() {
+        _localError =
+            'Attendance is locked for this session. An admin can temporarily reopen it.';
+      });
+      return;
+    }
+
+    final nowUtc = DateTime.now().toUtc();
     final updates = <AttendanceUpdate>[];
     for (final original in baseline.participants) {
       final edited = draft[original.id];
       if (edited == null) continue;
+      if (!edited.status.isMarkable) continue;
       final changed = edited.status != original.status ||
           edited.reason != original.reason ||
           (edited.note ?? '') != (original.note ?? '');
       if (!changed) continue;
       updates.add(
         AttendanceUpdate(
-          participantId: edited.id,
+          participantId: edited.memberId,
           status: edited.status,
           reason: statusNeedsNote(edited.status) ? edited.reason : null,
           note: edited.note,
+          recordedAtClientUtc: nowUtc,
+          clientRecordId: newClientRecordId(),
         ),
       );
     }
@@ -157,51 +169,6 @@ class _MarkAttendanceScreenState extends ConsumerState<MarkAttendanceScreen>
         throw StateError('No club selected');
       }
       final api = ref.read(attendanceApiProvider);
-
-      var state = baseline.attendanceState;
-      if (state == AttendanceState.notOpen) {
-        if (!baseline.canOpen) {
-          throw StateError(
-            'Attendance is not open yet. An admin or head coach must open it first.',
-          );
-        }
-        final opened = await api.openAttendance(
-          clubId: clubId,
-          eventId: widget.eventId,
-        );
-        // Keep local marks; only refresh session metadata.
-        if (mounted) {
-          setState(() {
-            _session = AttendanceSession(
-              eventId: opened.eventId,
-              title: opened.title,
-              type: opened.type,
-              startAt: opened.startAt,
-              attendanceState: opened.attendanceState,
-              summary: opened.summary,
-              participants: baseline.participants,
-              canMark: opened.canMark,
-              canFinalize: opened.canFinalize,
-              canOpen: opened.canOpen,
-              canManageParticipants: opened.canManageParticipants,
-              attendanceEnabled: opened.attendanceEnabled,
-              timezone: opened.timezone,
-              allDay: opened.allDay,
-            );
-          });
-        }
-        state = opened.attendanceState;
-      }
-
-      if (state == AttendanceState.notOpen) {
-        throw StateError('Attendance is not open for marking yet.');
-      }
-      if (state == AttendanceState.finalized) {
-        throw StateError(
-          'Attendance is finalized. An administrator must reopen it.',
-        );
-      }
-
       final saved = await api.saveAttendance(
         clubId: clubId,
         eventId: widget.eventId,
@@ -318,18 +285,17 @@ class _MarkAttendanceScreenState extends ConsumerState<MarkAttendanceScreen>
                   children: [
                     _PlayersTab(
                       players: players,
-                      canMark: session.canMark ||
-                          (session.attendanceState == AttendanceState.notOpen &&
-                              session.canOpen),
+                      canMark: session.canMark,
                       onTap: _pickStatus,
-                      canRefresh: session.canManageParticipants &&
-                          session.attendanceEnabled &&
-                          session.attendanceState != AttendanceState.finalized,
+                      canRefresh: true,
                       onRefresh: () => ref.invalidate(
                         attendanceSessionProvider(widget.eventId),
                       ),
                       attendanceEnabled: session.attendanceEnabled,
-                      teamNames: event?.teams ?? const [],
+                      teamNames: event?.teams ??
+                          (session.scopeName != null
+                              ? [session.scopeName!]
+                              : const []),
                     ),
                     _SummaryTab(players: players, counts: counts),
                   ],
@@ -338,11 +304,7 @@ class _MarkAttendanceScreenState extends ConsumerState<MarkAttendanceScreen>
               _StickyFooter(
                 counts: counts,
                 saving: _saving,
-                enabled: !_saving &&
-                    (session.canMark ||
-                        session.canOpen ||
-                        (_session?.canMark ?? false) ||
-                        (_session?.canOpen ?? false)),
+                enabled: !_saving && session.canMark,
                 onSave: _save,
               ),
             ],

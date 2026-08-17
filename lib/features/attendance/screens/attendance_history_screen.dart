@@ -59,7 +59,7 @@ class _AttendanceHistoryScreenState
           indicatorColor: Theme.of(context).colorScheme.primary,
           tabs: const [
             Tab(text: 'By Date'),
-            Tab(text: 'Hub'),
+            Tab(text: 'Open'),
           ],
         ),
       ),
@@ -117,38 +117,40 @@ class _AttendanceHistoryScreenState
           dashAsync.when(
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (e, _) => _Error(
-              message: apiErrorMessage(e, fallback: 'Could not load dashboard'),
+              message: apiErrorMessage(e, fallback: 'Could not load schedule'),
               onRetry: () => ref.invalidate(attendanceDashboardProvider),
             ),
-            data: (cards) {
-              if (cards.isEmpty) {
+            data: (events) {
+              if (events.isEmpty) {
                 return const Center(
                   child: Text('Nothing needs attendance action right now.'),
                 );
               }
               return ListView.separated(
                 padding: const EdgeInsets.all(16),
-                itemCount: cards.length,
+                itemCount: events.length,
                 separatorBuilder: (_, _) => const SizedBox(height: 10),
                 itemBuilder: (context, index) {
-                  final card = cards[index];
+                  final event = events[index];
                   return Card(
                     child: ListTile(
                       leading: CircleAvatar(
-                        backgroundColor:
-                            clubEventTypeColor(card.type).withValues(alpha: 0.15),
+                        backgroundColor: clubEventTypeColor(event.type)
+                            .withValues(alpha: 0.15),
                         child: Icon(
-                          clubEventTypeIcon(card.type),
-                          color: clubEventTypeColor(card.type),
+                          clubEventTypeIcon(event.type),
+                          color: clubEventTypeColor(event.type),
                         ),
                       ),
-                      title: Text(card.title),
+                      title: Text(
+                        event.title.isNotEmpty ? event.title : event.type.label,
+                      ),
                       subtitle: Text(
-                        '${formatEventDate(card.startAt)} · ${card.marked}/${card.total} marked',
+                        '${formatEventDate(event.startAt)} · ${formatEventTimeRange(event.startAt, event.endAt)}',
                       ),
                       trailing: const Icon(Icons.chevron_right_rounded),
                       onTap: () =>
-                          context.push('/events/${card.eventId}/attendance'),
+                          context.push('/events/${event.id}/attendance'),
                     ),
                   );
                 },

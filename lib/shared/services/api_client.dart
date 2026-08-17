@@ -1,8 +1,11 @@
 import 'package:dio/dio.dart';
 
-/// ChampHive / TeamHive backend.
-/// Swagger: https://backend-production-785b.up.railway.app/swagger-ui/index.html
-const String apiBaseUrl = 'https://backend-production-785b.up.railway.app';
+/// TeamHive ClubPlatform API.
+/// Docs: https://api.champhive.app/scalar/v1
+/// OpenAPI: https://api.champhive.app/openapi/v1.json
+const String apiBaseUrl = 'https://api.champhive.app';
+
+const String apiClientMobile = 'mobile';
 
 String apiPath(String path) {
   if (path.startsWith('http')) return path;
@@ -20,6 +23,7 @@ Dio createApiDio({List<Interceptor> interceptors = const []}) {
       headers: const {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
+        'User-Agent': 'TeamHive/1.0 (Flutter)',
       },
     ),
   );

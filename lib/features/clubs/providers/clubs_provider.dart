@@ -8,14 +8,14 @@ const _selectedClubKey = selectedClubPrefsKey;
 
 final myClubsProvider = FutureProvider.autoDispose<List<ClubSummary>>((ref) async {
   final auth = ref.watch(authNotifierProvider);
-  if (!auth.isAuthenticated || auth.user?.id == 'demo') {
+  final user = auth.user;
+  if (!auth.isAuthenticated || user == null || user.id == 'demo') {
     return const [];
   }
 
-  // Wait until AuthApi (cookie jar + CSRF) is ready.
   await ref.watch(authApiProvider.future);
   final api = ref.watch(clubsApiProvider);
-  return api.listMyClubs();
+  return api.listMyClubs(user);
 });
 
 final selectedClubIdProvider =

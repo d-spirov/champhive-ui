@@ -14,13 +14,14 @@ class PlayerTeamAssignment {
   factory PlayerTeamAssignment.fromJson(Map<String, dynamic> json) {
     return PlayerTeamAssignment(
       assignmentId: json['assignmentId']?.toString() ?? '',
-      teamId: json['teamId']?.toString() ?? '',
-      teamName: json['teamName'] as String? ?? 'Team',
-      shirtNumber: json['shirtNumber'] as String?,
+      teamId: json['teamId']?.toString() ?? json['id']?.toString() ?? '',
+      teamName: json['teamName'] as String? ?? json['name'] as String? ?? 'Team',
+      shirtNumber: json['shirtNumber']?.toString(),
     );
   }
 }
 
+/// Club member — UI still says "Players" in places.
 class ClubPlayer {
   const ClubPlayer({
     required this.id,
@@ -38,6 +39,8 @@ class ClubPlayer {
     this.email,
     this.notes,
     this.clubId,
+    this.photoUrl,
+    this.shirtNumber,
     this.activeTeams = const [],
   });
 
@@ -56,6 +59,8 @@ class ClubPlayer {
   final String? notes;
   final String status;
   final bool hasPhoto;
+  final String? photoUrl;
+  final String? shirtNumber;
   final List<PlayerTeamAssignment> activeTeams;
 
   String get name {
@@ -69,7 +74,11 @@ class ClubPlayer {
   }
 
   String get teamsLabel {
-    if (activeTeams.isEmpty) return 'Unassigned';
+    if (activeTeams.isEmpty) {
+      final n = shirtNumber;
+      if (n != null && n.isNotEmpty) return '#$n';
+      return 'Member';
+    }
     return activeTeams.map((t) {
       if (t.shirtNumber != null && t.shirtNumber!.isNotEmpty) {
         return '${t.teamName} #${t.shirtNumber}';
@@ -79,6 +88,7 @@ class ClubPlayer {
   }
 
   String? get primaryShirtNumber {
+    if (shirtNumber != null && shirtNumber!.isNotEmpty) return shirtNumber;
     for (final t in activeTeams) {
       if (t.shirtNumber != null && t.shirtNumber!.isNotEmpty) {
         return t.shirtNumber;
@@ -87,32 +97,10 @@ class ClubPlayer {
     return null;
   }
 
-  factory ClubPlayer.fromListJson(Map<String, dynamic> json) {
-    final teamsRaw = json['activeTeams'];
-    final teams = <PlayerTeamAssignment>[];
-    if (teamsRaw is List) {
-      for (final t in teamsRaw) {
-        if (t is Map) {
-          teams.add(PlayerTeamAssignment.fromJson(Map<String, dynamic>.from(t)));
-        }
-      }
-    }
-    return ClubPlayer(
-      id: json['id']?.toString() ?? '',
-      firstName: json['firstName'] as String? ?? '',
-      lastName: json['lastName'] as String? ?? '',
-      preferredName: json['preferredName'] as String?,
-      dateOfBirth: DateTime.tryParse(json['dateOfBirth'] as String? ?? ''),
-      age: (json['age'] as num?)?.toInt(),
-      registrationNumber: json['registrationNumber'] as String?,
-      status: json['status'] as String? ?? 'ACTIVE',
-      hasPhoto: json['hasPhoto'] as bool? ?? false,
-      activeTeams: teams,
-    );
-  }
-
-  factory ClubPlayer.fromDetailJson(Map<String, dynamic> json) {
-    final teamsRaw = json['activeTeamAssignments'];
+  factory ClubPlayer.fromMemberJson(Map<String, dynamic> json) {
+    final photoUrl = json['photoUrl'] as String?;
+    final dob = DateTime.tryParse(json['dateOfBirth'] as String? ?? '');
+    final teamsRaw = json['activeTeams'] ?? json['activeTeamAssignments'];
     final teams = <PlayerTeamAssignment>[];
     if (teamsRaw is List) {
       for (final t in teamsRaw) {
@@ -128,16 +116,38 @@ class ClubPlayer {
       lastName: json['lastName'] as String? ?? '',
       preferredName: json['preferredName'] as String?,
       displayName: json['displayName'] as String?,
-      dateOfBirth: DateTime.tryParse(json['dateOfBirth'] as String? ?? ''),
-      age: (json['age'] as num?)?.toInt(),
+      dateOfBirth: dob,
+      age: (json['age'] as num?)?.toInt() ?? _ageFromDob(dob),
       gender: json['gender'] as String?,
-      registrationNumber: json['registrationNumber'] as String?,
+      registrationNumber: json['licenseNumber'] as String? ??
+          json['registrationNumber'] as String?,
       phone: json['phone'] as String?,
       email: json['email'] as String?,
       notes: json['notes'] as String?,
-      status: json['status'] as String? ?? 'ACTIVE',
-      hasPhoto: json['hasPhoto'] as bool? ?? false,
+      status: json['status'] as String? ?? 'active',
+      photoUrl: photoUrl,
+      hasPhoto: json['hasPhoto'] as bool? ??
+          (photoUrl != null && photoUrl.isNotEmpty),
+      shirtNumber: json['shirtNumber']?.toString(),
       activeTeams: teams,
     );
+  }
+
+  /// Legacy aliases used by older call sites / tests.
+  factory ClubPlayer.fromListJson(Map<String, dynamic> json) =>
+      ClubPlayer.fromMemberJson(json);
+
+  factory ClubPlayer.fromDetailJson(Map<String, dynamic> json) =>
+      ClubPlayer.fromMemberJson(json);
+
+  static int? _ageFromDob(DateTime? dob) {
+    if (dob == null) return null;
+    final now = DateTime.now();
+    var age = now.year - dob.year;
+    if (now.month < dob.month ||
+        (now.month == dob.month && now.day < dob.day)) {
+      age--;
+    }
+    return age;
   }
 }
