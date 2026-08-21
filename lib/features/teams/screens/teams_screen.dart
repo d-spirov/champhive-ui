@@ -1,88 +1,110 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../shared/demo/demo_data.dart';
+import '../../../shared/models/team.dart';
+import '../../../shared/utils/api_error_message.dart';
 import '../../../shared/widgets/ui_bits.dart';
+import '../../auth/providers/auth_provider.dart';
+import '../../clubs/providers/clubs_provider.dart';
+import '../../shell/main_shell.dart';
+import '../providers/teams_provider.dart';
 
-class TeamsScreen extends StatefulWidget {
+class TeamsScreen extends ConsumerWidget {
   const TeamsScreen({super.key});
 
   @override
-  State<TeamsScreen> createState() => _TeamsScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final auth = ref.watch(authNotifierProvider);
+    final isDemo = auth.user?.id == 'demo';
+    final clubId = ref.watch(selectedClubIdProvider);
+    final teamsAsync = ref.watch(clubTeamsProvider);
 
-class _TeamsScreenState extends State<TeamsScreen>
-    with SingleTickerProviderStateMixin {
-  late final TabController _tabs = TabController(length: 2, vsync: this);
-
-  @override
-  void dispose() {
-    _tabs.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.menu_rounded),
-          onPressed: () => Scaffold.of(context).openDrawer(),
-        ),
-        title: const Text('Teams'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Create team coming soon')),
-              );
-            },
-            icon: const Icon(Icons.add_rounded),
-          ),
-        ],
-        bottom: TabBar(
-          controller: _tabs,
-          tabs: const [
-            Tab(text: 'My Teams'),
-            Tab(text: 'All Teams'),
-          ],
-        ),
-      ),
-      body: TabBarView(
-        controller: _tabs,
-        children: [
-          _TeamList(teams: DemoData.teams),
-          _TeamList(teams: DemoData.teams),
-        ],
-      ),
+      appBar: shellAppBar(context, title: 'Teams'),
+      body: isDemo
+          ? const Center(
+              child: Text('Sign in to load club teams from the API.'),
+            )
+          : clubId == null
+              ? const Center(child: Text('Select a club to view teams.'))
+              : teamsAsync.when(
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
+                  error: (e, _) => Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(24),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            apiErrorMessage(e, fallback: 'Could not load teams'),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 16),
+                          FilledButton(
+                            onPressed: () => ref.invalidate(clubTeamsProvider),
+                            child: const Text('Retry'),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  data: (teams) {
+                    if (teams.isEmpty) {
+                      return const Center(
+                        child: Text('No teams in this club yet.'),
+                      );
+                    }
+                    return RefreshIndicator(
+                      onRefresh: () async {
+                        ref.invalidate(clubTeamsProvider);
+                        await ref.read(clubTeamsProvider.future);
+                      },
+                      child: ListView.separated(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        padding: const EdgeInsets.all(16),
+                        itemCount: teams.length,
+                        separatorBuilder: (_, _) => const SizedBox(height: 10),
+                        itemBuilder: (context, index) {
+                          final team = teams[index];
+                          return _TeamCard(team: team);
+                        },
+                      ),
+                    );
+                  },
+                ),
     );
   }
 }
 
-class _TeamList extends StatelessWidget {
-  const _TeamList({required this.teams});
+class _TeamCard extends ConsumerWidget {
+  const _TeamCard({required this.team});
 
-  final List<DemoTeam> teams;
+  final ClubTeam team;
 
   @override
-  Widget build(BuildContext context) {
-    return ListView.separated(
-      padding: const EdgeInsets.all(16),
-      itemCount: teams.length,
-      separatorBuilder: (context, index) => const SizedBox(height: 10),
-      itemBuilder: (context, index) {
-        final team = teams[index];
-        return Card(
-          child: ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-            leading: AvatarCircle(label: team.name, size: 48),
-            title: Text(team.name, style: Theme.of(context).textTheme.titleSmall),
-            subtitle: Text('${team.playerCount} Players · ${team.season}'),
-            trailing: const Icon(Icons.chevron_right_rounded),
-            onTap: () => context.push('/teams/${team.id}'),
-          ),
-        );
-      },
+  Widget build(BuildContext context, WidgetRef ref) {
+    final rosterAsync = ref.watch(teamRosterProvider(team.id));
+    final count = rosterAsync.valueOrNull?.entries.length;
+    final season = rosterAsync.valueOrNull?.seasonLabel;
+    final subtitle = [
+      if (count != null) '$count members',
+      if (season != null && season.isNotEmpty) season,
+      if (team.subtitle.isNotEmpty) team.subtitle,
+    ].join(' · ');
+
+    return Card(
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        leading: AvatarCircle(label: team.name, size: 48),
+        title: Text(team.name, style: Theme.of(context).textTheme.titleSmall),
+        subtitle: Text(
+          subtitle.isEmpty ? 'Tap to open roster' : subtitle,
+        ),
+        trailing: const Icon(Icons.chevron_right_rounded),
+        onTap: () => context.push('/teams/${team.id}'),
+      ),
     );
   }
 }
