@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 
 import '../models/event_attendance.dart';
+import '../models/event_series.dart';
 
 /// Club schedule of occurrences (replaces the old events list API).
 class EventsApi {
@@ -55,6 +56,26 @@ class EventsApi {
       );
     }
     return ClubEvent.fromOccurrenceJson(Map<String, dynamic>.from(raw));
+  }
+
+  Future<EventSeries> createSeries({
+    required String clubId,
+    required SaveEventSeriesRequest request,
+  }) async {
+    final response = await _dio.post<dynamic>(
+      '/api/v1/clubs/$clubId/events',
+      data: request.toJson(),
+    );
+    final raw = response.data;
+    if (raw is! Map) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        type: DioExceptionType.badResponse,
+        response: response,
+        message: 'Empty series response',
+      );
+    }
+    return EventSeries.fromJson(Map<String, dynamic>.from(raw));
   }
 
   List<ClubEvent> _parseOccurrences(Response<dynamic> response) {

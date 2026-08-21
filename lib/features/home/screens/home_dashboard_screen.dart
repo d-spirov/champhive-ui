@@ -6,6 +6,7 @@ import '../../attendance/widgets/attendance_ui.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../../clubs/providers/clubs_provider.dart';
 import '../../events/providers/events_provider.dart';
+import '../../notifications/providers/notifications_provider.dart';
 import '../../shell/main_shell.dart';
 import '../../../shared/demo/demo_data.dart';
 import '../../../shared/models/club.dart';
@@ -33,6 +34,7 @@ class HomeDashboardScreen extends ConsumerWidget {
         : (user?.displayName ?? 'Coach');
     final clubsAsync = ref.watch(myClubsProvider);
     final eventsAsync = ref.watch(clubEventsProvider);
+    final unread = ref.watch(unreadNotificationCountProvider);
 
     return Scaffold(
       appBar: shellAppBar(
@@ -48,15 +50,21 @@ class HomeDashboardScreen extends ConsumerWidget {
             tooltip: 'Attendance',
           ),
           IconButton(
-            onPressed: () {},
-            icon: Badge(
-              smallSize: 8,
-              backgroundColor: AppColors.badge,
-              child: Icon(
-                Icons.notifications_outlined,
-                color: Theme.of(context).colorScheme.onSurface,
-              ),
-            ),
+            onPressed: () => context.push('/notifications'),
+            tooltip: 'Notifications',
+            icon: unread > 0
+                ? Badge(
+                    smallSize: 8,
+                    backgroundColor: AppColors.badge,
+                    child: Icon(
+                      Icons.notifications_outlined,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
+                  )
+                : Icon(
+                    Icons.notifications_outlined,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
           ),
         ],
       ),

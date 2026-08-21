@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'features/account/screens/account_screen.dart';
 import 'features/attendance/screens/attendance_history_screen.dart';
 import 'features/attendance/screens/attendance_report_screen.dart';
 import 'features/attendance/screens/attendance_saved_screen.dart';
@@ -12,11 +13,16 @@ import 'features/auth/screens/login_screen.dart';
 import 'features/auth/screens/register_screen.dart';
 import 'features/auth/screens/splash_screen.dart';
 import 'features/calendar/screens/calendar_screen.dart';
+import 'features/calendar/screens/create_schedule_screen.dart';
 import 'features/clubs/screens/club_details_screen.dart';
 import 'features/events/screens/event_detail_screen.dart';
 import 'features/home/screens/home_dashboard_screen.dart';
+import 'features/messages/screens/chat_thread_screen.dart';
+import 'features/messages/screens/compose_direct_message_screen.dart';
 import 'features/messages/screens/messages_screen.dart';
 import 'features/more/screens/more_screen.dart';
+import 'features/notifications/screens/notifications_screen.dart';
+import 'features/payments/screens/payments_screen.dart';
 import 'features/players/screens/player_profile_screen.dart';
 import 'features/players/screens/players_list_screen.dart';
 import 'features/shell/main_shell.dart';
@@ -142,6 +148,37 @@ class _AppState extends ConsumerState<App> {
         GoRoute(
           path: '/statistics',
           builder: (context, state) => const StatisticsScreen(),
+        ),
+        GoRoute(
+          path: '/notifications',
+          builder: (context, state) => const NotificationsScreen(),
+        ),
+        GoRoute(
+          path: '/payments',
+          builder: (context, state) => const PaymentsScreen(),
+        ),
+        GoRoute(
+          path: '/account',
+          builder: (context, state) => const AccountScreen(),
+        ),
+        GoRoute(
+          path: '/schedule/create',
+          builder: (context, state) {
+            final extra = state.extra;
+            return CreateScheduleScreen(
+              initialDate: extra is DateTime ? extra : null,
+            );
+          },
+        ),
+        GoRoute(
+          path: '/messages/new',
+          builder: (context, state) => const ComposeDirectMessageScreen(),
+        ),
+        GoRoute(
+          path: '/messages/:channelId',
+          builder: (context, state) => ChatThreadScreen(
+            channelId: state.pathParameters['channelId']!,
+          ),
         ),
         GoRoute(
           path: '/occurrences/:occurrenceId',

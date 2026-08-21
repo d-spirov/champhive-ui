@@ -23,8 +23,18 @@ class MoreScreen extends ConsumerWidget {
       ),
       body: ListView(
         children: [
-          _tile(context, Icons.payments_outlined, 'Payments', () {}),
-          _tile(context, Icons.person_outline_rounded, 'My Account', () {}),
+          _tile(
+            context,
+            Icons.payments_outlined,
+            'Payments',
+            () => context.push('/payments'),
+          ),
+          _tile(
+            context,
+            Icons.person_outline_rounded,
+            'My Account',
+            () => context.push('/account'),
+          ),
           ListTile(
             leading: const Icon(Icons.brightness_6_outlined),
             title: const Text('Appearance'),
@@ -32,7 +42,12 @@ class MoreScreen extends ConsumerWidget {
             trailing: const Icon(Icons.chevron_right_rounded),
             onTap: () => _pickTheme(context, ref, themeMode),
           ),
-          _tile(context, Icons.notifications_outlined, 'Notifications', () {}),
+          _tile(
+            context,
+            Icons.notifications_outlined,
+            'Notifications',
+            () => context.push('/notifications'),
+          ),
           _tile(
             context,
             Icons.how_to_reg_outlined,

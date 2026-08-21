@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../auth/logout.dart';
 import '../auth/providers/auth_provider.dart';
+import '../messages/providers/chat_provider.dart';
 import '../../shared/theme/app_theme.dart';
 import '../../shared/widgets/ui_bits.dart';
 
@@ -16,80 +17,119 @@ class AppDrawer extends ConsumerWidget {
     final name = user?.displayName ?? 'Coach';
     final email = user?.email ?? '';
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final unreadChat = ref.watch(unreadChatCountProvider);
 
     return Drawer(
-      child: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Container(
-              padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
-              color: isDark
-                  ? AppColors.darkNavy
-                  : AppColors.lightPrimary.withValues(alpha: 0.08),
-              child: Row(
-                children: [
-                  AvatarCircle(label: name, size: 56),
-                  const SizedBox(width: 14),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(name, style: Theme.of(context).textTheme.titleMedium),
-                        if (email.isNotEmpty)
+      // Own scroll scope so we never inherit the body's PrimaryScrollController
+      // (that can open the drawer already scrolled to the bottom).
+      child: PrimaryScrollController.none(
+        child: SafeArea(
+          child: ListView(
+            primary: false,
+            padding: EdgeInsets.zero,
+            children: [
+              Container(
+                padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
+                color: isDark
+                    ? AppColors.darkNavy
+                    : AppColors.lightPrimary.withValues(alpha: 0.08),
+                child: Row(
+                  children: [
+                    AvatarCircle(label: name, size: 56),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
                           Text(
-                            email,
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onSurface
-                                      .withValues(alpha: 0.65),
-                                ),
+                            name,
+                            style: Theme.of(context).textTheme.titleMedium,
                           ),
-                      ],
+                          if (email.isNotEmpty)
+                            Text(
+                              email,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall
+                                  ?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface
+                                        .withValues(alpha: 0.65),
+                                  ),
+                            ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: ListView(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                children: [
-                  _item(context, Icons.home_outlined, 'Home', '/home'),
-                  _item(context, Icons.sports_outlined, 'Members', '/members'),
-                  _item(context, Icons.calendar_month_outlined, 'Schedule', '/calendar'),
-                  _item(context, Icons.how_to_reg_outlined, 'Attendance', '/attendance/history'),
-                  _item(context, Icons.groups_outlined, 'Teams', '/teams'),
-                  _item(context, Icons.bar_chart_rounded, 'Statistics', '/statistics'),
-                  _item(context, Icons.payments_outlined, 'Payments', '/more'),
-                  _item(
-                    context,
-                    Icons.chat_bubble_outline_rounded,
-                    'Messages',
-                    '/messages',
-                    badge: 3,
-                  ),
-                  _item(context, Icons.notifications_outlined, 'Notifications', '/more'),
-                  _item(context, Icons.settings_outlined, 'Settings', '/more'),
-                  _item(context, Icons.help_outline_rounded, 'Help & Support', '/more'),
-                ],
-              ),
-            ),
-            const Divider(height: 1),
-            ListTile(
-              leading: const Icon(Icons.logout_rounded, color: AppColors.danger),
-              title: const Text(
-                'Log out',
-                style: TextStyle(
-                  color: AppColors.danger,
-                  fontWeight: FontWeight.w600,
+                  ],
                 ),
               ),
-              onTap: () => performLogout(ref, context),
-            ),
-            const SizedBox(height: 8),
-          ],
+              const SizedBox(height: 8),
+              _item(context, Icons.home_outlined, 'Home', '/home'),
+              _item(context, Icons.sports_outlined, 'Members', '/members'),
+              _item(
+                context,
+                Icons.calendar_month_outlined,
+                'Schedule',
+                '/calendar',
+              ),
+              _item(
+                context,
+                Icons.how_to_reg_outlined,
+                'Attendance',
+                '/attendance/history',
+              ),
+              _item(context, Icons.groups_outlined, 'Teams', '/teams'),
+              _item(
+                context,
+                Icons.bar_chart_rounded,
+                'Statistics',
+                '/statistics',
+              ),
+              _item(
+                context,
+                Icons.payments_outlined,
+                'Payments',
+                '/payments',
+              ),
+              _item(
+                context,
+                Icons.chat_bubble_outline_rounded,
+                'Messages',
+                '/messages',
+                badge: unreadChat,
+              ),
+              _item(
+                context,
+                Icons.notifications_outlined,
+                'Notifications',
+                '/notifications',
+              ),
+              _item(context, Icons.settings_outlined, 'Settings', '/more'),
+              _item(
+                context,
+                Icons.help_outline_rounded,
+                'Help & Support',
+                '/more',
+              ),
+              const Divider(height: 24),
+              ListTile(
+                leading: const Icon(
+                  Icons.logout_rounded,
+                  color: AppColors.danger,
+                ),
+                title: const Text(
+                  'Log out',
+                  style: TextStyle(
+                    color: AppColors.danger,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                onTap: () => performLogout(ref, context),
+              ),
+              const SizedBox(height: 8),
+            ],
+          ),
         ),
       ),
     );

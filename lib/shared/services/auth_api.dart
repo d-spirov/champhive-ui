@@ -112,6 +112,40 @@ class AuthApi {
     return _requireUser(response);
   }
 
+  /// Partial profile update. Pass null for fields that should stay unchanged.
+  Future<User> updateMe({
+    String? firstName,
+    String? lastName,
+    String? locale,
+  }) async {
+    final response = await _dio.patch<dynamic>(
+      '/api/v1/me',
+      data: {
+        'firstName': firstName,
+        'lastName': lastName,
+        'locale': locale,
+      },
+    );
+    return _requireUser(response);
+  }
+
+  /// Changes password, revokes other sessions, persists the fresh mobile token pair.
+  Future<User> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    final response = await _dio.post<dynamic>(
+      '/api/v1/auth/change-password',
+      data: {
+        'currentPassword': currentPassword,
+        'newPassword': newPassword,
+        'client': apiClientMobile,
+      },
+    );
+    await _persistTokens(response);
+    return currentUser();
+  }
+
   Future<void> clearTokens() => _tokenStore.clear();
 
   Future<TokenPair> _persistTokens(Response<dynamic> response) async {

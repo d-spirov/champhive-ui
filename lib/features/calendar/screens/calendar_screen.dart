@@ -54,9 +54,14 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Create event coming soon')),
-          );
+          final isDemo = ref.read(authNotifierProvider).user?.id == 'demo';
+          if (isDemo) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Sign in to create schedule items')),
+            );
+            return;
+          }
+          context.push('/schedule/create', extra: _selected);
         },
         child: const Icon(Icons.add_rounded),
       ),

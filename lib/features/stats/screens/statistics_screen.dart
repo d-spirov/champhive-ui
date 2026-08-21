@@ -1,19 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
+import '../../../shared/models/analytics.dart';
+import '../../../shared/models/payment.dart';
+import '../../../shared/theme/app_theme.dart';
+import '../../../shared/utils/api_error_message.dart';
 import '../../../shared/widgets/ui_bits.dart';
-import '../../shell/app_drawer.dart';
+import '../../auth/providers/auth_provider.dart';
+import '../../clubs/providers/clubs_provider.dart';
+import '../providers/stats_provider.dart';
 
-class StatisticsScreen extends StatefulWidget {
+class StatisticsScreen extends ConsumerStatefulWidget {
   const StatisticsScreen({super.key});
 
   @override
-  State<StatisticsScreen> createState() => _StatisticsScreenState();
+  ConsumerState<StatisticsScreen> createState() => _StatisticsScreenState();
 }
 
-class _StatisticsScreenState extends State<StatisticsScreen>
+class _StatisticsScreenState extends ConsumerState<StatisticsScreen>
     with SingleTickerProviderStateMixin {
   late final TabController _tabs = TabController(length: 2, vsync: this);
-  String _competition = 'All Competitions';
 
   @override
   void dispose() {
@@ -23,148 +31,472 @@ class _StatisticsScreenState extends State<StatisticsScreen>
 
   @override
   Widget build(BuildContext context) {
+    final isDemo = ref.watch(authNotifierProvider).user?.id == 'demo';
+    final club = ref.watch(selectedClubProvider);
+
     return Scaffold(
-      drawer: const AppDrawer(),
       appBar: AppBar(
-        title: const Text('Statistics'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_rounded),
+          onPressed: () {
+            if (context.canPop()) {
+              context.pop();
+            } else {
+              context.go('/more');
+            }
+          },
+        ),
+        title: Text(club == null ? 'Statistics' : '${club.name} stats'),
         bottom: TabBar(
           controller: _tabs,
+          labelColor: Theme.of(context).colorScheme.primary,
+          unselectedLabelColor:
+              Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.55),
+          indicatorColor: Theme.of(context).colorScheme.primary,
           tabs: const [
-            Tab(text: 'Team'),
-            Tab(text: 'Player'),
+            Tab(text: 'Membership'),
+            Tab(text: 'Revenue'),
           ],
         ),
       ),
-      body: TabBarView(
-        controller: _tabs,
-        children: [
-          _TeamStats(
-            competition: _competition,
-            onCompetitionChanged: (v) => setState(() => _competition = v),
+      body: isDemo
+          ? const Center(
+              child: Text('Sign in to see club membership and revenue analytics.'),
+            )
+          : TabBarView(
+              controller: _tabs,
+              children: const [
+                _MembershipTab(),
+                _RevenueTab(),
+              ],
+            ),
+    );
+  }
+}
+
+class _MembershipTab extends ConsumerWidget {
+  const _MembershipTab();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final clubId = ref.watch(selectedClubIdProvider);
+    final async = ref.watch(membershipAnalyticsProvider);
+
+    if (clubId == null) {
+      return const Center(child: Text('Select a club to view membership stats.'));
+    }
+
+    return async.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (e, _) => _ErrorBody(
+        message: apiErrorMessage(e, fallback: 'Could not load membership stats'),
+        onRetry: () => ref.invalidate(membershipAnalyticsProvider),
+      ),
+      data: (data) {
+        if (data == null) {
+          return const Center(child: Text('No membership data.'));
+        }
+        return RefreshIndicator(
+          onRefresh: () async {
+            ref.invalidate(membershipAnalyticsProvider);
+            await ref.read(membershipAnalyticsProvider.future);
+          },
+          child: ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
+            children: [
+              if (data.asOf != null)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Text(
+                    'As of ${DateFormat('d MMM yyyy').format(data.asOf!)}',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ),
+              Row(
+                children: [
+                  Expanded(
+                    child: StatCard(
+                      label: 'Active now',
+                      value: '${data.activeNow}',
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: StatCard(
+                      label: 'On the books',
+                      value: '${data.registeredCount}',
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(
+                    child: StatCard(
+                      label: 'Joined (12 mo)',
+                      value: '${data.joinedInWindow}',
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: StatCard(
+                      label: 'Left (12 mo)',
+                      value: '${data.leftInWindow}',
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              StatCard(
+                label: 'Unenrolled (no team)',
+                value: '${data.unenrolledCount}',
+              ),
+              const SizedBox(height: 24),
+              const SectionHeader(title: 'Monthly enrollment'),
+              const SizedBox(height: 8),
+              if (data.trend.isEmpty)
+                const Text('No trend data yet.')
+              else
+                ...data.trend.reversed.take(12).map(
+                      (p) => _TrendRow(
+                        period: p.period,
+                        primary: '${p.active} active',
+                        secondary: '+${p.joined} / −${p.left}',
+                        barValue: p.active.toDouble(),
+                        barMax: _maxActive(data.trend).toDouble(),
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+            ],
           ),
-          const Center(child: Text('Player statistics coming soon')),
+        );
+      },
+    );
+  }
+
+  int _maxActive(List<MembershipPeriod> trend) {
+    var max = 1;
+    for (final p in trend) {
+      if (p.active > max) max = p.active;
+    }
+    return max;
+  }
+}
+
+class _RevenueTab extends ConsumerWidget {
+  const _RevenueTab();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final clubId = ref.watch(selectedClubIdProvider);
+    final async = ref.watch(revenueAnalyticsProvider);
+
+    if (clubId == null) {
+      return const Center(child: Text('Select a club to view revenue stats.'));
+    }
+
+    return async.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (e, _) => _ErrorBody(
+        message: apiErrorMessage(e, fallback: 'Could not load revenue stats'),
+        onRetry: () => ref.invalidate(revenueAnalyticsProvider),
+      ),
+      data: (data) {
+        if (data == null) {
+          return const Center(child: Text('No revenue data.'));
+        }
+        final c = data.currency;
+        final t = data.totals;
+        final rate = t.collectionRate;
+        final rateLabel = rate == null
+            ? '—'
+            : '${(rate * 100).toStringAsFixed(1)}%';
+
+        return RefreshIndicator(
+          onRefresh: () async {
+            ref.invalidate(revenueAnalyticsProvider);
+            await ref.read(revenueAnalyticsProvider.future);
+          },
+          child: ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
+            children: [
+              if (data.asOf != null)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Text(
+                    'As of ${DateFormat('d MMM yyyy').format(data.asOf!)} · $c',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ),
+              Row(
+                children: [
+                  Expanded(
+                    child: StatCard(
+                      label: 'Collected',
+                      value: MoneyAmount(t.collected, c).formatted,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: StatCard(
+                      label: 'Outstanding',
+                      value: MoneyAmount(t.outstanding, c).formatted,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(
+                    child: StatCard(
+                      label: 'Expected',
+                      value: MoneyAmount(t.expected, c).formatted,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: StatCard(
+                      label: 'Collection rate',
+                      value: rateLabel,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(
+                    child: StatCard(
+                      label: 'Cash',
+                      value: MoneyAmount(t.cashCollected, c).formatted,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: StatCard(
+                      label: 'Bank',
+                      value: MoneyAmount(t.bankCollected, c).formatted,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(
+                    child: StatCard(
+                      label: 'Members billed',
+                      value: '${t.memberCount}',
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: StatCard(
+                      label: 'In debt',
+                      value: '${t.membersInDebt}',
+                    ),
+                  ),
+                ],
+              ),
+              if (t.waived > 0) ...[
+                const SizedBox(height: 10),
+                StatCard(
+                  label: 'Waived',
+                  value: MoneyAmount(t.waived, c).formatted,
+                ),
+              ],
+              const SizedBox(height: 24),
+              const SectionHeader(title: 'Aging (outstanding)'),
+              const SizedBox(height: 8),
+              _AgingBars(aging: data.aging, currency: c),
+              const SizedBox(height: 24),
+              const SectionHeader(title: 'Monthly trend'),
+              const SizedBox(height: 8),
+              if (data.trend.isEmpty)
+                const Text('No revenue trend yet.')
+              else
+                ...data.trend.reversed.take(12).map((p) {
+                  final max = _maxCollected(data.trend);
+                  return _TrendRow(
+                    period: p.period,
+                    primary: MoneyAmount(p.collected, c).formatted,
+                    secondary:
+                        'owed ${MoneyAmount(p.outstanding, c).formatted}',
+                    barValue: p.collected,
+                    barMax: max <= 0 ? 1 : max,
+                    color: AppColors.present,
+                  );
+                }),
+              if (data.teams.isNotEmpty) ...[
+                const SizedBox(height: 24),
+                const SectionHeader(title: 'By team'),
+                const SizedBox(height: 8),
+                ...data.teams.map(
+                  (b) => ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: Text(b.name),
+                    subtitle: Text(
+                      '${b.memberCount} members · owed ${MoneyAmount(b.outstanding, c).formatted}',
+                    ),
+                    trailing: Text(
+                      MoneyAmount(b.collected, c).formatted,
+                      style: const TextStyle(fontWeight: FontWeight.w700),
+                    ),
+                  ),
+                ),
+              ],
+              if (data.sections.isNotEmpty) ...[
+                const SizedBox(height: 24),
+                const SectionHeader(title: 'By section'),
+                const SizedBox(height: 8),
+                ...data.sections.map(
+                  (b) => ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: Text(b.name),
+                    subtitle: Text(
+                      '${b.memberCount} members · owed ${MoneyAmount(b.outstanding, c).formatted}',
+                    ),
+                    trailing: Text(
+                      MoneyAmount(b.collected, c).formatted,
+                      style: const TextStyle(fontWeight: FontWeight.w700),
+                    ),
+                  ),
+                ),
+              ],
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  double _maxCollected(List<RevenuePeriod> trend) {
+    var max = 0.0;
+    for (final p in trend) {
+      if (p.collected > max) max = p.collected;
+    }
+    return max;
+  }
+}
+
+class _AgingBars extends StatelessWidget {
+  const _AgingBars({required this.aging, required this.currency});
+
+  final RevenueAging aging;
+  final String currency;
+
+  @override
+  Widget build(BuildContext context) {
+    final max = aging.total <= 0 ? 1.0 : aging.total;
+    final rows = [
+      ('Not due', aging.current, Theme.of(context).colorScheme.primary),
+      ('1–30 days', aging.days1To30, AppColors.late),
+      ('31–60 days', aging.days31To60, AppColors.late),
+      ('61–90 days', aging.days61To90, AppColors.danger),
+      ('90+ days', aging.days90Plus, AppColors.danger),
+    ];
+    return Column(
+      children: [
+        for (final row in rows)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: _TrendRow(
+              period: row.$1,
+              primary: MoneyAmount(row.$2, currency).formatted,
+              secondary: '',
+              barValue: row.$2,
+              barMax: max,
+              color: row.$3,
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+class _TrendRow extends StatelessWidget {
+  const _TrendRow({
+    required this.period,
+    required this.primary,
+    required this.secondary,
+    required this.barValue,
+    required this.barMax,
+    required this.color,
+  });
+
+  final String period;
+  final String primary;
+  final String secondary;
+  final double barValue;
+  final double barMax;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    final ratio = barMax <= 0 ? 0.0 : (barValue / barMax).clamp(0.0, 1.0);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  period,
+                  style: const TextStyle(fontWeight: FontWeight.w600),
+                ),
+              ),
+              Text(primary, style: const TextStyle(fontWeight: FontWeight.w700)),
+            ],
+          ),
+          if (secondary.isNotEmpty) ...[
+            const SizedBox(height: 2),
+            Text(
+              secondary,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ],
+          const SizedBox(height: 6),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: LinearProgressIndicator(
+              value: ratio,
+              minHeight: 8,
+              color: color,
+              backgroundColor: color.withValues(alpha: 0.15),
+            ),
+          ),
         ],
       ),
     );
   }
 }
 
-class _TeamStats extends StatelessWidget {
-  const _TeamStats({
-    required this.competition,
-    required this.onCompetitionChanged,
-  });
+class _ErrorBody extends StatelessWidget {
+  const _ErrorBody({required this.message, required this.onRetry});
 
-  final String competition;
-  final ValueChanged<String> onCompetitionChanged;
+  final String message;
+  final VoidCallback onRetry;
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        DropdownButtonFormField<String>(
-          initialValue: competition,
-          items: const [
-            DropdownMenuItem(value: 'All Competitions', child: Text('All Competitions')),
-            DropdownMenuItem(value: 'League', child: Text('League')),
-            DropdownMenuItem(value: 'Cup', child: Text('Cup')),
-          ],
-          onChanged: (v) {
-            if (v != null) onCompetitionChanged(v);
-          },
-          decoration: const InputDecoration(labelText: 'Competition'),
-        ),
-        const SizedBox(height: 16),
-        Row(
-          children: const [
-            Expanded(child: StatCard(label: 'Matches', value: '18')),
-            SizedBox(width: 10),
-            Expanded(child: StatCard(label: 'Wins', value: '12')),
-          ],
-        ),
-        const SizedBox(height: 10),
-        Row(
-          children: const [
-            Expanded(child: StatCard(label: 'Draws', value: '3')),
-            SizedBox(width: 10),
-            Expanded(child: StatCard(label: 'Losses', value: '3')),
-          ],
-        ),
-        const SizedBox(height: 24),
-        const SectionHeader(title: 'Goals'),
-        _GoalBar(label: 'Total goals', value: 36, max: 40, color: const Color(0xFF3B82F6)),
-        const SizedBox(height: 12),
-        _GoalBar(label: 'Goals conceded', value: 18, max: 40, color: const Color(0xFF22C55E)),
-        const SizedBox(height: 24),
-        SectionHeader(
-          title: 'Top scorers',
-          actionLabel: 'See all',
-          onAction: () {},
-        ),
-        Card(
-          child: Column(
-            children: const [
-              ListTile(
-                leading: AvatarCircle(label: 'John Smith'),
-                title: Text('John Smith'),
-                trailing: Text('12', style: TextStyle(fontWeight: FontWeight.w700)),
-              ),
-              Divider(height: 1),
-              ListTile(
-                leading: AvatarCircle(label: 'Marco Rossi'),
-                title: Text('Marco Rossi'),
-                trailing: Text('8', style: TextStyle(fontWeight: FontWeight.w700)),
-              ),
-              Divider(height: 1),
-              ListTile(
-                leading: AvatarCircle(label: 'Luka Petrov'),
-                title: Text('Luka Petrov'),
-                trailing: Text('5', style: TextStyle(fontWeight: FontWeight.w700)),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _GoalBar extends StatelessWidget {
-  const _GoalBar({
-    required this.label,
-    required this.value,
-    required this.max,
-    required this.color,
-  });
-
-  final String label;
-  final int value;
-  final int max;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Expanded(child: Text(label)),
-            Text('$value', style: const TextStyle(fontWeight: FontWeight.w700)),
+            Text(message, textAlign: TextAlign.center),
+            const SizedBox(height: 16),
+            FilledButton(onPressed: onRetry, child: const Text('Retry')),
           ],
         ),
-        const SizedBox(height: 8),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(8),
-          child: LinearProgressIndicator(
-            value: value / max,
-            minHeight: 10,
-            color: color,
-            backgroundColor: color.withValues(alpha: 0.15),
-          ),
-        ),
-      ],
+      ),
     );
   }
 }

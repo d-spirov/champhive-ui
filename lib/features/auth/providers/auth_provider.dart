@@ -201,6 +201,77 @@ class AuthNotifier extends StateNotifier<AuthState> {
     }
   }
 
+  Future<User?> refreshCurrentUser() async {
+    if (state.user?.id == 'demo') return state.user;
+    try {
+      final api = await _api;
+      final user = await api.currentUser();
+      state = state.copyWith(user: user, clearError: true);
+      return user;
+    } catch (e) {
+      state = state.copyWith(
+        error: apiErrorMessage(e, fallback: 'Could not refresh profile'),
+      );
+      return null;
+    }
+  }
+
+  Future<bool> updateProfile({
+    String? firstName,
+    String? lastName,
+    String? locale,
+  }) async {
+    if (state.user?.id == 'demo') {
+      state = state.copyWith(
+        error: 'Sign in to edit your account',
+      );
+      return false;
+    }
+    state = state.copyWith(isLoading: true, clearError: true);
+    try {
+      final api = await _api;
+      final user = await api.updateMe(
+        firstName: firstName,
+        lastName: lastName,
+        locale: locale,
+      );
+      state = state.copyWith(user: user, isLoading: false, clearError: true);
+      return true;
+    } catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        error: apiErrorMessage(e, fallback: 'Could not update profile'),
+      );
+      return false;
+    }
+  }
+
+  Future<bool> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    if (state.user?.id == 'demo') {
+      state = state.copyWith(error: 'Sign in to change password');
+      return false;
+    }
+    state = state.copyWith(isLoading: true, clearError: true);
+    try {
+      final api = await _api;
+      final user = await api.changePassword(
+        currentPassword: currentPassword,
+        newPassword: newPassword,
+      );
+      state = state.copyWith(user: user, isLoading: false, clearError: true);
+      return true;
+    } catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        error: apiErrorMessage(e, fallback: 'Could not change password'),
+      );
+      return false;
+    }
+  }
+
   /// Clears remote session (best-effort), tokens, and local auth flags.
   Future<void> logout() async {
     final wasDemo = state.user?.id == 'demo';
