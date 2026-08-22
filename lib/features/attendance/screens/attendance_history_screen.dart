@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../l10n/app_localizations.dart';
+import '../../clubs/providers/sport_theme_provider.dart';
 import '../../events/providers/events_provider.dart';
 import '../../../shared/models/event_attendance.dart';
 import '../../../shared/utils/api_error_message.dart';
@@ -98,7 +99,10 @@ class _AttendanceHistoryScreenState
                           backgroundColor: clubEventTypeColor(event.type)
                               .withValues(alpha: 0.15),
                           child: Icon(
-                            clubEventTypeIcon(event.type),
+                            clubEventTypeIcon(
+                              event.type,
+                              sportIcon: ref.watch(sportThemeProvider).icon,
+                            ),
                             color: clubEventTypeColor(event.type),
                           ),
                         ),

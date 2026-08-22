@@ -52,6 +52,7 @@ class ClubSummary {
       name: club.name,
       city: club.city,
       countryCode: club.countryCode,
+      sportType: club.sportType,
       currentUserRoles: roles.isNotEmpty ? roles : club.currentUserRoles,
       logoUrl: club.logoUrl,
       hasLogo: club.hasLogo,

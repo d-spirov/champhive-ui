@@ -8,6 +8,7 @@ import '../../../shared/theme/app_theme.dart';
 import '../../../shared/utils/api_error_message.dart';
 import '../../../shared/widgets/ui_bits.dart';
 import '../../attendance/widgets/attendance_ui.dart';
+import '../../clubs/providers/sport_theme_provider.dart';
 import '../../players/widgets/player_avatar.dart';
 import '../providers/teams_provider.dart';
 
@@ -60,9 +61,10 @@ class _OverviewTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final rosterAsync = ref.watch(teamRosterProvider(teamId));
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final clubTeam = team;
     final location = clubTeam?.trainingLocation;
+    final sportTheme =
+        ref.watch(sportThemeForSectionProvider(clubTeam?.sectionId));
 
     return ListView(
       padding: const EdgeInsets.all(16),
@@ -72,10 +74,12 @@ class _OverviewTab extends ConsumerWidget {
           child: AspectRatio(
             aspectRatio: 16 / 9,
             child: Image.asset(
-              isDark
-                  ? 'assets/images/stadium_dark.jpg'
-                  : 'assets/images/stadium_light.jpg',
+              sportTheme.heroImage,
               fit: BoxFit.cover,
+              errorBuilder: (_, _, _) => Image.asset(
+                sportTheme.backgroundImage,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
         ),

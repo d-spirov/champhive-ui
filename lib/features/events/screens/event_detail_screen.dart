@@ -4,7 +4,9 @@ import 'package:go_router/go_router.dart';
 
 import '../../../l10n/app_localizations.dart';
 import '../../attendance/widgets/attendance_ui.dart';
+import '../../clubs/providers/sport_theme_provider.dart';
 import '../../events/providers/events_provider.dart';
+import '../../../core/theme/sport_theme_config.dart';
 import '../../../shared/models/event_attendance.dart';
 import '../../../shared/theme/app_theme.dart';
 import '../../../shared/utils/api_error_message.dart';
@@ -58,6 +60,7 @@ class EventDetailScreen extends ConsumerWidget {
         body: _OccurrenceBody(
           occurrence: occurrence,
           roster: rosterAsync.valueOrNull,
+          sportTheme: ref.watch(sportThemeProvider),
           onRetryRoster: () =>
               ref.invalidate(attendanceSessionProvider(eventId)),
         ),
@@ -70,11 +73,13 @@ class _OccurrenceBody extends StatelessWidget {
   const _OccurrenceBody({
     required this.occurrence,
     required this.roster,
+    required this.sportTheme,
     required this.onRetryRoster,
   });
 
   final ClubEvent occurrence;
   final AttendanceSession? roster;
+  final SportThemeConfig sportTheme;
   final VoidCallback onRetryRoster;
 
   @override
@@ -109,9 +114,13 @@ class _OccurrenceBody extends StatelessWidget {
               fit: StackFit.expand,
               children: [
                 Image.asset(
-                  'assets/images/basketball_court.jpg',
+                  sportTheme.heroImage,
                   fit: BoxFit.cover,
-                  errorBuilder: (_, _, _) => Container(color: color),
+                  errorBuilder: (_, _, _) => Image.asset(
+                    sportTheme.eventImage,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, _, _) => Container(color: color),
+                  ),
                 ),
                 DecoratedBox(
                   decoration: BoxDecoration(

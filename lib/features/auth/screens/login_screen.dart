@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../providers/auth_provider.dart';
+import '../../../core/theme/sport_theme_config.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../shared/theme/app_theme.dart';
 import '../../../shared/widgets/team_hive_logo.dart';
@@ -27,16 +28,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // Full-bleed stadium — same composition as the ChampHive welcome mock.
+          // Sport-neutral welcome — no active Section yet.
           Image.asset(
-            'assets/images/basketball_court.jpg',
+            kCommonWelcomeImage,
             fit: BoxFit.cover,
-            alignment: const Alignment(0, -0.1),
-            errorBuilder: (_, _, _) => Image.asset(
-              'assets/images/stadium_dark.jpg',
-              fit: BoxFit.cover,
-              alignment: const Alignment(0, -0.15),
-            ),
+            alignment: const Alignment(0, -0.15),
+            errorBuilder: (_, _, _) => Container(color: Colors.black),
           ),
           // Soft vignette: keep the pitch visible, darken edges for type/buttons.
           DecoratedBox(

@@ -50,4 +50,9 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+    - assets/images/common/
+    - assets/images/sports/basketball/
+    - assets/images/sports/football/
+    - assets/images/sports/volleyball/
+    - assets/images/sports/generic/
     - assets/icon/

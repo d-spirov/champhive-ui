@@ -14,14 +14,14 @@ Color eventTypeColor(DemoEventType type) {
   }
 }
 
-IconData eventTypeIcon(DemoEventType type) {
+IconData eventTypeIcon(DemoEventType type, {IconData? sportIcon}) {
   switch (type) {
     case DemoEventType.training:
       return Icons.fitness_center_rounded;
     case DemoEventType.meeting:
       return Icons.groups_rounded;
     case DemoEventType.match:
-      return Icons.sports_basketball_rounded;
+      return sportIcon ?? Icons.sports_outlined;
   }
 }
 

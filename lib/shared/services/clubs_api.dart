@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 
 import '../models/club.dart';
+import '../models/section.dart';
 import '../models/user.dart';
 
 class ClubsApi {
@@ -39,5 +40,19 @@ class ClubsApi {
       );
     }
     return Club.fromJson(Map<String, dynamic>.from(raw));
+  }
+
+  Future<List<ClubSection>> listSections(String clubId) async {
+    final response =
+        await _dio.get<dynamic>('/api/v1/clubs/$clubId/sections');
+    final raw = response.data;
+    final list = raw is List
+        ? raw
+        : (raw is Map ? raw['items'] ?? raw['sections'] : null);
+    if (list is! List) return const [];
+    return list
+        .whereType<Map>()
+        .map((e) => ClubSection.fromJson(Map<String, dynamic>.from(e)))
+        .toList();
   }
 }

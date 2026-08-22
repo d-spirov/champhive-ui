@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-/// Design tokens — basketball ChampHive (orange) + dark court navy.
+/// Design tokens — ChampHive brand (shared across sports).
 class AppColors {
   AppColors._();
 
-  // Light (basketball)
+  // Light
   static const Color lightPrimary = Color(0xFFFF7A00);
   static const Color lightPrimaryDark = Color(0xFFE56700);
   static const Color lightBg = Color(0xFFF7F8FA);

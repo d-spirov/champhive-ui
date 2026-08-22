@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../l10n/app_localizations.dart';
 import '../../../shared/l10n/label_l10n.dart';
 import '../../../shared/models/event_attendance.dart';
 import '../../../shared/theme/app_theme.dart';
+import '../../clubs/providers/sport_theme_provider.dart';
 
 export '../../../shared/l10n/label_l10n.dart'
     show attendanceStatusLabel, eventTypeLabel, attendanceLockStatusLabel;
+
 
 Color clubEventTypeColor(EventType type) {
   switch (type) {
@@ -23,10 +26,10 @@ Color clubEventTypeColor(EventType type) {
   }
 }
 
-IconData clubEventTypeIcon(EventType type) {
+IconData clubEventTypeIcon(EventType type, {IconData? sportIcon}) {
   switch (type) {
     case EventType.training:
-      return Icons.sports_basketball_rounded;
+      return sportIcon ?? Icons.sports_outlined;
     case EventType.meeting:
       return Icons.groups_rounded;
     case EventType.match:
@@ -101,7 +104,7 @@ String formatEventDate(DateTime dt) {
   return DateFormat('EEE, d MMM').format(dt);
 }
 
-class ClubEventListTile extends StatelessWidget {
+class ClubEventListTile extends ConsumerWidget {
   const ClubEventListTile({
     super.key,
     required this.event,
@@ -112,9 +115,10 @@ class ClubEventListTile extends StatelessWidget {
   final VoidCallback? onTap;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final color = clubEventTypeColor(event.type);
+    final sportIcon = ref.watch(sportThemeProvider).icon;
     final subtitle = [
       formatEventTimeRange(event.startAt, event.endAt),
       if (event.location.display != l10n.tbd) event.location.display,
@@ -134,7 +138,11 @@ class ClubEventListTile extends StatelessWidget {
                 color: color.withValues(alpha: 0.15),
                 shape: BoxShape.circle,
               ),
-              child: Icon(clubEventTypeIcon(event.type), color: color, size: 22),
+              child: Icon(
+                clubEventTypeIcon(event.type, sportIcon: sportIcon),
+                color: color,
+                size: 22,
+              ),
             ),
             const SizedBox(width: 12),
             Expanded(
