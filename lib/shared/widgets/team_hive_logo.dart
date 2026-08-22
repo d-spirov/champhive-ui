@@ -262,37 +262,54 @@ class TeamHiveLogoPainter extends CustomPainter {
     required Color accent,
     required bool glow,
   }) {
-    final bar = contentSize * 0.105;
-    final left = contentSize * 0.325;
-    final right = contentSize * 0.675;
+    final bar = contentSize * 0.078;
+    final left = contentSize * 0.335;
+    final right = contentSize * 0.665;
     final top = contentSize * 0.30;
     final bottom = contentSize * 0.70;
     final midY = center.dy;
     final r = bar / 2;
+    // Blue only on the upper part of the right stem (mockup: top half).
+    final splitY = top + (midY - top) * 0.92;
 
     RRect stemRect(double x) =>
         RRect.fromLTRBR(x - r, top, x + r, bottom, Radius.circular(r));
 
     final cross = RRect.fromLTRBR(
       left - r,
-      midY - r * 0.92,
+      midY - r * 0.85,
       right + r,
-      midY + r * 0.92,
+      midY + r * 0.85,
       Radius.circular(r),
     );
 
+    canvas.drawRRect(stemRect(left), Paint()..color = stem);
+    canvas.drawRRect(stemRect(right), Paint()..color = stem);
+
+    final accentRect = Rect.fromLTRB(
+      right - r - 1,
+      top - 1,
+      right + r + 1,
+      splitY,
+    );
     if (glow) {
+      canvas.save();
+      canvas.clipRect(accentRect);
       canvas.drawRRect(
         stemRect(right),
         Paint()
-          ..color = accent.withValues(alpha: 0.55)
-          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6),
+          ..color = accent.withValues(alpha: 0.5)
+          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 5),
       );
+      canvas.restore();
     }
 
-    canvas.drawRRect(stemRect(left), Paint()..color = stem);
-    canvas.drawRRect(cross, Paint()..color = stem);
+    canvas.save();
+    canvas.clipRect(accentRect);
     canvas.drawRRect(stemRect(right), Paint()..color = accent);
+    canvas.restore();
+
+    canvas.drawRRect(cross, Paint()..color = stem);
   }
 
   @override
