@@ -358,13 +358,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get exploreDemo => 'Explore demo UI';
 
   @override
-  String get tagline => 'Manage. Train. Win.\nAll in one place.';
+  String get tagline => 'Your team. One place.';
 
   @override
   String get continueWithGoogle => 'Continue with Google';
 
   @override
   String get continueWithApple => 'Continue with Apple';
+
+  @override
+  String get signInWithEmail => 'Sign in with email';
+
+  @override
+  String get newToChampHive => 'New to ChampHive? ';
+
+  @override
+  String get createAccount => 'Create account!';
 
   @override
   String get accountsViaInviteNote =>

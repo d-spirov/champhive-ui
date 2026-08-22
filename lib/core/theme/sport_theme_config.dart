@@ -59,3 +59,4 @@ const SportThemeConfig kGenericSportTheme = SportThemeConfig(
 
 /// Sport-neutral login / welcome imagery (no active section yet).
 const String kCommonWelcomeImage = 'assets/images/common/welcome.jpg';
+const String kLoginHeroImage = 'assets/images/common/login_hero.jpg';

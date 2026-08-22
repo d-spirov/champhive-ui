@@ -98,8 +98,9 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
   }
 
   Future<void> _reload() async {
-    final user =
-        await ref.read(authNotifierProvider.notifier).refreshCurrentUser();
+    final user = await ref
+        .read(authNotifierProvider.notifier)
+        .refreshCurrentUser();
     await ref.read(accountExtrasControllerProvider).refreshAll();
     if (!mounted || user == null) return;
     setState(() => _hydrateFrom(user));
@@ -110,17 +111,15 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
     final first = _firstNameCtrl.text.trim();
     final last = _lastNameCtrl.text.trim();
     if (first.isEmpty || last.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.namesRequired)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.namesRequired)));
       return;
     }
     setState(() => _savingProfile = true);
-    final ok = await ref.read(authNotifierProvider.notifier).updateProfile(
-          firstName: first,
-          lastName: last,
-          locale: _locale,
-        );
+    final ok = await ref
+        .read(authNotifierProvider.notifier)
+        .updateProfile(firstName: first, lastName: last, locale: _locale);
     if (ok && _locale != null) {
       await ref
           .read(localeProvider.notifier)
@@ -142,29 +141,28 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
     final next = _newPwCtrl.text;
     final confirm = _confirmPwCtrl.text;
     if (current.isEmpty || next.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.enterCurrentAndNewPassword)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.enterCurrentAndNewPassword)));
       return;
     }
     if (next != confirm) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.newPasswordsDoNotMatch)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.newPasswordsDoNotMatch)));
       return;
     }
     if (next.length < 8) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.newPasswordMinLength)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.newPasswordMinLength)));
       return;
     }
 
     setState(() => _changingPassword = true);
-    final ok = await ref.read(authNotifierProvider.notifier).changePassword(
-          currentPassword: current,
-          newPassword: next,
-        );
+    final ok = await ref
+        .read(authNotifierProvider.notifier)
+        .changePassword(currentPassword: current, newPassword: next);
     if (!mounted) return;
     setState(() => _changingPassword = false);
     if (ok) {
@@ -184,12 +182,17 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
     );
   }
 
-  Future<void> _togglePreference(NotificationPreference pref, bool enabled) async {
+  Future<void> _togglePreference(
+    NotificationPreference pref,
+    bool enabled,
+  ) async {
     final l10n = AppLocalizations.of(context)!;
     final id = '${pref.key}|${pref.channel}';
     setState(() => _togglingPrefId = id);
     try {
-      await ref.read(accountExtrasControllerProvider).setPreferenceEnabled(
+      await ref
+          .read(accountExtrasControllerProvider)
+          .setPreferenceEnabled(
             key: pref.key,
             channel: pref.channel,
             enabled: enabled,
@@ -197,7 +200,9 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(apiErrorMessage(e, fallback: l10n.saveFailed))),
+          SnackBar(
+            content: Text(apiErrorMessage(e, fallback: l10n.saveFailed)),
+          ),
         );
       }
     } finally {
@@ -222,8 +227,8 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
                   Text(
                     _humanizeKey(consent.kind),
                     style: Theme.of(ctx).textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w700,
-                        ),
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                   const SizedBox(height: 4),
                   Text(
@@ -257,21 +262,18 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
     final id = '${consent.memberId}|${consent.kind}|${consent.version}';
     setState(() => _grantingConsentId = id);
     try {
-      await ref.read(accountExtrasControllerProvider).grantConsent(
-            memberId: consent.memberId,
-            kind: consent.kind,
-          );
+      await ref
+          .read(accountExtrasControllerProvider)
+          .grantConsent(memberId: consent.memberId, kind: consent.kind);
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.consentGrantedSnack)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.consentGrantedSnack)));
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            apiErrorMessage(e, fallback: l10n.consentGrantFailed),
-          ),
+          content: Text(apiErrorMessage(e, fallback: l10n.consentGrantFailed)),
         ),
       );
     } finally {
@@ -322,277 +324,267 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
       body: user == null
           ? Center(child: Text(l10n.signInToContinue))
           : isDemo
-              ? Center(child: Text(l10n.signInToContinue))
-              : RefreshIndicator(
-                  onRefresh: _reload,
-                  child: ListView(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
-                    children: [
-                      _ProfileHeader(user: user),
-                      const SizedBox(height: 20),
-                      Text(
-                        l10n.profile,
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                      const SizedBox(height: 8),
-                      TextField(
-                        controller: _firstNameCtrl,
-                        textCapitalization: TextCapitalization.words,
-                        decoration: InputDecoration(
-                          labelText: l10n.firstName,
+          ? Center(child: Text(l10n.signInToContinue))
+          : RefreshIndicator(
+              onRefresh: _reload,
+              child: ListView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
+                children: [
+                  _ProfileHeader(user: user),
+                  const SizedBox(height: 20),
+                  Text(
+                    l10n.profile,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: 8),
+                  TextField(
+                    controller: _firstNameCtrl,
+                    textCapitalization: TextCapitalization.words,
+                    decoration: InputDecoration(labelText: l10n.firstName),
+                  ),
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: _lastNameCtrl,
+                    textCapitalization: TextCapitalization.words,
+                    decoration: InputDecoration(labelText: l10n.lastName),
+                  ),
+                  const SizedBox(height: 12),
+                  DropdownButtonFormField<String>(
+                    // ignore: deprecated_member_use
+                    value: localeOptions.any((e) => e.$1 == _locale)
+                        ? _locale
+                        : localeOptions.first.$1,
+                    decoration: InputDecoration(labelText: l10n.language),
+                    items: [
+                      for (final opt in localeOptions)
+                        DropdownMenuItem(
+                          value: opt.$1,
+                          child: Text('${opt.$2} (${opt.$1})'),
                         ),
-                      ),
-                      const SizedBox(height: 12),
-                      TextField(
-                        controller: _lastNameCtrl,
-                        textCapitalization: TextCapitalization.words,
-                        decoration: InputDecoration(
-                          labelText: l10n.lastName,
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      DropdownButtonFormField<String>(
-                        // ignore: deprecated_member_use
-                        value: localeOptions.any((e) => e.$1 == _locale)
-                            ? _locale
-                            : localeOptions.first.$1,
-                        decoration: InputDecoration(labelText: l10n.language),
-                        items: [
-                          for (final opt in localeOptions)
-                            DropdownMenuItem(
-                              value: opt.$1,
-                              child: Text('${opt.$2} (${opt.$1})'),
+                      if (_locale != null &&
+                          _locale!.isNotEmpty &&
+                          !localeOptions.any((e) => e.$1 == _locale))
+                        DropdownMenuItem(value: _locale, child: Text(_locale!)),
+                    ],
+                    onChanged: (v) => setState(() => _locale = v),
+                  ),
+                  const SizedBox(height: 16),
+                  GradientButton(
+                    onPressed: _savingProfile || auth.isLoading
+                        ? null
+                        : _saveProfile,
+                    child: _savingProfile
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
                             ),
-                          if (_locale != null &&
-                              _locale!.isNotEmpty &&
-                              !localeOptions.any((e) => e.$1 == _locale))
-                            DropdownMenuItem(
-                              value: _locale,
-                              child: Text(_locale!),
+                          )
+                        : Text(l10n.saveProfile),
+                  ),
+                  const SizedBox(height: 28),
+                  _sectionTitle(context, l10n.pendingConsents),
+                  const SizedBox(height: 8),
+                  pendingAsync.when(
+                    loading: () => const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 12),
+                      child: Center(
+                        child: SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        ),
+                      ),
+                    ),
+                    error: (e, _) => Text(
+                      apiErrorMessage(e, fallback: l10n.consentsLoadFailed),
+                    ),
+                    data: (items) {
+                      if (items.isEmpty) {
+                        return Text(l10n.noPendingConsents);
+                      }
+                      return Column(
+                        children: [
+                          for (final c in items)
+                            _PendingConsentTile(
+                              consent: c,
+                              busy:
+                                  _grantingConsentId ==
+                                  '${c.memberId}|${c.kind}|${c.version}',
+                              onReview: () => _openGrantConsent(c),
                             ),
                         ],
-                        onChanged: (v) => setState(() => _locale = v),
-                      ),
-                      const SizedBox(height: 16),
-                      FilledButton(
-                        onPressed: _savingProfile || auth.isLoading
-                            ? null
-                            : _saveProfile,
-                        child: _savingProfile
-                            ? const SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                ),
-                              )
-                            : Text(l10n.saveProfile),
-                      ),
-                      const SizedBox(height: 28),
-                      _sectionTitle(context, l10n.pendingConsents),
-                      const SizedBox(height: 8),
-                      pendingAsync.when(
-                        loading: () => const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 12),
-                          child: Center(
-                            child: SizedBox(
-                              width: 24,
-                              height: 24,
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            ),
-                          ),
-                        ),
-                        error: (e, _) => Text(
-                          apiErrorMessage(e, fallback: l10n.consentsLoadFailed),
-                        ),
-                        data: (items) {
-                          if (items.isEmpty) {
-                            return Text(l10n.noPendingConsents);
-                          }
-                          return Column(
-                            children: [
-                              for (final c in items)
-                                _PendingConsentTile(
-                                  consent: c,
-                                  busy: _grantingConsentId ==
-                                      '${c.memberId}|${c.kind}|${c.version}',
-                                  onReview: () => _openGrantConsent(c),
-                                ),
-                            ],
-                          );
-                        },
-                      ),
-                      const SizedBox(height: 28),
-                      _sectionTitle(context, l10n.familyMembers),
-                      const SizedBox(height: 8),
-                      familyAsync.when(
-                        loading: () => const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 12),
-                          child: Center(
-                            child: SizedBox(
-                              width: 24,
-                              height: 24,
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            ),
-                          ),
-                        ),
-                        error: (e, _) => Text(
-                          apiErrorMessage(e, fallback: l10n.familyLoadFailed),
-                        ),
-                        data: (items) {
-                          if (items.isEmpty) {
-                            return Text(l10n.noFamilyMembers);
-                          }
-                          return Column(
-                            children: [
-                              for (final child in items)
-                                _FamilyChildTile(child: child),
-                            ],
-                          );
-                        },
-                      ),
-                      const SizedBox(height: 28),
-                      _sectionTitle(context, l10n.notificationPreferences),
-                      const SizedBox(height: 8),
-                      prefsAsync.when(
-                        loading: () => const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 12),
-                          child: Center(
-                            child: SizedBox(
-                              width: 24,
-                              height: 24,
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            ),
-                          ),
-                        ),
-                        error: (e, _) => Text(
-                          apiErrorMessage(e, fallback: l10n.prefsLoadFailed),
-                        ),
-                        data: (items) {
-                          if (items.isEmpty) {
-                            return Text(l10n.noNotificationPreferences);
-                          }
-                          return Column(
-                            children: [
-                              for (final pref in items)
-                                SwitchListTile(
-                                  contentPadding: EdgeInsets.zero,
-                                  title: Text(_humanizeKey(pref.key)),
-                                  subtitle: Text(
-                                    [
-                                      _channelLabel(l10n, pref.channel),
-                                      if (pref.isDefault) l10n.preferenceDefault,
-                                    ].join(' · '),
-                                  ),
-                                  value: pref.enabled,
-                                  onChanged: _togglingPrefId ==
-                                          '${pref.key}|${pref.channel}'
-                                      ? null
-                                      : (v) => _togglePreference(pref, v),
-                                ),
-                            ],
-                          );
-                        },
-                      ),
-                      const SizedBox(height: 28),
-                      Text(
-                        l10n.clubsAndRoles,
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                      const SizedBox(height: 8),
-                      if (user.roles.isEmpty)
-                        Text(l10n.noRoleGrants)
-                      else
-                        ...user.roles.map(
-                          (r) => ListTile(
-                            contentPadding: EdgeInsets.zero,
-                            leading: const Icon(Icons.badge_outlined),
-                            title: Text(r.role),
-                            subtitle: Text(
-                              [
-                                if (r.scope.isNotEmpty) r.scope,
-                                if (r.scopeId.isNotEmpty) r.scopeId,
-                                '${l10n.club} ${r.clubId}',
-                              ].join(' · '),
-                            ),
-                          ),
-                        ),
-                      const SizedBox(height: 20),
-                      Text(
-                        l10n.password,
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                      const SizedBox(height: 8),
-                      TextField(
-                        controller: _currentPwCtrl,
-                        obscureText: _obscureCurrent,
-                        decoration: InputDecoration(
-                          labelText: l10n.currentPassword,
-                          suffixIcon: IconButton(
-                            onPressed: () => setState(
-                              () => _obscureCurrent = !_obscureCurrent,
-                            ),
-                            icon: Icon(
-                              _obscureCurrent
-                                  ? Icons.visibility_outlined
-                                  : Icons.visibility_off_outlined,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      TextField(
-                        controller: _newPwCtrl,
-                        obscureText: _obscureNew,
-                        decoration: InputDecoration(
-                          labelText: l10n.newPassword,
-                          helperText: l10n.passwordRequirementsHint,
-                          suffixIcon: IconButton(
-                            onPressed: () =>
-                                setState(() => _obscureNew = !_obscureNew),
-                            icon: Icon(
-                              _obscureNew
-                                  ? Icons.visibility_outlined
-                                  : Icons.visibility_off_outlined,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      TextField(
-                        controller: _confirmPwCtrl,
-                        obscureText: _obscureNew,
-                        decoration: InputDecoration(
-                          labelText: l10n.confirmNewPassword,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      OutlinedButton(
-                        onPressed: _changingPassword || auth.isLoading
-                            ? null
-                            : _changePassword,
-                        child: _changingPassword
-                            ? const SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                ),
-                              )
-                            : Text(l10n.changePassword),
-                      ),
-                    ],
+                      );
+                    },
                   ),
-                ),
+                  const SizedBox(height: 28),
+                  _sectionTitle(context, l10n.familyMembers),
+                  const SizedBox(height: 8),
+                  familyAsync.when(
+                    loading: () => const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 12),
+                      child: Center(
+                        child: SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        ),
+                      ),
+                    ),
+                    error: (e, _) => Text(
+                      apiErrorMessage(e, fallback: l10n.familyLoadFailed),
+                    ),
+                    data: (items) {
+                      if (items.isEmpty) {
+                        return Text(l10n.noFamilyMembers);
+                      }
+                      return Column(
+                        children: [
+                          for (final child in items)
+                            _FamilyChildTile(child: child),
+                        ],
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 28),
+                  _sectionTitle(context, l10n.notificationPreferences),
+                  const SizedBox(height: 8),
+                  prefsAsync.when(
+                    loading: () => const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 12),
+                      child: Center(
+                        child: SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        ),
+                      ),
+                    ),
+                    error: (e, _) => Text(
+                      apiErrorMessage(e, fallback: l10n.prefsLoadFailed),
+                    ),
+                    data: (items) {
+                      if (items.isEmpty) {
+                        return Text(l10n.noNotificationPreferences);
+                      }
+                      return Column(
+                        children: [
+                          for (final pref in items)
+                            SwitchListTile(
+                              contentPadding: EdgeInsets.zero,
+                              title: Text(_humanizeKey(pref.key)),
+                              subtitle: Text(
+                                [
+                                  _channelLabel(l10n, pref.channel),
+                                  if (pref.isDefault) l10n.preferenceDefault,
+                                ].join(' · '),
+                              ),
+                              value: pref.enabled,
+                              onChanged:
+                                  _togglingPrefId ==
+                                      '${pref.key}|${pref.channel}'
+                                  ? null
+                                  : (v) => _togglePreference(pref, v),
+                            ),
+                        ],
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 28),
+                  Text(
+                    l10n.clubsAndRoles,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: 8),
+                  if (user.roles.isEmpty)
+                    Text(l10n.noRoleGrants)
+                  else
+                    ...user.roles.map(
+                      (r) => ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        leading: const Icon(Icons.badge_outlined),
+                        title: Text(r.role),
+                        subtitle: Text(
+                          [
+                            if (r.scope.isNotEmpty) r.scope,
+                            if (r.scopeId.isNotEmpty) r.scopeId,
+                            '${l10n.club} ${r.clubId}',
+                          ].join(' · '),
+                        ),
+                      ),
+                    ),
+                  const SizedBox(height: 20),
+                  Text(
+                    l10n.password,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: 8),
+                  TextField(
+                    controller: _currentPwCtrl,
+                    obscureText: _obscureCurrent,
+                    decoration: InputDecoration(
+                      labelText: l10n.currentPassword,
+                      suffixIcon: IconButton(
+                        onPressed: () =>
+                            setState(() => _obscureCurrent = !_obscureCurrent),
+                        icon: Icon(
+                          _obscureCurrent
+                              ? Icons.visibility_outlined
+                              : Icons.visibility_off_outlined,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: _newPwCtrl,
+                    obscureText: _obscureNew,
+                    decoration: InputDecoration(
+                      labelText: l10n.newPassword,
+                      helperText: l10n.passwordRequirementsHint,
+                      suffixIcon: IconButton(
+                        onPressed: () =>
+                            setState(() => _obscureNew = !_obscureNew),
+                        icon: Icon(
+                          _obscureNew
+                              ? Icons.visibility_outlined
+                              : Icons.visibility_off_outlined,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: _confirmPwCtrl,
+                    obscureText: _obscureNew,
+                    decoration: InputDecoration(
+                      labelText: l10n.confirmNewPassword,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  OutlinedButton(
+                    onPressed: _changingPassword || auth.isLoading
+                        ? null
+                        : _changePassword,
+                    child: _changingPassword
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : Text(l10n.changePassword),
+                  ),
+                ],
+              ),
+            ),
     );
   }
 
   Widget _sectionTitle(BuildContext context, String title) {
-    return Text(
-      title,
-      style: Theme.of(context).textTheme.titleMedium,
-    );
+    return Text(title, style: Theme.of(context).textTheme.titleMedium);
   }
 }
 
@@ -692,8 +684,8 @@ class _ProfileHeader extends StatelessWidget {
                 Text(
                   user.displayName,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
                 Text(user.email),
                 const SizedBox(height: 6),
@@ -706,8 +698,8 @@ class _ProfileHeader extends StatelessWidget {
                       user.emailVerified
                           ? l10n.emailVerified
                           : user.emailVerificationPending
-                              ? l10n.verificationPending
-                              : l10n.emailNotVerified,
+                          ? l10n.verificationPending
+                          : l10n.emailNotVerified,
                       ok: user.emailVerified,
                     ),
                     if (user.isPlatformRoot)
@@ -734,15 +726,17 @@ class _ProfileHeader extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        color: (ok ? AppColors.present : AppColors.late).withValues(alpha: 0.15),
+        color: (ok ? AppColors.present : AppColors.late).withValues(
+          alpha: 0.15,
+        ),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
         label,
         style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: ok ? AppColors.present : AppColors.late,
-              fontWeight: FontWeight.w600,
-            ),
+          color: ok ? AppColors.present : AppColors.late,
+          fontWeight: FontWeight.w600,
+        ),
       ),
     );
   }

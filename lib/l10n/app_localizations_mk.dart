@@ -359,13 +359,22 @@ class AppLocalizationsMk extends AppLocalizations {
   String get exploreDemo => 'Истражи демо интерфејс';
 
   @override
-  String get tagline => 'Менаџирај. Тренирај. Победи.\nСè на едно место.';
+  String get tagline => 'Твојот тим. Едно место.';
 
   @override
   String get continueWithGoogle => 'Продолжи со Google';
 
   @override
   String get continueWithApple => 'Продолжи со Apple';
+
+  @override
+  String get signInWithEmail => 'Најави се со е-пошта';
+
+  @override
+  String get newToChampHive => 'Нов на ChampHive? ';
+
+  @override
+  String get createAccount => 'Креирај профил!';
 
   @override
   String get accountsViaInviteNote =>

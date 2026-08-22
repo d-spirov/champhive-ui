@@ -37,14 +37,13 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     ref.listen(authNotifierProvider, (previous, next) => _tryRoute());
     ref.listen(authApiProvider, (previous, next) => _tryRoute());
 
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bg = isDark ? AppColors.darkNavy : AppColors.lightPrimary;
+    const bg = AppColors.loginNavyDeep;
 
     return Scaffold(
       body: Container(
         width: double.infinity,
         color: bg,
-        child: Center(
+        child: const Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -52,12 +51,12 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                 size: 96,
                 showWordmark: true,
                 showShadow: false,
-                isDark: isDark,
-                backgroundColor: bg,
+                solidWhiteMark: true,
+                backgroundColor: Colors.white,
                 wordmarkColor: Colors.white,
               ),
-              const SizedBox(height: 28),
-              const CircularProgressIndicator(color: Colors.white),
+              SizedBox(height: 28),
+              CircularProgressIndicator(color: Colors.white),
             ],
           ),
         ),

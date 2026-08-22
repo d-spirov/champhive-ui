@@ -358,13 +358,22 @@ class AppLocalizationsIt extends AppLocalizations {
   String get exploreDemo => 'Esplora l\'interfaccia demo';
 
   @override
-  String get tagline => 'Gestisci. Allenati. Vinci.\nTutto in un unico posto.';
+  String get tagline => 'La tua squadra. Un solo posto.';
 
   @override
   String get continueWithGoogle => 'Continua con Google';
 
   @override
   String get continueWithApple => 'Continua con Apple';
+
+  @override
+  String get signInWithEmail => 'Accedi con e-mail';
+
+  @override
+  String get newToChampHive => 'Nuovo su ChampHive? ';
+
+  @override
+  String get createAccount => 'Crea un account!';
 
   @override
   String get accountsViaInviteNote =>

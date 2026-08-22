@@ -49,9 +49,7 @@ class _MessagesScreenState extends ConsumerState<MessagesScreen> {
               onChanged: (v) => setState(() => _query = v),
             ),
           ),
-          Expanded(
-            child: isDemo ? _demoList(l10n) : _liveList(l10n),
-          ),
+          Expanded(child: isDemo ? _demoList(l10n) : _liveList(l10n)),
         ],
       ),
     );
@@ -70,43 +68,48 @@ class _MessagesScreenState extends ConsumerState<MessagesScreen> {
     }
 
     return ListView.separated(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
       itemCount: threads.length,
-      separatorBuilder: (_, _) => const Divider(height: 1),
+      separatorBuilder: (_, _) => const SizedBox(height: 10),
       itemBuilder: (context, index) {
         final thread = threads[index];
-        return ListTile(
-          leading: AvatarCircle(
-            label: thread.title,
-            backgroundColor: thread.isGroup
-                ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.25)
-                : null,
+        return AppCard(
+          child: ListTile(
+            leading: AvatarCircle(
+              label: thread.title,
+              backgroundColor: thread.isGroup
+                  ? Theme.of(
+                      context,
+                    ).colorScheme.primary.withValues(alpha: 0.25)
+                  : null,
+            ),
+            title: Text(
+              thread.title,
+              style: const TextStyle(fontWeight: FontWeight.w600),
+            ),
+            subtitle: Text(
+              thread.preview,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            trailing: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  thread.timeLabel,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                const SizedBox(height: 6),
+                UnreadBadge(count: thread.unread),
+              ],
+            ),
+            onTap: () {
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text(l10n.signInToOpenChat)));
+            },
           ),
-          title: Text(
-            thread.title,
-            style: const TextStyle(fontWeight: FontWeight.w600),
-          ),
-          subtitle: Text(
-            thread.preview,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-          trailing: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                thread.timeLabel,
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
-              const SizedBox(height: 6),
-              UnreadBadge(count: thread.unread),
-            ],
-          ),
-          onTap: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(l10n.signInToOpenChat)),
-            );
-          },
         );
       },
     );
@@ -168,13 +171,16 @@ class _MessagesScreenState extends ConsumerState<MessagesScreen> {
           },
           child: ListView.separated(
             physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
             itemCount: filtered.length,
-            separatorBuilder: (_, _) => const Divider(height: 1),
+            separatorBuilder: (_, _) => const SizedBox(height: 10),
             itemBuilder: (context, index) {
               final channel = filtered[index];
-              return _ChannelTile(
-                channel: channel,
-                onTap: () => context.push('/messages/${channel.channelId}'),
+              return AppCard(
+                child: _ChannelTile(
+                  channel: channel,
+                  onTap: () => context.push('/messages/${channel.channelId}'),
+                ),
               );
             },
           ),
@@ -196,8 +202,8 @@ class _ChannelTile extends StatelessWidget {
     final preview = channel.lastMessage == null
         ? l10n.noMessagesYet
         : channel.lastMessage!.isDeleted
-            ? l10n.messageDeleted
-            : (channel.lastMessage!.body ?? '');
+        ? l10n.messageDeleted
+        : (channel.lastMessage!.body ?? '');
     final when = channel.lastMessage?.sentAtUtc ?? channel.updatedAtUtc;
 
     return ListTile(
@@ -227,10 +233,9 @@ class _ChannelTile extends StatelessWidget {
               child: Icon(
                 Icons.notifications_off_outlined,
                 size: 16,
-                color: Theme.of(context)
-                    .colorScheme
-                    .onSurface
-                    .withValues(alpha: 0.45),
+                color: Theme.of(
+                  context,
+                ).colorScheme.onSurface.withValues(alpha: 0.45),
               ),
             ),
         ],
@@ -240,8 +245,9 @@ class _ChannelTile extends StatelessWidget {
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
         style: TextStyle(
-          fontWeight:
-              channel.unreadCount > 0 ? FontWeight.w500 : FontWeight.w400,
+          fontWeight: channel.unreadCount > 0
+              ? FontWeight.w500
+              : FontWeight.w400,
         ),
       ),
       trailing: Column(

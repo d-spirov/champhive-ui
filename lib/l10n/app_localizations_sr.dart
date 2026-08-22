@@ -358,13 +358,22 @@ class AppLocalizationsSr extends AppLocalizations {
   String get exploreDemo => 'Istraži demo interfejs';
 
   @override
-  String get tagline => 'Upravljaj. Treniraj. Pobedi.\nSve na jednom mestu.';
+  String get tagline => 'Tvoj tim. Jedno mesto.';
 
   @override
   String get continueWithGoogle => 'Nastavi sa Google';
 
   @override
   String get continueWithApple => 'Nastavi sa Apple';
+
+  @override
+  String get signInWithEmail => 'Prijavi se e-poštom';
+
+  @override
+  String get newToChampHive => 'Novi na ChampHive? ';
+
+  @override
+  String get createAccount => 'Napravi nalog!';
 
   @override
   String get accountsViaInviteNote =>
@@ -1577,13 +1586,22 @@ class AppLocalizationsSrLatn extends AppLocalizationsSr {
   String get exploreDemo => 'Istraži demo interfejs';
 
   @override
-  String get tagline => 'Upravljaj. Treniraj. Pobedi.\nSve na jednom mestu.';
+  String get tagline => 'Tvoj tim. Jedno mesto.';
 
   @override
   String get continueWithGoogle => 'Nastavi sa Google';
 
   @override
   String get continueWithApple => 'Nastavi sa Apple';
+
+  @override
+  String get signInWithEmail => 'Prijavi se e-poštom';
+
+  @override
+  String get newToChampHive => 'Novi na ChampHive? ';
+
+  @override
+  String get createAccount => 'Napravi nalog!';
 
   @override
   String get accountsViaInviteNote =>

@@ -6,6 +6,7 @@ import '../../../l10n/app_localizations.dart';
 import '../providers/auth_provider.dart';
 import '../../../shared/theme/app_theme.dart';
 import '../../../shared/widgets/team_hive_logo.dart';
+import '../../../shared/widgets/ui_bits.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
@@ -35,7 +36,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
-    final ok = await ref.read(authNotifierProvider.notifier).register(
+    final ok = await ref
+        .read(authNotifierProvider.notifier)
+        .register(
           email: _emailController.text.trim(),
           password: _passwordController.text,
           firstName: _firstNameController.text.trim(),
@@ -48,9 +51,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     }
     final l10n = AppLocalizations.of(context)!;
     final error = ref.read(authNotifierProvider).error;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(error ?? l10n.registrationFailed)),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(error ?? l10n.registrationFailed)));
   }
 
   @override
@@ -129,8 +132,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     TextFormField(
                       controller: _confirmController,
                       obscureText: _obscure,
-                      decoration:
-                          InputDecoration(labelText: l10n.confirmPassword),
+                      decoration: InputDecoration(
+                        labelText: l10n.confirmPassword,
+                      ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return l10n.pleaseConfirmPassword;
@@ -142,19 +146,23 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       },
                     ),
                     const SizedBox(height: 24),
-                    FilledButton(
+                    GradientButton(
                       onPressed: auth.isLoading ? null : _submit,
                       child: auth.isLoading
                           ? const SizedBox(
                               height: 20,
                               width: 20,
-                              child: CircularProgressIndicator(strokeWidth: 2),
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Colors.white,
+                              ),
                             )
                           : Text(l10n.signUp),
                     ),
                     TextButton(
-                      onPressed:
-                          auth.isLoading ? null : () => context.go('/login'),
+                      onPressed: auth.isLoading
+                          ? null
+                          : () => context.go('/login'),
                       child: Text.rich(
                         TextSpan(
                           text: l10n.alreadyHaveAccount,
@@ -175,8 +183,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       l10n.accountsViaInviteNote,
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: AppColors.lightMuted,
-                          ),
+                        color: AppColors.lightMuted,
+                      ),
                     ),
                   ],
                 ),

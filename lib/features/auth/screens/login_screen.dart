@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -8,6 +9,7 @@ import '../../../core/theme/sport_theme_config.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../shared/theme/app_theme.dart';
 import '../../../shared/widgets/team_hive_logo.dart';
+import '../../../shared/widgets/ui_bits.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -20,139 +22,141 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primary = isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
-    final onPrimary = isDark ? const Color(0xFF111827) : Colors.white;
 
-    return Scaffold(
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          // Sport-neutral welcome — no active Section yet.
-          Image.asset(
-            kCommonWelcomeImage,
-            fit: BoxFit.cover,
-            alignment: const Alignment(0, -0.15),
-            errorBuilder: (_, _, _) => Container(color: Colors.black),
-          ),
-          // Soft vignette: keep the pitch visible, darken edges for type/buttons.
-          DecoratedBox(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                stops: const [0.0, 0.35, 0.62, 1.0],
-                colors: [
-                  Colors.black.withValues(alpha: 0.45),
-                  Colors.black.withValues(alpha: 0.15),
-                  Colors.black.withValues(alpha: 0.55),
-                  Colors.black.withValues(alpha: 0.88),
-                ],
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.light,
+      child: Scaffold(
+        backgroundColor: AppColors.loginNavyDeep,
+        body: Stack(
+          fit: StackFit.expand,
+          children: [
+            Image.asset(
+              kLoginHeroImage,
+              fit: BoxFit.cover,
+              alignment: const Alignment(0, 0.05),
+              errorBuilder: (_, _, _) =>
+                  const ColoredBox(color: AppColors.loginNavyDeep),
+            ),
+            const DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  stops: [0.0, 0.16, 0.32, 0.62, 0.82, 1.0],
+                  colors: [
+                    Color(0xCC070B18),
+                    Color(0x66070B18),
+                    Color(0x14070B18),
+                    Color(0x33070B18),
+                    Color(0xD9070B18),
+                    Color(0xFF070B18),
+                  ],
+                ),
               ),
             ),
-          ),
-          SafeArea(
-            child: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 420),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 28),
-                  child: Column(
-                    children: [
-                      const Spacer(flex: 2),
-                      const TeamHiveLogo(
-                        size: 104,
-                        showWordmark: true,
-                        showShadow: false,
-                        isDark: false,
-                        backgroundColor: Colors.white,
-                        wordmarkColor: Colors.white,
-                      ),
-                      const SizedBox(height: 14),
-                      Text(
-                        l10n.tagline,
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.inter(
-                          color: Colors.white.withValues(alpha: 0.92),
-                          fontSize: 16,
-                          height: 1.45,
-                          fontWeight: FontWeight.w400,
+            SafeArea(
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 420),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 28),
+                    child: Column(
+                      children: [
+                        const Spacer(flex: 2),
+                        const TeamHiveLogo(
+                          size: 88,
+                          showWordmark: true,
+                          showShadow: false,
+                          solidWhiteMark: true,
+                          backgroundColor: Colors.white,
+                          wordmarkColor: Colors.white,
                         ),
-                      ),
-                      const Spacer(flex: 3),
-                      _PrimaryButton(
-                        label: l10n.logIn,
-                        background: primary,
-                        foreground: onPrimary,
-                        onPressed: () => _openEmailLogin(context),
-                      ),
-                      const SizedBox(height: 12),
-                      _SocialButton(
-                        label: l10n.continueWithGoogle,
-                        icon: const _GoogleGlyph(),
-                        onPressed: () => _comingSoon('Google Sign-In'),
-                      ),
-                      const SizedBox(height: 12),
-                      _SocialButton(
-                        label: l10n.continueWithApple,
-                        icon: const Icon(Icons.apple_rounded, size: 22, color: Colors.black),
-                        onPressed: () => _comingSoon('Apple Sign-In'),
-                      ),
-                      const SizedBox(height: 18),
-                      TextButton(
-                        onPressed: () => context.go('/register'),
-                        style: TextButton.styleFrom(
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                        ),
-                        child: Text.rich(
-                          TextSpan(
-                            text: l10n.dontHaveAccount,
-                            style: GoogleFonts.inter(
-                              color: Colors.white.withValues(alpha: 0.78),
-                              fontSize: 14,
-                            ),
-                            children: [
-                              TextSpan(
-                                text: l10n.signUp,
-                                style: GoogleFonts.inter(
-                                  color: primary,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ],
+                        const SizedBox(height: 12),
+                        Text(
+                          l10n.tagline,
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.inter(
+                            color: Colors.white.withValues(alpha: 0.92),
+                            fontSize: 16,
+                            height: 1.4,
+                            fontWeight: FontWeight.w400,
                           ),
                         ),
-                      ),
-                      TextButton(
-                        onPressed: () async {
-                          await ref.read(authNotifierProvider.notifier).enterDemo();
-                          if (context.mounted) context.go('/home');
-                        },
-                        style: TextButton.styleFrom(
-                          foregroundColor: Colors.white54,
-                          textStyle: GoogleFonts.inter(fontSize: 13),
+                        const Spacer(flex: 5),
+                        _PillButton(
+                          label: l10n.continueWithGoogle,
+                          icon: const _GoogleGlyph(),
+                          filled: true,
+                          onPressed: () => _comingSoon('Google Sign-In'),
                         ),
-                        child: Text(l10n.exploreDemo),
-                      ),
-                      const SizedBox(height: 8),
-                    ],
+                        const SizedBox(height: 12),
+                        _PillButton(
+                          label: l10n.continueWithApple,
+                          icon: const Icon(
+                            Icons.apple,
+                            size: 22,
+                            color: Color(0xFF0F172A),
+                          ),
+                          filled: true,
+                          onPressed: () => _comingSoon('Apple Sign-In'),
+                        ),
+                        const SizedBox(height: 12),
+                        _PillButton(
+                          label: l10n.signInWithEmail,
+                          icon: Icon(
+                            Icons.mail_outline_rounded,
+                            size: 20,
+                            color: Colors.white.withValues(alpha: 0.95),
+                          ),
+                          filled: false,
+                          onPressed: () => _openEmailLogin(context),
+                        ),
+                        const SizedBox(height: 18),
+                        TextButton(
+                          onPressed: () => context.go('/register'),
+                          style: TextButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                          ),
+                          child: Text.rich(
+                            TextSpan(
+                              text: l10n.newToChampHive,
+                              style: GoogleFonts.inter(
+                                color: Colors.white.withValues(alpha: 0.86),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                              ),
+                              children: [
+                                TextSpan(
+                                  text: l10n.createAccount,
+                                  style: GoogleFonts.inter(
+                                    color: AppColors.primaryBright,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
   void _comingSoon(String label) {
     final l10n = AppLocalizations.of(context)!;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(l10n.comingSoonNamed(label))),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(l10n.comingSoonNamed(label))));
   }
 
   Future<void> _openEmailLogin(BuildContext context) async {
@@ -194,7 +198,9 @@ class _EmailLoginSheetState extends ConsumerState<_EmailLoginSheet> {
 
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
-    final ok = await ref.read(authNotifierProvider.notifier).login(
+    final ok = await ref
+        .read(authNotifierProvider.notifier)
+        .login(
           email: _emailController.text.trim(),
           password: _passwordController.text,
         );
@@ -207,9 +213,7 @@ class _EmailLoginSheetState extends ConsumerState<_EmailLoginSheet> {
     final error = ref.read(authNotifierProvider).error;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(
-          error ?? AppLocalizations.of(context)!.loginFailed,
-        ),
+        content: Text(error ?? AppLocalizations.of(context)!.loginFailed),
       ),
     );
   }
@@ -256,10 +260,11 @@ class _EmailLoginSheetState extends ConsumerState<_EmailLoginSheet> {
                 ),
                 const SizedBox(height: 18),
                 Text(
-                  l10n.logIn,
-                  style: GoogleFonts.poppins(
+                  l10n.signInWithEmail,
+                  style: GoogleFonts.inter(
                     fontSize: 22,
                     fontWeight: FontWeight.w700,
+                    letterSpacing: -0.3,
                     color: textColor,
                   ),
                 ),
@@ -304,20 +309,36 @@ class _EmailLoginSheetState extends ConsumerState<_EmailLoginSheet> {
                       : null,
                 ),
                 const SizedBox(height: 22),
-                FilledButton(
+                GradientButton(
                   onPressed: auth.isLoading ? null : _submit,
                   child: auth.isLoading
                       ? const SizedBox(
                           width: 22,
                           height: 22,
-                          child: CircularProgressIndicator(strokeWidth: 2),
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
                         )
                       : Text(l10n.logIn),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 4),
                 TextButton(
-                  onPressed:
-                      auth.isLoading ? null : () => Navigator.pop(context),
+                  onPressed: auth.isLoading
+                      ? null
+                      : () async {
+                          Navigator.pop(context);
+                          await ref
+                              .read(authNotifierProvider.notifier)
+                              .enterDemo();
+                          if (context.mounted) context.go('/home');
+                        },
+                  child: Text(l10n.exploreDemo),
+                ),
+                TextButton(
+                  onPressed: auth.isLoading
+                      ? null
+                      : () => Navigator.pop(context),
                   child: Text(l10n.cancel),
                 ),
               ],
@@ -329,82 +350,51 @@ class _EmailLoginSheetState extends ConsumerState<_EmailLoginSheet> {
   }
 }
 
-class _PrimaryButton extends StatelessWidget {
-  const _PrimaryButton({
-    required this.label,
-    required this.background,
-    required this.foreground,
-    required this.onPressed,
-  });
-
-  final String label;
-  final Color background;
-  final Color foreground;
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: 54,
-      child: FilledButton(
-        onPressed: onPressed,
-        style: FilledButton.styleFrom(
-          backgroundColor: background,
-          foregroundColor: foreground,
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
-          ),
-          textStyle: GoogleFonts.inter(
-            fontWeight: FontWeight.w700,
-            fontSize: 16,
-          ),
-        ),
-        child: Text(label),
-      ),
-    );
-  }
-}
-
-class _SocialButton extends StatelessWidget {
-  const _SocialButton({
+class _PillButton extends StatelessWidget {
+  const _PillButton({
     required this.label,
     required this.icon,
+    required this.filled,
     required this.onPressed,
   });
 
   final String label;
   final Widget icon;
+  final bool filled;
   final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
+    final radius = BorderRadius.circular(AppTheme.radiusPill);
     return SizedBox(
       width: double.infinity,
       height: 54,
-      child: OutlinedButton(
-        onPressed: onPressed,
-        style: OutlinedButton.styleFrom(
-          backgroundColor: Colors.white,
-          foregroundColor: const Color(0xFF111827),
-          side: BorderSide(color: Colors.white.withValues(alpha: 0.9)),
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
-          ),
-          textStyle: GoogleFonts.inter(
-            fontWeight: FontWeight.w600,
-            fontSize: 15,
-          ),
+      child: Material(
+        color: filled ? Colors.white : Colors.transparent,
+        shape: RoundedRectangleBorder(
+          borderRadius: radius,
+          side: filled
+              ? BorderSide.none
+              : BorderSide(color: Colors.white.withValues(alpha: 0.85)),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(width: 24, height: 24, child: Center(child: icon)),
-            const SizedBox(width: 10),
-            Text(label),
-          ],
+        child: InkWell(
+          onTap: onPressed,
+          borderRadius: radius,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(width: 24, height: 24, child: Center(child: icon)),
+              const SizedBox(width: 10),
+              Text(
+                label,
+                style: GoogleFonts.inter(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 15,
+                  color: filled ? const Color(0xFF0F172A) : Colors.white,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -416,10 +406,7 @@ class _GoogleGlyph extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(
-      size: const Size.square(20),
-      painter: _GoogleGPainter(),
-    );
+    return CustomPaint(size: const Size.square(20), painter: _GoogleGPainter());
   }
 }
 
@@ -427,14 +414,14 @@ class _GoogleGPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final stroke = size.width * 0.18;
-    final rect = Offset(stroke / 2, stroke / 2) &
+    final rect =
+        Offset(stroke / 2, stroke / 2) &
         Size(size.width - stroke, size.height - stroke);
     final paint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = stroke
       ..strokeCap = StrokeCap.butt;
 
-    // Simplified multicolor G ring (blue / green / yellow / red arcs).
     paint.color = const Color(0xFF4285F4);
     canvas.drawArc(rect, -0.4, 1.6, false, paint);
     paint.color = const Color(0xFF34A853);

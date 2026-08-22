@@ -8,6 +8,7 @@ import '../../events/providers/events_provider.dart';
 import '../../../shared/models/event_attendance.dart';
 import '../../../shared/theme/app_theme.dart';
 import '../../../shared/utils/api_error_message.dart';
+import '../../../shared/widgets/ui_bits.dart';
 import '../widgets/attendance_ui.dart';
 import '../../players/widgets/player_avatar.dart';
 
@@ -46,9 +47,7 @@ class _MarkAttendanceScreenState extends ConsumerState<MarkAttendanceScreen>
 
   void _syncFromSession(AttendanceSession session) {
     _session = session;
-    _draft = {
-      for (final p in session.participants) p.id: p,
-    };
+    _draft = {for (final p in session.participants) p.id: p};
   }
 
   AttendanceSummaryCounts _counts() {
@@ -151,9 +150,9 @@ class _MarkAttendanceScreenState extends ConsumerState<MarkAttendanceScreen>
         _saving = false;
         _localError = apiErrorMessage(e, fallback: l10n.couldNotSaveStatus);
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(_localError!)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(_localError!)));
     }
   }
 
@@ -176,7 +175,8 @@ class _MarkAttendanceScreenState extends ConsumerState<MarkAttendanceScreen>
       final edited = draft[original.id];
       if (edited == null) continue;
       if (!edited.status.isMarkable) continue;
-      final changed = edited.status != original.status ||
+      final changed =
+          edited.status != original.status ||
           (edited.note ?? '') != (original.note ?? '');
       if (!changed) continue;
       updates.add(
@@ -213,23 +213,17 @@ class _MarkAttendanceScreenState extends ConsumerState<MarkAttendanceScreen>
       ref.invalidate(attendanceSessionProvider(_occurrenceId));
       ref.invalidate(occurrenceAttendanceReportProvider(_occurrenceId));
       if (!mounted) return;
-      context.go(
-        '/occurrences/$_occurrenceId/attendance/saved',
-        extra: result,
-      );
+      context.go('/occurrences/$_occurrenceId/attendance/saved', extra: result);
     } catch (e) {
       if (!mounted) return;
-      final message = apiErrorMessage(
-        e,
-        fallback: l10n.couldNotSaveAttendance,
-      );
+      final message = apiErrorMessage(e, fallback: l10n.couldNotSaveAttendance);
       setState(() {
         _localError = message;
         _saving = false;
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(message)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(message)));
     }
   }
 
@@ -255,8 +249,9 @@ class _MarkAttendanceScreenState extends ConsumerState<MarkAttendanceScreen>
         bottom: TabBar(
           controller: _tabs,
           labelColor: Theme.of(context).colorScheme.primary,
-          unselectedLabelColor:
-              Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.55),
+          unselectedLabelColor: Theme.of(
+            context,
+          ).colorScheme.onSurface.withValues(alpha: 0.55),
           indicatorColor: Theme.of(context).colorScheme.primary,
           tabs: [
             Tab(
@@ -343,7 +338,8 @@ class _MarkAttendanceScreenState extends ConsumerState<MarkAttendanceScreen>
                       onRefresh: () => ref.invalidate(
                         attendanceSessionProvider(_occurrenceId),
                       ),
-                      scopeName: session.scopeName ??
+                      scopeName:
+                          session.scopeName ??
                           occurrence?.scopeName ??
                           (occurrence?.teams.isNotEmpty == true
                               ? occurrence!.teams.join(', ')
@@ -376,46 +372,52 @@ class _SessionHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final muted = Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6);
+    final muted = Theme.of(
+      context,
+    ).colorScheme.onSurface.withValues(alpha: 0.6);
     final scope = session.scopeName ?? occurrence?.scopeName;
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            session.title,
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
+          Text(session.title, style: Theme.of(context).textTheme.titleMedium),
           if (scope != null && scope.isNotEmpty) ...[
             const SizedBox(height: 2),
             Text(
               scope,
               style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
+                color: Theme.of(context).colorScheme.primary,
+              ),
             ),
           ],
           const SizedBox(height: 4),
           Text(
             [
               formatEventDate(session.startAt),
-              formatEventTimeRange(session.startAt, occurrence?.endAt ?? session.endAt),
+              formatEventTimeRange(
+                session.startAt,
+                occurrence?.endAt ?? session.endAt,
+              ),
               if (session.location != null && session.location!.isNotEmpty)
                 session.location!
               else if (occurrence != null)
                 occurrence!.location.display,
             ].join(' · '),
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: muted),
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: muted),
           ),
           const SizedBox(height: 6),
           Text(
             session.canMark
                 ? l10n.tapMemberToMark
                 : session.isCanceled
-                    ? l10n.sessionCanceled
-                    : l10n.attendanceLocked,
-            style: Theme.of(context).textTheme.labelMedium?.copyWith(color: muted),
+                ? l10n.sessionCanceled
+                : l10n.attendanceLocked,
+            style: Theme.of(
+              context,
+            ).textTheme.labelMedium?.copyWith(color: muted),
           ),
         ],
       ),
@@ -449,10 +451,7 @@ class _RosterTab extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                l10n.noMembersOnRoster(scope),
-                textAlign: TextAlign.center,
-              ),
+              Text(l10n.noMembersOnRoster(scope), textAlign: TextAlign.center),
               const SizedBox(height: 16),
               FilledButton.tonal(
                 onPressed: onRefresh,
@@ -511,10 +510,26 @@ class _SummaryTab extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            _Stat(label: l10n.statusPresent, count: counts.present, color: AppColors.present),
-            _Stat(label: l10n.statusLate, count: counts.late, color: AppColors.late),
-            _Stat(label: l10n.statusAbsent, count: counts.absent, color: AppColors.absent),
-            _Stat(label: l10n.statusExcused, count: counts.excused, color: AppColors.excused),
+            _Stat(
+              label: l10n.statusPresent,
+              count: counts.present,
+              color: AppColors.present,
+            ),
+            _Stat(
+              label: l10n.statusLate,
+              count: counts.late,
+              color: AppColors.late,
+            ),
+            _Stat(
+              label: l10n.statusAbsent,
+              count: counts.absent,
+              color: AppColors.absent,
+            ),
+            _Stat(
+              label: l10n.statusExcused,
+              count: counts.excused,
+              color: AppColors.excused,
+            ),
           ],
         ),
         const SizedBox(height: 20),
@@ -536,11 +551,7 @@ class _SummaryTab extends StatelessWidget {
 }
 
 class _Stat extends StatelessWidget {
-  const _Stat({
-    required this.label,
-    required this.count,
-    required this.color,
-  });
+  const _Stat({required this.label, required this.count, required this.color});
 
   final String label;
   final int count;
@@ -553,9 +564,9 @@ class _Stat extends StatelessWidget {
         Text(
           '$count',
           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                color: color,
-                fontWeight: FontWeight.w800,
-              ),
+            color: color,
+            fontWeight: FontWeight.w800,
+          ),
         ),
         Text(label, style: Theme.of(context).textTheme.labelMedium),
       ],
@@ -621,7 +632,8 @@ class _StickyFooter extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     return Material(
       elevation: 8,
-      color: Theme.of(context).cardTheme.color ??
+      color:
+          Theme.of(context).cardTheme.color ??
           Theme.of(context).colorScheme.surface,
       child: SafeArea(
         top: false,
@@ -652,13 +664,16 @@ class _StickyFooter extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 12),
-              FilledButton(
+              GradientButton(
                 onPressed: enabled ? onSave : null,
                 child: saving
                     ? const SizedBox(
                         height: 22,
                         width: 22,
-                        child: CircularProgressIndicator(strokeWidth: 2),
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
                       )
                     : Text(l10n.saveRemaining),
               ),
@@ -671,10 +686,7 @@ class _StickyFooter extends StatelessWidget {
 }
 
 class _StatusPickerSheet extends StatelessWidget {
-  const _StatusPickerSheet({
-    required this.memberName,
-    required this.current,
-  });
+  const _StatusPickerSheet({required this.memberName, required this.current});
 
   final String memberName;
   final AttendanceStatus current;

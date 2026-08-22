@@ -16,6 +16,7 @@ class TeamHiveLogo extends StatelessWidget {
     this.backgroundColor,
     this.showWordmark = false,
     this.wordmarkColor,
+    this.solidWhiteMark = false,
   });
 
   final double size;
@@ -26,6 +27,9 @@ class TeamHiveLogo extends StatelessWidget {
   final Color? backgroundColor;
   final bool showWordmark;
   final Color? wordmarkColor;
+
+  /// White filled hex + navy H, for the dark login/splash screens.
+  final bool solidWhiteMark;
 
   @override
   Widget build(BuildContext context) {
@@ -38,10 +42,14 @@ class TeamHiveLogo extends StatelessWidget {
       child: CustomPaint(
         size: Size.square(size),
         painter: TeamHiveLogoPainter(
-          fillColor: backgroundColor ??
-              (dark ? const Color(0xFF0E1F3D) : Colors.white),
+          fillColor:
+              backgroundColor ??
+              (solidWhiteMark
+                  ? Colors.white
+                  : (dark ? const Color(0xFF0E1F3D) : Colors.white)),
           showShadow: showShadow,
           isDark: dark,
+          solidWhiteMark: solidWhiteMark,
         ),
       ),
     );
@@ -54,13 +62,14 @@ class TeamHiveLogo extends StatelessWidget {
         mark,
         SizedBox(height: size * 0.14),
         Text(
-          'TEAMHIVE',
+          'CHAMPHIVE',
           style: TextStyle(
             fontSize: size * 0.22,
             fontWeight: FontWeight.w800,
             letterSpacing: 2.4,
-            color: wordmarkColor ??
-                (dark ? AppColors.darkPrimary : const Color(0xFF111827)),
+            color:
+                wordmarkColor ??
+                (dark ? AppColors.darkPrimary : AppColors.primaryDark),
           ),
         ),
       ],
@@ -93,36 +102,38 @@ class TeamHiveLogoPainter extends CustomPainter {
     required this.fillColor,
     this.showShadow = true,
     this.isDark = false,
+    this.solidWhiteMark = false,
   });
 
   final Color fillColor;
   final bool showShadow;
   final bool isDark;
+  final bool solidWhiteMark;
 
   static const _lightStroke = [
-    Color(0xFFFFB86B),
-    Color(0xFFFF8A1F),
-    Color(0xFFFF7A00),
-    Color(0xFFC2410C),
+    Color(0xFF93C5FD),
+    Color(0xFF3B82F6),
+    Color(0xFF2563EB),
+    Color(0xFF1E3A8A),
   ];
 
   static const _darkStroke = [
-    Color(0xFFFFB86B),
-    Color(0xFFFF8A1F),
-    Color(0xFFFF7A00),
-    Color(0xFF9A3412),
+    Color(0xFFBFDBFE),
+    Color(0xFF60A5FA),
+    Color(0xFF2563EB),
+    Color(0xFF1E40AF),
   ];
 
   static const _lightLetter = [
-    Color(0xFF1C1917),
-    Color(0xFF292524),
-    Color(0xFF0C0A09),
+    Color(0xFF1E3A8A),
+    Color(0xFF1E40AF),
+    Color(0xFF172554),
   ];
 
   static const _darkLetter = [
-    Color(0xFFFFF7ED),
-    Color(0xFFFFEDD5),
-    Color(0xFFFDBA74),
+    Color(0xFFEFF6FF),
+    Color(0xFFDBEAFE),
+    Color(0xFF93C5FD),
   ];
 
   @override
@@ -130,8 +141,12 @@ class TeamHiveLogoPainter extends CustomPainter {
     final path = createTeamHiveHexagonPath(size);
     final contentSize = size.width;
     final center = Offset(contentSize / 2, contentSize / 2);
-    final strokeColors = isDark ? _darkStroke : _lightStroke;
-    final letterColors = isDark ? _darkLetter : _lightLetter;
+    final strokeColors = solidWhiteMark
+        ? const [Colors.white, Colors.white, Color(0xFFE8EEF9), Colors.white]
+        : (isDark ? _darkStroke : _lightStroke);
+    final letterColors = solidWhiteMark
+        ? const [Color(0xFF0F265D), Color(0xFF1E42AF), Color(0xFF0F265D)]
+        : (isDark ? _darkLetter : _lightLetter);
 
     // 1. Hexagon fill (blends with background)
     canvas.drawPath(
@@ -154,14 +169,18 @@ class TeamHiveLogoPainter extends CustomPainter {
       Paint()
         ..shader = strokeGradient
         ..style = PaintingStyle.stroke
-        ..strokeWidth = contentSize * 0.13
+        ..strokeWidth = contentSize * (solidWhiteMark ? 0.09 : 0.13)
         ..strokeJoin = StrokeJoin.round,
     );
 
     // 3. Soft interior shadow (UI only — off for app icons)
     if (showShadow) {
-      final shadowRect =
-          Rect.fromLTRB(0, contentSize * 0.25, contentSize, contentSize);
+      final shadowRect = Rect.fromLTRB(
+        0,
+        contentSize * 0.25,
+        contentSize,
+        contentSize,
+      );
       canvas.save();
       canvas.clipPath(path);
       canvas.drawRect(
@@ -172,8 +191,9 @@ class TeamHiveLogoPainter extends CustomPainter {
             end: Alignment.bottomCenter,
             colors: [
               Colors.transparent,
-              (isDark ? Colors.white : Colors.black)
-                  .withValues(alpha: isDark ? 0.28 : 0.35),
+              (isDark ? Colors.white : Colors.black).withValues(
+                alpha: isDark ? 0.28 : 0.35,
+              ),
             ],
           ).createShader(shadowRect),
       );
@@ -187,8 +207,9 @@ class TeamHiveLogoPainter extends CustomPainter {
       colors: letterColors,
     );
     final paint = Paint()
-      ..shader =
-          letterGradient.createShader(Rect.fromLTWH(0, 0, contentSize, contentSize))
+      ..shader = letterGradient.createShader(
+        Rect.fromLTWH(0, 0, contentSize, contentSize),
+      )
       ..style = PaintingStyle.fill;
 
     final bar = contentSize * 0.12;
@@ -208,7 +229,13 @@ class TeamHiveLogoPainter extends CustomPainter {
       paint,
     );
     canvas.drawRRect(
-      RRect.fromLTRBR(left - r, midY - r, right + r, midY + r, Radius.circular(r)),
+      RRect.fromLTRBR(
+        left - r,
+        midY - r,
+        right + r,
+        midY + r,
+        Radius.circular(r),
+      ),
       paint,
     );
   }
@@ -217,5 +244,6 @@ class TeamHiveLogoPainter extends CustomPainter {
   bool shouldRepaint(covariant TeamHiveLogoPainter oldDelegate) =>
       fillColor != oldDelegate.fillColor ||
       showShadow != oldDelegate.showShadow ||
-      isDark != oldDelegate.isDark;
+      isDark != oldDelegate.isDark ||
+      solidWhiteMark != oldDelegate.solidWhiteMark;
 }

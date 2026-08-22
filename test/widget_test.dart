@@ -10,7 +10,7 @@ void main() {
         child: App(),
       ),
     );
-    expect(find.text('TEAMHIVE'), findsOneWidget);
+    expect(find.text('CHAMPHIVE'), findsOneWidget);
     await tester.pump();
   });
 }

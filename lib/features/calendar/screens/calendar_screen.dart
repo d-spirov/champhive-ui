@@ -35,8 +35,9 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
     final eventsAsync = ref.watch(clubEventsProvider);
 
     final days = List.generate(14, (i) {
-      final base =
-          DateTime.now().subtract(Duration(days: DateTime.now().weekday - 1));
+      final base = DateTime.now().subtract(
+        Duration(days: DateTime.now().weekday - 1),
+      );
       return DateTime(base.year, base.month, base.day).add(Duration(days: i));
     });
 
@@ -76,49 +77,50 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
               separatorBuilder: (context, index) => const SizedBox(width: 8),
               itemBuilder: (context, index) {
                 final day = days[index];
-                final selected = day.year == _selected.year &&
+                final selected =
+                    day.year == _selected.year &&
                     day.month == _selected.month &&
                     day.day == _selected.day;
                 return InkWell(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(28),
                   onTap: () => setState(() => _selected = day),
-                  child: Container(
-                    width: 56,
-                    decoration: BoxDecoration(
-                      color: selected
-                          ? Theme.of(context).colorScheme.primary
-                          : Theme.of(context).cardTheme.color,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: selected
-                            ? Theme.of(context).colorScheme.primary
-                            : Theme.of(context).dividerColor,
-                      ),
-                    ),
+                  child: SizedBox(
+                    width: 52,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          DateFormat('EEE').format(day),
+                          DateFormat('EEE').format(day).toUpperCase(),
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 0.4,
                             color: selected
-                                ? Theme.of(context).colorScheme.onPrimary
-                                : Theme.of(context)
-                                    .colorScheme
-                                    .onSurface
-                                    .withValues(alpha: 0.6),
+                                ? Theme.of(context).colorScheme.primary
+                                : Theme.of(context).colorScheme.onSurface
+                                      .withValues(alpha: 0.55),
                           ),
                         ),
-                        const SizedBox(height: 4),
-                        Text(
-                          '${day.day}',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 16,
+                        const SizedBox(height: 6),
+                        Container(
+                          width: 36,
+                          height: 36,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
                             color: selected
-                                ? Theme.of(context).colorScheme.onPrimary
-                                : Theme.of(context).colorScheme.onSurface,
+                                ? Theme.of(context).colorScheme.primary
+                                : Colors.transparent,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Text(
+                            '${day.day}',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 15,
+                              color: selected
+                                  ? Theme.of(context).colorScheme.onPrimary
+                                  : Theme.of(context).colorScheme.onSurface,
+                            ),
                           ),
                         ),
                       ],
@@ -188,15 +190,20 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                             else
                               Card(
                                 child: Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(14, 8, 14, 8),
+                                  padding: const EdgeInsets.fromLTRB(
+                                    14,
+                                    8,
+                                    14,
+                                    8,
+                                  ),
                                   child: Column(
                                     children: [
                                       for (final e in dayEvents)
                                         ClubEventListTile(
                                           event: e,
-                                          onTap: () =>
-                                              context.push('/occurrences/${e.id}'),
+                                          onTap: () => context.push(
+                                            '/occurrences/${e.id}',
+                                          ),
                                         ),
                                     ],
                                   ),
@@ -237,9 +244,7 @@ class _DemoAgenda extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.fromLTRB(14, 14, 14, 6),
             child: Column(
-              children: [
-                for (final e in shown) EventListTile(event: e),
-              ],
+              children: [for (final e in shown) EventListTile(event: e)],
             ),
           ),
         ),

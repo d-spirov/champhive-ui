@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../demo/demo_data.dart';
 import '../theme/app_theme.dart';
@@ -45,16 +46,127 @@ class SectionHeader extends StatelessWidget {
         children: [
           Expanded(
             child: Text(
-              title,
-              style: Theme.of(context).textTheme.titleMedium,
+              title.toUpperCase(),
+              style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 0.8,
+              ),
             ),
           ),
           if (actionLabel != null)
             TextButton(
               onPressed: onAction,
+              style: TextButton.styleFrom(
+                visualDensity: VisualDensity.compact,
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+              ),
               child: Text(actionLabel!),
             ),
         ],
+      ),
+    );
+  }
+}
+
+/// White floating card — 16px radius, 1px border, soft mockup shadow.
+class AppCard extends StatelessWidget {
+  const AppCard({
+    super.key,
+    required this.child,
+    this.padding,
+    this.onTap,
+    this.color,
+    this.margin,
+  });
+
+  final Widget child;
+  final EdgeInsetsGeometry? padding;
+  final VoidCallback? onTap;
+  final Color? color;
+  final EdgeInsetsGeometry? margin;
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final radius = BorderRadius.circular(AppTheme.radius);
+    final decoration = BoxDecoration(
+      color: color ?? Theme.of(context).cardTheme.color,
+      borderRadius: radius,
+      border: Border.all(
+        color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+      ),
+      boxShadow: isDark ? null : AppTheme.softShadow,
+    );
+
+    final content = padding == null
+        ? child
+        : Padding(padding: padding!, child: child);
+
+    return Padding(
+      padding: margin ?? EdgeInsets.zero,
+      child: DecoratedBox(
+        decoration: decoration,
+        child: Material(
+          type: MaterialType.transparency,
+          child: onTap == null
+              ? content
+              : InkWell(onTap: onTap, borderRadius: radius, child: content),
+        ),
+      ),
+    );
+  }
+}
+
+/// Primary CTA with the mockup blue gradient and soft blue shadow.
+class GradientButton extends StatelessWidget {
+  const GradientButton({
+    super.key,
+    required this.onPressed,
+    required this.child,
+    this.height = 52,
+    this.borderRadius,
+  });
+
+  final VoidCallback? onPressed;
+  final Widget child;
+  final double height;
+  final double? borderRadius;
+
+  @override
+  Widget build(BuildContext context) {
+    final enabled = onPressed != null;
+    final radius = BorderRadius.circular(borderRadius ?? AppTheme.radiusMd);
+    return SizedBox(
+      width: double.infinity,
+      height: height,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          gradient: enabled ? AppGradients.primaryButton : null,
+          color: enabled ? null : Theme.of(context).disabledColor,
+          borderRadius: radius,
+          boxShadow: enabled ? AppTheme.buttonShadow : null,
+        ),
+        child: Material(
+          type: MaterialType.transparency,
+          child: InkWell(
+            onTap: onPressed,
+            borderRadius: radius,
+            child: Center(
+              child: DefaultTextStyle(
+                style: GoogleFonts.inter(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16,
+                ),
+                child: IconTheme(
+                  data: const IconThemeData(color: Colors.white),
+                  child: child,
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -98,8 +210,10 @@ class EventListTile extends StatelessWidget {
                 Text(
                   time,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
-                      ),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withValues(alpha: 0.6),
+                  ),
                 ),
               ],
             ),
@@ -137,16 +251,19 @@ class AppSearchField extends StatelessWidget {
       decoration: InputDecoration(
         hintText: hintText,
         prefixIcon: const Icon(Icons.search_rounded),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 12,
+        ),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(AppTheme.radiusMd),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(AppTheme.radiusMd),
           borderSide: BorderSide(color: Theme.of(context).dividerColor),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(AppTheme.radiusMd),
           borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
         ),
       ),
@@ -168,27 +285,27 @@ class StatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
-        child: Column(
-          children: [
-            Text(
-              value,
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    color: valueColor ?? Theme.of(context).colorScheme.primary,
-                    fontWeight: FontWeight.w800,
-                  ),
+    return AppCard(
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+      child: Column(
+        children: [
+          Text(
+            value,
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+              color: valueColor ?? Theme.of(context).colorScheme.primary,
+              fontWeight: FontWeight.w800,
             ),
-            const SizedBox(height: 4),
-            Text(
-              label,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
-                  ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: Theme.of(
+                context,
+              ).colorScheme.onSurface.withValues(alpha: 0.6),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -211,21 +328,22 @@ class AvatarCircle extends StatelessWidget {
     final initials = label.isEmpty
         ? '?'
         : label
-            .trim()
-            .split(RegExp(r'\s+'))
-            .take(2)
-            .map((w) => w[0].toUpperCase())
-            .join();
+              .trim()
+              .split(RegExp(r'\s+'))
+              .take(2)
+              .map((w) => w[0].toUpperCase())
+              .join();
     return CircleAvatar(
       radius: size / 2,
-      backgroundColor:
-          backgroundColor ?? Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+      backgroundColor: backgroundColor ?? AppColors.primaryLight,
       child: Text(
         initials,
         style: TextStyle(
           fontWeight: FontWeight.w700,
           fontSize: size * 0.32,
-          color: Theme.of(context).colorScheme.primary,
+          color: Theme.of(context).brightness == Brightness.dark
+              ? AppColors.darkPrimary
+              : AppColors.primaryDark,
         ),
       ),
     );
@@ -244,14 +362,14 @@ class UnreadBadge extends StatelessWidget {
       constraints: const BoxConstraints(minWidth: 20),
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primary,
+        color: AppColors.badge,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Text(
         count > 99 ? '99+' : '$count',
         textAlign: TextAlign.center,
-        style: TextStyle(
-          color: Theme.of(context).colorScheme.onPrimary,
+        style: const TextStyle(
+          color: Colors.white,
           fontSize: 11,
           fontWeight: FontWeight.w700,
         ),

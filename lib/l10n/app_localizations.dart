@@ -796,7 +796,7 @@ abstract class AppLocalizations {
   /// No description provided for @tagline.
   ///
   /// In en, this message translates to:
-  /// **'Manage. Train. Win.\nAll in one place.'**
+  /// **'Your team. One place.'**
   String get tagline;
 
   /// No description provided for @continueWithGoogle.
@@ -810,6 +810,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Continue with Apple'**
   String get continueWithApple;
+
+  /// No description provided for @signInWithEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in with email'**
+  String get signInWithEmail;
+
+  /// No description provided for @newToChampHive.
+  ///
+  /// In en, this message translates to:
+  /// **'New to ChampHive? '**
+  String get newToChampHive;
+
+  /// No description provided for @createAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Create account!'**
+  String get createAccount;
 
   /// No description provided for @accountsViaInviteNote.
   ///
