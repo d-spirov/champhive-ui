@@ -48,11 +48,10 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               TeamHiveLogo(
-                size: 96,
+                size: 108,
                 showWordmark: true,
-                showShadow: false,
+                showShadow: true,
                 solidWhiteMark: true,
-                backgroundColor: Colors.white,
                 wordmarkColor: Colors.white,
               ),
               SizedBox(height: 28),

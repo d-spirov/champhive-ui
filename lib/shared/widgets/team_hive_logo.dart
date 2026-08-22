@@ -1,12 +1,11 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../theme/app_theme.dart';
 
-/// TeamHive logo: vector hexagon ring + bold "H" (ParkHive-style geometry).
-///
-/// Used in splash/login and for app-icon generation.
+/// ChampHive crest: dual-ring hexagon + geometric H with a blue accent stem.
 class TeamHiveLogo extends StatelessWidget {
   const TeamHiveLogo({
     super.key,
@@ -23,12 +22,12 @@ class TeamHiveLogo extends StatelessWidget {
   final bool showShadow;
   final bool isDark;
 
-  /// Hexagon interior fill — match the surface behind the logo.
+  /// Hexagon interior fill. Ignored for the on-dark outline crest.
   final Color? backgroundColor;
   final bool showWordmark;
   final Color? wordmarkColor;
 
-  /// White filled hex + navy H, for the dark login/splash screens.
+  /// White outline crest + white H with blue right stem (login / splash).
   final bool solidWhiteMark;
 
   @override
@@ -45,7 +44,7 @@ class TeamHiveLogo extends StatelessWidget {
           fillColor:
               backgroundColor ??
               (solidWhiteMark
-                  ? Colors.white
+                  ? Colors.transparent
                   : (dark ? const Color(0xFF0E1F3D) : Colors.white)),
           showShadow: showShadow,
           isDark: dark,
@@ -60,16 +59,17 @@ class TeamHiveLogo extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         mark,
-        SizedBox(height: size * 0.14),
+        SizedBox(height: size * 0.12),
         Text(
           'CHAMPHIVE',
-          style: TextStyle(
-            fontSize: size * 0.22,
+          style: GoogleFonts.inter(
+            fontSize: size * 0.20,
             fontWeight: FontWeight.w800,
-            letterSpacing: 2.4,
+            letterSpacing: size * 0.048,
+            height: 1.0,
             color:
                 wordmarkColor ??
-                (dark ? AppColors.darkPrimary : AppColors.primaryDark),
+                (dark ? AppColors.darkPrimary : AppColors.primaryNavy),
           ),
         ),
       ],
@@ -77,11 +77,11 @@ class TeamHiveLogo extends StatelessWidget {
   }
 }
 
-/// Flat-top? No — pointy-top regular hexagon, same math as ParkHive.
-Path createTeamHiveHexagonPath(Size size) {
+/// Pointy-top regular hexagon.
+Path createTeamHiveHexagonPath(Size size, {double inset = 2}) {
   final contentSize = size.width;
   final center = Offset(contentSize / 2, contentSize / 2);
-  final radius = contentSize / 2 - 2;
+  final radius = contentSize / 2 - inset;
   final path = Path();
   for (var i = 0; i < 6; i++) {
     final angle = (math.pi / 3 * i) - (math.pi / 6);
@@ -113,131 +113,186 @@ class TeamHiveLogoPainter extends CustomPainter {
   static const _lightStroke = [
     Color(0xFF93C5FD),
     Color(0xFF3B82F6),
-    Color(0xFF2563EB),
-    Color(0xFF1E3A8A),
+    Color(0xFF1E42AF),
+    Color(0xFF0F265D),
   ];
 
   static const _darkStroke = [
     Color(0xFFBFDBFE),
     Color(0xFF60A5FA),
-    Color(0xFF2563EB),
-    Color(0xFF1E40AF),
-  ];
-
-  static const _lightLetter = [
-    Color(0xFF1E3A8A),
-    Color(0xFF1E40AF),
-    Color(0xFF172554),
-  ];
-
-  static const _darkLetter = [
-    Color(0xFFEFF6FF),
-    Color(0xFFDBEAFE),
-    Color(0xFF93C5FD),
+    Color(0xFF3B82F6),
+    Color(0xFF1E42AF),
   ];
 
   @override
   void paint(Canvas canvas, Size size) {
-    final path = createTeamHiveHexagonPath(size);
     final contentSize = size.width;
     final center = Offset(contentSize / 2, contentSize / 2);
-    final strokeColors = solidWhiteMark
-        ? const [Colors.white, Colors.white, Color(0xFFE8EEF9), Colors.white]
-        : (isDark ? _darkStroke : _lightStroke);
-    final letterColors = solidWhiteMark
-        ? const [Color(0xFF0F265D), Color(0xFF1E42AF), Color(0xFF0F265D)]
-        : (isDark ? _darkLetter : _lightLetter);
+    final outer = createTeamHiveHexagonPath(size, inset: contentSize * 0.06);
+    final inner = createTeamHiveHexagonPath(size, inset: contentSize * 0.155);
 
-    // 1. Hexagon fill (blends with background)
+    if (fillColor.a > 0) {
+      canvas.drawPath(
+        outer,
+        Paint()
+          ..color = fillColor
+          ..style = PaintingStyle.fill,
+      );
+    }
+
+    if (solidWhiteMark) {
+      _paintOnDarkCrest(canvas, size, outer, inner, center, contentSize);
+    } else {
+      _paintBrandCrest(canvas, size, outer, inner, center, contentSize);
+    }
+  }
+
+  void _paintOnDarkCrest(
+    Canvas canvas,
+    Size size,
+    Path outer,
+    Path inner,
+    Offset center,
+    double contentSize,
+  ) {
+    if (showShadow) {
+      canvas.drawPath(
+        outer,
+        Paint()
+          ..color = Colors.white.withValues(alpha: 0.28)
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = contentSize * 0.18
+          ..strokeJoin = StrokeJoin.round
+          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 10),
+      );
+    }
+
     canvas.drawPath(
-      path,
+      outer,
       Paint()
-        ..color = fillColor
-        ..style = PaintingStyle.fill,
+        ..color = Colors.white
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = contentSize * 0.078
+        ..strokeJoin = StrokeJoin.round
+        ..strokeCap = StrokeCap.round,
     );
 
-    // 2. Thick rounded hexagon stroke with vertical brand gradient
+    canvas.drawPath(
+      inner,
+      Paint()
+        ..color = Colors.white.withValues(alpha: 0.42)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = contentSize * 0.018
+        ..strokeJoin = StrokeJoin.round,
+    );
+
+    _paintLetterH(
+      canvas,
+      contentSize,
+      center,
+      stem: Colors.white,
+      accent: AppColors.primaryBright,
+      glow: true,
+    );
+  }
+
+  void _paintBrandCrest(
+    Canvas canvas,
+    Size size,
+    Path outer,
+    Path inner,
+    Offset center,
+    double contentSize,
+  ) {
+    final strokeColors = isDark ? _darkStroke : _lightStroke;
     final strokeGradient = LinearGradient(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
       colors: strokeColors,
-      stops: const [0.0, 0.35, 0.65, 1.0],
+      stops: const [0.0, 0.32, 0.68, 1.0],
     ).createShader(Rect.fromLTWH(0, 0, contentSize, contentSize));
 
+    if (showShadow) {
+      canvas.drawPath(
+        outer,
+        Paint()
+          ..color = AppColors.primary.withValues(alpha: 0.22)
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = contentSize * 0.16
+          ..strokeJoin = StrokeJoin.round
+          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8),
+      );
+    }
+
     canvas.drawPath(
-      path,
+      outer,
       Paint()
         ..shader = strokeGradient
         ..style = PaintingStyle.stroke
-        ..strokeWidth = contentSize * (solidWhiteMark ? 0.09 : 0.13)
+        ..strokeWidth = contentSize * 0.10
         ..strokeJoin = StrokeJoin.round,
     );
 
-    // 3. Soft interior shadow (UI only — off for app icons)
-    if (showShadow) {
-      final shadowRect = Rect.fromLTRB(
-        0,
-        contentSize * 0.25,
-        contentSize,
-        contentSize,
-      );
-      canvas.save();
-      canvas.clipPath(path);
-      canvas.drawRect(
-        shadowRect,
-        Paint()
-          ..shader = LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Colors.transparent,
-              (isDark ? Colors.white : Colors.black).withValues(
-                alpha: isDark ? 0.28 : 0.35,
-              ),
-            ],
-          ).createShader(shadowRect),
-      );
-      canvas.restore();
-    }
-
-    // 4. Bold geometric H (vector bars — same construction as app icon tool)
-    final letterGradient = LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: letterColors,
+    canvas.drawPath(
+      inner,
+      Paint()
+        ..color = (isDark ? Colors.white : AppColors.primaryNavy).withValues(
+          alpha: 0.28,
+        )
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = contentSize * 0.016
+        ..strokeJoin = StrokeJoin.round,
     );
-    final paint = Paint()
-      ..shader = letterGradient.createShader(
-        Rect.fromLTWH(0, 0, contentSize, contentSize),
-      )
-      ..style = PaintingStyle.fill;
 
-    final bar = contentSize * 0.12;
-    final left = contentSize * 0.30;
-    final right = contentSize * 0.70;
-    final top = contentSize * 0.26;
-    final bottom = contentSize * 0.74;
+    _paintLetterH(
+      canvas,
+      contentSize,
+      center,
+      stem: isDark ? const Color(0xFFEFF6FF) : AppColors.primaryNavy,
+      accent: AppColors.primaryBright,
+      glow: false,
+    );
+  }
+
+  void _paintLetterH(
+    Canvas canvas,
+    double contentSize,
+    Offset center, {
+    required Color stem,
+    required Color accent,
+    required bool glow,
+  }) {
+    final bar = contentSize * 0.105;
+    final left = contentSize * 0.325;
+    final right = contentSize * 0.675;
+    final top = contentSize * 0.30;
+    final bottom = contentSize * 0.70;
     final midY = center.dy;
     final r = bar / 2;
 
-    canvas.drawRRect(
-      RRect.fromLTRBR(left - r, top, left + r, bottom, Radius.circular(r)),
-      paint,
+    RRect stemRect(double x) =>
+        RRect.fromLTRBR(x - r, top, x + r, bottom, Radius.circular(r));
+
+    final cross = RRect.fromLTRBR(
+      left - r,
+      midY - r * 0.92,
+      right + r,
+      midY + r * 0.92,
+      Radius.circular(r),
     );
-    canvas.drawRRect(
-      RRect.fromLTRBR(right - r, top, right + r, bottom, Radius.circular(r)),
-      paint,
-    );
-    canvas.drawRRect(
-      RRect.fromLTRBR(
-        left - r,
-        midY - r,
-        right + r,
-        midY + r,
-        Radius.circular(r),
-      ),
-      paint,
-    );
+
+    if (glow) {
+      canvas.drawRRect(
+        stemRect(right),
+        Paint()
+          ..color = accent.withValues(alpha: 0.55)
+          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6),
+      );
+    }
+
+    canvas.drawRRect(stemRect(left), Paint()..color = stem);
+    canvas.drawRRect(cross, Paint()..color = stem);
+    canvas.drawRRect(stemRect(right), Paint()..color = accent);
   }
 
   @override

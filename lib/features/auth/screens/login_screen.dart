@@ -62,27 +62,26 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 28),
                     child: Column(
                       children: [
-                        const Spacer(flex: 2),
+                        const SizedBox(height: 10),
                         const TeamHiveLogo(
-                          size: 88,
+                          size: 100,
                           showWordmark: true,
-                          showShadow: false,
+                          showShadow: true,
                           solidWhiteMark: true,
-                          backgroundColor: Colors.white,
                           wordmarkColor: Colors.white,
                         ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: 10),
                         Text(
                           l10n.tagline,
                           textAlign: TextAlign.center,
                           style: GoogleFonts.inter(
-                            color: Colors.white.withValues(alpha: 0.92),
-                            fontSize: 16,
-                            height: 1.4,
+                            color: Colors.white.withValues(alpha: 0.88),
+                            fontSize: 15,
+                            height: 1.35,
                             fontWeight: FontWeight.w400,
                           ),
                         ),
-                        const Spacer(flex: 5),
+                        const Spacer(),
                         _PillButton(
                           label: l10n.continueWithGoogle,
                           icon: const _GoogleGlyph(),
