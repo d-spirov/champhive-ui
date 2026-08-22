@@ -133,6 +133,7 @@
   "continueWithGoogle": "Nastavi sa Google",
   "continueWithApple": "Nastavi sa Apple",
   "signInWithEmail": "Prijavi se e-poštom",
+  "orDivider": "ILI",
   "newToChampHive": "Novi na ChampHive? ",
   "createAccount": "Napravi nalog!",
   "accountsViaInviteNote": "Nalozi se obično kreiraju putem pozivnice. Registracija može biti samo za operatere na ovom API-ju.",

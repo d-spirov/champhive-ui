@@ -817,6 +817,12 @@ abstract class AppLocalizations {
   /// **'Sign in with email'**
   String get signInWithEmail;
 
+  /// No description provided for @orDivider.
+  ///
+  /// In en, this message translates to:
+  /// **'OR'**
+  String get orDivider;
+
   /// No description provided for @newToChampHive.
   ///
   /// In en, this message translates to:

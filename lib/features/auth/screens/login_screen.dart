@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -30,10 +32,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         body: Stack(
           fit: StackFit.expand,
           children: [
+            const ColoredBox(color: AppColors.loginNavyDeep),
             Image.asset(
               kLoginHeroImage,
               fit: BoxFit.cover,
-              alignment: const Alignment(0, 0.05),
+              alignment: const Alignment(0, 0.18),
               errorBuilder: (_, _, _) =>
                   const ColoredBox(color: AppColors.loginNavyDeep),
             ),
@@ -42,15 +45,30 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  stops: [0.0, 0.16, 0.32, 0.62, 0.82, 1.0],
+                  stops: [0.0, 0.22, 0.38, 0.58, 0.78, 1.0],
                   colors: [
-                    Color(0xCC070B18),
-                    Color(0x66070B18),
-                    Color(0x14070B18),
+                    Color(0xE6070B18),
+                    Color(0x99070B18),
+                    Color(0x22070B18),
                     Color(0x33070B18),
-                    Color(0xD9070B18),
+                    Color(0xE6070B18),
                     Color(0xFF070B18),
                   ],
+                ),
+              ),
+            ),
+            const Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              height: 280,
+              child: IgnorePointer(
+                child: Opacity(
+                  opacity: 0.22,
+                  child: CustomPaint(
+                    painter: _HexMeshPainter(),
+                    child: SizedBox.expand(),
+                  ),
                 ),
               ),
             ),
@@ -81,6 +99,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             fontWeight: FontWeight.w400,
                           ),
                         ),
+                        const SizedBox(height: 12),
+                        Container(
+                          width: 36,
+                          height: 2,
+                          decoration: BoxDecoration(
+                            color: AppColors.primaryBright,
+                            borderRadius: BorderRadius.circular(99),
+                          ),
+                        ),
                         const Spacer(),
                         _PillButton(
                           label: l10n.continueWithGoogle,
@@ -99,15 +126,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           filled: true,
                           onPressed: () => _comingSoon('Apple Sign-In'),
                         ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: 16),
+                        _OrDivider(label: l10n.orDivider),
+                        const SizedBox(height: 16),
                         _PillButton(
                           label: l10n.signInWithEmail,
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.mail_outline_rounded,
                             size: 20,
-                            color: Colors.white.withValues(alpha: 0.95),
+                            color: AppColors.primaryBright,
                           ),
                           filled: false,
+                          borderColor: AppColors.primaryBright,
                           onPressed: () => _openEmailLogin(context),
                         ),
                         const SizedBox(height: 18),
@@ -355,12 +385,14 @@ class _PillButton extends StatelessWidget {
     required this.icon,
     required this.filled,
     required this.onPressed,
+    this.borderColor,
   });
 
   final String label;
   final Widget icon;
   final bool filled;
   final VoidCallback onPressed;
+  final Color? borderColor;
 
   @override
   Widget build(BuildContext context) {
@@ -374,7 +406,9 @@ class _PillButton extends StatelessWidget {
           borderRadius: radius,
           side: filled
               ? BorderSide.none
-              : BorderSide(color: Colors.white.withValues(alpha: 0.85)),
+              : BorderSide(
+                  color: borderColor ?? Colors.white.withValues(alpha: 0.85),
+                ),
         ),
         child: InkWell(
           onTap: onPressed,
@@ -439,6 +473,77 @@ class _GoogleGPainter extends CustomPainter {
       Offset(size.width * 0.92, size.height * 0.5),
       bar,
     );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+class _OrDivider extends StatelessWidget {
+  const _OrDivider({required this.label});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    final line = Expanded(
+      child: Container(
+        height: 1,
+        color: Colors.white.withValues(alpha: 0.22),
+      ),
+    );
+    return Row(
+      children: [
+        line,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          child: Text(
+            label,
+            style: GoogleFonts.inter(
+              color: Colors.white.withValues(alpha: 0.55),
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 1.2,
+            ),
+          ),
+        ),
+        line,
+      ],
+    );
+  }
+}
+
+class _HexMeshPainter extends CustomPainter {
+  const _HexMeshPainter();
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1
+      ..color = Colors.white.withValues(alpha: 0.55);
+    const radius = 22.0;
+    final horiz = radius * 1.7320508;
+    final vert = radius * 1.5;
+    for (var row = -1; row < (size.height / vert) + 2; row++) {
+      for (var col = -1; col < (size.width / horiz) + 2; col++) {
+        final dx = col * horiz + (row.isOdd ? horiz / 2 : 0);
+        final dy = row * vert;
+        final path = Path();
+        for (var i = 0; i < 6; i++) {
+          final angle = (math.pi / 3 * i) - (math.pi / 6);
+          final x = dx + radius * math.cos(angle);
+          final y = dy + radius * math.sin(angle);
+          if (i == 0) {
+            path.moveTo(x, y);
+          } else {
+            path.lineTo(x, y);
+          }
+        }
+        path.close();
+        canvas.drawPath(path, paint);
+      }
+    }
   }
 
   @override

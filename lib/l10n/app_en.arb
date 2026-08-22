@@ -133,6 +133,7 @@
   "continueWithGoogle": "Continue with Google",
   "continueWithApple": "Continue with Apple",
   "signInWithEmail": "Sign in with email",
+  "orDivider": "OR",
   "newToChampHive": "New to ChampHive? ",
   "createAccount": "Create account!",
   "accountsViaInviteNote": "Accounts are normally created via invite. Sign-up may be ops-only on this API.",

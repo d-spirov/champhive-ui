@@ -263,10 +263,10 @@ class TeamHiveLogoPainter extends CustomPainter {
     required bool glow,
   }) {
     final bar = contentSize * 0.078;
-    final left = contentSize * 0.335;
-    final right = contentSize * 0.665;
-    final top = contentSize * 0.30;
-    final bottom = contentSize * 0.70;
+    final left = contentSize * 0.355;
+    final right = contentSize * 0.645;
+    final top = contentSize * 0.325;
+    final bottom = contentSize * 0.675;
     final midY = center.dy;
     final r = bar / 2;
     // Blue only on the upper part of the right stem (mockup: top half).

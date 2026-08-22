@@ -371,6 +371,9 @@ class AppLocalizationsMk extends AppLocalizations {
   String get signInWithEmail => 'Најави се со е-пошта';
 
   @override
+  String get orDivider => 'ИЛИ';
+
+  @override
   String get newToChampHive => 'Нов на ChampHive? ';
 
   @override

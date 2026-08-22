@@ -133,6 +133,7 @@
   "continueWithGoogle": "Продолжи со Google",
   "continueWithApple": "Продолжи со Apple",
   "signInWithEmail": "Најави се со е-пошта",
+  "orDivider": "ИЛИ",
   "newToChampHive": "Нов на ChampHive? ",
   "createAccount": "Креирај профил!",
   "accountsViaInviteNote": "Профилите обично се создаваат преку покана. Регистрацијата може да биде само за оператори на овој API.",

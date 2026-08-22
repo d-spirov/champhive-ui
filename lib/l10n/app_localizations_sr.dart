@@ -370,6 +370,9 @@ class AppLocalizationsSr extends AppLocalizations {
   String get signInWithEmail => 'Prijavi se e-poštom';
 
   @override
+  String get orDivider => 'ILI';
+
+  @override
   String get newToChampHive => 'Novi na ChampHive? ';
 
   @override
@@ -1596,6 +1599,9 @@ class AppLocalizationsSrLatn extends AppLocalizationsSr {
 
   @override
   String get signInWithEmail => 'Prijavi se e-poštom';
+
+  @override
+  String get orDivider => 'ILI';
 
   @override
   String get newToChampHive => 'Novi na ChampHive? ';

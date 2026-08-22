@@ -370,6 +370,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get signInWithEmail => 'Accedi con e-mail';
 
   @override
+  String get orDivider => 'O';
+
+  @override
   String get newToChampHive => 'Nuovo su ChampHive? ';
 
   @override
