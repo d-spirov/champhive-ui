@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../../../shared/demo/demo_data.dart';
 import '../../../shared/models/chat.dart';
 import '../../../shared/utils/api_error_message.dart';
@@ -23,18 +24,19 @@ class _MessagesScreenState extends ConsumerState<MessagesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final auth = ref.watch(authNotifierProvider);
     final isDemo = auth.user?.id == 'demo';
 
     return Scaffold(
       appBar: shellAppBar(
         context,
-        title: 'Messages',
+        title: l10n.messages,
         actions: [
           IconButton(
             onPressed: () => context.push('/messages/new'),
             icon: const Icon(Icons.edit_square),
-            tooltip: 'New message',
+            tooltip: l10n.newMessage,
           ),
         ],
       ),
@@ -43,19 +45,19 @@ class _MessagesScreenState extends ConsumerState<MessagesScreen> {
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
             child: AppSearchField(
-              hintText: 'Search messages',
+              hintText: l10n.searchMessages,
               onChanged: (v) => setState(() => _query = v),
             ),
           ),
           Expanded(
-            child: isDemo ? _demoList() : _liveList(),
+            child: isDemo ? _demoList(l10n) : _liveList(l10n),
           ),
         ],
       ),
     );
   }
 
-  Widget _demoList() {
+  Widget _demoList(AppLocalizations l10n) {
     final threads = DemoData.messages.where((m) {
       if (_query.isEmpty) return true;
       final q = _query.toLowerCase();
@@ -64,7 +66,7 @@ class _MessagesScreenState extends ConsumerState<MessagesScreen> {
     }).toList();
 
     if (threads.isEmpty) {
-      return const Center(child: Text('No conversations.'));
+      return Center(child: Text(l10n.noConversations));
     }
 
     return ListView.separated(
@@ -102,7 +104,7 @@ class _MessagesScreenState extends ConsumerState<MessagesScreen> {
           ),
           onTap: () {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Sign in to open live chat')),
+              SnackBar(content: Text(l10n.signInToOpenChat)),
             );
           },
         );
@@ -110,7 +112,7 @@ class _MessagesScreenState extends ConsumerState<MessagesScreen> {
     );
   }
 
-  Widget _liveList() {
+  Widget _liveList(AppLocalizations l10n) {
     final async = ref.watch(chatChannelsProvider);
 
     return async.when(
@@ -122,13 +124,13 @@ class _MessagesScreenState extends ConsumerState<MessagesScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                apiErrorMessage(e, fallback: 'Could not load conversations'),
+                apiErrorMessage(e, fallback: l10n.couldNotLoadConversations),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
               FilledButton(
                 onPressed: () => ref.invalidate(chatChannelsProvider),
-                child: const Text('Retry'),
+                child: Text(l10n.retry),
               ),
             ],
           ),
@@ -151,9 +153,9 @@ class _MessagesScreenState extends ConsumerState<MessagesScreen> {
             },
             child: ListView(
               physics: const AlwaysScrollableScrollPhysics(),
-              children: const [
-                SizedBox(height: 120),
-                Center(child: Text('No conversations yet.')),
+              children: [
+                const SizedBox(height: 120),
+                Center(child: Text(l10n.noConversationsYet)),
               ],
             ),
           );
@@ -190,10 +192,11 @@ class _ChannelTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final preview = channel.lastMessage == null
-        ? 'No messages yet'
+        ? l10n.noMessagesYet
         : channel.lastMessage!.isDeleted
-            ? 'Message deleted'
+            ? l10n.messageDeleted
             : (channel.lastMessage!.body ?? '');
     final when = channel.lastMessage?.sentAtUtc ?? channel.updatedAtUtc;
 
@@ -246,7 +249,7 @@ class _ChannelTile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Text(
-            _formatWhen(when),
+            _formatWhen(when, l10n),
             style: Theme.of(context).textTheme.bodySmall,
           ),
           const SizedBox(height: 6),
@@ -257,13 +260,13 @@ class _ChannelTile extends StatelessWidget {
     );
   }
 
-  String _formatWhen(DateTime utc) {
+  String _formatWhen(DateTime utc, AppLocalizations l10n) {
     final local = utc.toLocal();
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final day = DateTime(local.year, local.month, local.day);
     if (day == today) return DateFormat('HH:mm').format(local);
-    if (day == today.subtract(const Duration(days: 1))) return 'Yesterday';
+    if (day == today.subtract(const Duration(days: 1))) return l10n.yesterday;
     if (now.difference(local).inDays < 7) {
       return DateFormat('EEE').format(local);
     }

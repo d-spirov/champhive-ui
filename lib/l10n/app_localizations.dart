@@ -6,6 +6,9 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
 import 'app_localizations_en.dart';
+import 'app_localizations_it.dart';
+import 'app_localizations_mk.dart';
+import 'app_localizations_sr.dart';
 
 // ignore_for_file: type=lint
 
@@ -92,7 +95,13 @@ abstract class AppLocalizations {
       ];
 
   /// A list of this localizations delegate's supported locales.
-  static const List<Locale> supportedLocales = <Locale>[Locale('en')];
+  static const List<Locale> supportedLocales = <Locale>[
+    Locale('en'),
+    Locale('it'),
+    Locale('mk'),
+    Locale('sr'),
+    Locale.fromSubtags(languageCode: 'sr', scriptCode: 'Latn'),
+  ];
 
   /// No description provided for @appTitle.
   ///
@@ -268,11 +277,29 @@ abstract class AppLocalizations {
   /// **'Players'**
   String get players;
 
+  /// No description provided for @members.
+  ///
+  /// In en, this message translates to:
+  /// **'Members'**
+  String get members;
+
   /// No description provided for @events.
   ///
   /// In en, this message translates to:
   /// **'Events'**
   String get events;
+
+  /// No description provided for @schedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule'**
+  String get schedule;
+
+  /// No description provided for @calendar.
+  ///
+  /// In en, this message translates to:
+  /// **'Calendar'**
+  String get calendar;
 
   /// No description provided for @attendance.
   ///
@@ -280,11 +307,71 @@ abstract class AppLocalizations {
   /// **'Attendance'**
   String get attendance;
 
-  /// No description provided for @comingSoon.
+  /// No description provided for @messages.
   ///
   /// In en, this message translates to:
-  /// **'Coming soon — UI will follow your screen designs.'**
-  String get comingSoon;
+  /// **'Messages'**
+  String get messages;
+
+  /// No description provided for @notifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notifications;
+
+  /// No description provided for @payments.
+  ///
+  /// In en, this message translates to:
+  /// **'Payments'**
+  String get payments;
+
+  /// No description provided for @statistics.
+  ///
+  /// In en, this message translates to:
+  /// **'Statistics'**
+  String get statistics;
+
+  /// No description provided for @more.
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get more;
+
+  /// No description provided for @settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settings;
+
+  /// No description provided for @helpSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Help & Support'**
+  String get helpSupport;
+
+  /// No description provided for @myAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'My Account'**
+  String get myAccount;
+
+  /// No description provided for @appearance.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get appearance;
+
+  /// No description provided for @language.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
+
+  /// No description provided for @aboutApp.
+  ///
+  /// In en, this message translates to:
+  /// **'About TeamHive'**
+  String get aboutApp;
 
   /// No description provided for @retry.
   ///
@@ -292,11 +379,1841 @@ abstract class AppLocalizations {
   /// **'Retry'**
   String get retry;
 
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @create.
+  ///
+  /// In en, this message translates to:
+  /// **'Create'**
+  String get create;
+
+  /// No description provided for @search.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get search;
+
+  /// No description provided for @comingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Coming soon'**
+  String get comingSoon;
+
+  /// No description provided for @comingSoonNamed.
+  ///
+  /// In en, this message translates to:
+  /// **'{label} coming soon'**
+  String comingSoonNamed(String label);
+
   /// No description provided for @sessionExpired.
   ///
   /// In en, this message translates to:
   /// **'Your session expired. Please sign in again.'**
   String get sessionExpired;
+
+  /// No description provided for @signInToContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to continue'**
+  String get signInToContinue;
+
+  /// No description provided for @selectClub.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a club'**
+  String get selectClub;
+
+  /// No description provided for @selectClubFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a club first'**
+  String get selectClubFirst;
+
+  /// No description provided for @noData.
+  ///
+  /// In en, this message translates to:
+  /// **'No data yet'**
+  String get noData;
+
+  /// No description provided for @pullToRefresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Pull to refresh'**
+  String get pullToRefresh;
+
+  /// No description provided for @dismiss.
+  ///
+  /// In en, this message translates to:
+  /// **'Dismiss'**
+  String get dismiss;
+
+  /// No description provided for @continueAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continueAction;
+
+  /// No description provided for @refresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get refresh;
+
+  /// No description provided for @history.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get history;
+
+  /// No description provided for @report.
+  ///
+  /// In en, this message translates to:
+  /// **'Report'**
+  String get report;
+
+  /// No description provided for @overview.
+  ///
+  /// In en, this message translates to:
+  /// **'Overview'**
+  String get overview;
+
+  /// No description provided for @info.
+  ///
+  /// In en, this message translates to:
+  /// **'Info'**
+  String get info;
+
+  /// No description provided for @notes.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get notes;
+
+  /// No description provided for @note.
+  ///
+  /// In en, this message translates to:
+  /// **'Note'**
+  String get note;
+
+  /// No description provided for @optionalNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional note'**
+  String get optionalNote;
+
+  /// No description provided for @location.
+  ///
+  /// In en, this message translates to:
+  /// **'Location'**
+  String get location;
+
+  /// No description provided for @title.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get title;
+
+  /// No description provided for @type.
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get type;
+
+  /// No description provided for @scope.
+  ///
+  /// In en, this message translates to:
+  /// **'Scope'**
+  String get scope;
+
+  /// No description provided for @when.
+  ///
+  /// In en, this message translates to:
+  /// **'When'**
+  String get when;
+
+  /// No description provided for @repeat.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeat'**
+  String get repeat;
+
+  /// No description provided for @duration.
+  ///
+  /// In en, this message translates to:
+  /// **'Duration'**
+  String get duration;
+
+  /// No description provided for @amount.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get amount;
+
+  /// No description provided for @bank.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank'**
+  String get bank;
+
+  /// No description provided for @importMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'Import'**
+  String get importMethod;
+
+  /// No description provided for @member.
+  ///
+  /// In en, this message translates to:
+  /// **'Member'**
+  String get member;
+
+  /// No description provided for @payment.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment'**
+  String get payment;
+
+  /// No description provided for @chat.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat'**
+  String get chat;
+
+  /// No description provided for @session.
+  ///
+  /// In en, this message translates to:
+  /// **'Session'**
+  String get session;
+
+  /// No description provided for @club.
+  ///
+  /// In en, this message translates to:
+  /// **'Club'**
+  String get club;
+
+  /// No description provided for @status.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get status;
+
+  /// No description provided for @timezone.
+  ///
+  /// In en, this message translates to:
+  /// **'Timezone'**
+  String get timezone;
+
+  /// No description provided for @contact.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact'**
+  String get contact;
+
+  /// No description provided for @gender.
+  ///
+  /// In en, this message translates to:
+  /// **'Gender'**
+  String get gender;
+
+  /// No description provided for @dateOfBirth.
+  ///
+  /// In en, this message translates to:
+  /// **'Date of birth'**
+  String get dateOfBirth;
+
+  /// No description provided for @registrationNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Registration #'**
+  String get registrationNumber;
+
+  /// No description provided for @shirtNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Shirt number'**
+  String get shirtNumber;
+
+  /// No description provided for @shirtNumberValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Shirt #{number}'**
+  String shirtNumberValue(String number);
+
+  /// No description provided for @themeLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get themeLight;
+
+  /// No description provided for @themeDark.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get themeDark;
+
+  /// No description provided for @themeSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get themeSystem;
+
+  /// No description provided for @languageEnglish.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get languageEnglish;
+
+  /// No description provided for @languageMacedonian.
+  ///
+  /// In en, this message translates to:
+  /// **'Macedonian'**
+  String get languageMacedonian;
+
+  /// No description provided for @languageSerbian.
+  ///
+  /// In en, this message translates to:
+  /// **'Serbian'**
+  String get languageSerbian;
+
+  /// No description provided for @languageItalian.
+  ///
+  /// In en, this message translates to:
+  /// **'Italian'**
+  String get languageItalian;
+
+  /// No description provided for @languageSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'System language'**
+  String get languageSystem;
+
+  /// No description provided for @newMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'New message'**
+  String get newMessage;
+
+  /// No description provided for @newSchedule.
+  ///
+  /// In en, this message translates to:
+  /// **'New schedule'**
+  String get newSchedule;
+
+  /// No description provided for @markAllRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark all read'**
+  String get markAllRead;
+
+  /// No description provided for @recordPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Record payment'**
+  String get recordPayment;
+
+  /// No description provided for @profile.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get profile;
+
+  /// No description provided for @saveProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Save profile'**
+  String get saveProfile;
+
+  /// No description provided for @changePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Change password'**
+  String get changePassword;
+
+  /// No description provided for @outstanding.
+  ///
+  /// In en, this message translates to:
+  /// **'Outstanding'**
+  String get outstanding;
+
+  /// No description provided for @cash.
+  ///
+  /// In en, this message translates to:
+  /// **'Cash'**
+  String get cash;
+
+  /// No description provided for @myFees.
+  ///
+  /// In en, this message translates to:
+  /// **'My fees'**
+  String get myFees;
+
+  /// No description provided for @membership.
+  ///
+  /// In en, this message translates to:
+  /// **'Membership'**
+  String get membership;
+
+  /// No description provided for @revenue.
+  ///
+  /// In en, this message translates to:
+  /// **'Revenue'**
+  String get revenue;
+
+  /// No description provided for @exploreDemo.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore demo UI'**
+  String get exploreDemo;
+
+  /// No description provided for @tagline.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage. Train. Win.\nAll in one place.'**
+  String get tagline;
+
+  /// No description provided for @continueWithGoogle.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Google'**
+  String get continueWithGoogle;
+
+  /// No description provided for @continueWithApple.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Apple'**
+  String get continueWithApple;
+
+  /// No description provided for @accountsViaInviteNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Accounts are normally created via invite. Sign-up may be ops-only on this API.'**
+  String get accountsViaInviteNote;
+
+  /// No description provided for @coachFallback.
+  ///
+  /// In en, this message translates to:
+  /// **'Coach'**
+  String get coachFallback;
+
+  /// No description provided for @goodMorning.
+  ///
+  /// In en, this message translates to:
+  /// **'Good morning'**
+  String get goodMorning;
+
+  /// No description provided for @goodAfternoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Good afternoon'**
+  String get goodAfternoon;
+
+  /// No description provided for @goodEvening.
+  ///
+  /// In en, this message translates to:
+  /// **'Good evening'**
+  String get goodEvening;
+
+  /// No description provided for @yourTeams.
+  ///
+  /// In en, this message translates to:
+  /// **'Your teams'**
+  String get yourTeams;
+
+  /// No description provided for @yourClubs.
+  ///
+  /// In en, this message translates to:
+  /// **'Your clubs'**
+  String get yourClubs;
+
+  /// No description provided for @upcoming.
+  ///
+  /// In en, this message translates to:
+  /// **'Upcoming'**
+  String get upcoming;
+
+  /// No description provided for @recentActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent activity'**
+  String get recentActivity;
+
+  /// No description provided for @nextMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Next match'**
+  String get nextMatch;
+
+  /// No description provided for @tbd.
+  ///
+  /// In en, this message translates to:
+  /// **'TBD'**
+  String get tbd;
+
+  /// No description provided for @nothingOnScheduleToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing on the schedule today. Open Calendar to browse.'**
+  String get nothingOnScheduleToday;
+
+  /// No description provided for @nothingTodayNextUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing today — next up'**
+  String get nothingTodayNextUp;
+
+  /// No description provided for @couldNotLoadClubs.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load clubs'**
+  String get couldNotLoadClubs;
+
+  /// No description provided for @couldNotLoadSchedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load schedule'**
+  String get couldNotLoadSchedule;
+
+  /// No description provided for @couldNotLoadEvents.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load events'**
+  String get couldNotLoadEvents;
+
+  /// No description provided for @couldNotLoadTeams.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load teams'**
+  String get couldNotLoadTeams;
+
+  /// No description provided for @couldNotLoadMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load members'**
+  String get couldNotLoadMembers;
+
+  /// No description provided for @couldNotLoadMember.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load member'**
+  String get couldNotLoadMember;
+
+  /// No description provided for @couldNotLoadRoster.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load roster'**
+  String get couldNotLoadRoster;
+
+  /// No description provided for @couldNotLoadSession.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load session'**
+  String get couldNotLoadSession;
+
+  /// No description provided for @couldNotLoadReport.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load report'**
+  String get couldNotLoadReport;
+
+  /// No description provided for @couldNotLoadHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load history'**
+  String get couldNotLoadHistory;
+
+  /// No description provided for @couldNotLoadConversations.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load conversations'**
+  String get couldNotLoadConversations;
+
+  /// No description provided for @couldNotLoadChat.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load chat'**
+  String get couldNotLoadChat;
+
+  /// No description provided for @couldNotLoadPeople.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load people'**
+  String get couldNotLoadPeople;
+
+  /// No description provided for @couldNotLoadNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load notifications'**
+  String get couldNotLoadNotifications;
+
+  /// No description provided for @couldNotLoadMore.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load more'**
+  String get couldNotLoadMore;
+
+  /// No description provided for @couldNotLoadObligations.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load obligations'**
+  String get couldNotLoadObligations;
+
+  /// No description provided for @couldNotLoadPayments.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load payments'**
+  String get couldNotLoadPayments;
+
+  /// No description provided for @couldNotLoadFees.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load your fees'**
+  String get couldNotLoadFees;
+
+  /// No description provided for @couldNotLoadClub.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load club'**
+  String get couldNotLoadClub;
+
+  /// No description provided for @couldNotLoadMembershipStats.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load membership stats'**
+  String get couldNotLoadMembershipStats;
+
+  /// No description provided for @couldNotLoadRevenueStats.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load revenue stats'**
+  String get couldNotLoadRevenueStats;
+
+  /// No description provided for @couldNotCreateSchedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not create schedule'**
+  String get couldNotCreateSchedule;
+
+  /// No description provided for @couldNotSaveStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not save status'**
+  String get couldNotSaveStatus;
+
+  /// No description provided for @couldNotSaveAttendance.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not save attendance'**
+  String get couldNotSaveAttendance;
+
+  /// No description provided for @couldNotSendMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not send message'**
+  String get couldNotSendMessage;
+
+  /// No description provided for @couldNotOpenConversation.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open conversation'**
+  String get couldNotOpenConversation;
+
+  /// No description provided for @couldNotMarkAsRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not mark as read'**
+  String get couldNotMarkAsRead;
+
+  /// No description provided for @couldNotRecordPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not record payment'**
+  String get couldNotRecordPayment;
+
+  /// No description provided for @signInToCreateSchedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to create schedule items'**
+  String get signInToCreateSchedule;
+
+  /// No description provided for @signInToOpenChat.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to open live chat'**
+  String get signInToOpenChat;
+
+  /// No description provided for @signInToSeeNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to see your notification feed.'**
+  String get signInToSeeNotifications;
+
+  /// No description provided for @signInToManagePayments.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to manage club payments.'**
+  String get signInToManagePayments;
+
+  /// No description provided for @signInToSeeFees.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to see your fees.'**
+  String get signInToSeeFees;
+
+  /// No description provided for @signInToSeeStats.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to see club membership and revenue analytics.'**
+  String get signInToSeeStats;
+
+  /// No description provided for @signInToLoadTeams.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to load club teams from the API.'**
+  String get signInToLoadTeams;
+
+  /// No description provided for @selectClubToViewTeams.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a club to view teams.'**
+  String get selectClubToViewTeams;
+
+  /// No description provided for @selectClubToViewMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a club to view members.'**
+  String get selectClubToViewMembers;
+
+  /// No description provided for @selectClubToViewCharges.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a club to view charges.'**
+  String get selectClubToViewCharges;
+
+  /// No description provided for @selectClubToViewPayments.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a club to view payments.'**
+  String get selectClubToViewPayments;
+
+  /// No description provided for @selectClubToViewMembershipStats.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a club to view membership stats.'**
+  String get selectClubToViewMembershipStats;
+
+  /// No description provided for @selectClubToViewRevenueStats.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a club to view revenue stats.'**
+  String get selectClubToViewRevenueStats;
+
+  /// No description provided for @noClubSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'No club selected.'**
+  String get noClubSelected;
+
+  /// No description provided for @noEventsOnThisDay.
+  ///
+  /// In en, this message translates to:
+  /// **'No events on this day.'**
+  String get noEventsOnThisDay;
+
+  /// No description provided for @demoSchedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Demo schedule'**
+  String get demoSchedule;
+
+  /// No description provided for @noTeamsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No teams in this club yet.'**
+  String get noTeamsYet;
+
+  /// No description provided for @tapToOpenRoster.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to open roster'**
+  String get tapToOpenRoster;
+
+  /// No description provided for @noMembersFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No members found for this club.'**
+  String get noMembersFound;
+
+  /// No description provided for @searchMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'Search members'**
+  String get searchMembers;
+
+  /// No description provided for @searchMessages.
+  ///
+  /// In en, this message translates to:
+  /// **'Search messages'**
+  String get searchMessages;
+
+  /// No description provided for @searchPeople.
+  ///
+  /// In en, this message translates to:
+  /// **'Search people'**
+  String get searchPeople;
+
+  /// No description provided for @noConversations.
+  ///
+  /// In en, this message translates to:
+  /// **'No conversations.'**
+  String get noConversations;
+
+  /// No description provided for @noConversationsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No conversations yet.'**
+  String get noConversationsYet;
+
+  /// No description provided for @noMessagesYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No messages yet.'**
+  String get noMessagesYet;
+
+  /// No description provided for @messageDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Message deleted'**
+  String get messageDeleted;
+
+  /// No description provided for @yesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get yesterday;
+
+  /// No description provided for @noMatches.
+  ///
+  /// In en, this message translates to:
+  /// **'No matches.'**
+  String get noMatches;
+
+  /// No description provided for @noAdultsToMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'No adults to message yet.\nPeople appear here from club staff and your team chats.'**
+  String get noAdultsToMessage;
+
+  /// No description provided for @sayHello.
+  ///
+  /// In en, this message translates to:
+  /// **'Say hello'**
+  String get sayHello;
+
+  /// No description provided for @messageHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Message'**
+  String get messageHint;
+
+  /// No description provided for @readOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Read only'**
+  String get readOnly;
+
+  /// No description provided for @systemMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get systemMessage;
+
+  /// No description provided for @cannotSendInChannel.
+  ///
+  /// In en, this message translates to:
+  /// **'You cannot send in this channel'**
+  String get cannotSendInChannel;
+
+  /// No description provided for @couldNotLoadOlder.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load older'**
+  String get couldNotLoadOlder;
+
+  /// No description provided for @noNotificationsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No notifications yet.'**
+  String get noNotificationsYet;
+
+  /// No description provided for @loadMore.
+  ///
+  /// In en, this message translates to:
+  /// **'Load more'**
+  String get loadMore;
+
+  /// No description provided for @nothingOutstanding.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing outstanding.'**
+  String get nothingOutstanding;
+
+  /// No description provided for @noPaymentsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No payments recorded yet.'**
+  String get noPaymentsYet;
+
+  /// No description provided for @noOpenFamilyFees.
+  ///
+  /// In en, this message translates to:
+  /// **'No open family fees.'**
+  String get noOpenFamilyFees;
+
+  /// No description provided for @noFeeHistoryYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No fee history yet.'**
+  String get noFeeHistoryYet;
+
+  /// No description provided for @openCharges.
+  ///
+  /// In en, this message translates to:
+  /// **'Open charges'**
+  String get openCharges;
+
+  /// No description provided for @youOwe.
+  ///
+  /// In en, this message translates to:
+  /// **'You owe'**
+  String get youOwe;
+
+  /// No description provided for @paymentReference.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment reference'**
+  String get paymentReference;
+
+  /// No description provided for @mixedCurrencies.
+  ///
+  /// In en, this message translates to:
+  /// **'Mixed currencies'**
+  String get mixedCurrencies;
+
+  /// No description provided for @noFamilyMembersLinked.
+  ///
+  /// In en, this message translates to:
+  /// **'No family members linked'**
+  String get noFamilyMembersLinked;
+
+  /// No description provided for @copiedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied {label}'**
+  String copiedLabel(String label);
+
+  /// No description provided for @memberId.
+  ///
+  /// In en, this message translates to:
+  /// **'Member id'**
+  String get memberId;
+
+  /// No description provided for @pasteMemberIdHint.
+  ///
+  /// In en, this message translates to:
+  /// **'No open charges — paste member id'**
+  String get pasteMemberIdHint;
+
+  /// No description provided for @notesOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes (optional)'**
+  String get notesOptional;
+
+  /// No description provided for @savePayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Save payment'**
+  String get savePayment;
+
+  /// No description provided for @pickAMember.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a member'**
+  String get pickAMember;
+
+  /// No description provided for @enterValidAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid amount'**
+  String get enterValidAmount;
+
+  /// No description provided for @openListedSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'{open} open · {total} listed'**
+  String openListedSummary(int open, int total);
+
+  /// No description provided for @membersCountLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} member(s)'**
+  String membersCountLabel(int count);
+
+  /// No description provided for @titleRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Title is required'**
+  String get titleRequired;
+
+  /// No description provided for @pickATeam.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a team'**
+  String get pickATeam;
+
+  /// No description provided for @createdNamed.
+  ///
+  /// In en, this message translates to:
+  /// **'Created “{title}”'**
+  String createdNamed(String title);
+
+  /// No description provided for @purposeOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Purpose (optional)'**
+  String get purposeOptional;
+
+  /// No description provided for @locationOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Location (optional)'**
+  String get locationOptional;
+
+  /// No description provided for @titleHintTraining.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. U14 training'**
+  String get titleHintTraining;
+
+  /// No description provided for @wholeClub.
+  ///
+  /// In en, this message translates to:
+  /// **'Whole club'**
+  String get wholeClub;
+
+  /// No description provided for @noTeamsCreateOrClub.
+  ///
+  /// In en, this message translates to:
+  /// **'No teams in this club. Create a team first, or use Whole club.'**
+  String get noTeamsCreateOrClub;
+
+  /// No description provided for @duration45.
+  ///
+  /// In en, this message translates to:
+  /// **'45 min'**
+  String get duration45;
+
+  /// No description provided for @duration60.
+  ///
+  /// In en, this message translates to:
+  /// **'60 min'**
+  String get duration60;
+
+  /// No description provided for @duration75.
+  ///
+  /// In en, this message translates to:
+  /// **'75 min'**
+  String get duration75;
+
+  /// No description provided for @duration90.
+  ///
+  /// In en, this message translates to:
+  /// **'90 min'**
+  String get duration90;
+
+  /// No description provided for @duration2h.
+  ///
+  /// In en, this message translates to:
+  /// **'2 hours'**
+  String get duration2h;
+
+  /// No description provided for @duration3h.
+  ///
+  /// In en, this message translates to:
+  /// **'3 hours'**
+  String get duration3h;
+
+  /// No description provided for @oneOff.
+  ///
+  /// In en, this message translates to:
+  /// **'One-off'**
+  String get oneOff;
+
+  /// No description provided for @weekly.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly'**
+  String get weekly;
+
+  /// No description provided for @daily.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily'**
+  String get daily;
+
+  /// No description provided for @numberOfOccurrences.
+  ///
+  /// In en, this message translates to:
+  /// **'Number of occurrences'**
+  String get numberOfOccurrences;
+
+  /// No description provided for @requestRsvp.
+  ///
+  /// In en, this message translates to:
+  /// **'Request RSVP'**
+  String get requestRsvp;
+
+  /// No description provided for @requestRsvpSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Families can confirm attendance beforehand'**
+  String get requestRsvpSubtitle;
+
+  /// No description provided for @eventTypeTraining.
+  ///
+  /// In en, this message translates to:
+  /// **'Training'**
+  String get eventTypeTraining;
+
+  /// No description provided for @eventTypeMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Match'**
+  String get eventTypeMatch;
+
+  /// No description provided for @eventTypeClubEvent.
+  ///
+  /// In en, this message translates to:
+  /// **'Club event'**
+  String get eventTypeClubEvent;
+
+  /// No description provided for @eventTypeTournament.
+  ///
+  /// In en, this message translates to:
+  /// **'Tournament'**
+  String get eventTypeTournament;
+
+  /// No description provided for @eventTypeEvent.
+  ///
+  /// In en, this message translates to:
+  /// **'Event'**
+  String get eventTypeEvent;
+
+  /// No description provided for @statusPresent.
+  ///
+  /// In en, this message translates to:
+  /// **'Present'**
+  String get statusPresent;
+
+  /// No description provided for @statusAbsent.
+  ///
+  /// In en, this message translates to:
+  /// **'Absent'**
+  String get statusAbsent;
+
+  /// No description provided for @statusLate.
+  ///
+  /// In en, this message translates to:
+  /// **'Late'**
+  String get statusLate;
+
+  /// No description provided for @statusExcused.
+  ///
+  /// In en, this message translates to:
+  /// **'Excused'**
+  String get statusExcused;
+
+  /// No description provided for @statusUnmarked.
+  ///
+  /// In en, this message translates to:
+  /// **'Unmarked'**
+  String get statusUnmarked;
+
+  /// No description provided for @takeAttendance.
+  ///
+  /// In en, this message translates to:
+  /// **'Take attendance'**
+  String get takeAttendance;
+
+  /// No description provided for @roster.
+  ///
+  /// In en, this message translates to:
+  /// **'Roster'**
+  String get roster;
+
+  /// No description provided for @rosterCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Roster ({count})'**
+  String rosterCount(int count);
+
+  /// No description provided for @summary.
+  ///
+  /// In en, this message translates to:
+  /// **'Summary'**
+  String get summary;
+
+  /// No description provided for @reloadRoster.
+  ///
+  /// In en, this message translates to:
+  /// **'Reload roster'**
+  String get reloadRoster;
+
+  /// No description provided for @saveRemaining.
+  ///
+  /// In en, this message translates to:
+  /// **'Save remaining'**
+  String get saveRemaining;
+
+  /// No description provided for @skipNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip note'**
+  String get skipNote;
+
+  /// No description provided for @tapMemberToMark.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap a member to mark — status saves to the server immediately'**
+  String get tapMemberToMark;
+
+  /// No description provided for @noMembersOnRoster.
+  ///
+  /// In en, this message translates to:
+  /// **'No members on the roster for {scope}.'**
+  String noMembersOnRoster(String scope);
+
+  /// No description provided for @thisSession.
+  ///
+  /// In en, this message translates to:
+  /// **'this session'**
+  String get thisSession;
+
+  /// No description provided for @attendanceLocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Attendance is locked for this session.'**
+  String get attendanceLocked;
+
+  /// No description provided for @sessionCanceled.
+  ///
+  /// In en, this message translates to:
+  /// **'This session was canceled.'**
+  String get sessionCanceled;
+
+  /// No description provided for @unmarkedCannotBeSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Unmarked cannot be saved — pick a status first.'**
+  String get unmarkedCannotBeSaved;
+
+  /// No description provided for @allMarksAlreadySaved.
+  ///
+  /// In en, this message translates to:
+  /// **'All marks are already saved.'**
+  String get allMarksAlreadySaved;
+
+  /// No description provided for @rsvpStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'RSVP: {status}'**
+  String rsvpStatus(String status);
+
+  /// No description provided for @markNamed.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark {name}'**
+  String markNamed(String name);
+
+  /// No description provided for @optionalNoteSynced.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional note (synced with the mark)'**
+  String get optionalNoteSynced;
+
+  /// No description provided for @attendanceReport.
+  ///
+  /// In en, this message translates to:
+  /// **'Attendance report'**
+  String get attendanceReport;
+
+  /// No description provided for @openWindow.
+  ///
+  /// In en, this message translates to:
+  /// **'Open window'**
+  String get openWindow;
+
+  /// No description provided for @past.
+  ///
+  /// In en, this message translates to:
+  /// **'Past'**
+  String get past;
+
+  /// No description provided for @noSessionsInWindow.
+  ///
+  /// In en, this message translates to:
+  /// **'No sessions in the attendance window right now.'**
+  String get noSessionsInWindow;
+
+  /// No description provided for @noPastSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'No past sessions yet.'**
+  String get noPastSessions;
+
+  /// No description provided for @attendanceSynced.
+  ///
+  /// In en, this message translates to:
+  /// **'Attendance synced'**
+  String get attendanceSynced;
+
+  /// No description provided for @attendancePartiallySynced.
+  ///
+  /// In en, this message translates to:
+  /// **'Attendance partially synced'**
+  String get attendancePartiallySynced;
+
+  /// No description provided for @marksSentToPlatform.
+  ///
+  /// In en, this message translates to:
+  /// **'Marks were sent to the club platform.'**
+  String get marksSentToPlatform;
+
+  /// No description provided for @marksAppliedRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'{applied} applied · {rejected} rejected'**
+  String marksAppliedRejected(int applied, int rejected);
+
+  /// No description provided for @superseded.
+  ///
+  /// In en, this message translates to:
+  /// **'superseded'**
+  String get superseded;
+
+  /// No description provided for @backToSession.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to session'**
+  String get backToSession;
+
+  /// No description provided for @viewReport.
+  ///
+  /// In en, this message translates to:
+  /// **'View report'**
+  String get viewReport;
+
+  /// No description provided for @attendanceHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Attendance history'**
+  String get attendanceHistory;
+
+  /// No description provided for @trainingLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Training location'**
+  String get trainingLocation;
+
+  /// No description provided for @active.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get active;
+
+  /// No description provided for @season.
+  ///
+  /// In en, this message translates to:
+  /// **'Season'**
+  String get season;
+
+  /// No description provided for @noMembersOnTeamRoster.
+  ///
+  /// In en, this message translates to:
+  /// **'No members on this team roster.'**
+  String get noMembersOnTeamRoster;
+
+  /// No description provided for @noUpcomingSessionsForTeam.
+  ///
+  /// In en, this message translates to:
+  /// **'No upcoming sessions for this team.'**
+  String get noUpcomingSessionsForTeam;
+
+  /// No description provided for @playerProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Player Profile'**
+  String get playerProfile;
+
+  /// No description provided for @noProfileDetailsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No profile details yet.'**
+  String get noProfileDetailsYet;
+
+  /// No description provided for @notAssignedToTeam.
+  ///
+  /// In en, this message translates to:
+  /// **'Not assigned to a team.'**
+  String get notAssignedToTeam;
+
+  /// No description provided for @noNotesYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No notes yet.'**
+  String get noNotesYet;
+
+  /// No description provided for @demoNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Demo notes'**
+  String get demoNotes;
+
+  /// No description provided for @canceled.
+  ///
+  /// In en, this message translates to:
+  /// **'Canceled'**
+  String get canceled;
+
+  /// No description provided for @loadingAttendanceStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading attendance status…'**
+  String get loadingAttendanceStatus;
+
+  /// No description provided for @loadRosterAndMark.
+  ///
+  /// In en, this message translates to:
+  /// **'Load roster and mark members'**
+  String get loadRosterAndMark;
+
+  /// No description provided for @viewLockedReport.
+  ///
+  /// In en, this message translates to:
+  /// **'View the report for this locked session'**
+  String get viewLockedReport;
+
+  /// No description provided for @rosterWithStatuses.
+  ///
+  /// In en, this message translates to:
+  /// **'Roster with present / late / absent / excused'**
+  String get rosterWithStatuses;
+
+  /// No description provided for @pastAndOpenSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'Past and open sessions for attendance'**
+  String get pastAndOpenSessions;
+
+  /// No description provided for @refreshAttendanceStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh attendance status'**
+  String get refreshAttendanceStatus;
+
+  /// No description provided for @marksAcceptedUntil.
+  ///
+  /// In en, this message translates to:
+  /// **'Marks accepted until {date} · {time}'**
+  String marksAcceptedUntil(String date, String time);
+
+  /// No description provided for @clubStatsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} stats'**
+  String clubStatsTitle(String name);
+
+  /// No description provided for @noMembershipData.
+  ///
+  /// In en, this message translates to:
+  /// **'No membership data.'**
+  String get noMembershipData;
+
+  /// No description provided for @noRevenueData.
+  ///
+  /// In en, this message translates to:
+  /// **'No revenue data.'**
+  String get noRevenueData;
+
+  /// No description provided for @noTrendDataYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No trend data yet.'**
+  String get noTrendDataYet;
+
+  /// No description provided for @noRevenueTrendYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No revenue trend yet.'**
+  String get noRevenueTrendYet;
+
+  /// No description provided for @asOfDate.
+  ///
+  /// In en, this message translates to:
+  /// **'As of {date}'**
+  String asOfDate(String date);
+
+  /// No description provided for @asOfDateCurrency.
+  ///
+  /// In en, this message translates to:
+  /// **'As of {date} · {currency}'**
+  String asOfDateCurrency(String date, String currency);
+
+  /// No description provided for @activeNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Active now'**
+  String get activeNow;
+
+  /// No description provided for @onTheBooks.
+  ///
+  /// In en, this message translates to:
+  /// **'On the books'**
+  String get onTheBooks;
+
+  /// No description provided for @joined12Mo.
+  ///
+  /// In en, this message translates to:
+  /// **'Joined (12 mo)'**
+  String get joined12Mo;
+
+  /// No description provided for @left12Mo.
+  ///
+  /// In en, this message translates to:
+  /// **'Left (12 mo)'**
+  String get left12Mo;
+
+  /// No description provided for @unenrolledNoTeam.
+  ///
+  /// In en, this message translates to:
+  /// **'Unenrolled (no team)'**
+  String get unenrolledNoTeam;
+
+  /// No description provided for @collected.
+  ///
+  /// In en, this message translates to:
+  /// **'Collected'**
+  String get collected;
+
+  /// No description provided for @expected.
+  ///
+  /// In en, this message translates to:
+  /// **'Expected'**
+  String get expected;
+
+  /// No description provided for @collectionRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Collection rate'**
+  String get collectionRate;
+
+  /// No description provided for @membersBilled.
+  ///
+  /// In en, this message translates to:
+  /// **'Members billed'**
+  String get membersBilled;
+
+  /// No description provided for @inDebt.
+  ///
+  /// In en, this message translates to:
+  /// **'In debt'**
+  String get inDebt;
+
+  /// No description provided for @waived.
+  ///
+  /// In en, this message translates to:
+  /// **'Waived'**
+  String get waived;
+
+  /// No description provided for @monthlyEnrollment.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly enrollment'**
+  String get monthlyEnrollment;
+
+  /// No description provided for @agingOutstanding.
+  ///
+  /// In en, this message translates to:
+  /// **'Aging (outstanding)'**
+  String get agingOutstanding;
+
+  /// No description provided for @monthlyTrend.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly trend'**
+  String get monthlyTrend;
+
+  /// No description provided for @byTeam.
+  ///
+  /// In en, this message translates to:
+  /// **'By team'**
+  String get byTeam;
+
+  /// No description provided for @bySection.
+  ///
+  /// In en, this message translates to:
+  /// **'By section'**
+  String get bySection;
+
+  /// No description provided for @notDue.
+  ///
+  /// In en, this message translates to:
+  /// **'Not due'**
+  String get notDue;
+
+  /// No description provided for @days1To30.
+  ///
+  /// In en, this message translates to:
+  /// **'1–30 days'**
+  String get days1To30;
+
+  /// No description provided for @days31To60.
+  ///
+  /// In en, this message translates to:
+  /// **'31–60 days'**
+  String get days31To60;
+
+  /// No description provided for @days61To90.
+  ///
+  /// In en, this message translates to:
+  /// **'61–90 days'**
+  String get days61To90;
+
+  /// No description provided for @days90Plus.
+  ///
+  /// In en, this message translates to:
+  /// **'90+ days'**
+  String get days90Plus;
+
+  /// No description provided for @activeCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} active'**
+  String activeCount(int count);
+
+  /// No description provided for @joinedLeftDelta.
+  ///
+  /// In en, this message translates to:
+  /// **'+{joined} / −{left}'**
+  String joinedLeftDelta(int joined, int left);
+
+  /// No description provided for @owedAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'owed {amount}'**
+  String owedAmount(String amount);
+
+  /// No description provided for @membersOwed.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} members · owed {amount}'**
+  String membersOwed(int count, String amount);
+
+  /// No description provided for @yourRoles.
+  ///
+  /// In en, this message translates to:
+  /// **'Your roles'**
+  String get yourRoles;
+
+  /// No description provided for @useThisClub.
+  ///
+  /// In en, this message translates to:
+  /// **'Use this club'**
+  String get useThisClub;
+
+  /// No description provided for @clubSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} selected'**
+  String clubSelected(String name);
+
+  /// No description provided for @namesRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'First and last name are required'**
+  String get namesRequired;
+
+  /// No description provided for @profileSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile saved'**
+  String get profileSaved;
+
+  /// No description provided for @saveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Save failed'**
+  String get saveFailed;
+
+  /// No description provided for @enterCurrentAndNewPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter current and new password'**
+  String get enterCurrentAndNewPassword;
+
+  /// No description provided for @newPasswordsDoNotMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'New passwords do not match'**
+  String get newPasswordsDoNotMatch;
+
+  /// No description provided for @newPasswordMinLength.
+  ///
+  /// In en, this message translates to:
+  /// **'New password must be at least 8 characters'**
+  String get newPasswordMinLength;
+
+  /// No description provided for @passwordChangedSessionsSignedOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Password changed. Other sessions were signed out.'**
+  String get passwordChangedSessionsSignedOut;
+
+  /// No description provided for @couldNotChangePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not change password'**
+  String get couldNotChangePassword;
+
+  /// No description provided for @clubsAndRoles.
+  ///
+  /// In en, this message translates to:
+  /// **'Clubs & roles'**
+  String get clubsAndRoles;
+
+  /// No description provided for @noRoleGrants.
+  ///
+  /// In en, this message translates to:
+  /// **'No role grants on this account.'**
+  String get noRoleGrants;
+
+  /// No description provided for @currentPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Current password'**
+  String get currentPassword;
+
+  /// No description provided for @newPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'New password'**
+  String get newPassword;
+
+  /// No description provided for @passwordRequirementsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'≥8 chars with upper, lower, digit'**
+  String get passwordRequirementsHint;
+
+  /// No description provided for @confirmNewPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm new password'**
+  String get confirmNewPassword;
+
+  /// No description provided for @emailVerified.
+  ///
+  /// In en, this message translates to:
+  /// **'Email verified'**
+  String get emailVerified;
+
+  /// No description provided for @verificationPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification pending'**
+  String get verificationPending;
+
+  /// No description provided for @emailNotVerified.
+  ///
+  /// In en, this message translates to:
+  /// **'Email not verified'**
+  String get emailNotVerified;
+
+  /// No description provided for @platformRoot.
+  ///
+  /// In en, this message translates to:
+  /// **'Platform root'**
+  String get platformRoot;
+
+  /// No description provided for @joinedMonthYear.
+  ///
+  /// In en, this message translates to:
+  /// **'Joined {when}'**
+  String joinedMonthYear(String when);
+
+  /// No description provided for @overdue.
+  ///
+  /// In en, this message translates to:
+  /// **'overdue'**
+  String get overdue;
+
+  /// No description provided for @voided.
+  ///
+  /// In en, this message translates to:
+  /// **'voided'**
+  String get voided;
+
+  /// No description provided for @voidLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'void'**
+  String get voidLabel;
+
+  /// No description provided for @relationshipSelf.
+  ///
+  /// In en, this message translates to:
+  /// **'self'**
+  String get relationshipSelf;
+
+  /// No description provided for @relationshipGuardian.
+  ///
+  /// In en, this message translates to:
+  /// **'guardian'**
+  String get relationshipGuardian;
+
+  /// No description provided for @attendanceCanceledClosed.
+  ///
+  /// In en, this message translates to:
+  /// **'Canceled — attendance closed'**
+  String get attendanceCanceledClosed;
+
+  /// No description provided for @attendanceOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Attendance open'**
+  String get attendanceOpen;
+
+  /// No description provided for @attendanceLockedShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Attendance locked'**
+  String get attendanceLockedShort;
+
+  /// No description provided for @age.
+  ///
+  /// In en, this message translates to:
+  /// **'Age'**
+  String get age;
 }
 
 class _AppLocalizationsDelegate
@@ -310,17 +2227,35 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['en'].contains(locale.languageCode);
+      <String>['en', 'it', 'mk', 'sr'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
+  // Lookup logic when language+script codes are specified.
+  switch (locale.languageCode) {
+    case 'sr':
+      {
+        switch (locale.scriptCode) {
+          case 'Latn':
+            return AppLocalizationsSrLatn();
+        }
+        break;
+      }
+  }
+
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
     case 'en':
       return AppLocalizationsEn();
+    case 'it':
+      return AppLocalizationsIt();
+    case 'mk':
+      return AppLocalizationsMk();
+    case 'sr':
+      return AppLocalizationsSr();
   }
 
   throw FlutterError(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../../../shared/demo/demo_data.dart';
 import '../../../shared/models/player.dart';
 import '../../../shared/utils/api_error_message.dart';
@@ -17,6 +18,7 @@ class PlayerProfileScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final isDemo = ref.watch(authNotifierProvider).user?.id == 'demo';
     if (isDemo) {
       return _DemoProfile(player: DemoData.player);
@@ -26,11 +28,11 @@ class PlayerProfileScreen extends ConsumerWidget {
 
     return async.when(
       loading: () => Scaffold(
-        appBar: AppBar(title: const Text('Member')),
+        appBar: AppBar(title: Text(l10n.member)),
         body: const Center(child: CircularProgressIndicator()),
       ),
       error: (e, _) => Scaffold(
-        appBar: AppBar(title: const Text('Member')),
+        appBar: AppBar(title: Text(l10n.member)),
         body: Center(
           child: Padding(
             padding: const EdgeInsets.all(24),
@@ -38,14 +40,14 @@ class PlayerProfileScreen extends ConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  apiErrorMessage(e, fallback: 'Could not load member'),
+                  apiErrorMessage(e, fallback: l10n.couldNotLoadMember),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 12),
                 FilledButton(
                   onPressed: () =>
                       ref.invalidate(playerDetailProvider(playerId)),
-                  child: const Text('Retry'),
+                  child: Text(l10n.retry),
                 ),
               ],
             ),
@@ -64,16 +66,17 @@ class _PlayerProfileBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return DefaultTabController(
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Player Profile'),
-          bottom: const TabBar(
+          title: Text(l10n.playerProfile),
+          bottom: TabBar(
             tabs: [
-              Tab(text: 'Info'),
-              Tab(text: 'Teams'),
-              Tab(text: 'Notes'),
+              Tab(text: l10n.info),
+              Tab(text: l10n.teams),
+              Tab(text: l10n.notes),
             ],
           ),
         ),
@@ -110,7 +113,7 @@ class _PlayerProfileBody extends StatelessWidget {
                                   ),
                         ),
                         const SizedBox(height: 8),
-                        Chip(label: Text(_statusLabel(player.status))),
+                        Chip(label: Text(_statusLabel(l10n, player.status))),
                       ],
                     ),
                   ),
@@ -132,7 +135,8 @@ class _PlayerProfileBody extends StatelessWidget {
     );
   }
 
-  String _statusLabel(String status) {
+  String _statusLabel(AppLocalizations l10n, String status) {
+    if (status.toLowerCase() == 'active') return l10n.active;
     if (status.isEmpty) return status;
     return status[0].toUpperCase() + status.substring(1).toLowerCase();
   }
@@ -145,26 +149,27 @@ class _InfoTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final dob = player.dateOfBirth == null
         ? null
         : DateFormat.yMMMd().format(player.dateOfBirth!);
     final rows = <(String, String)>[
-      if (dob != null) ('Date of birth', dob),
-      if (player.age != null) ('Age', '${player.age}'),
-      if (player.gender != null) ('Gender', player.gender!),
+      if (dob != null) (l10n.dateOfBirth, dob),
+      if (player.age != null) (l10n.age, '${player.age}'),
+      if (player.gender != null) (l10n.gender, player.gender!),
       if (player.registrationNumber != null &&
           player.registrationNumber!.isNotEmpty)
-        ('Registration #', player.registrationNumber!),
+        (l10n.registrationNumber, player.registrationNumber!),
       if (player.email != null && player.email!.isNotEmpty)
-        ('Email', player.email!),
+        (l10n.email, player.email!),
       if (player.phone != null && player.phone!.isNotEmpty)
-        ('Phone', player.phone!),
+        (l10n.phone, player.phone!),
       if (player.primaryShirtNumber != null)
-        ('Shirt number', '#${player.primaryShirtNumber}'),
+        (l10n.shirtNumber, '#${player.primaryShirtNumber}'),
     ];
 
     if (rows.isEmpty) {
-      return const Center(child: Text('No profile details yet.'));
+      return Center(child: Text(l10n.noProfileDetailsYet));
     }
 
     return ListView.separated(
@@ -201,8 +206,9 @@ class _TeamsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     if (player.activeTeams.isEmpty) {
-      return const Center(child: Text('Not assigned to a team.'));
+      return Center(child: Text(l10n.notAssignedToTeam));
     }
     return ListView.separated(
       padding: const EdgeInsets.all(16),
@@ -216,7 +222,7 @@ class _TeamsTab extends StatelessWidget {
             title: Text(t.teamName),
             subtitle: t.shirtNumber == null || t.shirtNumber!.isEmpty
                 ? null
-                : Text('Shirt #${t.shirtNumber}'),
+                : Text(l10n.shirtNumberValue(t.shirtNumber!)),
           ),
         );
       },
@@ -231,8 +237,9 @@ class _NotesTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     if (notes == null || notes!.trim().isEmpty) {
-      return const Center(child: Text('No notes yet.'));
+      return Center(child: Text(l10n.noNotesYet));
     }
     return ListView(
       padding: const EdgeInsets.all(16),
@@ -250,15 +257,16 @@ class _DemoProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return DefaultTabController(
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Player Profile'),
-          bottom: const TabBar(
+          title: Text(l10n.playerProfile),
+          bottom: TabBar(
             tabs: [
-              Tab(text: 'Info'),
-              Tab(text: 'Notes'),
+              Tab(text: l10n.info),
+              Tab(text: l10n.notes),
             ],
           ),
         ),
@@ -280,7 +288,13 @@ class _DemoProfile extends StatelessWidget {
                         ),
                         Text('${player.position} · #${player.number}'),
                         const SizedBox(height: 8),
-                        Chip(label: Text(player.status)),
+                        Chip(
+                          label: Text(
+                            player.status.toLowerCase() == 'active'
+                                ? l10n.active
+                                : player.status,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -294,16 +308,16 @@ class _DemoProfile extends StatelessWidget {
                     padding: const EdgeInsets.all(16),
                     children: [
                       ListTile(
-                        title: const Text('Email'),
+                        title: Text(l10n.email),
                         subtitle: Text(player.email),
                       ),
                       ListTile(
-                        title: const Text('Phone'),
+                        title: Text(l10n.phone),
                         subtitle: Text(player.phone),
                       ),
                     ],
                   ),
-                  const Center(child: Text('Demo notes')),
+                  Center(child: Text(l10n.demoNotes)),
                 ],
               ),
             ),

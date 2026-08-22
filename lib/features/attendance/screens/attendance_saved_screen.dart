@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../../../shared/models/event_attendance.dart';
 import '../../../shared/theme/app_theme.dart';
 import '../widgets/attendance_ui.dart';
@@ -19,11 +20,19 @@ class AttendanceSavedScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final summary =
         result?.session.summary ?? session?.summary ?? const AttendanceSummaryCounts();
     final batch = result?.batch;
     final rejected = batch?.rejected ?? 0;
     final applied = (batch?.applied ?? 0) + (batch?.alreadyApplied ?? 0);
+
+    final detail = batch == null
+        ? l10n.marksSentToPlatform
+        : rejected > 0
+            ? '${l10n.marksAppliedRejected(applied, rejected)}'
+                '${batch.supersededByNewer > 0 ? ' · ${batch.supersededByNewer} ${l10n.superseded}' : ''}'
+            : l10n.marksAppliedRejected(applied, 0);
 
     return Scaffold(
       appBar: AppBar(
@@ -56,18 +65,15 @@ class AttendanceSavedScreen extends StatelessWidget {
               ),
               const SizedBox(height: 28),
               Text(
-                rejected > 0 ? 'Attendance partially synced' : 'Attendance synced',
+                rejected > 0
+                    ? l10n.attendancePartiallySynced
+                    : l10n.attendanceSynced,
                 style: Theme.of(context).textTheme.headlineSmall,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 10),
               Text(
-                batch == null
-                    ? 'Marks were sent to the club platform.'
-                    : rejected > 0
-                        ? '$applied applied · $rejected rejected'
-                            '${batch.supersededByNewer > 0 ? ' · ${batch.supersededByNewer} superseded' : ''}'
-                        : '$applied mark${applied == 1 ? '' : 's'} applied to the server.',
+                detail,
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       color: Theme.of(context)
                           .colorScheme
@@ -101,17 +107,17 @@ class AttendanceSavedScreen extends StatelessWidget {
               const Spacer(),
               FilledButton(
                 onPressed: () => context.go('/occurrences/$eventId'),
-                child: const Text('Back to session'),
+                child: Text(l10n.backToSession),
               ),
               const SizedBox(height: 8),
               TextButton(
                 onPressed: () =>
                     context.push('/occurrences/$eventId/attendance/report'),
-                child: const Text('View report'),
+                child: Text(l10n.viewReport),
               ),
               TextButton(
                 onPressed: () => context.push('/attendance/history'),
-                child: const Text('Attendance history'),
+                child: Text(l10n.attendanceHistory),
               ),
             ],
           ),

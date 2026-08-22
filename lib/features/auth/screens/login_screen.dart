@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../providers/auth_provider.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../../shared/theme/app_theme.dart';
 import '../../../shared/widgets/team_hive_logo.dart';
 
@@ -17,6 +18,7 @@ class LoginScreen extends ConsumerStatefulWidget {
 class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final primary = isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
     final onPrimary = isDark ? const Color(0xFF111827) : Colors.white;
@@ -71,7 +73,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ),
                       const SizedBox(height: 14),
                       Text(
-                        'Manage. Train. Win.\nAll in one place.',
+                        l10n.tagline,
                         textAlign: TextAlign.center,
                         style: GoogleFonts.inter(
                           color: Colors.white.withValues(alpha: 0.92),
@@ -82,20 +84,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ),
                       const Spacer(flex: 3),
                       _PrimaryButton(
-                        label: 'Log In',
+                        label: l10n.logIn,
                         background: primary,
                         foreground: onPrimary,
                         onPressed: () => _openEmailLogin(context),
                       ),
                       const SizedBox(height: 12),
                       _SocialButton(
-                        label: 'Continue with Google',
+                        label: l10n.continueWithGoogle,
                         icon: const _GoogleGlyph(),
                         onPressed: () => _comingSoon('Google Sign-In'),
                       ),
                       const SizedBox(height: 12),
                       _SocialButton(
-                        label: 'Continue with Apple',
+                        label: l10n.continueWithApple,
                         icon: const Icon(Icons.apple_rounded, size: 22, color: Colors.black),
                         onPressed: () => _comingSoon('Apple Sign-In'),
                       ),
@@ -108,14 +110,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         ),
                         child: Text.rich(
                           TextSpan(
-                            text: "Don't have an account? ",
+                            text: l10n.dontHaveAccount,
                             style: GoogleFonts.inter(
                               color: Colors.white.withValues(alpha: 0.78),
                               fontSize: 14,
                             ),
                             children: [
                               TextSpan(
-                                text: 'Sign up',
+                                text: l10n.signUp,
                                 style: GoogleFonts.inter(
                                   color: primary,
                                   fontWeight: FontWeight.w700,
@@ -135,7 +137,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           foregroundColor: Colors.white54,
                           textStyle: GoogleFonts.inter(fontSize: 13),
                         ),
-                        child: const Text('Explore demo UI'),
+                        child: Text(l10n.exploreDemo),
                       ),
                       const SizedBox(height: 8),
                     ],
@@ -150,8 +152,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   void _comingSoon(String label) {
+    final l10n = AppLocalizations.of(context)!;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('$label coming soon')),
+      SnackBar(content: Text(l10n.comingSoonNamed(label))),
     );
   }
 
@@ -206,12 +209,17 @@ class _EmailLoginSheetState extends ConsumerState<_EmailLoginSheet> {
     }
     final error = ref.read(authNotifierProvider).error;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(error ?? 'Login failed. Check your credentials.')),
+      SnackBar(
+        content: Text(
+          error ?? AppLocalizations.of(context)!.loginFailed,
+        ),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final auth = ref.watch(authNotifierProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final surface = isDark ? AppColors.darkCard : Colors.white;
@@ -251,19 +259,11 @@ class _EmailLoginSheetState extends ConsumerState<_EmailLoginSheet> {
                 ),
                 const SizedBox(height: 18),
                 Text(
-                  'Welcome back',
+                  l10n.logIn,
                   style: GoogleFonts.poppins(
                     fontSize: 22,
                     fontWeight: FontWeight.w700,
                     color: textColor,
-                  ),
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  'Sign in with your TeamHive account',
-                  style: GoogleFonts.inter(
-                    fontSize: 14,
-                    color: textColor.withValues(alpha: 0.6),
                   ),
                 ),
                 const SizedBox(height: 22),
@@ -272,14 +272,14 @@ class _EmailLoginSheetState extends ConsumerState<_EmailLoginSheet> {
                   keyboardType: TextInputType.emailAddress,
                   autofillHints: const [AutofillHints.email],
                   textInputAction: TextInputAction.next,
-                  decoration: const InputDecoration(
-                    labelText: 'Email',
-                    prefixIcon: Icon(Icons.mail_outline_rounded),
+                  decoration: InputDecoration(
+                    labelText: l10n.email,
+                    prefixIcon: const Icon(Icons.mail_outline_rounded),
                   ),
                   validator: (v) {
                     final value = v?.trim() ?? '';
-                    if (value.isEmpty) return 'Please enter your email';
-                    if (!value.contains('@')) return 'Please enter a valid email';
+                    if (value.isEmpty) return l10n.pleaseEnterEmail;
+                    if (!value.contains('@')) return l10n.pleaseEnterValidEmail;
                     return null;
                   },
                 ),
@@ -291,7 +291,7 @@ class _EmailLoginSheetState extends ConsumerState<_EmailLoginSheet> {
                   textInputAction: TextInputAction.done,
                   onFieldSubmitted: (_) => _submit(),
                   decoration: InputDecoration(
-                    labelText: 'Password',
+                    labelText: l10n.password,
                     prefixIcon: const Icon(Icons.lock_outline_rounded),
                     suffixIcon: IconButton(
                       onPressed: () => setState(() => _obscure = !_obscure),
@@ -302,8 +302,9 @@ class _EmailLoginSheetState extends ConsumerState<_EmailLoginSheet> {
                       ),
                     ),
                   ),
-                  validator: (v) =>
-                      (v == null || v.isEmpty) ? 'Please enter your password' : null,
+                  validator: (v) => (v == null || v.isEmpty)
+                      ? l10n.pleaseEnterPassword
+                      : null,
                 ),
                 const SizedBox(height: 22),
                 FilledButton(
@@ -314,12 +315,13 @@ class _EmailLoginSheetState extends ConsumerState<_EmailLoginSheet> {
                           height: 22,
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
-                      : const Text('Log In'),
+                      : Text(l10n.logIn),
                 ),
                 const SizedBox(height: 8),
                 TextButton(
-                  onPressed: auth.isLoading ? null : () => Navigator.pop(context),
-                  child: const Text('Cancel'),
+                  onPressed:
+                      auth.isLoading ? null : () => Navigator.pop(context),
+                  child: Text(l10n.cancel),
                 ),
               ],
             ),

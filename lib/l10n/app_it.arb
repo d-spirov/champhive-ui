@@ -1,0 +1,520 @@
+{
+  "@@locale": "it",
+  "appTitle": "TeamHive",
+  "team": "Squadra",
+  "hive": "Alveare",
+  "email": "Email",
+  "password": "Password",
+  "confirmPassword": "Conferma password",
+  "firstName": "Nome",
+  "lastName": "Cognome",
+  "phone": "Telefono",
+  "logIn": "Accedi",
+  "signUp": "Registrati",
+  "logOut": "Esci",
+  "dontHaveAccount": "Non hai un account? ",
+  "alreadyHaveAccount": "Hai già un account? ",
+  "pleaseEnterEmail": "Inserisci la tua email",
+  "pleaseEnterValidEmail": "Inserisci un'email valida",
+  "pleaseEnterPassword": "Inserisci la tua password",
+  "pleaseEnterFirstName": "Inserisci il tuo nome",
+  "pleaseEnterLastName": "Inserisci il tuo cognome",
+  "pleaseConfirmPassword": "Conferma la password",
+  "passwordsDoNotMatch": "Le password non corrispondono",
+  "passwordMinLength": "La password deve avere almeno 8 caratteri",
+  "loginFailed": "Accesso non riuscito. Controlla le credenziali.",
+  "registrationFailed": "Registrazione non riuscita. Riprova.",
+  "myClubs": "I miei club",
+  "noClubsYet": "Non sei ancora membro di nessun club.",
+  "home": "Inizio",
+  "teams": "Squadre",
+  "players": "Giocatori",
+  "members": "Membri",
+  "events": "Eventi",
+  "schedule": "Programma",
+  "calendar": "Calendario",
+  "attendance": "Presenze",
+  "messages": "Messaggi",
+  "notifications": "Notifiche",
+  "payments": "Pagamenti",
+  "statistics": "Statistiche",
+  "more": "Altro",
+  "settings": "Impostazioni",
+  "helpSupport": "Aiuto e supporto",
+  "myAccount": "Il mio account",
+  "appearance": "Aspetto",
+  "language": "Lingua",
+  "aboutApp": "Informazioni su TeamHive",
+  "retry": "Riprova",
+  "save": "Salva",
+  "cancel": "Annulla",
+  "create": "Crea",
+  "search": "Cerca",
+  "comingSoon": "Prossimamente",
+  "comingSoonNamed": "{label} in arrivo",
+  "@comingSoonNamed": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "sessionExpired": "La sessione è scaduta. Accedi di nuovo.",
+  "signInToContinue": "Accedi per continuare",
+  "selectClub": "Seleziona un club",
+  "selectClubFirst": "Seleziona prima un club",
+  "noData": "Nessun dato ancora",
+  "pullToRefresh": "Scorri per aggiornare",
+  "dismiss": "Chiudi",
+  "continueAction": "Continua",
+  "refresh": "Aggiorna",
+  "history": "Cronologia",
+  "report": "Rapporto",
+  "overview": "Panoramica",
+  "info": "Info",
+  "notes": "Note",
+  "note": "Nota",
+  "optionalNote": "Nota facoltativa",
+  "location": "Luogo",
+  "title": "Titolo",
+  "type": "Tipo",
+  "scope": "Ambito",
+  "when": "Quando",
+  "repeat": "Ripeti",
+  "duration": "Durata",
+  "amount": "Importo",
+  "bank": "Banca",
+  "importMethod": "Importa",
+  "member": "Membro",
+  "payment": "Pagamento",
+  "chat": "Chat",
+  "session": "Sessione",
+  "club": "Club",
+  "status": "Stato",
+  "timezone": "Fuso orario",
+  "contact": "Contatto",
+  "gender": "Genere",
+  "dateOfBirth": "Data di nascita",
+  "registrationNumber": "N. di registrazione",
+  "shirtNumber": "Numero maglia",
+  "shirtNumberValue": "Maglia #{number}",
+  "@shirtNumberValue": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "themeLight": "Chiaro",
+  "themeDark": "Scuro",
+  "themeSystem": "Sistema",
+  "languageEnglish": "Inglese",
+  "languageMacedonian": "Macedone",
+  "languageSerbian": "Serbo",
+  "languageItalian": "Italiano",
+  "languageSystem": "Lingua di sistema",
+  "newMessage": "Nuovo messaggio",
+  "newSchedule": "Nuovo programma",
+  "markAllRead": "Segna tutto come letto",
+  "recordPayment": "Registra pagamento",
+  "profile": "Profilo",
+  "saveProfile": "Salva profilo",
+  "changePassword": "Cambia password",
+  "outstanding": "In sospeso",
+  "cash": "Contanti",
+  "myFees": "Le mie quote",
+  "membership": "Iscrizione",
+  "revenue": "Entrate",
+  "exploreDemo": "Esplora l'interfaccia demo",
+  "tagline": "Gestisci. Allenati. Vinci.\nTutto in un unico posto.",
+  "continueWithGoogle": "Continua con Google",
+  "continueWithApple": "Continua con Apple",
+  "accountsViaInviteNote": "Gli account di solito si creano tramite invito. La registrazione può essere riservata agli operatori su questa API.",
+  "coachFallback": "Allenatore",
+  "goodMorning": "Buongiorno",
+  "goodAfternoon": "Buon pomeriggio",
+  "goodEvening": "Buonasera",
+  "yourTeams": "Le tue squadre",
+  "yourClubs": "I tuoi club",
+  "upcoming": "In arrivo",
+  "recentActivity": "Attività recente",
+  "nextMatch": "Prossima partita",
+  "tbd": "Da definire",
+  "nothingOnScheduleToday": "Niente in programma oggi. Apri Calendario per sfogliare.",
+  "nothingTodayNextUp": "Niente oggi — prossimo",
+  "couldNotLoadClubs": "Impossibile caricare i club",
+  "couldNotLoadSchedule": "Impossibile caricare il programma",
+  "couldNotLoadEvents": "Impossibile caricare gli eventi",
+  "couldNotLoadTeams": "Impossibile caricare le squadre",
+  "couldNotLoadMembers": "Impossibile caricare i membri",
+  "couldNotLoadMember": "Impossibile caricare il membro",
+  "couldNotLoadRoster": "Impossibile caricare la rosa",
+  "couldNotLoadSession": "Impossibile caricare la sessione",
+  "couldNotLoadReport": "Impossibile caricare il report",
+  "couldNotLoadHistory": "Impossibile caricare la cronologia",
+  "couldNotLoadConversations": "Impossibile caricare le conversazioni",
+  "couldNotLoadChat": "Impossibile caricare la chat",
+  "couldNotLoadPeople": "Impossibile caricare le persone",
+  "couldNotLoadNotifications": "Impossibile caricare le notifiche",
+  "couldNotLoadMore": "Impossibile caricare altro",
+  "couldNotLoadObligations": "Impossibile caricare le obbligazioni",
+  "couldNotLoadPayments": "Impossibile caricare i pagamenti",
+  "couldNotLoadFees": "Impossibile caricare le tue quote",
+  "couldNotLoadClub": "Impossibile caricare il club",
+  "couldNotLoadMembershipStats": "Impossibile caricare le statistiche di iscrizione",
+  "couldNotLoadRevenueStats": "Impossibile caricare le statistiche delle entrate",
+  "couldNotCreateSchedule": "Impossibile creare il programma",
+  "couldNotSaveStatus": "Impossibile salvare lo stato",
+  "couldNotSaveAttendance": "Impossibile salvare le presenze",
+  "couldNotSendMessage": "Impossibile inviare il messaggio",
+  "couldNotOpenConversation": "Impossibile aprire la conversazione",
+  "couldNotMarkAsRead": "Impossibile segnare come letto",
+  "couldNotRecordPayment": "Impossibile registrare il pagamento",
+  "signInToCreateSchedule": "Accedi per creare voci del programma",
+  "signInToOpenChat": "Accedi per aprire la chat dal vivo",
+  "signInToSeeNotifications": "Accedi per vedere le tue notifiche.",
+  "signInToManagePayments": "Accedi per gestire i pagamenti del club.",
+  "signInToSeeFees": "Accedi per vedere le tue quote.",
+  "signInToSeeStats": "Accedi per vedere le analisi di iscrizione e entrate del club.",
+  "signInToLoadTeams": "Accedi per caricare le squadre del club dall'API.",
+  "selectClubToViewTeams": "Seleziona un club per vedere le squadre.",
+  "selectClubToViewMembers": "Seleziona un club per vedere i membri.",
+  "selectClubToViewCharges": "Seleziona un club per vedere gli addebiti.",
+  "selectClubToViewPayments": "Seleziona un club per vedere i pagamenti.",
+  "selectClubToViewMembershipStats": "Seleziona un club per vedere le statistiche di iscrizione.",
+  "selectClubToViewRevenueStats": "Seleziona un club per vedere le statistiche delle entrate.",
+  "noClubSelected": "Nessun club selezionato.",
+  "noEventsOnThisDay": "Nessun evento in questo giorno.",
+  "demoSchedule": "Programma demo",
+  "noTeamsYet": "Nessuna squadra in questo club ancora.",
+  "tapToOpenRoster": "Tocca per aprire la rosa",
+  "noMembersFound": "Nessun membro trovato per questo club.",
+  "searchMembers": "Cerca membri",
+  "searchMessages": "Cerca messaggi",
+  "searchPeople": "Cerca persone",
+  "noConversations": "Nessuna conversazione.",
+  "noConversationsYet": "Nessuna conversazione ancora.",
+  "noMessagesYet": "Nessun messaggio ancora.",
+  "messageDeleted": "Messaggio eliminato",
+  "yesterday": "Ieri",
+  "noMatches": "Nessun risultato.",
+  "noAdultsToMessage": "Nessun adulto a cui scrivere ancora.\nLe persone appaiono qui dallo staff del club e dalle chat della squadra.",
+  "sayHello": "Di' ciao",
+  "messageHint": "Messaggio",
+  "readOnly": "Solo lettura",
+  "systemMessage": "Sistema",
+  "cannotSendInChannel": "Non puoi inviare in questo canale",
+  "couldNotLoadOlder": "Impossibile caricare i messaggi precedenti",
+  "noNotificationsYet": "Nessuna notifica ancora.",
+  "loadMore": "Carica altro",
+  "nothingOutstanding": "Niente in sospeso.",
+  "noPaymentsYet": "Nessun pagamento registrato ancora.",
+  "noOpenFamilyFees": "Nessuna quota familiare aperta.",
+  "noFeeHistoryYet": "Nessuna cronologia delle quote ancora.",
+  "openCharges": "Addebiti aperti",
+  "youOwe": "Devi",
+  "paymentReference": "Riferimento pagamento",
+  "mixedCurrencies": "Valute miste",
+  "noFamilyMembersLinked": "Nessun membro della famiglia collegato",
+  "copiedLabel": "Copiato {label}",
+  "@copiedLabel": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "memberId": "ID membro",
+  "pasteMemberIdHint": "Nessun addebito aperto — incolla l'ID membro",
+  "notesOptional": "Note (facoltative)",
+  "savePayment": "Salva pagamento",
+  "pickAMember": "Scegli un membro",
+  "enterValidAmount": "Inserisci un importo valido",
+  "openListedSummary": "{open} aperti · {total} elencati",
+  "@openListedSummary": {
+    "placeholders": {
+      "open": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "membersCountLabel": "{count} membro/i",
+  "@membersCountLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "titleRequired": "Il titolo è obbligatorio",
+  "pickATeam": "Scegli una squadra",
+  "createdNamed": "Creato “{title}”",
+  "@createdNamed": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "purposeOptional": "Scopo (facoltativo)",
+  "locationOptional": "Luogo (facoltativo)",
+  "titleHintTraining": "es. allenamento U14",
+  "wholeClub": "Tutto il club",
+  "noTeamsCreateOrClub": "Nessuna squadra in questo club. Crea prima una squadra o usa Tutto il club.",
+  "duration45": "45 min",
+  "duration60": "60 min",
+  "duration75": "75 min",
+  "duration90": "90 min",
+  "duration2h": "2 ore",
+  "duration3h": "3 ore",
+  "oneOff": "Una tantum",
+  "weekly": "Settimanale",
+  "daily": "Giornaliero",
+  "numberOfOccurrences": "Numero di occorrenze",
+  "requestRsvp": "Richiedi RSVP",
+  "requestRsvpSubtitle": "Le famiglie possono confermare la presenza in anticipo",
+  "eventTypeTraining": "Allenamento",
+  "eventTypeMatch": "Partita",
+  "eventTypeClubEvent": "Evento del club",
+  "eventTypeTournament": "Torneo",
+  "eventTypeEvent": "Evento",
+  "statusPresent": "Presente",
+  "statusAbsent": "Assente",
+  "statusLate": "In ritardo",
+  "statusExcused": "Giustificato",
+  "statusUnmarked": "Non contrassegnato",
+  "takeAttendance": "Registra le presenze",
+  "roster": "Rosa",
+  "rosterCount": "Rosa ({count})",
+  "@rosterCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "summary": "Riepilogo",
+  "reloadRoster": "Ricarica rosa",
+  "saveRemaining": "Salva rimanenti",
+  "skipNote": "Salta nota",
+  "tapMemberToMark": "Tocca un membro per contrassegnare — lo stato viene salvato subito sul server",
+  "noMembersOnRoster": "Nessun membro nella rosa per {scope}.",
+  "@noMembersOnRoster": {
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "thisSession": "questa sessione",
+  "attendanceLocked": "Le presenze sono bloccate per questa sessione.",
+  "sessionCanceled": "Questa sessione è stata annullata.",
+  "unmarkedCannotBeSaved": "Non contrassegnato non può essere salvato — scegli prima uno stato.",
+  "allMarksAlreadySaved": "Tutte le contrassegnature sono già salvate.",
+  "rsvpStatus": "RSVP: {status}",
+  "@rsvpStatus": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "markNamed": "Contrassegna {name}",
+  "@markNamed": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "optionalNoteSynced": "Nota facoltativa (sincronizzata con la contrassegnatura)",
+  "attendanceReport": "Report presenze",
+  "openWindow": "Finestra aperta",
+  "past": "Passate",
+  "noSessionsInWindow": "Nessuna sessione nella finestra delle presenze al momento.",
+  "noPastSessions": "Nessuna sessione passata ancora.",
+  "attendanceSynced": "Presenze sincronizzate",
+  "attendancePartiallySynced": "Presenze parzialmente sincronizzate",
+  "marksSentToPlatform": "Le contrassegnature sono state inviate alla piattaforma del club.",
+  "marksAppliedRejected": "{applied} applicate · {rejected} rifiutate",
+  "@marksAppliedRejected": {
+    "placeholders": {
+      "applied": {
+        "type": "int"
+      },
+      "rejected": {
+        "type": "int"
+      }
+    }
+  },
+  "superseded": "sostituito",
+  "backToSession": "Torna alla sessione",
+  "viewReport": "Vedi report",
+  "attendanceHistory": "Cronologia presenze",
+  "trainingLocation": "Luogo dell'allenamento",
+  "active": "Attivo",
+  "season": "Stagione",
+  "noMembersOnTeamRoster": "Nessun membro nella rosa di questa squadra.",
+  "noUpcomingSessionsForTeam": "Nessuna sessione in arrivo per questa squadra.",
+  "playerProfile": "Profilo giocatore",
+  "noProfileDetailsYet": "Nessun dettaglio del profilo ancora.",
+  "notAssignedToTeam": "Non assegnato a una squadra.",
+  "noNotesYet": "Nessuna nota ancora.",
+  "demoNotes": "Note demo",
+  "canceled": "Annullato",
+  "loadingAttendanceStatus": "Caricamento stato presenze…",
+  "loadRosterAndMark": "Carica la rosa e contrassegna i membri",
+  "viewLockedReport": "Vedi il report di questa sessione bloccata",
+  "rosterWithStatuses": "Rosa con presente / in ritardo / assente / giustificato",
+  "pastAndOpenSessions": "Sessioni passate e aperte per le presenze",
+  "refreshAttendanceStatus": "Aggiorna stato presenze",
+  "marksAcceptedUntil": "Contrassegnature accettate fino al {date} · {time}",
+  "@marksAcceptedUntil": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "clubStatsTitle": "Statistiche di {name}",
+  "@clubStatsTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "noMembershipData": "Nessun dato di iscrizione.",
+  "noRevenueData": "Nessun dato sulle entrate.",
+  "noTrendDataYet": "Nessun dato di tendenza ancora.",
+  "noRevenueTrendYet": "Nessuna tendenza delle entrate ancora.",
+  "asOfDate": "Al {date}",
+  "@asOfDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "asOfDateCurrency": "Al {date} · {currency}",
+  "@asOfDateCurrency": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "activeNow": "Attivi ora",
+  "onTheBooks": "In evidenza",
+  "joined12Mo": "Iscritti (12 mesi)",
+  "left12Mo": "Usciti (12 mesi)",
+  "unenrolledNoTeam": "Non iscritti (senza squadra)",
+  "collected": "Incassato",
+  "expected": "Previsto",
+  "collectionRate": "Tasso di riscossione",
+  "membersBilled": "Membri fatturati",
+  "inDebt": "In debito",
+  "waived": "Esonerato",
+  "monthlyEnrollment": "Iscrizioni mensili",
+  "agingOutstanding": "Invecchiamento (in sospeso)",
+  "monthlyTrend": "Tendenza mensile",
+  "byTeam": "Per squadra",
+  "bySection": "Per sezione",
+  "notDue": "Non scaduto",
+  "days1To30": "1–30 giorni",
+  "days31To60": "31–60 giorni",
+  "days61To90": "61–90 giorni",
+  "days90Plus": "90+ giorni",
+  "activeCount": "{count} attivi",
+  "@activeCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "joinedLeftDelta": "+{joined} / −{left}",
+  "@joinedLeftDelta": {
+    "placeholders": {
+      "joined": {
+        "type": "int"
+      },
+      "left": {
+        "type": "int"
+      }
+    }
+  },
+  "owedAmount": "deve {amount}",
+  "@owedAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "membersOwed": "{count} membri · devono {amount}",
+  "@membersOwed": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "yourRoles": "I tuoi ruoli",
+  "useThisClub": "Usa questo club",
+  "clubSelected": "{name} selezionato",
+  "@clubSelected": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "namesRequired": "Nome e cognome sono obbligatori",
+  "profileSaved": "Profilo salvato",
+  "saveFailed": "Salvataggio non riuscito",
+  "enterCurrentAndNewPassword": "Inserisci la password attuale e quella nuova",
+  "newPasswordsDoNotMatch": "Le nuove password non corrispondono",
+  "newPasswordMinLength": "La nuova password deve avere almeno 8 caratteri",
+  "passwordChangedSessionsSignedOut": "Password modificata. Le altre sessioni sono state disconnesse.",
+  "couldNotChangePassword": "Impossibile cambiare la password",
+  "clubsAndRoles": "Club e ruoli",
+  "noRoleGrants": "Nessun ruolo assegnato a questo account.",
+  "currentPassword": "Password attuale",
+  "newPassword": "Nuova password",
+  "passwordRequirementsHint": "≥8 caratteri con maiuscola, minuscola e cifra",
+  "confirmNewPassword": "Conferma nuova password",
+  "emailVerified": "Email verificata",
+  "verificationPending": "Verifica in sospeso",
+  "emailNotVerified": "Email non verificata",
+  "platformRoot": "Root piattaforma",
+  "joinedMonthYear": "Iscritto {when}",
+  "@joinedMonthYear": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "overdue": "scaduto",
+  "voided": "annullato",
+  "voidLabel": "annullato",
+  "relationshipSelf": "se stesso",
+  "relationshipGuardian": "tutore",
+  "attendanceCanceledClosed": "Annullato — presenze chiuse",
+  "attendanceOpen": "Presenze aperte",
+  "attendanceLockedShort": "Presenze bloccate",
+  "age": "Età"
+}

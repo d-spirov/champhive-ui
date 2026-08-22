@@ -31,6 +31,7 @@ import 'features/teams/screens/team_details_screen.dart';
 import 'features/teams/screens/teams_screen.dart';
 import 'l10n/app_localizations.dart';
 import 'shared/models/event_attendance.dart';
+import 'shared/providers/locale_provider.dart';
 import 'shared/providers/theme_mode_provider.dart';
 import 'shared/theme/app_theme.dart';
 
@@ -282,15 +283,29 @@ class _AppState extends ConsumerState<App> {
   Widget build(BuildContext context) {
     ref.watch(authApiProvider);
     final themeOverride = ref.watch(themeModeProvider);
+    final localeOverride = ref.watch(localeProvider);
 
     return MaterialApp.router(
       title: 'TeamHive',
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
       themeMode: themeOverride ?? ThemeMode.system,
+      locale: localeOverride,
+      supportedLocales: AppLocalizations.supportedLocales,
+      localeListResolutionCallback: (locales, supported) {
+        // Prefer Serbian Latin when the device asks for Serbian.
+        for (final locale in locales ?? const <Locale>[]) {
+          if (locale.languageCode == 'sr') {
+            return AppLocales.serbian;
+          }
+          for (final s in supported) {
+            if (s.languageCode == locale.languageCode) return s;
+          }
+        }
+        return AppLocales.english;
+      },
       routerConfig: _router,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
       debugShowCheckedModeBanner: false,
     );
   }

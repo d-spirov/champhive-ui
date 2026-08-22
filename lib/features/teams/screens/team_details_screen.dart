@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../../../shared/models/team.dart';
 import '../../../shared/theme/app_theme.dart';
 import '../../../shared/utils/api_error_message.dart';
@@ -17,22 +18,23 @@ class TeamDetailsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final team = ref.watch(clubTeamProvider(teamId));
     final rosterAsync = ref.watch(teamRosterProvider(teamId));
     final title = team?.name ??
         rosterAsync.valueOrNull?.teamName ??
-        'Team';
+        l10n.team;
 
     return DefaultTabController(
       length: 3,
       child: Scaffold(
         appBar: AppBar(
           title: Text(title),
-          bottom: const TabBar(
+          bottom: TabBar(
             tabs: [
-              Tab(text: 'Overview'),
-              Tab(text: 'Members'),
-              Tab(text: 'Schedule'),
+              Tab(text: l10n.overview),
+              Tab(text: l10n.members),
+              Tab(text: l10n.schedule),
             ],
           ),
         ),
@@ -56,6 +58,7 @@ class _OverviewTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final rosterAsync = ref.watch(teamRosterProvider(teamId));
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final clubTeam = team;
@@ -78,7 +81,7 @@ class _OverviewTab extends ConsumerWidget {
         ),
         const SizedBox(height: 16),
         Text(
-          clubTeam?.name ?? rosterAsync.valueOrNull?.teamName ?? 'Team',
+          clubTeam?.name ?? rosterAsync.valueOrNull?.teamName ?? l10n.team,
           style: Theme.of(context).textTheme.headlineSmall,
         ),
         if (clubTeam?.subtitle.isNotEmpty == true) ...[
@@ -97,7 +100,7 @@ class _OverviewTab extends ConsumerWidget {
         rosterAsync.when(
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (e, _) => Text(
-            apiErrorMessage(e, fallback: 'Could not load roster'),
+            apiErrorMessage(e, fallback: l10n.couldNotLoadRoster),
           ),
           data: (roster) {
             final active = roster.entries
@@ -106,26 +109,26 @@ class _OverviewTab extends ConsumerWidget {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SectionHeader(title: 'Roster'),
+                SectionHeader(title: l10n.roster),
                 Row(
                   children: [
                     Expanded(
                       child: StatCard(
-                        label: 'Members',
+                        label: l10n.members,
                         value: '${roster.entries.length}',
                       ),
                     ),
                     const SizedBox(width: 10),
                     Expanded(
                       child: StatCard(
-                        label: 'Active',
+                        label: l10n.active,
                         value: '$active',
                       ),
                     ),
                     const SizedBox(width: 10),
                     Expanded(
                       child: StatCard(
-                        label: 'Season',
+                        label: l10n.season,
                         value: roster.seasonLabel?.isNotEmpty == true
                             ? roster.seasonLabel!
                             : '—',
@@ -135,7 +138,7 @@ class _OverviewTab extends ConsumerWidget {
                 ),
                 if (location != null && location.isNotEmpty) ...[
                   const SizedBox(height: 20),
-                  const SectionHeader(title: 'Training location'),
+                  SectionHeader(title: l10n.trainingLocation),
                   Card(
                     child: ListTile(
                       leading: const Icon(Icons.place_outlined),
@@ -159,6 +162,7 @@ class _MembersTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final rosterAsync = ref.watch(teamRosterProvider(teamId));
 
     return rosterAsync.when(
@@ -170,13 +174,13 @@ class _MembersTab extends ConsumerWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                apiErrorMessage(e, fallback: 'Could not load roster'),
+                apiErrorMessage(e, fallback: l10n.couldNotLoadRoster),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
               FilledButton(
                 onPressed: () => ref.invalidate(teamRosterProvider(teamId)),
-                child: const Text('Retry'),
+                child: Text(l10n.retry),
               ),
             ],
           ),
@@ -184,7 +188,7 @@ class _MembersTab extends ConsumerWidget {
       ),
       data: (roster) {
         if (roster.entries.isEmpty) {
-          return const Center(child: Text('No members on this team roster.'));
+          return Center(child: Text(l10n.noMembersOnTeamRoster));
         }
         final entries = [...roster.entries]
           ..sort((a, b) => a.displayName.compareTo(b.displayName));
@@ -228,6 +232,7 @@ class _ScheduleTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final scheduleAsync = ref.watch(teamScheduleProvider(teamId));
 
     return scheduleAsync.when(
@@ -239,13 +244,13 @@ class _ScheduleTab extends ConsumerWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                apiErrorMessage(e, fallback: 'Could not load schedule'),
+                apiErrorMessage(e, fallback: l10n.couldNotLoadSchedule),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
               FilledButton(
                 onPressed: () => ref.invalidate(teamScheduleProvider(teamId)),
-                child: const Text('Retry'),
+                child: Text(l10n.retry),
               ),
             ],
           ),
@@ -253,7 +258,7 @@ class _ScheduleTab extends ConsumerWidget {
       ),
       data: (events) {
         if (events.isEmpty) {
-          return const Center(child: Text('No upcoming sessions for this team.'));
+          return Center(child: Text(l10n.noUpcomingSessionsForTeam));
         }
         return RefreshIndicator(
           onRefresh: () async {

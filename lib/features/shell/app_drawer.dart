@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../auth/logout.dart';
 import '../auth/providers/auth_provider.dart';
 import '../messages/providers/chat_provider.dart';
@@ -13,6 +14,7 @@ class AppDrawer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final user = ref.watch(authNotifierProvider).user;
     final name = user?.displayName ?? 'Coach';
     final email = user?.email ?? '';
@@ -65,51 +67,51 @@ class AppDrawer extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: 8),
-              _item(context, Icons.home_outlined, 'Home', '/home'),
-              _item(context, Icons.sports_outlined, 'Members', '/members'),
+              _item(context, Icons.home_outlined, l10n.home, '/home'),
+              _item(context, Icons.sports_outlined, l10n.members, '/members'),
               _item(
                 context,
                 Icons.calendar_month_outlined,
-                'Schedule',
+                l10n.schedule,
                 '/calendar',
               ),
               _item(
                 context,
                 Icons.how_to_reg_outlined,
-                'Attendance',
+                l10n.attendance,
                 '/attendance/history',
               ),
-              _item(context, Icons.groups_outlined, 'Teams', '/teams'),
+              _item(context, Icons.groups_outlined, l10n.teams, '/teams'),
               _item(
                 context,
                 Icons.bar_chart_rounded,
-                'Statistics',
+                l10n.statistics,
                 '/statistics',
               ),
               _item(
                 context,
                 Icons.payments_outlined,
-                'Payments',
+                l10n.payments,
                 '/payments',
               ),
               _item(
                 context,
                 Icons.chat_bubble_outline_rounded,
-                'Messages',
+                l10n.messages,
                 '/messages',
                 badge: unreadChat,
               ),
               _item(
                 context,
                 Icons.notifications_outlined,
-                'Notifications',
+                l10n.notifications,
                 '/notifications',
               ),
-              _item(context, Icons.settings_outlined, 'Settings', '/more'),
+              _item(context, Icons.settings_outlined, l10n.settings, '/more'),
               _item(
                 context,
                 Icons.help_outline_rounded,
-                'Help & Support',
+                l10n.helpSupport,
                 '/more',
               ),
               const Divider(height: 24),
@@ -118,9 +120,9 @@ class AppDrawer extends ConsumerWidget {
                   Icons.logout_rounded,
                   color: AppColors.danger,
                 ),
-                title: const Text(
-                  'Log out',
-                  style: TextStyle(
+                title: Text(
+                  l10n.logOut,
+                  style: const TextStyle(
                     color: AppColors.danger,
                     fontWeight: FontWeight.w600,
                   ),

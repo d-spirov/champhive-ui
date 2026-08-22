@@ -3,20 +3,17 @@
   "appTitle": "TeamHive",
   "team": "Team",
   "hive": "Hive",
-
   "email": "Email",
   "password": "Password",
   "confirmPassword": "Confirm password",
   "firstName": "First name",
   "lastName": "Last name",
   "phone": "Phone",
-
   "logIn": "Log In",
   "signUp": "Sign Up",
   "logOut": "Log out",
   "dontHaveAccount": "Don't have an account? ",
   "alreadyHaveAccount": "Already have an account? ",
-
   "pleaseEnterEmail": "Please enter your email",
   "pleaseEnterValidEmail": "Please enter a valid email",
   "pleaseEnterPassword": "Please enter your password",
@@ -25,18 +22,499 @@
   "pleaseConfirmPassword": "Please confirm your password",
   "passwordsDoNotMatch": "Passwords do not match",
   "passwordMinLength": "Password must be at least 8 characters",
-
   "loginFailed": "Login failed. Check your credentials.",
   "registrationFailed": "Registration failed. Please try again.",
-
   "myClubs": "My clubs",
   "noClubsYet": "You're not a member of any club yet.",
   "home": "Home",
   "teams": "Teams",
   "players": "Players",
+  "members": "Members",
   "events": "Events",
+  "schedule": "Schedule",
+  "calendar": "Calendar",
   "attendance": "Attendance",
-  "comingSoon": "Coming soon — UI will follow your screen designs.",
+  "messages": "Messages",
+  "notifications": "Notifications",
+  "payments": "Payments",
+  "statistics": "Statistics",
+  "more": "More",
+  "settings": "Settings",
+  "helpSupport": "Help & Support",
+  "myAccount": "My Account",
+  "appearance": "Appearance",
+  "language": "Language",
+  "aboutApp": "About TeamHive",
   "retry": "Retry",
-  "sessionExpired": "Your session expired. Please sign in again."
+  "save": "Save",
+  "cancel": "Cancel",
+  "create": "Create",
+  "search": "Search",
+  "comingSoon": "Coming soon",
+  "comingSoonNamed": "{label} coming soon",
+  "@comingSoonNamed": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "sessionExpired": "Your session expired. Please sign in again.",
+  "signInToContinue": "Sign in to continue",
+  "selectClub": "Select a club",
+  "selectClubFirst": "Select a club first",
+  "noData": "No data yet",
+  "pullToRefresh": "Pull to refresh",
+  "dismiss": "Dismiss",
+  "continueAction": "Continue",
+  "refresh": "Refresh",
+  "history": "History",
+  "report": "Report",
+  "overview": "Overview",
+  "info": "Info",
+  "notes": "Notes",
+  "note": "Note",
+  "optionalNote": "Optional note",
+  "location": "Location",
+  "title": "Title",
+  "type": "Type",
+  "scope": "Scope",
+  "when": "When",
+  "repeat": "Repeat",
+  "duration": "Duration",
+  "amount": "Amount",
+  "bank": "Bank",
+  "importMethod": "Import",
+  "member": "Member",
+  "payment": "Payment",
+  "chat": "Chat",
+  "session": "Session",
+  "club": "Club",
+  "status": "Status",
+  "timezone": "Timezone",
+  "contact": "Contact",
+  "gender": "Gender",
+  "dateOfBirth": "Date of birth",
+  "registrationNumber": "Registration #",
+  "shirtNumber": "Shirt number",
+  "shirtNumberValue": "Shirt #{number}",
+  "@shirtNumberValue": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "themeLight": "Light",
+  "themeDark": "Dark",
+  "themeSystem": "System",
+  "languageEnglish": "English",
+  "languageMacedonian": "Macedonian",
+  "languageSerbian": "Serbian",
+  "languageItalian": "Italian",
+  "languageSystem": "System language",
+  "newMessage": "New message",
+  "newSchedule": "New schedule",
+  "markAllRead": "Mark all read",
+  "recordPayment": "Record payment",
+  "profile": "Profile",
+  "saveProfile": "Save profile",
+  "changePassword": "Change password",
+  "outstanding": "Outstanding",
+  "cash": "Cash",
+  "myFees": "My fees",
+  "membership": "Membership",
+  "revenue": "Revenue",
+  "exploreDemo": "Explore demo UI",
+  "tagline": "Manage. Train. Win.\nAll in one place.",
+  "continueWithGoogle": "Continue with Google",
+  "continueWithApple": "Continue with Apple",
+  "accountsViaInviteNote": "Accounts are normally created via invite. Sign-up may be ops-only on this API.",
+  "coachFallback": "Coach",
+  "goodMorning": "Good morning",
+  "goodAfternoon": "Good afternoon",
+  "goodEvening": "Good evening",
+  "yourTeams": "Your teams",
+  "yourClubs": "Your clubs",
+  "upcoming": "Upcoming",
+  "recentActivity": "Recent activity",
+  "nextMatch": "Next match",
+  "tbd": "TBD",
+  "nothingOnScheduleToday": "Nothing on the schedule today. Open Calendar to browse.",
+  "nothingTodayNextUp": "Nothing today — next up",
+  "couldNotLoadClubs": "Could not load clubs",
+  "couldNotLoadSchedule": "Could not load schedule",
+  "couldNotLoadEvents": "Could not load events",
+  "couldNotLoadTeams": "Could not load teams",
+  "couldNotLoadMembers": "Could not load members",
+  "couldNotLoadMember": "Could not load member",
+  "couldNotLoadRoster": "Could not load roster",
+  "couldNotLoadSession": "Could not load session",
+  "couldNotLoadReport": "Could not load report",
+  "couldNotLoadHistory": "Could not load history",
+  "couldNotLoadConversations": "Could not load conversations",
+  "couldNotLoadChat": "Could not load chat",
+  "couldNotLoadPeople": "Could not load people",
+  "couldNotLoadNotifications": "Could not load notifications",
+  "couldNotLoadMore": "Could not load more",
+  "couldNotLoadObligations": "Could not load obligations",
+  "couldNotLoadPayments": "Could not load payments",
+  "couldNotLoadFees": "Could not load your fees",
+  "couldNotLoadClub": "Could not load club",
+  "couldNotLoadMembershipStats": "Could not load membership stats",
+  "couldNotLoadRevenueStats": "Could not load revenue stats",
+  "couldNotCreateSchedule": "Could not create schedule",
+  "couldNotSaveStatus": "Could not save status",
+  "couldNotSaveAttendance": "Could not save attendance",
+  "couldNotSendMessage": "Could not send message",
+  "couldNotOpenConversation": "Could not open conversation",
+  "couldNotMarkAsRead": "Could not mark as read",
+  "couldNotRecordPayment": "Could not record payment",
+  "signInToCreateSchedule": "Sign in to create schedule items",
+  "signInToOpenChat": "Sign in to open live chat",
+  "signInToSeeNotifications": "Sign in to see your notification feed.",
+  "signInToManagePayments": "Sign in to manage club payments.",
+  "signInToSeeFees": "Sign in to see your fees.",
+  "signInToSeeStats": "Sign in to see club membership and revenue analytics.",
+  "signInToLoadTeams": "Sign in to load club teams from the API.",
+  "selectClubToViewTeams": "Select a club to view teams.",
+  "selectClubToViewMembers": "Select a club to view members.",
+  "selectClubToViewCharges": "Select a club to view charges.",
+  "selectClubToViewPayments": "Select a club to view payments.",
+  "selectClubToViewMembershipStats": "Select a club to view membership stats.",
+  "selectClubToViewRevenueStats": "Select a club to view revenue stats.",
+  "noClubSelected": "No club selected.",
+  "noEventsOnThisDay": "No events on this day.",
+  "demoSchedule": "Demo schedule",
+  "noTeamsYet": "No teams in this club yet.",
+  "tapToOpenRoster": "Tap to open roster",
+  "noMembersFound": "No members found for this club.",
+  "searchMembers": "Search members",
+  "searchMessages": "Search messages",
+  "searchPeople": "Search people",
+  "noConversations": "No conversations.",
+  "noConversationsYet": "No conversations yet.",
+  "noMessagesYet": "No messages yet.",
+  "messageDeleted": "Message deleted",
+  "yesterday": "Yesterday",
+  "noMatches": "No matches.",
+  "noAdultsToMessage": "No adults to message yet.\nPeople appear here from club staff and your team chats.",
+  "sayHello": "Say hello",
+  "messageHint": "Message",
+  "readOnly": "Read only",
+  "systemMessage": "System",
+  "cannotSendInChannel": "You cannot send in this channel",
+  "couldNotLoadOlder": "Could not load older",
+  "noNotificationsYet": "No notifications yet.",
+  "loadMore": "Load more",
+  "nothingOutstanding": "Nothing outstanding.",
+  "noPaymentsYet": "No payments recorded yet.",
+  "noOpenFamilyFees": "No open family fees.",
+  "noFeeHistoryYet": "No fee history yet.",
+  "openCharges": "Open charges",
+  "youOwe": "You owe",
+  "paymentReference": "Payment reference",
+  "mixedCurrencies": "Mixed currencies",
+  "noFamilyMembersLinked": "No family members linked",
+  "copiedLabel": "Copied {label}",
+  "@copiedLabel": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "memberId": "Member id",
+  "pasteMemberIdHint": "No open charges — paste member id",
+  "notesOptional": "Notes (optional)",
+  "savePayment": "Save payment",
+  "pickAMember": "Pick a member",
+  "enterValidAmount": "Enter a valid amount",
+  "openListedSummary": "{open} open · {total} listed",
+  "@openListedSummary": {
+    "placeholders": {
+      "open": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "membersCountLabel": "{count} member(s)",
+  "@membersCountLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "titleRequired": "Title is required",
+  "pickATeam": "Pick a team",
+  "createdNamed": "Created “{title}”",
+  "@createdNamed": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "purposeOptional": "Purpose (optional)",
+  "locationOptional": "Location (optional)",
+  "titleHintTraining": "e.g. U14 training",
+  "wholeClub": "Whole club",
+  "noTeamsCreateOrClub": "No teams in this club. Create a team first, or use Whole club.",
+  "duration45": "45 min",
+  "duration60": "60 min",
+  "duration75": "75 min",
+  "duration90": "90 min",
+  "duration2h": "2 hours",
+  "duration3h": "3 hours",
+  "oneOff": "One-off",
+  "weekly": "Weekly",
+  "daily": "Daily",
+  "numberOfOccurrences": "Number of occurrences",
+  "requestRsvp": "Request RSVP",
+  "requestRsvpSubtitle": "Families can confirm attendance beforehand",
+  "eventTypeTraining": "Training",
+  "eventTypeMatch": "Match",
+  "eventTypeClubEvent": "Club event",
+  "eventTypeTournament": "Tournament",
+  "eventTypeEvent": "Event",
+  "statusPresent": "Present",
+  "statusAbsent": "Absent",
+  "statusLate": "Late",
+  "statusExcused": "Excused",
+  "statusUnmarked": "Unmarked",
+  "takeAttendance": "Take attendance",
+  "roster": "Roster",
+  "rosterCount": "Roster ({count})",
+  "@rosterCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "summary": "Summary",
+  "reloadRoster": "Reload roster",
+  "saveRemaining": "Save remaining",
+  "skipNote": "Skip note",
+  "tapMemberToMark": "Tap a member to mark — status saves to the server immediately",
+  "noMembersOnRoster": "No members on the roster for {scope}.",
+  "@noMembersOnRoster": {
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "thisSession": "this session",
+  "attendanceLocked": "Attendance is locked for this session.",
+  "sessionCanceled": "This session was canceled.",
+  "unmarkedCannotBeSaved": "Unmarked cannot be saved — pick a status first.",
+  "allMarksAlreadySaved": "All marks are already saved.",
+  "rsvpStatus": "RSVP: {status}",
+  "@rsvpStatus": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "markNamed": "Mark {name}",
+  "@markNamed": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "optionalNoteSynced": "Optional note (synced with the mark)",
+  "attendanceReport": "Attendance report",
+  "openWindow": "Open window",
+  "past": "Past",
+  "noSessionsInWindow": "No sessions in the attendance window right now.",
+  "noPastSessions": "No past sessions yet.",
+  "attendanceSynced": "Attendance synced",
+  "attendancePartiallySynced": "Attendance partially synced",
+  "marksSentToPlatform": "Marks were sent to the club platform.",
+  "marksAppliedRejected": "{applied} applied · {rejected} rejected",
+  "@marksAppliedRejected": {
+    "placeholders": {
+      "applied": {
+        "type": "int"
+      },
+      "rejected": {
+        "type": "int"
+      }
+    }
+  },
+  "superseded": "superseded",
+  "backToSession": "Back to session",
+  "viewReport": "View report",
+  "attendanceHistory": "Attendance history",
+  "trainingLocation": "Training location",
+  "active": "Active",
+  "season": "Season",
+  "noMembersOnTeamRoster": "No members on this team roster.",
+  "noUpcomingSessionsForTeam": "No upcoming sessions for this team.",
+  "playerProfile": "Player Profile",
+  "noProfileDetailsYet": "No profile details yet.",
+  "notAssignedToTeam": "Not assigned to a team.",
+  "noNotesYet": "No notes yet.",
+  "demoNotes": "Demo notes",
+  "canceled": "Canceled",
+  "loadingAttendanceStatus": "Loading attendance status…",
+  "loadRosterAndMark": "Load roster and mark members",
+  "viewLockedReport": "View the report for this locked session",
+  "rosterWithStatuses": "Roster with present / late / absent / excused",
+  "pastAndOpenSessions": "Past and open sessions for attendance",
+  "refreshAttendanceStatus": "Refresh attendance status",
+  "marksAcceptedUntil": "Marks accepted until {date} · {time}",
+  "@marksAcceptedUntil": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "clubStatsTitle": "{name} stats",
+  "@clubStatsTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "noMembershipData": "No membership data.",
+  "noRevenueData": "No revenue data.",
+  "noTrendDataYet": "No trend data yet.",
+  "noRevenueTrendYet": "No revenue trend yet.",
+  "asOfDate": "As of {date}",
+  "@asOfDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "asOfDateCurrency": "As of {date} · {currency}",
+  "@asOfDateCurrency": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "activeNow": "Active now",
+  "onTheBooks": "On the books",
+  "joined12Mo": "Joined (12 mo)",
+  "left12Mo": "Left (12 mo)",
+  "unenrolledNoTeam": "Unenrolled (no team)",
+  "collected": "Collected",
+  "expected": "Expected",
+  "collectionRate": "Collection rate",
+  "membersBilled": "Members billed",
+  "inDebt": "In debt",
+  "waived": "Waived",
+  "monthlyEnrollment": "Monthly enrollment",
+  "agingOutstanding": "Aging (outstanding)",
+  "monthlyTrend": "Monthly trend",
+  "byTeam": "By team",
+  "bySection": "By section",
+  "notDue": "Not due",
+  "days1To30": "1–30 days",
+  "days31To60": "31–60 days",
+  "days61To90": "61–90 days",
+  "days90Plus": "90+ days",
+  "activeCount": "{count} active",
+  "@activeCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "joinedLeftDelta": "+{joined} / −{left}",
+  "@joinedLeftDelta": {
+    "placeholders": {
+      "joined": {
+        "type": "int"
+      },
+      "left": {
+        "type": "int"
+      }
+    }
+  },
+  "owedAmount": "owed {amount}",
+  "@owedAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "membersOwed": "{count} members · owed {amount}",
+  "@membersOwed": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "yourRoles": "Your roles",
+  "useThisClub": "Use this club",
+  "clubSelected": "{name} selected",
+  "@clubSelected": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "namesRequired": "First and last name are required",
+  "profileSaved": "Profile saved",
+  "saveFailed": "Save failed",
+  "enterCurrentAndNewPassword": "Enter current and new password",
+  "newPasswordsDoNotMatch": "New passwords do not match",
+  "newPasswordMinLength": "New password must be at least 8 characters",
+  "passwordChangedSessionsSignedOut": "Password changed. Other sessions were signed out.",
+  "couldNotChangePassword": "Could not change password",
+  "clubsAndRoles": "Clubs & roles",
+  "noRoleGrants": "No role grants on this account.",
+  "currentPassword": "Current password",
+  "newPassword": "New password",
+  "passwordRequirementsHint": "≥8 chars with upper, lower, digit",
+  "confirmNewPassword": "Confirm new password",
+  "emailVerified": "Email verified",
+  "verificationPending": "Verification pending",
+  "emailNotVerified": "Email not verified",
+  "platformRoot": "Platform root",
+  "joinedMonthYear": "Joined {when}",
+  "@joinedMonthYear": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "overdue": "overdue",
+  "voided": "voided",
+  "voidLabel": "void",
+  "relationshipSelf": "self",
+  "relationshipGuardian": "guardian",
+  "attendanceCanceledClosed": "Canceled — attendance closed",
+  "attendanceOpen": "Attendance open",
+  "attendanceLockedShort": "Attendance locked",
+  "age": "Age"
 }

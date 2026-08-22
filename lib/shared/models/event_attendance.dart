@@ -95,6 +95,7 @@ extension EventTypeX on EventType {
         EventType.other => 'clubEvent',
       };
 
+  /// English fallback. Prefer [eventTypeLabel] from `label_l10n.dart` in UI.
   String get label => switch (this) {
         EventType.training => 'Training',
         EventType.match => 'Match',
@@ -114,6 +115,7 @@ extension AttendanceStatusX on AttendanceStatus {
         AttendanceStatus.excused => 'excused',
       };
 
+  /// English fallback. Prefer [attendanceStatusLabel] from `label_l10n.dart` in UI.
   String get label => switch (this) {
         AttendanceStatus.notMarked => 'Unmarked',
         AttendanceStatus.present => 'Present',

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../../../shared/models/event_series.dart';
 import '../../../shared/models/team.dart';
 import '../../../shared/utils/api_error_message.dart';
@@ -84,18 +85,19 @@ class _CreateScheduleScreenState extends ConsumerState<CreateScheduleScreen> {
   }
 
   Future<void> _save() async {
+    final l10n = AppLocalizations.of(context)!;
     final clubId = ref.read(selectedClubIdProvider);
     if (clubId == null) {
-      setState(() => _error = 'Select a club first');
+      setState(() => _error = l10n.selectClubFirst);
       return;
     }
     final title = _titleCtrl.text.trim();
     if (title.isEmpty) {
-      setState(() => _error = 'Title is required');
+      setState(() => _error = l10n.titleRequired);
       return;
     }
     if (_scopeKind == 'team' && (_teamId == null || _teamId!.isEmpty)) {
-      setState(() => _error = 'Pick a team');
+      setState(() => _error = l10n.pickATeam);
       return;
     }
 
@@ -138,7 +140,7 @@ class _CreateScheduleScreenState extends ConsumerState<CreateScheduleScreen> {
       ref.invalidate(clubEventsProvider);
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Created “${series.title}”')),
+        SnackBar(content: Text(l10n.createdNamed(series.title))),
       );
       if (context.canPop()) {
         context.pop(true);
@@ -149,13 +151,14 @@ class _CreateScheduleScreenState extends ConsumerState<CreateScheduleScreen> {
       if (!mounted) return;
       setState(() {
         _saving = false;
-        _error = apiErrorMessage(e, fallback: 'Could not create schedule');
+        _error = apiErrorMessage(e, fallback: l10n.couldNotCreateSchedule);
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isDemo = ref.watch(authNotifierProvider).user?.id == 'demo';
     final clubId = ref.watch(selectedClubIdProvider);
     final teamsAsync = ref.watch(clubTeamsProvider);
@@ -180,17 +183,17 @@ class _CreateScheduleScreenState extends ConsumerState<CreateScheduleScreen> {
             }
           },
         ),
-        title: const Text('New schedule'),
+        title: Text(l10n.newSchedule),
       ),
       body: isDemo
-          ? const Center(child: Text('Sign in to create schedule items.'))
+          ? Center(child: Text(l10n.signInToCreateSchedule))
           : clubId == null
-              ? const Center(child: Text('Select a club first.'))
+              ? Center(child: Text(l10n.selectClubFirst))
               : ListView(
                   padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
                   children: [
                     Text(
-                      'Type',
+                      l10n.type,
                       style: Theme.of(context).textTheme.titleSmall,
                     ),
                     const SizedBox(height: 8),
@@ -198,11 +201,11 @@ class _CreateScheduleScreenState extends ConsumerState<CreateScheduleScreen> {
                       spacing: 8,
                       runSpacing: 8,
                       children: [
-                        for (final t in const [
-                          ('training', 'Training'),
-                          ('match', 'Match'),
-                          ('clubEvent', 'Club event'),
-                          ('tournament', 'Tournament'),
+                        for (final t in [
+                          ('training', l10n.eventTypeTraining),
+                          ('match', l10n.eventTypeMatch),
+                          ('clubEvent', l10n.eventTypeClubEvent),
+                          ('tournament', l10n.eventTypeTournament),
                         ])
                           ChoiceChip(
                             label: Text(t.$2),
@@ -215,37 +218,40 @@ class _CreateScheduleScreenState extends ConsumerState<CreateScheduleScreen> {
                     TextField(
                       controller: _titleCtrl,
                       textCapitalization: TextCapitalization.sentences,
-                      decoration: const InputDecoration(
-                        labelText: 'Title',
-                        hintText: 'e.g. U14 training',
+                      decoration: InputDecoration(
+                        labelText: l10n.title,
+                        hintText: l10n.titleHintTraining,
                       ),
                     ),
                     const SizedBox(height: 12),
                     TextField(
                       controller: _purposeCtrl,
                       textCapitalization: TextCapitalization.sentences,
-                      decoration: const InputDecoration(
-                        labelText: 'Purpose (optional)',
+                      decoration: InputDecoration(
+                        labelText: l10n.purposeOptional,
                       ),
                     ),
                     const SizedBox(height: 12),
                     TextField(
                       controller: _locationCtrl,
                       textCapitalization: TextCapitalization.sentences,
-                      decoration: const InputDecoration(
-                        labelText: 'Location (optional)',
+                      decoration: InputDecoration(
+                        labelText: l10n.locationOptional,
                       ),
                     ),
                     const SizedBox(height: 20),
                     Text(
-                      'Scope',
+                      l10n.scope,
                       style: Theme.of(context).textTheme.titleSmall,
                     ),
                     const SizedBox(height: 8),
                     SegmentedButton<String>(
-                      segments: const [
-                        ButtonSegment(value: 'team', label: Text('Team')),
-                        ButtonSegment(value: 'club', label: Text('Whole club')),
+                      segments: [
+                        ButtonSegment(value: 'team', label: Text(l10n.team)),
+                        ButtonSegment(
+                          value: 'club',
+                          label: Text(l10n.wholeClub),
+                        ),
                       ],
                       selected: {_scopeKind},
                       onSelectionChanged: (s) =>
@@ -256,13 +262,11 @@ class _CreateScheduleScreenState extends ConsumerState<CreateScheduleScreen> {
                       teamsAsync.when(
                         loading: () => const LinearProgressIndicator(),
                         error: (e, _) => Text(
-                          apiErrorMessage(e, fallback: 'Could not load teams'),
+                          apiErrorMessage(e, fallback: l10n.couldNotLoadTeams),
                         ),
                         data: (list) {
                           if (list.isEmpty) {
-                            return const Text(
-                              'No teams in this club. Create a team first, or use Whole club.',
-                            );
+                            return Text(l10n.noTeamsCreateOrClub);
                           }
                           return DropdownButtonFormField<String>(
                             // ignore: deprecated_member_use
@@ -270,7 +274,7 @@ class _CreateScheduleScreenState extends ConsumerState<CreateScheduleScreen> {
                                 ? _teamId
                                 : list.first.id,
                             decoration:
-                                const InputDecoration(labelText: 'Team'),
+                                InputDecoration(labelText: l10n.team),
                             items: [
                               for (final t in list)
                                 DropdownMenuItem(
@@ -285,7 +289,7 @@ class _CreateScheduleScreenState extends ConsumerState<CreateScheduleScreen> {
                     ],
                     const SizedBox(height: 20),
                     Text(
-                      'When',
+                      l10n.when,
                       style: Theme.of(context).textTheme.titleSmall,
                     ),
                     const SizedBox(height: 8),
@@ -313,14 +317,14 @@ class _CreateScheduleScreenState extends ConsumerState<CreateScheduleScreen> {
                       // ignore: deprecated_member_use
                       value: _durationMin,
                       decoration:
-                          const InputDecoration(labelText: 'Duration'),
-                      items: const [
-                        DropdownMenuItem(value: 45, child: Text('45 min')),
-                        DropdownMenuItem(value: 60, child: Text('60 min')),
-                        DropdownMenuItem(value: 75, child: Text('75 min')),
-                        DropdownMenuItem(value: 90, child: Text('90 min')),
-                        DropdownMenuItem(value: 120, child: Text('2 hours')),
-                        DropdownMenuItem(value: 180, child: Text('3 hours')),
+                          InputDecoration(labelText: l10n.duration),
+                      items: [
+                        DropdownMenuItem(value: 45, child: Text(l10n.duration45)),
+                        DropdownMenuItem(value: 60, child: Text(l10n.duration60)),
+                        DropdownMenuItem(value: 75, child: Text(l10n.duration75)),
+                        DropdownMenuItem(value: 90, child: Text(l10n.duration90)),
+                        DropdownMenuItem(value: 120, child: Text(l10n.duration2h)),
+                        DropdownMenuItem(value: 180, child: Text(l10n.duration3h)),
                       ],
                       onChanged: (v) {
                         if (v != null) setState(() => _durationMin = v);
@@ -328,17 +332,17 @@ class _CreateScheduleScreenState extends ConsumerState<CreateScheduleScreen> {
                     ),
                     const SizedBox(height: 20),
                     Text(
-                      'Repeat',
+                      l10n.repeat,
                       style: Theme.of(context).textTheme.titleSmall,
                     ),
                     const SizedBox(height: 8),
                     Wrap(
                       spacing: 8,
                       children: [
-                        for (final r in const [
-                          ('once', 'One-off'),
-                          ('weekly', 'Weekly'),
-                          ('daily', 'Daily'),
+                        for (final r in [
+                          ('once', l10n.oneOff),
+                          ('weekly', l10n.weekly),
+                          ('daily', l10n.daily),
                         ])
                           ChoiceChip(
                             label: Text(r.$2),
@@ -353,8 +357,8 @@ class _CreateScheduleScreenState extends ConsumerState<CreateScheduleScreen> {
                       DropdownButtonFormField<int>(
                         // ignore: deprecated_member_use
                         value: _repeatCount,
-                        decoration: const InputDecoration(
-                          labelText: 'Number of occurrences',
+                        decoration: InputDecoration(
+                          labelText: l10n.numberOfOccurrences,
                         ),
                         items: const [
                           DropdownMenuItem(value: 4, child: Text('4')),
@@ -371,10 +375,8 @@ class _CreateScheduleScreenState extends ConsumerState<CreateScheduleScreen> {
                     const SizedBox(height: 12),
                     SwitchListTile(
                       contentPadding: EdgeInsets.zero,
-                      title: const Text('Request RSVP'),
-                      subtitle: const Text(
-                        'Families can confirm attendance beforehand',
-                      ),
+                      title: Text(l10n.requestRsvp),
+                      subtitle: Text(l10n.requestRsvpSubtitle),
                       value: _rsvpRequested,
                       onChanged: (v) => setState(() => _rsvpRequested = v),
                     ),
@@ -396,7 +398,7 @@ class _CreateScheduleScreenState extends ConsumerState<CreateScheduleScreen> {
                               height: 22,
                               child: CircularProgressIndicator(strokeWidth: 2),
                             )
-                          : const Text('Create'),
+                          : Text(l10n.create),
                     ),
                   ],
                 ),

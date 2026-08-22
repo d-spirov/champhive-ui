@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../../../shared/models/chat.dart';
 import '../../../shared/services/chat_api.dart';
 import '../../../shared/theme/app_theme.dart';
@@ -80,9 +81,10 @@ class _ChatThreadScreenState extends ConsumerState<ChatThreadScreen> {
       await _markNewestRead();
     } catch (e) {
       if (!mounted) return;
+      final l10n = AppLocalizations.of(context)!;
       setState(() {
         _loading = false;
-        _error = apiErrorMessage(e, fallback: 'Could not load chat');
+        _error = apiErrorMessage(e, fallback: l10n.couldNotLoadChat);
       });
     }
   }
@@ -105,9 +107,10 @@ class _ChatThreadScreenState extends ConsumerState<ChatThreadScreen> {
       });
     } catch (e) {
       if (!mounted) return;
+      final l10n = AppLocalizations.of(context)!;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(apiErrorMessage(e, fallback: 'Could not load older')),
+          content: Text(apiErrorMessage(e, fallback: l10n.couldNotLoadOlder)),
         ),
       );
     } finally {
@@ -130,9 +133,10 @@ class _ChatThreadScreenState extends ConsumerState<ChatThreadScreen> {
   Future<void> _send() async {
     final text = _controller.text.trim();
     if (text.isEmpty || _sending) return;
+    final l10n = AppLocalizations.of(context)!;
     if (_channel?.canSend == false) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('You cannot send in this channel')),
+        SnackBar(content: Text(l10n.cannotSendInChannel)),
       );
       return;
     }
@@ -182,7 +186,9 @@ class _ChatThreadScreenState extends ConsumerState<ChatThreadScreen> {
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(apiErrorMessage(e, fallback: 'Could not send message')),
+          content: Text(
+            apiErrorMessage(e, fallback: l10n.couldNotSendMessage),
+          ),
         ),
       );
     } finally {
@@ -192,7 +198,8 @@ class _ChatThreadScreenState extends ConsumerState<ChatThreadScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final title = _channel?.name ?? 'Chat';
+    final l10n = AppLocalizations.of(context)!;
+    final title = _channel?.name ?? l10n.chat;
     final canSend = _channel?.canSend ?? true;
     final myId = ref.watch(authNotifierProvider).user?.id;
 
@@ -215,7 +222,7 @@ class _ChatThreadScreenState extends ConsumerState<ChatThreadScreen> {
             if (_channel != null)
               Text(
                 _channel!.isGroup
-                    ? '${_channel!.participantCount} members'
+                    ? l10n.membersCountLabel(_channel!.participantCount)
                     : (_channel!.type),
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       color: Theme.of(context)
@@ -240,7 +247,7 @@ class _ChatThreadScreenState extends ConsumerState<ChatThreadScreen> {
                         const SizedBox(height: 16),
                         FilledButton(
                           onPressed: _bootstrap,
-                          child: const Text('Retry'),
+                          child: Text(l10n.retry),
                         ),
                       ],
                     ),
@@ -252,7 +259,7 @@ class _ChatThreadScreenState extends ConsumerState<ChatThreadScreen> {
                       const LinearProgressIndicator(minHeight: 2),
                     Expanded(
                       child: _messages.isEmpty
-                          ? const Center(child: Text('Say hello'))
+                          ? Center(child: Text(l10n.sayHello))
                           : ListView.builder(
                               controller: _scroll,
                               reverse: true,
@@ -284,8 +291,8 @@ class _ChatThreadScreenState extends ConsumerState<ChatThreadScreen> {
                                 onSubmitted: (_) => _send(),
                                 decoration: InputDecoration(
                                   hintText: canSend
-                                      ? 'Message'
-                                      : 'Read only',
+                                      ? l10n.messageHint
+                                      : l10n.readOnly,
                                   filled: true,
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(
@@ -333,11 +340,12 @@ class _Bubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final scheme = Theme.of(context).colorScheme;
     final isSystem = message.isSystem;
     final deleted = message.isDeleted;
     final body = deleted
-        ? 'Message deleted'
+        ? l10n.messageDeleted
         : (message.body ?? '');
     final when = DateFormat('HH:mm').format(message.sentAtUtc.toLocal());
 
@@ -346,7 +354,7 @@ class _Bubble extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 8),
         child: Center(
           child: Text(
-            body.isEmpty ? 'System' : body,
+            body.isEmpty ? l10n.systemMessage : body,
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
                   color: scheme.onSurface.withValues(alpha: 0.55),
                 ),

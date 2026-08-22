@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../../attendance/widgets/attendance_ui.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../../clubs/providers/clubs_provider.dart';
@@ -17,21 +19,22 @@ import '../../../shared/widgets/ui_bits.dart';
 class HomeDashboardScreen extends ConsumerWidget {
   const HomeDashboardScreen({super.key});
 
-  String _greeting() {
+  String _greeting(AppLocalizations l10n) {
     final hour = DateTime.now().hour;
-    if (hour < 12) return 'Good morning';
-    if (hour < 18) return 'Good afternoon';
-    return 'Good evening';
+    if (hour < 12) return l10n.goodMorning;
+    if (hour < 18) return l10n.goodAfternoon;
+    return l10n.goodEvening;
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final auth = ref.watch(authNotifierProvider);
     final user = auth.user;
     final isDemo = user?.id == 'demo';
     final first = user?.firstName.isNotEmpty == true
         ? user!.firstName
-        : (user?.displayName ?? 'Coach');
+        : (user?.displayName ?? l10n.coachFallback);
     final clubsAsync = ref.watch(myClubsProvider);
     final eventsAsync = ref.watch(clubEventsProvider);
     final unread = ref.watch(unreadNotificationCountProvider);
@@ -39,7 +42,7 @@ class HomeDashboardScreen extends ConsumerWidget {
     return Scaffold(
       appBar: shellAppBar(
         context,
-        title: '${_greeting()}, $first! 👋',
+        title: '${_greeting(l10n)}, $first! 👋',
         actions: [
           IconButton(
             onPressed: () => context.push('/attendance/history'),
@@ -47,11 +50,11 @@ class HomeDashboardScreen extends ConsumerWidget {
               Icons.how_to_reg_outlined,
               color: Theme.of(context).colorScheme.onSurface,
             ),
-            tooltip: 'Attendance',
+            tooltip: l10n.attendance,
           ),
           IconButton(
             onPressed: () => context.push('/notifications'),
-            tooltip: 'Notifications',
+            tooltip: l10n.notifications,
             icon: unread > 0
                 ? Badge(
                     smallSize: 8,
@@ -84,10 +87,10 @@ class HomeDashboardScreen extends ConsumerWidget {
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
           children: [
             if (isDemo) ...[
-              const SectionHeader(title: 'Your teams'),
+              SectionHeader(title: l10n.yourTeams),
               _YourTeamCard(team: DemoData.teams.first),
             ] else ...[
-              const SectionHeader(title: 'Your clubs'),
+              SectionHeader(title: l10n.yourClubs),
               clubsAsync.when(
                 loading: () => const Padding(
                   padding: EdgeInsets.symmetric(vertical: 24),
@@ -99,13 +102,13 @@ class HomeDashboardScreen extends ConsumerWidget {
                     child: Column(
                       children: [
                         Text(
-                          apiErrorMessage(e, fallback: 'Could not load clubs'),
+                          apiErrorMessage(e, fallback: l10n.couldNotLoadClubs),
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 12),
                         FilledButton(
                           onPressed: () => ref.invalidate(myClubsProvider),
-                          child: const Text('Retry'),
+                          child: Text(l10n.retry),
                         ),
                       ],
                     ),
@@ -117,7 +120,7 @@ class HomeDashboardScreen extends ConsumerWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(20),
                         child: Text(
-                          'You are not a member of any club yet.',
+                          l10n.noClubsYet,
                           textAlign: TextAlign.center,
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
@@ -137,8 +140,8 @@ class HomeDashboardScreen extends ConsumerWidget {
             ],
             const SizedBox(height: 24),
             SectionHeader(
-              title: 'Upcoming',
-              actionLabel: isDemo ? null : 'History',
+              title: l10n.upcoming,
+              actionLabel: isDemo ? null : l10n.history,
               onAction: isDemo
                   ? null
                   : () => context.push('/attendance/history'),
@@ -165,7 +168,7 @@ class HomeDashboardScreen extends ConsumerWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(16),
                     child: Text(
-                      apiErrorMessage(e, fallback: 'Could not load schedule'),
+                      apiErrorMessage(e, fallback: l10n.couldNotLoadSchedule),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -190,11 +193,11 @@ class HomeDashboardScreen extends ConsumerWidget {
                           .toList();
 
                   if (shown.isEmpty) {
-                    return const Card(
+                    return Card(
                       child: Padding(
-                        padding: EdgeInsets.all(20),
+                        padding: const EdgeInsets.all(20),
                         child: Text(
-                          'Nothing on the schedule today. Open Calendar to browse.',
+                          l10n.nothingOnScheduleToday,
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -210,7 +213,7 @@ class HomeDashboardScreen extends ConsumerWidget {
                             Padding(
                               padding: const EdgeInsets.fromLTRB(0, 4, 0, 8),
                               child: Text(
-                                'Nothing today — next up',
+                                l10n.nothingTodayNextUp,
                                 style: Theme.of(context)
                                     .textTheme
                                     .labelMedium
@@ -235,7 +238,7 @@ class HomeDashboardScreen extends ConsumerWidget {
               ),
             if (isDemo) ...[
               const SizedBox(height: 24),
-              const SectionHeader(title: 'Recent activity'),
+              SectionHeader(title: l10n.recentActivity),
               Card(
                 child: Column(
                   children: [
@@ -342,8 +345,9 @@ class _YourTeamCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final next = team.nextMatchAt;
-    final opponent = team.nextOpponent ?? 'TBD';
+    final opponent = team.nextOpponent ?? l10n.tbd;
 
     return Card(
       clipBehavior: Clip.antiAlias,
@@ -370,7 +374,7 @@ class _YourTeamCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      'Next match',
+                      l10n.nextMatch,
                       style: Theme.of(context).textTheme.labelMedium?.copyWith(
                             color: Theme.of(context).colorScheme.primary,
                           ),
@@ -379,7 +383,7 @@ class _YourTeamCard extends StatelessWidget {
                     Text(
                       next == null
                           ? 'vs $opponent'
-                          : 'vs $opponent · ${_shortDate(next)}',
+                          : 'vs $opponent · ${DateFormat('d MMM, HH:mm').format(next)}',
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ],
@@ -394,13 +398,5 @@ class _YourTeamCard extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  String _shortDate(DateTime dt) {
-    const months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
-    ];
-    return '${dt.day} ${months[dt.month - 1]}, ${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
   }
 }

@@ -3,16 +3,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../../../shared/models/user.dart';
+import '../../../shared/providers/locale_provider.dart';
 import '../../../shared/theme/app_theme.dart';
 import '../../../shared/widgets/ui_bits.dart';
 import '../../auth/providers/auth_provider.dart';
 
-const _localeOptions = <(String code, String label)>[
-  ('en', 'English'),
-  ('mk', 'Македонски'),
-  ('sr-Latn', 'Srpski'),
-];
+List<(String code, String label)> _profileLocaleOptions(AppLocalizations l10n) {
+  return [
+    ('en', l10n.languageEnglish),
+    ('mk', l10n.languageMacedonian),
+    ('sr-Latn', l10n.languageSerbian),
+    ('it', l10n.languageItalian),
+  ];
+}
 
 class AccountScreen extends ConsumerStatefulWidget {
   const AccountScreen({super.key});
@@ -59,11 +64,12 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
   }
 
   Future<void> _saveProfile() async {
+    final l10n = AppLocalizations.of(context)!;
     final first = _firstNameCtrl.text.trim();
     final last = _lastNameCtrl.text.trim();
     if (first.isEmpty || last.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('First and last name are required')),
+        SnackBar(content: Text(l10n.namesRequired)),
       );
       return;
     }
@@ -73,33 +79,41 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
           lastName: last,
           locale: _locale,
         );
+    if (ok && _locale != null) {
+      await ref
+          .read(localeProvider.notifier)
+          .setLocale(AppLocales.tryParse(_locale));
+    }
     if (!mounted) return;
     setState(() => _savingProfile = false);
     final err = ref.read(authNotifierProvider).error;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(ok ? 'Profile saved' : (err ?? 'Save failed'))),
+      SnackBar(
+        content: Text(ok ? l10n.profileSaved : (err ?? l10n.saveFailed)),
+      ),
     );
   }
 
   Future<void> _changePassword() async {
+    final l10n = AppLocalizations.of(context)!;
     final current = _currentPwCtrl.text;
     final next = _newPwCtrl.text;
     final confirm = _confirmPwCtrl.text;
     if (current.isEmpty || next.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Enter current and new password')),
+        SnackBar(content: Text(l10n.enterCurrentAndNewPassword)),
       );
       return;
     }
     if (next != confirm) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('New passwords do not match')),
+        SnackBar(content: Text(l10n.newPasswordsDoNotMatch)),
       );
       return;
     }
     if (next.length < 8) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('New password must be at least 8 characters')),
+        SnackBar(content: Text(l10n.newPasswordMinLength)),
       );
       return;
     }
@@ -121,8 +135,8 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
       SnackBar(
         content: Text(
           ok
-              ? 'Password changed. Other sessions were signed out.'
-              : (err ?? 'Could not change password'),
+              ? l10n.passwordChangedSessionsSignedOut
+              : (err ?? l10n.couldNotChangePassword),
         ),
       ),
     );
@@ -130,9 +144,11 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final auth = ref.watch(authNotifierProvider);
     final user = auth.user;
     final isDemo = user?.id == 'demo';
+    final localeOptions = _profileLocaleOptions(l10n);
 
     if (user != null && !isDemo && !_hydrated) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -153,22 +169,20 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
             }
           },
         ),
-        title: const Text('My Account'),
+        title: Text(l10n.myAccount),
         actions: [
           if (!isDemo)
             IconButton(
-              tooltip: 'Refresh',
+              tooltip: l10n.refresh,
               onPressed: auth.isLoading ? null : _reload,
               icon: const Icon(Icons.refresh_rounded),
             ),
         ],
       ),
       body: user == null
-          ? const Center(child: Text('Not signed in'))
+          ? Center(child: Text(l10n.signInToContinue))
           : isDemo
-              ? const Center(
-                  child: Text('Sign in to manage your account.'),
-                )
+              ? Center(child: Text(l10n.signInToContinue))
               : RefreshIndicator(
                   onRefresh: _reload,
                   child: ListView(
@@ -178,41 +192,41 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
                       _ProfileHeader(user: user),
                       const SizedBox(height: 20),
                       Text(
-                        'Profile',
+                        l10n.profile,
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                       const SizedBox(height: 8),
                       TextField(
                         controller: _firstNameCtrl,
                         textCapitalization: TextCapitalization.words,
-                        decoration: const InputDecoration(
-                          labelText: 'First name',
+                        decoration: InputDecoration(
+                          labelText: l10n.firstName,
                         ),
                       ),
                       const SizedBox(height: 12),
                       TextField(
                         controller: _lastNameCtrl,
                         textCapitalization: TextCapitalization.words,
-                        decoration: const InputDecoration(
-                          labelText: 'Last name',
+                        decoration: InputDecoration(
+                          labelText: l10n.lastName,
                         ),
                       ),
                       const SizedBox(height: 12),
                       DropdownButtonFormField<String>(
                         // ignore: deprecated_member_use
-                        value: _localeOptions.any((e) => e.$1 == _locale)
+                        value: localeOptions.any((e) => e.$1 == _locale)
                             ? _locale
-                            : (_localeOptions.first.$1),
-                        decoration: const InputDecoration(labelText: 'Locale'),
+                            : localeOptions.first.$1,
+                        decoration: InputDecoration(labelText: l10n.language),
                         items: [
-                          for (final opt in _localeOptions)
+                          for (final opt in localeOptions)
                             DropdownMenuItem(
                               value: opt.$1,
                               child: Text('${opt.$2} (${opt.$1})'),
                             ),
                           if (_locale != null &&
                               _locale!.isNotEmpty &&
-                              !_localeOptions.any((e) => e.$1 == _locale))
+                              !localeOptions.any((e) => e.$1 == _locale))
                             DropdownMenuItem(
                               value: _locale,
                               child: Text(_locale!),
@@ -233,16 +247,16 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
                                   strokeWidth: 2,
                                 ),
                               )
-                            : const Text('Save profile'),
+                            : Text(l10n.saveProfile),
                       ),
                       const SizedBox(height: 28),
                       Text(
-                        'Clubs & roles',
+                        l10n.clubsAndRoles,
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                       const SizedBox(height: 8),
                       if (user.roles.isEmpty)
-                        const Text('No role grants on this account.')
+                        Text(l10n.noRoleGrants)
                       else
                         ...user.roles.map(
                           (r) => ListTile(
@@ -253,14 +267,14 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
                               [
                                 if (r.scope.isNotEmpty) r.scope,
                                 if (r.scopeId.isNotEmpty) r.scopeId,
-                                'club ${r.clubId}',
+                                '${l10n.club} ${r.clubId}',
                               ].join(' · '),
                             ),
                           ),
                         ),
                       const SizedBox(height: 20),
                       Text(
-                        'Password',
+                        l10n.password,
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                       const SizedBox(height: 8),
@@ -268,7 +282,7 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
                         controller: _currentPwCtrl,
                         obscureText: _obscureCurrent,
                         decoration: InputDecoration(
-                          labelText: 'Current password',
+                          labelText: l10n.currentPassword,
                           suffixIcon: IconButton(
                             onPressed: () => setState(
                               () => _obscureCurrent = !_obscureCurrent,
@@ -286,8 +300,8 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
                         controller: _newPwCtrl,
                         obscureText: _obscureNew,
                         decoration: InputDecoration(
-                          labelText: 'New password',
-                          helperText: '≥8 chars with upper, lower, digit',
+                          labelText: l10n.newPassword,
+                          helperText: l10n.passwordRequirementsHint,
                           suffixIcon: IconButton(
                             onPressed: () =>
                                 setState(() => _obscureNew = !_obscureNew),
@@ -303,8 +317,8 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
                       TextField(
                         controller: _confirmPwCtrl,
                         obscureText: _obscureNew,
-                        decoration: const InputDecoration(
-                          labelText: 'Confirm new password',
+                        decoration: InputDecoration(
+                          labelText: l10n.confirmNewPassword,
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -320,7 +334,7 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
                                   strokeWidth: 2,
                                 ),
                               )
-                            : const Text('Change password'),
+                            : Text(l10n.changePassword),
                       ),
                     ],
                   ),
@@ -336,6 +350,7 @@ class _ProfileHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final created = user.createdAt;
     return Container(
       padding: const EdgeInsets.all(16),
@@ -366,18 +381,20 @@ class _ProfileHeader extends StatelessWidget {
                     _chip(
                       context,
                       user.emailVerified
-                          ? 'Email verified'
+                          ? l10n.emailVerified
                           : user.emailVerificationPending
-                              ? 'Verification pending'
-                              : 'Email not verified',
+                              ? l10n.verificationPending
+                              : l10n.emailNotVerified,
                       ok: user.emailVerified,
                     ),
                     if (user.isPlatformRoot)
-                      _chip(context, 'Platform root', ok: true),
+                      _chip(context, l10n.platformRoot, ok: true),
                     if (created != null)
                       _chip(
                         context,
-                        'Joined ${DateFormat('MMM yyyy').format(created.toLocal())}',
+                        l10n.joinedMonthYear(
+                          DateFormat('MMM yyyy').format(created.toLocal()),
+                        ),
                         ok: true,
                       ),
                   ],

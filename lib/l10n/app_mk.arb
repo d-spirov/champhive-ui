@@ -1,0 +1,520 @@
+{
+  "@@locale": "mk",
+  "appTitle": "TeamHive",
+  "team": "Тим",
+  "hive": "Кошница",
+  "email": "Е-пошта",
+  "password": "Лозинка",
+  "confirmPassword": "Потврди лозинка",
+  "firstName": "Име",
+  "lastName": "Презиме",
+  "phone": "Телефон",
+  "logIn": "Најави се",
+  "signUp": "Регистрирај се",
+  "logOut": "Одјави се",
+  "dontHaveAccount": "Немаш профил? ",
+  "alreadyHaveAccount": "Веќе имаш профил? ",
+  "pleaseEnterEmail": "Внеси ја својата е-пошта",
+  "pleaseEnterValidEmail": "Внеси валидна е-пошта",
+  "pleaseEnterPassword": "Внеси ја својата лозинка",
+  "pleaseEnterFirstName": "Внеси го своето име",
+  "pleaseEnterLastName": "Внеси го своето презиме",
+  "pleaseConfirmPassword": "Потврди ја лозинката",
+  "passwordsDoNotMatch": "Лозинките не се совпаѓаат",
+  "passwordMinLength": "Лозинката мора да има најмалку 8 знаци",
+  "loginFailed": "Најавата не успеа. Провери ги податоците.",
+  "registrationFailed": "Регистрацијата не успеа. Обиди се повторно.",
+  "myClubs": "Мои клубови",
+  "noClubsYet": "Сè уште не си член на ниеден клуб.",
+  "home": "Почетна",
+  "teams": "Тимови",
+  "players": "Играчи",
+  "members": "Членови",
+  "events": "Настани",
+  "schedule": "Распоред",
+  "calendar": "Календар",
+  "attendance": "Присуство",
+  "messages": "Пораки",
+  "notifications": "Известувања",
+  "payments": "Плаќања",
+  "statistics": "Статистика",
+  "more": "Повеќе",
+  "settings": "Поставки",
+  "helpSupport": "Помош и поддршка",
+  "myAccount": "Мој профил",
+  "appearance": "Изглед",
+  "language": "Јазик",
+  "aboutApp": "За TeamHive",
+  "retry": "Обиди се повторно",
+  "save": "Зачувај",
+  "cancel": "Откажи",
+  "create": "Креирај",
+  "search": "Пребарај",
+  "comingSoon": "Наскоро",
+  "comingSoonNamed": "{label} наскоро",
+  "@comingSoonNamed": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "sessionExpired": "Сесијата истече. Најави се повторно.",
+  "signInToContinue": "Најави се за да продолжиш",
+  "selectClub": "Избери клуб",
+  "selectClubFirst": "Прво избери клуб",
+  "noData": "Сè уште нема податоци",
+  "pullToRefresh": "Повлечи за освежување",
+  "dismiss": "Отфрли",
+  "continueAction": "Продолжи",
+  "refresh": "Освежи",
+  "history": "Историја",
+  "report": "Извештај",
+  "overview": "Преглед",
+  "info": "Инфо",
+  "notes": "Белешки",
+  "note": "Белешка",
+  "optionalNote": "Опционална белешка",
+  "location": "Локација",
+  "title": "Наслов",
+  "type": "Тип",
+  "scope": "Опсег",
+  "when": "Кога",
+  "repeat": "Повторување",
+  "duration": "Времетраење",
+  "amount": "Износ",
+  "bank": "Банка",
+  "importMethod": "Увоз",
+  "member": "Член",
+  "payment": "Плаќање",
+  "chat": "Разговор",
+  "session": "Сесија",
+  "club": "Клуб",
+  "status": "Статус",
+  "timezone": "Временска зона",
+  "contact": "Контакт",
+  "gender": "Пол",
+  "dateOfBirth": "Датум на раѓање",
+  "registrationNumber": "Регистарски бр.",
+  "shirtNumber": "Број на дрес",
+  "shirtNumberValue": "Дрес #{number}",
+  "@shirtNumberValue": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "themeLight": "Светла",
+  "themeDark": "Темна",
+  "themeSystem": "Системска",
+  "languageEnglish": "Англиски",
+  "languageMacedonian": "Македонски",
+  "languageSerbian": "Српски",
+  "languageItalian": "Италијански",
+  "languageSystem": "Системски јазик",
+  "newMessage": "Нова порака",
+  "newSchedule": "Нов распоред",
+  "markAllRead": "Означи ги сите како прочитани",
+  "recordPayment": "Евидентирај плаќање",
+  "profile": "Профил",
+  "saveProfile": "Зачувај профил",
+  "changePassword": "Промени лозинка",
+  "outstanding": "Неплатено",
+  "cash": "Готовина",
+  "myFees": "Мои обврски",
+  "membership": "Членство",
+  "revenue": "Приходи",
+  "exploreDemo": "Истражи демо интерфејс",
+  "tagline": "Менаџирај. Тренирај. Победи.\nСè на едно место.",
+  "continueWithGoogle": "Продолжи со Google",
+  "continueWithApple": "Продолжи со Apple",
+  "accountsViaInviteNote": "Профилите обично се создаваат преку покана. Регистрацијата може да биде само за оператори на овој API.",
+  "coachFallback": "Тренер",
+  "goodMorning": "Добро утро",
+  "goodAfternoon": "Добар ден",
+  "goodEvening": "Добра вечер",
+  "yourTeams": "Твои тимови",
+  "yourClubs": "Твои клубови",
+  "upcoming": "Претстојни",
+  "recentActivity": "Неодамнешна активност",
+  "nextMatch": "Следен натпревар",
+  "tbd": "Ќе се одреди",
+  "nothingOnScheduleToday": "Нема ништо во распоредот денес. Отвори Календар за преглед.",
+  "nothingTodayNextUp": "Ништо денес — следно",
+  "couldNotLoadClubs": "Не можеа да се вчитаат клубовите",
+  "couldNotLoadSchedule": "Не можеше да се вчита распоредот",
+  "couldNotLoadEvents": "Не можеа да се вчитаат настаните",
+  "couldNotLoadTeams": "Не можеа да се вчитаат тимовите",
+  "couldNotLoadMembers": "Не можеа да се вчитаат членовите",
+  "couldNotLoadMember": "Не можеше да се вчита членот",
+  "couldNotLoadRoster": "Не можеше да се вчита составот",
+  "couldNotLoadSession": "Не можеше да се вчита сесијата",
+  "couldNotLoadReport": "Не можеше да се вчита извештајот",
+  "couldNotLoadHistory": "Не можеше да се вчита историјата",
+  "couldNotLoadConversations": "Не можеа да се вчитаат разговорите",
+  "couldNotLoadChat": "Не можеше да се вчита разговорот",
+  "couldNotLoadPeople": "Не можеа да се вчитаат луѓето",
+  "couldNotLoadNotifications": "Не можеа да се вчитаат известувањата",
+  "couldNotLoadMore": "Не можеше да се вчита повеќе",
+  "couldNotLoadObligations": "Не можеа да се вчитаат обврските",
+  "couldNotLoadPayments": "Не можеа да се вчитаат плаќањата",
+  "couldNotLoadFees": "Не можеа да се вчитаат твоите обврски",
+  "couldNotLoadClub": "Не можеше да се вчита клубот",
+  "couldNotLoadMembershipStats": "Не можеше да се вчита статистиката за членство",
+  "couldNotLoadRevenueStats": "Не можеше да се вчита статистиката за приходи",
+  "couldNotCreateSchedule": "Не можеше да се креира распоред",
+  "couldNotSaveStatus": "Не можеше да се зачува статусот",
+  "couldNotSaveAttendance": "Не можеше да се зачува присуството",
+  "couldNotSendMessage": "Не можеше да се испрати пораката",
+  "couldNotOpenConversation": "Не можеше да се отвори разговорот",
+  "couldNotMarkAsRead": "Не можеше да се означи како прочитано",
+  "couldNotRecordPayment": "Не можеше да се евидентира плаќањето",
+  "signInToCreateSchedule": "Најави се за да креираш ставки во распоредот",
+  "signInToOpenChat": "Најави се за да отвориш жив разговор",
+  "signInToSeeNotifications": "Најави се за да ги видиш известувањата.",
+  "signInToManagePayments": "Најави се за да ги управуваш плаќањата на клубот.",
+  "signInToSeeFees": "Најави се за да ги видиш твоите обврски.",
+  "signInToSeeStats": "Најави се за да ја видиш аналитиката за членство и приходи.",
+  "signInToLoadTeams": "Најави се за да ги вчиташ тимовите на клубот од API.",
+  "selectClubToViewTeams": "Избери клуб за да ги видиш тимовите.",
+  "selectClubToViewMembers": "Избери клуб за да ги видиш членовите.",
+  "selectClubToViewCharges": "Избери клуб за да ги видиш задолжувањата.",
+  "selectClubToViewPayments": "Избери клуб за да ги видиш плаќањата.",
+  "selectClubToViewMembershipStats": "Избери клуб за статистика за членство.",
+  "selectClubToViewRevenueStats": "Избери клуб за статистика за приходи.",
+  "noClubSelected": "Не е избран клуб.",
+  "noEventsOnThisDay": "Нема настани на овој ден.",
+  "demoSchedule": "Демо распоред",
+  "noTeamsYet": "Сè уште нема тимови во овој клуб.",
+  "tapToOpenRoster": "Допри за да го отвориш составот",
+  "noMembersFound": "Не се пронајдени членови за овој клуб.",
+  "searchMembers": "Пребарај членови",
+  "searchMessages": "Пребарај пораки",
+  "searchPeople": "Пребарај луѓе",
+  "noConversations": "Нема разговори.",
+  "noConversationsYet": "Сè уште нема разговори.",
+  "noMessagesYet": "Сè уште нема пораки.",
+  "messageDeleted": "Пораката е избришана",
+  "yesterday": "Вчера",
+  "noMatches": "Нема совпаѓања.",
+  "noAdultsToMessage": "Сè уште нема возрасни за пораки.\nЛуѓето се појавуваат овде од персоналот на клубот и тимските разговори.",
+  "sayHello": "Кажи здраво",
+  "messageHint": "Порака",
+  "readOnly": "Само за читање",
+  "systemMessage": "Систем",
+  "cannotSendInChannel": "Не можеш да испраќаш во овој канал",
+  "couldNotLoadOlder": "Не можеа да се вчитаат постарите",
+  "noNotificationsYet": "Сè уште нема известувања.",
+  "loadMore": "Вчитај повеќе",
+  "nothingOutstanding": "Нема неплатени обврски.",
+  "noPaymentsYet": "Сè уште нема евидентирани плаќања.",
+  "noOpenFamilyFees": "Нема отворени семејни обврски.",
+  "noFeeHistoryYet": "Сè уште нема историја на обврски.",
+  "openCharges": "Отворени задолжувања",
+  "youOwe": "Должиш",
+  "paymentReference": "Референца за плаќање",
+  "mixedCurrencies": "Мешани валути",
+  "noFamilyMembersLinked": "Нема поврзани членови на семејството",
+  "copiedLabel": "Копирано {label}",
+  "@copiedLabel": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "memberId": "ID на член",
+  "pasteMemberIdHint": "Нема отворени задолжувања — залепи ID на член",
+  "notesOptional": "Белешки (опционално)",
+  "savePayment": "Зачувај плаќање",
+  "pickAMember": "Избери член",
+  "enterValidAmount": "Внеси валиден износ",
+  "openListedSummary": "{open} отворени · {total} наведени",
+  "@openListedSummary": {
+    "placeholders": {
+      "open": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "membersCountLabel": "{count} член(ови)",
+  "@membersCountLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "titleRequired": "Насловот е задолжителен",
+  "pickATeam": "Избери тим",
+  "createdNamed": "Креирано „{title}“",
+  "@createdNamed": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "purposeOptional": "Цел (опционално)",
+  "locationOptional": "Локација (опционално)",
+  "titleHintTraining": "на пр. тренинг U14",
+  "wholeClub": "Цел клуб",
+  "noTeamsCreateOrClub": "Нема тимови во овој клуб. Прво креирај тим или користи Цел клуб.",
+  "duration45": "45 мин",
+  "duration60": "60 мин",
+  "duration75": "75 мин",
+  "duration90": "90 мин",
+  "duration2h": "2 часа",
+  "duration3h": "3 часа",
+  "oneOff": "Еднократно",
+  "weekly": "Неделно",
+  "daily": "Дневно",
+  "numberOfOccurrences": "Број на повторувања",
+  "requestRsvp": "Барај RSVP",
+  "requestRsvpSubtitle": "Семејствата можат однапред да го потврдат присуството",
+  "eventTypeTraining": "Тренинг",
+  "eventTypeMatch": "Натпревар",
+  "eventTypeClubEvent": "Клубски настан",
+  "eventTypeTournament": "Турнир",
+  "eventTypeEvent": "Настан",
+  "statusPresent": "Присутен",
+  "statusAbsent": "Отсутен",
+  "statusLate": "Доцни",
+  "statusExcused": "Оправдан",
+  "statusUnmarked": "Неозначен",
+  "takeAttendance": "Евидентирај присуство",
+  "roster": "Состав",
+  "rosterCount": "Состав ({count})",
+  "@rosterCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "summary": "Резиме",
+  "reloadRoster": "Превчитај состав",
+  "saveRemaining": "Зачувај преостанати",
+  "skipNote": "Прескокни белешка",
+  "tapMemberToMark": "Допри член за означување — статусот веднаш се зачувува на серверот",
+  "noMembersOnRoster": "Нема членови во составот за {scope}.",
+  "@noMembersOnRoster": {
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "thisSession": "оваа сесија",
+  "attendanceLocked": "Присуството е заклучено за оваа сесија.",
+  "sessionCanceled": "Оваа сесија е откажана.",
+  "unmarkedCannotBeSaved": "Неозначеното не може да се зачува — прво избери статус.",
+  "allMarksAlreadySaved": "Сите ознаки веќе се зачувани.",
+  "rsvpStatus": "RSVP: {status}",
+  "@rsvpStatus": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "markNamed": "Означи {name}",
+  "@markNamed": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "optionalNoteSynced": "Опционална белешка (синхронизирана со ознаката)",
+  "attendanceReport": "Извештај за присуство",
+  "openWindow": "Отворен период",
+  "past": "Минати",
+  "noSessionsInWindow": "Моментално нема сесии во периодот за присуство.",
+  "noPastSessions": "Сè уште нема минати сесии.",
+  "attendanceSynced": "Присуството е синхронизирано",
+  "attendancePartiallySynced": "Присуството е делумно синхронизирано",
+  "marksSentToPlatform": "Ознаките се испратени до клубската платформа.",
+  "marksAppliedRejected": "{applied} применети · {rejected} одбиени",
+  "@marksAppliedRejected": {
+    "placeholders": {
+      "applied": {
+        "type": "int"
+      },
+      "rejected": {
+        "type": "int"
+      }
+    }
+  },
+  "superseded": "заменето",
+  "backToSession": "Назад кон сесијата",
+  "viewReport": "Види извештај",
+  "attendanceHistory": "Историја на присуство",
+  "trainingLocation": "Локација на тренинг",
+  "active": "Активен",
+  "season": "Сезона",
+  "noMembersOnTeamRoster": "Нема членови во составот на овој тим.",
+  "noUpcomingSessionsForTeam": "Нема претстојни сесии за овој тим.",
+  "playerProfile": "Профил на играч",
+  "noProfileDetailsYet": "Сè уште нема детали за профилот.",
+  "notAssignedToTeam": "Не е распореден во тим.",
+  "noNotesYet": "Сè уште нема белешки.",
+  "demoNotes": "Демо белешки",
+  "canceled": "Откажано",
+  "loadingAttendanceStatus": "Се вчитува статусот на присуство…",
+  "loadRosterAndMark": "Вчитај состав и означи членови",
+  "viewLockedReport": "Види го извештајот за оваа заклучена сесија",
+  "rosterWithStatuses": "Состав со присутен / доцни / отсутен / оправдан",
+  "pastAndOpenSessions": "Минати и отворени сесии за присуство",
+  "refreshAttendanceStatus": "Освежи статус на присуство",
+  "marksAcceptedUntil": "Ознаки се прифаќаат до {date} · {time}",
+  "@marksAcceptedUntil": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "clubStatsTitle": "Статистика за {name}",
+  "@clubStatsTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "noMembershipData": "Нема податоци за членство.",
+  "noRevenueData": "Нема податоци за приходи.",
+  "noTrendDataYet": "Сè уште нема податоци за тренд.",
+  "noRevenueTrendYet": "Сè уште нема тренд на приходи.",
+  "asOfDate": "Заклучно со {date}",
+  "@asOfDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "asOfDateCurrency": "Заклучно со {date} · {currency}",
+  "@asOfDateCurrency": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "activeNow": "Активни сега",
+  "onTheBooks": "Во евиденција",
+  "joined12Mo": "Приклучени (12 мес.)",
+  "left12Mo": "Заминати (12 мес.)",
+  "unenrolledNoTeam": "Незапишани (без тим)",
+  "collected": "Наплатено",
+  "expected": "Очекувано",
+  "collectionRate": "Стапка на наплата",
+  "membersBilled": "Задолжени членови",
+  "inDebt": "Во долг",
+  "waived": "Ослободено",
+  "monthlyEnrollment": "Месечно запишување",
+  "agingOutstanding": "Стареење (неплатено)",
+  "monthlyTrend": "Месечен тренд",
+  "byTeam": "По тим",
+  "bySection": "По секција",
+  "notDue": "Недостасано",
+  "days1To30": "1–30 дена",
+  "days31To60": "31–60 дена",
+  "days61To90": "61–90 дена",
+  "days90Plus": "90+ дена",
+  "activeCount": "{count} активни",
+  "@activeCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "joinedLeftDelta": "+{joined} / −{left}",
+  "@joinedLeftDelta": {
+    "placeholders": {
+      "joined": {
+        "type": "int"
+      },
+      "left": {
+        "type": "int"
+      }
+    }
+  },
+  "owedAmount": "должи {amount}",
+  "@owedAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "membersOwed": "{count} членови · должат {amount}",
+  "@membersOwed": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "yourRoles": "Твои улоги",
+  "useThisClub": "Користи го овој клуб",
+  "clubSelected": "{name} е избран",
+  "@clubSelected": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "namesRequired": "Името и презимето се задолжителни",
+  "profileSaved": "Профилот е зачуван",
+  "saveFailed": "Зачувувањето не успеа",
+  "enterCurrentAndNewPassword": "Внеси тековна и нова лозинка",
+  "newPasswordsDoNotMatch": "Новите лозинки не се совпаѓаат",
+  "newPasswordMinLength": "Новата лозинка мора да има најмалку 8 знаци",
+  "passwordChangedSessionsSignedOut": "Лозинката е променета. Другите сесии се одјавени.",
+  "couldNotChangePassword": "Не можеше да се промени лозинката",
+  "clubsAndRoles": "Клубови и улоги",
+  "noRoleGrants": "Нема доделени улоги на овој профил.",
+  "currentPassword": "Тековна лозинка",
+  "newPassword": "Нова лозинка",
+  "passwordRequirementsHint": "≥8 знаци со голема, мала буква и цифра",
+  "confirmNewPassword": "Потврди нова лозинка",
+  "emailVerified": "Е-поштата е потврдена",
+  "verificationPending": "Потврдата е во тек",
+  "emailNotVerified": "Е-поштата не е потврдена",
+  "platformRoot": "Платформски root",
+  "joinedMonthYear": "Приклучен {when}",
+  "@joinedMonthYear": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "overdue": "задоцнето",
+  "voided": "поништено",
+  "voidLabel": "поништено",
+  "relationshipSelf": "себе",
+  "relationshipGuardian": "старател",
+  "attendanceCanceledClosed": "Откажано — присуството е затворено",
+  "attendanceOpen": "Присуството е отворено",
+  "attendanceLockedShort": "Присуството е заклучено",
+  "age": "Возраст"
+}

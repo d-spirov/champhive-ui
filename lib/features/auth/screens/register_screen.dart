@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../providers/auth_provider.dart';
 import '../../../shared/theme/app_theme.dart';
 import '../../../shared/widgets/team_hive_logo.dart';
@@ -45,18 +46,20 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       context.go('/home');
       return;
     }
+    final l10n = AppLocalizations.of(context)!;
     final error = ref.read(authNotifierProvider).error;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(error ?? 'Registration failed. Please try again.')),
+      SnackBar(content: Text(error ?? l10n.registrationFailed)),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final auth = ref.watch(authNotifierProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Sign up')),
+      appBar: AppBar(title: Text(l10n.signUp)),
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
@@ -73,27 +76,29 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     TextFormField(
                       controller: _firstNameController,
                       textCapitalization: TextCapitalization.words,
-                      decoration: const InputDecoration(labelText: 'First name'),
-                      validator: (v) =>
-                          (v == null || v.trim().isEmpty) ? 'Please enter your first name' : null,
+                      decoration: InputDecoration(labelText: l10n.firstName),
+                      validator: (v) => (v == null || v.trim().isEmpty)
+                          ? l10n.pleaseEnterFirstName
+                          : null,
                     ),
                     const SizedBox(height: 12),
                     TextFormField(
                       controller: _lastNameController,
                       textCapitalization: TextCapitalization.words,
-                      decoration: const InputDecoration(labelText: 'Last name'),
-                      validator: (v) =>
-                          (v == null || v.trim().isEmpty) ? 'Please enter your last name' : null,
+                      decoration: InputDecoration(labelText: l10n.lastName),
+                      validator: (v) => (v == null || v.trim().isEmpty)
+                          ? l10n.pleaseEnterLastName
+                          : null,
                     ),
                     const SizedBox(height: 12),
                     TextFormField(
                       controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
-                      decoration: const InputDecoration(labelText: 'Email'),
+                      decoration: InputDecoration(labelText: l10n.email),
                       validator: (value) {
                         final v = value?.trim() ?? '';
-                        if (v.isEmpty) return 'Please enter your email';
-                        if (!v.contains('@')) return 'Please enter a valid email';
+                        if (v.isEmpty) return l10n.pleaseEnterEmail;
+                        if (!v.contains('@')) return l10n.pleaseEnterValidEmail;
                         return null;
                       },
                     ),
@@ -102,18 +107,20 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       controller: _passwordController,
                       obscureText: _obscure,
                       decoration: InputDecoration(
-                        labelText: 'Password',
+                        labelText: l10n.password,
                         suffixIcon: IconButton(
                           onPressed: () => setState(() => _obscure = !_obscure),
-                          icon: Icon(_obscure ? Icons.visibility : Icons.visibility_off),
+                          icon: Icon(
+                            _obscure ? Icons.visibility : Icons.visibility_off,
+                          ),
                         ),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter your password';
+                          return l10n.pleaseEnterPassword;
                         }
                         if (value.length < 8) {
-                          return 'Password must be at least 8 characters';
+                          return l10n.passwordMinLength;
                         }
                         return null;
                       },
@@ -122,13 +129,14 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     TextFormField(
                       controller: _confirmController,
                       obscureText: _obscure,
-                      decoration: const InputDecoration(labelText: 'Confirm password'),
+                      decoration:
+                          InputDecoration(labelText: l10n.confirmPassword),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please confirm your password';
+                          return l10n.pleaseConfirmPassword;
                         }
                         if (value != _passwordController.text) {
-                          return 'Passwords do not match';
+                          return l10n.passwordsDoNotMatch;
                         }
                         return null;
                       },
@@ -142,16 +150,17 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                               width: 20,
                               child: CircularProgressIndicator(strokeWidth: 2),
                             )
-                          : const Text('Sign Up'),
+                          : Text(l10n.signUp),
                     ),
                     TextButton(
-                      onPressed: auth.isLoading ? null : () => context.go('/login'),
+                      onPressed:
+                          auth.isLoading ? null : () => context.go('/login'),
                       child: Text.rich(
                         TextSpan(
-                          text: 'Already have an account? ',
+                          text: l10n.alreadyHaveAccount,
                           children: [
                             TextSpan(
-                              text: 'Log In',
+                              text: l10n.logIn,
                               style: TextStyle(
                                 fontWeight: FontWeight.w700,
                                 color: Theme.of(context).colorScheme.primary,
@@ -163,7 +172,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Accounts are normally created via invite. Sign-up may be ops-only on this API.',
+                      l10n.accountsViaInviteNote,
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: AppColors.lightMuted,

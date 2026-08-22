@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../../events/providers/events_provider.dart';
 import '../../../shared/models/event_attendance.dart';
 import '../../../shared/utils/api_error_message.dart';
@@ -35,6 +36,7 @@ class _AttendanceHistoryScreenState
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final pastAsync = ref.watch(pastClubEventsProvider);
     final openAsync = ref.watch(openAttendanceOccurrencesProvider);
 
@@ -50,16 +52,16 @@ class _AttendanceHistoryScreenState
             }
           },
         ),
-        title: const Text('Attendance'),
+        title: Text(l10n.attendance),
         bottom: TabBar(
           controller: _tabs,
           labelColor: Theme.of(context).colorScheme.primary,
           unselectedLabelColor:
               Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.55),
           indicatorColor: Theme.of(context).colorScheme.primary,
-          tabs: const [
-            Tab(text: 'Open window'),
-            Tab(text: 'Past'),
+          tabs: [
+            Tab(text: l10n.openWindow),
+            Tab(text: l10n.past),
           ],
         ),
       ),
@@ -69,14 +71,14 @@ class _AttendanceHistoryScreenState
           openAsync.when(
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (e, _) => _Error(
-              message: apiErrorMessage(e, fallback: 'Could not load schedule'),
+              message: apiErrorMessage(e, fallback: l10n.couldNotLoadSchedule),
               onRetry: () =>
                   ref.invalidate(openAttendanceOccurrencesProvider),
             ),
             data: (events) {
               if (events.isEmpty) {
-                return const Center(
-                  child: Text('No sessions in the attendance window right now.'),
+                return Center(
+                  child: Text(l10n.noSessionsInWindow),
                 );
               }
               return RefreshIndicator(
@@ -103,7 +105,7 @@ class _AttendanceHistoryScreenState
                         title: Text(
                           event.title.isNotEmpty
                               ? event.title
-                              : event.type.label,
+                              : eventTypeLabel(l10n, event.type),
                         ),
                         subtitle: Text(
                           '${formatEventDate(event.startAt)} · ${formatEventTimeRange(event.startAt, event.endAt)}'
@@ -122,12 +124,12 @@ class _AttendanceHistoryScreenState
           pastAsync.when(
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (e, _) => _Error(
-              message: apiErrorMessage(e, fallback: 'Could not load history'),
+              message: apiErrorMessage(e, fallback: l10n.couldNotLoadHistory),
               onRetry: () => ref.invalidate(pastClubEventsProvider),
             ),
             data: (events) {
               if (events.isEmpty) {
-                return const Center(child: Text('No past sessions yet.'));
+                return Center(child: Text(l10n.noPastSessions));
               }
               final grouped = <String, List<ClubEvent>>{};
               final monthFmt = DateFormat('MMMM yyyy');
@@ -160,7 +162,7 @@ class _AttendanceHistoryScreenState
                                 title: Text(
                                   entry.value[i].title.isNotEmpty
                                       ? entry.value[i].title
-                                      : entry.value[i].type.label,
+                                      : eventTypeLabel(l10n, entry.value[i].type),
                                 ),
                                 subtitle: Text(
                                   '${formatEventDate(entry.value[i].startAt)} · ${formatEventTimeRange(entry.value[i].startAt, entry.value[i].endAt)}',
@@ -195,6 +197,7 @@ class _Error extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -203,7 +206,7 @@ class _Error extends StatelessWidget {
           children: [
             Text(message, textAlign: TextAlign.center),
             const SizedBox(height: 16),
-            FilledButton(onPressed: onRetry, child: const Text('Retry')),
+            FilledButton(onPressed: onRetry, child: Text(l10n.retry)),
           ],
         ),
       ),

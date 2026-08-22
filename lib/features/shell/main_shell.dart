@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../l10n/app_localizations.dart';
 import 'app_drawer.dart';
 
 class MainShell extends StatelessWidget {
@@ -8,16 +9,38 @@ class MainShell extends StatelessWidget {
 
   final StatefulNavigationShell navigationShell;
 
-  static const _destinations = [
-    (icon: Icons.home_outlined, selected: Icons.home_rounded, label: 'Home'),
-    (icon: Icons.calendar_month_outlined, selected: Icons.calendar_month, label: 'Calendar'),
-    (icon: Icons.groups_outlined, selected: Icons.groups_rounded, label: 'Teams'),
-    (icon: Icons.chat_bubble_outline_rounded, selected: Icons.chat_bubble_rounded, label: 'Messages'),
-    (icon: Icons.more_horiz_rounded, selected: Icons.more_horiz_rounded, label: 'More'),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
+    final destinations = [
+      (
+        icon: Icons.home_outlined,
+        selected: Icons.home_rounded,
+        label: l10n.home,
+      ),
+      (
+        icon: Icons.calendar_month_outlined,
+        selected: Icons.calendar_month,
+        label: l10n.calendar,
+      ),
+      (
+        icon: Icons.groups_outlined,
+        selected: Icons.groups_rounded,
+        label: l10n.teams,
+      ),
+      (
+        icon: Icons.chat_bubble_outline_rounded,
+        selected: Icons.chat_bubble_rounded,
+        label: l10n.messages,
+      ),
+      (
+        icon: Icons.more_horiz_rounded,
+        selected: Icons.more_horiz_rounded,
+        label: l10n.more,
+      ),
+    ];
+
     return Scaffold(
       drawer: const AppDrawer(),
       body: navigationShell,
@@ -30,7 +53,7 @@ class MainShell extends StatelessWidget {
           );
         },
         destinations: [
-          for (final d in _destinations)
+          for (final d in destinations)
             NavigationDestination(
               icon: Icon(d.icon),
               selectedIcon: Icon(d.selected),

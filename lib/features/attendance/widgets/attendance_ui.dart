@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
+import '../../../l10n/app_localizations.dart';
+import '../../../shared/l10n/label_l10n.dart';
 import '../../../shared/models/event_attendance.dart';
 import '../../../shared/theme/app_theme.dart';
+
+export '../../../shared/l10n/label_l10n.dart'
+    show attendanceStatusLabel, eventTypeLabel, attendanceLockStatusLabel;
 
 Color clubEventTypeColor(EventType type) {
   switch (type) {
@@ -86,25 +92,13 @@ bool statusNeedsNote(AttendanceStatus status) {
 bool statusOffersNote(AttendanceStatus status) => statusNeedsNote(status);
 
 String formatEventTimeRange(DateTime start, DateTime? end) {
-  final a = _fmtTime(start);
+  final a = DateFormat.jm().format(start);
   if (end == null) return a;
-  return '$a – ${_fmtTime(end)}';
+  return '$a – ${DateFormat.jm().format(end)}';
 }
 
 String formatEventDate(DateTime dt) {
-  const months = [
-    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
-  ];
-  const weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-  return '${weekdays[dt.weekday - 1]}, ${dt.day} ${months[dt.month - 1]}';
-}
-
-String _fmtTime(DateTime dt) {
-  final h = dt.hour > 12 ? dt.hour - 12 : (dt.hour == 0 ? 12 : dt.hour);
-  final m = dt.minute.toString().padLeft(2, '0');
-  final ampm = dt.hour >= 12 ? 'PM' : 'AM';
-  return '$h:$m $ampm';
+  return DateFormat('EEE, d MMM').format(dt);
 }
 
 class ClubEventListTile extends StatelessWidget {
@@ -119,10 +113,11 @@ class ClubEventListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final color = clubEventTypeColor(event.type);
     final subtitle = [
       formatEventTimeRange(event.startAt, event.endAt),
-      if (event.location.display != 'TBD') event.location.display,
+      if (event.location.display != l10n.tbd) event.location.display,
     ].join(' · ');
 
     return InkWell(
@@ -147,7 +142,9 @@ class ClubEventListTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    event.title.isNotEmpty ? event.title : event.type.label,
+                    event.title.isNotEmpty
+                        ? event.title
+                        : eventTypeLabel(l10n, event.type),
                     style: Theme.of(context).textTheme.titleSmall,
                   ),
                   const SizedBox(height: 2),

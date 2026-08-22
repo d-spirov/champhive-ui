@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../../attendance/widgets/attendance_ui.dart';
 import '../../events/providers/events_provider.dart';
 import '../../../shared/models/event_attendance.dart';
@@ -25,6 +26,7 @@ class EventDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final async = ref.watch(eventDetailProvider(eventId));
     final rosterAsync = ref.watch(attendanceSessionProvider(eventId));
 
@@ -35,7 +37,7 @@ class EventDetailScreen extends ConsumerWidget {
             icon: const Icon(Icons.arrow_back_rounded),
             onPressed: () => popOrGoHome(context),
           ),
-          title: const Text('Session'),
+          title: Text(l10n.session),
         ),
         body: const Center(child: CircularProgressIndicator()),
       ),
@@ -45,10 +47,10 @@ class EventDetailScreen extends ConsumerWidget {
             icon: const Icon(Icons.arrow_back_rounded),
             onPressed: () => popOrGoHome(context),
           ),
-          title: const Text('Session'),
+          title: Text(l10n.session),
         ),
         body: _ErrorBody(
-          message: apiErrorMessage(e, fallback: 'Could not load session'),
+          message: apiErrorMessage(e, fallback: l10n.couldNotLoadSession),
           onRetry: () => ref.invalidate(eventDetailProvider(eventId)),
         ),
       ),
@@ -77,14 +79,16 @@ class _OccurrenceBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final color = clubEventTypeColor(occurrence.type);
     final scope = occurrence.scopeName ??
         (occurrence.teams.isEmpty ? null : occurrence.teams.join(', '));
     final canceled = (occurrence.status ?? '').toLowerCase() == 'canceled';
     final snapshot = roster;
     final open = snapshot?.canMark ?? false;
-    final lockLabel = snapshot?.lockStatusLabel ??
-        (canceled ? 'Canceled' : 'Loading attendance status…');
+    final lockLabel = snapshot == null
+        ? (canceled ? l10n.canceled : l10n.loadingAttendanceStatus)
+        : attendanceLockStatusLabel(l10n, snapshot);
     final lockAt = snapshot?.attendanceLockAtUtc;
 
     return CustomScrollView(
@@ -134,7 +138,7 @@ class _OccurrenceBody extends StatelessWidget {
                 Text(
                   occurrence.title.isNotEmpty
                       ? occurrence.title
-                      : occurrence.type.label,
+                      : eventTypeLabel(l10n, occurrence.type),
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
                 const SizedBox(height: 8),
@@ -143,12 +147,16 @@ class _OccurrenceBody extends StatelessWidget {
                   runSpacing: 8,
                   children: [
                     Chip(
-                      label: Text(occurrence.type.label),
+                      label: Text(eventTypeLabel(l10n, occurrence.type)),
                       visualDensity: VisualDensity.compact,
                     ),
                     if (occurrence.status != null)
                       Chip(
-                        label: Text(occurrence.status!),
+                        label: Text(
+                          occurrence.status!.toLowerCase() == 'canceled'
+                              ? l10n.canceled
+                              : occurrence.status!,
+                        ),
                         visualDensity: VisualDensity.compact,
                       ),
                     Chip(
@@ -196,14 +204,16 @@ class _OccurrenceBody extends StatelessWidget {
                 if (lockAt != null)
                   _MetaRow(
                     icon: Icons.timer_outlined,
-                    label:
-                        'Marks accepted until ${formatEventDate(lockAt)} · ${formatEventTimeRange(lockAt, null)}',
+                    label: l10n.marksAcceptedUntil(
+                      formatEventDate(lockAt),
+                      formatEventTimeRange(lockAt, null),
+                    ),
                   ),
                 if (occurrence.description != null &&
                     occurrence.description!.trim().isNotEmpty) ...[
                   const SizedBox(height: 16),
                   Text(
-                    'Notes',
+                    l10n.notes,
                     style: Theme.of(context).textTheme.titleSmall,
                   ),
                   const SizedBox(height: 6),
@@ -221,10 +231,10 @@ class _OccurrenceBody extends StatelessWidget {
                 if (!canceled && open)
                   _ActionTile(
                     icon: Icons.how_to_reg_rounded,
-                    title: 'Take attendance',
+                    title: l10n.takeAttendance,
                     subtitle: snapshot == null
-                        ? 'Load roster and mark members'
-                        : '${snapshot.participants.length} on roster · tap to mark',
+                        ? l10n.loadRosterAndMark
+                        : l10n.rosterCount(snapshot.participants.length),
                     color: AppColors.training,
                     onTap: () => context.push(
                       '/occurrences/${occurrence.id}/attendance',
@@ -233,9 +243,8 @@ class _OccurrenceBody extends StatelessWidget {
                 else if (!canceled)
                   _ActionTile(
                     icon: Icons.lock_rounded,
-                    title: 'Attendance locked',
-                    subtitle:
-                        'View the report, or ask an admin to reopen temporarily',
+                    title: l10n.attendanceLocked,
+                    subtitle: l10n.viewLockedReport,
                     color: AppColors.meeting,
                     onTap: () => context.push(
                       '/occurrences/${occurrence.id}/attendance/report',
@@ -244,8 +253,8 @@ class _OccurrenceBody extends StatelessWidget {
                 const SizedBox(height: 12),
                 _ActionTile(
                   icon: Icons.assignment_outlined,
-                  title: 'Attendance report',
-                  subtitle: 'Roster with present / late / absent / excused',
+                  title: l10n.attendanceReport,
+                  subtitle: l10n.rosterWithStatuses,
                   color: AppColors.match,
                   onTap: () => context.push(
                     '/occurrences/${occurrence.id}/attendance/report',
@@ -254,8 +263,8 @@ class _OccurrenceBody extends StatelessWidget {
                 const SizedBox(height: 12),
                 _ActionTile(
                   icon: Icons.history_rounded,
-                  title: 'Attendance history',
-                  subtitle: 'Past and open sessions for this club',
+                  title: l10n.attendanceHistory,
+                  subtitle: l10n.pastAndOpenSessions,
                   color: AppColors.meeting,
                   onTap: () => context.push('/attendance/history'),
                 ),
@@ -263,7 +272,7 @@ class _OccurrenceBody extends StatelessWidget {
                   const SizedBox(height: 16),
                   TextButton(
                     onPressed: onRetryRoster,
-                    child: const Text('Refresh attendance status'),
+                    child: Text(l10n.refreshAttendanceStatus),
                   ),
                 ],
               ],
@@ -345,6 +354,7 @@ class _ErrorBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -353,7 +363,7 @@ class _ErrorBody extends StatelessWidget {
           children: [
             Text(message, textAlign: TextAlign.center),
             const SizedBox(height: 16),
-            FilledButton(onPressed: onRetry, child: const Text('Retry')),
+            FilledButton(onPressed: onRetry, child: Text(l10n.retry)),
           ],
         ),
       ),

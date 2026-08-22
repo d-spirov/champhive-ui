@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../../../shared/models/notification.dart';
 import '../../../shared/theme/app_theme.dart';
 import '../../../shared/utils/api_error_message.dart';
@@ -71,9 +72,10 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
       ref.invalidate(notificationFeedProvider);
     } catch (e) {
       if (!mounted) return;
+      final l10n = AppLocalizations.of(context)!;
       setState(() {
         _initialLoadDone = true;
-        _error = apiErrorMessage(e, fallback: 'Could not load notifications');
+        _error = apiErrorMessage(e, fallback: l10n.couldNotLoadNotifications);
       });
     }
   }
@@ -91,9 +93,10 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
       _applyFeed(feed, replace: false);
     } catch (e) {
       if (!mounted) return;
+      final l10n = AppLocalizations.of(context)!;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(apiErrorMessage(e, fallback: 'Could not load more')),
+          content: Text(apiErrorMessage(e, fallback: l10n.couldNotLoadMore)),
         ),
       );
     } finally {
@@ -117,10 +120,11 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
       ref.invalidate(notificationFeedProvider);
     } catch (e) {
       if (!mounted) return;
+      final l10n = AppLocalizations.of(context)!;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            apiErrorMessage(e, fallback: 'Could not mark as read'),
+            apiErrorMessage(e, fallback: l10n.couldNotMarkAsRead),
           ),
         ),
       );
@@ -155,6 +159,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isDemo = ref.watch(authNotifierProvider).user?.id == 'demo';
 
     return Scaffold(
@@ -169,18 +174,18 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
             }
           },
         ),
-        title: const Text('Notifications'),
+        title: Text(l10n.notifications),
         actions: [
           if (_unreadCount > 0)
             TextButton(
               onPressed: _markAllRead,
-              child: const Text('Mark all read'),
+              child: Text(l10n.markAllRead),
             ),
         ],
       ),
       body: isDemo
-          ? const Center(
-              child: Text('Sign in to see your notification feed.'),
+          ? Center(
+              child: Text(l10n.signInToSeeNotifications),
             )
           : !_initialLoadDone
               ? const Center(child: CircularProgressIndicator())
@@ -195,25 +200,25 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                             const SizedBox(height: 16),
                             FilledButton(
                               onPressed: _reload,
-                              child: const Text('Retry'),
+                              child: Text(l10n.retry),
                             ),
                           ],
                         ),
                       ),
                     )
-                  : _buildList(),
+                  : _buildList(l10n),
     );
   }
 
-  Widget _buildList() {
+  Widget _buildList(AppLocalizations l10n) {
     if (_items.isEmpty) {
       return RefreshIndicator(
         onRefresh: _reload,
         child: ListView(
           physics: const AlwaysScrollableScrollPhysics(),
-          children: const [
-            SizedBox(height: 120),
-            Center(child: Text('No notifications yet.')),
+          children: [
+            const SizedBox(height: 120),
+            Center(child: Text(l10n.noNotificationsYet)),
           ],
         ),
       );
@@ -246,7 +251,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                         )
                       : TextButton(
                           onPressed: _loadMore,
-                          child: const Text('Load more'),
+                          child: Text(l10n.loadMore),
                         ),
                 ),
               );

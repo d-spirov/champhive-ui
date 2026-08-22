@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../../../shared/models/staff.dart';
 import '../../../shared/utils/api_error_message.dart';
 import '../../../shared/widgets/ui_bits.dart';
@@ -32,10 +33,11 @@ class _ComposeDirectMessageScreenState
       context.pushReplacement('/messages/${channel.channelId}');
     } catch (e) {
       if (!mounted) return;
+      final l10n = AppLocalizations.of(context)!;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            apiErrorMessage(e, fallback: 'Could not open conversation'),
+            apiErrorMessage(e, fallback: l10n.couldNotOpenConversation),
           ),
         ),
       );
@@ -46,6 +48,7 @@ class _ComposeDirectMessageScreenState
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final async = ref.watch(directMessageCandidatesProvider);
 
     return Scaffold(
@@ -60,14 +63,14 @@ class _ComposeDirectMessageScreenState
             }
           },
         ),
-        title: const Text('New message'),
+        title: Text(l10n.newMessage),
       ),
       body: Column(
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
             child: AppSearchField(
-              hintText: 'Search people',
+              hintText: l10n.searchPeople,
               onChanged: (v) => setState(() => _query = v),
             ),
           ),
@@ -83,7 +86,7 @@ class _ComposeDirectMessageScreenState
                       Text(
                         apiErrorMessage(
                           e,
-                          fallback: 'Could not load people',
+                          fallback: l10n.couldNotLoadPeople,
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -91,7 +94,7 @@ class _ComposeDirectMessageScreenState
                       FilledButton(
                         onPressed: () =>
                             ref.invalidate(directMessageCandidatesProvider),
-                        child: const Text('Retry'),
+                        child: Text(l10n.retry),
                       ),
                     ],
                   ),
@@ -108,12 +111,11 @@ class _ComposeDirectMessageScreenState
                       }).toList();
 
                 if (candidates.isEmpty) {
-                  return const Center(
+                  return Center(
                     child: Padding(
-                      padding: EdgeInsets.all(24),
+                      padding: const EdgeInsets.all(24),
                       child: Text(
-                        'No adults to message yet.\n'
-                        'People appear here from club staff and your team chats.',
+                        l10n.noAdultsToMessage,
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -121,7 +123,7 @@ class _ComposeDirectMessageScreenState
                 }
 
                 if (filtered.isEmpty) {
-                  return const Center(child: Text('No matches.'));
+                  return Center(child: Text(l10n.noMatches));
                 }
 
                 return ListView.separated(

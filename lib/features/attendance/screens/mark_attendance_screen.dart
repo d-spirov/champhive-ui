@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../../events/providers/events_provider.dart';
 import '../../../shared/models/event_attendance.dart';
@@ -59,6 +60,7 @@ class _MarkAttendanceScreenState extends ConsumerState<MarkAttendanceScreen>
   Future<void> _pickStatus(AttendanceParticipant member) async {
     if (!(_session?.canMark ?? false) || _saving) return;
 
+    final l10n = AppLocalizations.of(context)!;
     final selected = await showModalBottomSheet<AttendanceStatus>(
       context: context,
       builder: (ctx) => _StatusPickerSheet(
@@ -70,8 +72,7 @@ class _MarkAttendanceScreenState extends ConsumerState<MarkAttendanceScreen>
 
     if (selected == AttendanceStatus.notMarked) {
       setState(() {
-        _localError =
-            'Unmarked cannot be saved to the server. Choose Present, Late, Absent, or Excused.';
+        _localError = l10n.unmarkedCannotBeSaved;
       });
       return;
     }
@@ -124,7 +125,9 @@ class _MarkAttendanceScreenState extends ConsumerState<MarkAttendanceScreen>
       ref.invalidate(occurrenceAttendanceReportProvider(_occurrenceId));
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('${member.displayName} → ${selected.label}'),
+          content: Text(
+            '${member.displayName} → ${attendanceStatusLabel(l10n, selected)}',
+          ),
           duration: const Duration(seconds: 1),
         ),
       );
@@ -146,7 +149,7 @@ class _MarkAttendanceScreenState extends ConsumerState<MarkAttendanceScreen>
           _draft![member.id] = original;
         }
         _saving = false;
-        _localError = apiErrorMessage(e, fallback: 'Could not save status');
+        _localError = apiErrorMessage(e, fallback: l10n.couldNotSaveStatus);
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(_localError!)),
@@ -159,10 +162,10 @@ class _MarkAttendanceScreenState extends ConsumerState<MarkAttendanceScreen>
     final draft = _draft;
     if (baseline == null || draft == null || _saving) return;
 
+    final l10n = AppLocalizations.of(context)!;
     if (!baseline.canMark) {
       setState(() {
-        _localError =
-            'Attendance is locked for this session. An admin can reopen it temporarily.';
+        _localError = l10n.attendanceLocked;
       });
       return;
     }
@@ -189,7 +192,7 @@ class _MarkAttendanceScreenState extends ConsumerState<MarkAttendanceScreen>
 
     if (updates.isEmpty) {
       setState(() {
-        _localError = 'All marks are already saved.';
+        _localError = l10n.allMarksAlreadySaved;
       });
       return;
     }
@@ -218,7 +221,7 @@ class _MarkAttendanceScreenState extends ConsumerState<MarkAttendanceScreen>
       if (!mounted) return;
       final message = apiErrorMessage(
         e,
-        fallback: 'Could not save attendance',
+        fallback: l10n.couldNotSaveAttendance,
       );
       setState(() {
         _localError = message;
@@ -232,6 +235,7 @@ class _MarkAttendanceScreenState extends ConsumerState<MarkAttendanceScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final async = ref.watch(attendanceSessionProvider(_occurrenceId));
     final occurrenceAsync = ref.watch(eventDetailProvider(_occurrenceId));
 
@@ -247,7 +251,7 @@ class _MarkAttendanceScreenState extends ConsumerState<MarkAttendanceScreen>
             }
           },
         ),
-        title: const Text('Take attendance'),
+        title: Text(l10n.takeAttendance),
         bottom: TabBar(
           controller: _tabs,
           labelColor: Theme.of(context).colorScheme.primary,
@@ -257,10 +261,10 @@ class _MarkAttendanceScreenState extends ConsumerState<MarkAttendanceScreen>
           tabs: [
             Tab(
               text: _draft == null
-                  ? 'Roster'
-                  : 'Roster (${_draft!.length})',
+                  ? l10n.roster
+                  : l10n.rosterCount(_draft!.length),
             ),
-            const Tab(text: 'Summary'),
+            Tab(text: l10n.summary),
           ],
         ),
       ),
@@ -273,14 +277,14 @@ class _MarkAttendanceScreenState extends ConsumerState<MarkAttendanceScreen>
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  apiErrorMessage(e, fallback: 'Could not load roster'),
+                  apiErrorMessage(e, fallback: l10n.couldNotLoadRoster),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 16),
                 FilledButton(
                   onPressed: () =>
                       ref.invalidate(attendanceSessionProvider(_occurrenceId)),
-                  child: const Text('Retry'),
+                  child: Text(l10n.retry),
                 ),
               ],
             ),
@@ -306,15 +310,15 @@ class _MarkAttendanceScreenState extends ConsumerState<MarkAttendanceScreen>
                 MaterialBanner(
                   content: Text(
                     session.isCanceled
-                        ? 'This session was canceled — marks are not accepted.'
-                        : 'Attendance is locked. You can still review the roster; ask an admin to reopen if you need to edit.',
+                        ? l10n.sessionCanceled
+                        : l10n.attendanceLocked,
                   ),
                   actions: [
                     TextButton(
                       onPressed: () => context.push(
                         '/occurrences/$_occurrenceId/attendance/report',
                       ),
-                      child: const Text('Report'),
+                      child: Text(l10n.report),
                     ),
                   ],
                 ),
@@ -324,7 +328,7 @@ class _MarkAttendanceScreenState extends ConsumerState<MarkAttendanceScreen>
                   actions: [
                     TextButton(
                       onPressed: () => setState(() => _localError = null),
-                      child: const Text('Dismiss'),
+                      child: Text(l10n.dismiss),
                     ),
                   ],
                 ),
@@ -371,6 +375,7 @@ class _SessionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final muted = Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6);
     final scope = session.scopeName ?? occurrence?.scopeName;
     return Padding(
@@ -406,8 +411,10 @@ class _SessionHeader extends StatelessWidget {
           const SizedBox(height: 6),
           Text(
             session.canMark
-                ? 'Tap a member to mark — status saves to the server immediately'
-                : session.lockStatusLabel,
+                ? l10n.tapMemberToMark
+                : session.isCanceled
+                    ? l10n.sessionCanceled
+                    : l10n.attendanceLocked,
             style: Theme.of(context).textTheme.labelMedium?.copyWith(color: muted),
           ),
         ],
@@ -433,8 +440,9 @@ class _RosterTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     if (members.isEmpty) {
-      final scope = scopeName ?? 'this session';
+      final scope = scopeName ?? l10n.thisSession;
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(24),
@@ -442,13 +450,13 @@ class _RosterTab extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'No members on the roster for $scope.',
+                l10n.noMembersOnRoster(scope),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
               FilledButton.tonal(
                 onPressed: onRefresh,
-                child: const Text('Reload roster'),
+                child: Text(l10n.reloadRoster),
               ),
             ],
           ),
@@ -474,9 +482,9 @@ class _RosterTab extends StatelessWidget {
             subtitle: Text(
               [
                 if (p.rsvpStatus != null && p.rsvpStatus != 'noResponse')
-                  'RSVP: ${p.rsvpStatus}',
+                  l10n.rsvpStatus(p.rsvpStatus!),
                 if (p.teamName != null) p.teamName!,
-                p.status.label,
+                attendanceStatusLabel(l10n, p.status),
               ].where((s) => s.isNotEmpty).join(' · '),
             ),
             trailing: AttendanceStatusBadge(status: p.status),
@@ -496,16 +504,17 @@ class _SummaryTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            _Stat(label: 'Present', count: counts.present, color: AppColors.present),
-            _Stat(label: 'Late', count: counts.late, color: AppColors.late),
-            _Stat(label: 'Absent', count: counts.absent, color: AppColors.absent),
-            _Stat(label: 'Excused', count: counts.excused, color: AppColors.excused),
+            _Stat(label: l10n.statusPresent, count: counts.present, color: AppColors.present),
+            _Stat(label: l10n.statusLate, count: counts.late, color: AppColors.late),
+            _Stat(label: l10n.statusAbsent, count: counts.absent, color: AppColors.absent),
+            _Stat(label: l10n.statusExcused, count: counts.excused, color: AppColors.excused),
           ],
         ),
         const SizedBox(height: 20),
@@ -562,6 +571,7 @@ class _Group extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     if (members.isEmpty) return const SizedBox.shrink();
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
@@ -573,7 +583,7 @@ class _Group extends StatelessWidget {
               AttendanceStatusBadge(status: status, size: 22),
               const SizedBox(width: 8),
               Text(
-                '${status.label} (${members.length})',
+                '${attendanceStatusLabel(l10n, status)} (${members.length})',
                 style: Theme.of(context).textTheme.titleSmall,
               ),
             ],
@@ -608,6 +618,7 @@ class _StickyFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Material(
       elevation: 8,
       color: Theme.of(context).cardTheme.color ??
@@ -649,7 +660,7 @@ class _StickyFooter extends StatelessWidget {
                         width: 22,
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
-                    : const Text('Save remaining'),
+                    : Text(l10n.saveRemaining),
               ),
             ],
           ),
@@ -678,6 +689,7 @@ class _StatusPickerSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(8, 12, 8, 16),
@@ -688,14 +700,14 @@ class _StatusPickerSheet extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
               child: Text(
-                'Mark $memberName',
+                l10n.markNamed(memberName),
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             ),
             for (final status in _options)
               ListTile(
                 leading: AttendanceStatusBadge(status: status),
-                title: Text(status.label),
+                title: Text(attendanceStatusLabel(l10n, status)),
                 trailing: current == status
                     ? Icon(
                         Icons.check_rounded,
@@ -743,6 +755,7 @@ class _OptionalNoteSheetState extends State<_OptionalNoteSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final bottom = MediaQuery.viewInsetsOf(context).bottom;
     return Padding(
       padding: EdgeInsets.only(bottom: bottom),
@@ -754,12 +767,12 @@ class _OptionalNoteSheetState extends State<_OptionalNoteSheet> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                '${widget.memberName} · ${widget.status.label}',
+                '${widget.memberName} · ${attendanceStatusLabel(l10n, widget.status)}',
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               const SizedBox(height: 8),
               Text(
-                'Optional note (synced with the mark)',
+                l10n.optionalNoteSynced,
                 style: Theme.of(context).textTheme.bodySmall,
               ),
               const SizedBox(height: 12),
@@ -767,19 +780,19 @@ class _OptionalNoteSheetState extends State<_OptionalNoteSheet> {
                 controller: _note,
                 maxLines: 3,
                 maxLength: 500,
-                decoration: const InputDecoration(
-                  labelText: 'Note',
+                decoration: InputDecoration(
+                  labelText: l10n.note,
                   alignLabelWithHint: true,
                 ),
               ),
               const SizedBox(height: 8),
               FilledButton(
                 onPressed: () => Navigator.pop(context, _note.text.trim()),
-                child: const Text('Continue'),
+                child: Text(l10n.continueAction),
               ),
               TextButton(
                 onPressed: () => Navigator.pop(context, ''),
-                child: const Text('Skip note'),
+                child: Text(l10n.skipNote),
               ),
             ],
           ),

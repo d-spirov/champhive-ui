@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../../../shared/demo/demo_data.dart';
 import '../../../shared/utils/api_error_message.dart';
 import '../../../shared/widgets/ui_bits.dart';
@@ -33,6 +34,7 @@ class _PlayersListScreenState extends ConsumerState<PlayersListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isDemo = ref.watch(authNotifierProvider).user?.id == 'demo';
     final clubId = ref.watch(selectedClubIdProvider);
     final playersAsync = ref.watch(clubPlayersProvider);
@@ -40,7 +42,7 @@ class _PlayersListScreenState extends ConsumerState<PlayersListScreen> {
     return Scaffold(
       drawer: const AppDrawer(),
       appBar: AppBar(
-        title: const Text('Members'),
+        title: Text(l10n.members),
       ),
       body: Column(
         children: [
@@ -48,7 +50,7 @@ class _PlayersListScreenState extends ConsumerState<PlayersListScreen> {
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
             child: AppSearchField(
               controller: _search,
-              hintText: 'Search members',
+              hintText: l10n.searchMembers,
               onChanged: (value) {
                 _debounce?.cancel();
                 _debounce = Timer(const Duration(milliseconds: 350), () {
@@ -61,8 +63,8 @@ class _PlayersListScreenState extends ConsumerState<PlayersListScreen> {
             child: isDemo
                 ? _DemoPlayersList()
                 : clubId == null
-                    ? const Center(
-                        child: Text('Select a club to view members.'),
+                    ? Center(
+                        child: Text(l10n.selectClubToViewMembers),
                       )
                     : playersAsync.when(
                         loading: () =>
@@ -76,7 +78,7 @@ class _PlayersListScreenState extends ConsumerState<PlayersListScreen> {
                                 Text(
                                   apiErrorMessage(
                                     e,
-                                    fallback: 'Could not load members',
+                                    fallback: l10n.couldNotLoadMembers,
                                   ),
                                   textAlign: TextAlign.center,
                                 ),
@@ -84,7 +86,7 @@ class _PlayersListScreenState extends ConsumerState<PlayersListScreen> {
                                 FilledButton(
                                   onPressed: () =>
                                       ref.invalidate(clubPlayersProvider),
-                                  child: const Text('Retry'),
+                                  child: Text(l10n.retry),
                                 ),
                               ],
                             ),
@@ -92,8 +94,8 @@ class _PlayersListScreenState extends ConsumerState<PlayersListScreen> {
                         ),
                         data: (players) {
                           if (players.isEmpty) {
-                            return const Center(
-                              child: Text('No members found for this club.'),
+                            return Center(
+                              child: Text(l10n.noMembersFound),
                             );
                           }
                           return RefreshIndicator(

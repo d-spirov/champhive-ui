@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../../events/providers/events_provider.dart';
 import '../../../shared/theme/app_theme.dart';
 import '../../../shared/utils/api_error_message.dart';
@@ -15,15 +16,16 @@ class AttendanceReportScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final async = ref.watch(occurrenceAttendanceReportProvider(occurrenceId));
     final occurrenceAsync = ref.watch(eventDetailProvider(occurrenceId));
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Attendance report'),
+        title: Text(l10n.attendanceReport),
         actions: [
           IconButton(
-            tooltip: 'Take attendance',
+            tooltip: l10n.takeAttendance,
             onPressed: () =>
                 context.push('/occurrences/$occurrenceId/attendance'),
             icon: const Icon(Icons.how_to_reg_outlined),
@@ -39,7 +41,7 @@ class AttendanceReportScreen extends ConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  apiErrorMessage(e, fallback: 'Could not load report'),
+                  apiErrorMessage(e, fallback: l10n.couldNotLoadReport),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 16),
@@ -47,7 +49,7 @@ class AttendanceReportScreen extends ConsumerWidget {
                   onPressed: () => ref.invalidate(
                     occurrenceAttendanceReportProvider(occurrenceId),
                   ),
-                  child: const Text('Retry'),
+                  child: Text(l10n.retry),
                 ),
               ],
             ),
@@ -57,6 +59,7 @@ class AttendanceReportScreen extends ConsumerWidget {
           final occurrence = occurrenceAsync.valueOrNull;
           final members = [...report.participants]
             ..sort((a, b) => a.displayName.compareTo(b.displayName));
+          final lockLabel = attendanceLockStatusLabel(l10n, report);
           return RefreshIndicator(
             onRefresh: () async {
               ref.invalidate(occurrenceAttendanceReportProvider(occurrenceId));
@@ -79,7 +82,7 @@ class AttendanceReportScreen extends ConsumerWidget {
                       report.startAt,
                       occurrence?.endAt ?? report.endAt,
                     ),
-                    report.lockStatusLabel,
+                    lockLabel,
                   ].join(' · '),
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
@@ -87,12 +90,12 @@ class AttendanceReportScreen extends ConsumerWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    _Stat('Present', report.summary.present, AppColors.present),
-                    _Stat('Late', report.summary.late, AppColors.late),
-                    _Stat('Absent', report.summary.absent, AppColors.absent),
-                    _Stat('Excused', report.summary.excused, AppColors.excused),
+                    _Stat(l10n.statusPresent, report.summary.present, AppColors.present),
+                    _Stat(l10n.statusLate, report.summary.late, AppColors.late),
+                    _Stat(l10n.statusAbsent, report.summary.absent, AppColors.absent),
+                    _Stat(l10n.statusExcused, report.summary.excused, AppColors.excused),
                     _Stat(
-                      'Open',
+                      l10n.statusUnmarked,
                       report.summary.notMarked,
                       const Color(0xFFCBD5E1),
                     ),

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../../events/providers/events_provider.dart';
 import '../../attendance/widgets/attendance_ui.dart';
@@ -28,6 +30,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isDemo = ref.watch(authNotifierProvider).user?.id == 'demo';
     final eventsAsync = ref.watch(clubEventsProvider);
 
@@ -43,12 +46,12 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
           icon: const Icon(Icons.menu_rounded),
           onPressed: () => Scaffold.of(context).openDrawer(),
         ),
-        title: Text(_monthLabel(_selected)),
+        title: Text(DateFormat('MMMM yyyy').format(_selected)),
         actions: [
           IconButton(
             onPressed: () => context.push('/attendance/history'),
             icon: const Icon(Icons.how_to_reg_outlined),
-            tooltip: 'Attendance',
+            tooltip: l10n.attendance,
           ),
         ],
       ),
@@ -57,7 +60,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
           final isDemo = ref.read(authNotifierProvider).user?.id == 'demo';
           if (isDemo) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Sign in to create schedule items')),
+              SnackBar(content: Text(l10n.signInToCreateSchedule)),
             );
             return;
           }
@@ -99,7 +102,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          _weekday(day.weekday),
+                          DateFormat('EEE').format(day),
                           style: TextStyle(
                             fontSize: 12,
                             color: selected
@@ -143,7 +146,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                             Text(
                               apiErrorMessage(
                                 e,
-                                fallback: 'Could not load events',
+                                fallback: l10n.couldNotLoadEvents,
                               ),
                               textAlign: TextAlign.center,
                             ),
@@ -151,7 +154,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                             FilledButton(
                               onPressed: () =>
                                   ref.invalidate(clubEventsProvider),
-                              child: const Text('Retry'),
+                              child: Text(l10n.retry),
                             ),
                           ],
                         ),
@@ -172,13 +175,15 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                           physics: const AlwaysScrollableScrollPhysics(),
                           padding: const EdgeInsets.fromLTRB(16, 8, 16, 88),
                           children: [
-                            SectionHeader(title: _dayLabel(_selected)),
+                            SectionHeader(
+                              title: DateFormat('EEE, d MMM').format(_selected),
+                            ),
                             if (dayEvents.isEmpty)
-                              const Card(
+                              Card(
                                 child: Padding(
-                                  padding: EdgeInsets.all(20),
+                                  padding: const EdgeInsets.all(20),
                                   child: Text(
-                                    'No events on this day.',
+                                    l10n.noEventsOnThisDay,
                                     textAlign: TextAlign.center,
                                   ),
                                 ),
@@ -210,27 +215,6 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
       ),
     );
   }
-
-  String _monthLabel(DateTime dt) {
-    const months = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December',
-    ];
-    return '${months[dt.month - 1]} ${dt.year}';
-  }
-
-  String _weekday(int weekday) {
-    const names = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    return names[weekday - 1];
-  }
-
-  String _dayLabel(DateTime dt) {
-    const months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
-    ];
-    return '${_weekday(dt.weekday)}, ${dt.day} ${months[dt.month - 1]}';
-  }
 }
 
 class _DemoAgenda extends StatelessWidget {
@@ -240,6 +224,7 @@ class _DemoAgenda extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final dayEvents = DemoData.events.where((e) {
       return e.start.year == selected.year &&
           e.start.month == selected.month &&
@@ -250,7 +235,7 @@ class _DemoAgenda extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 88),
       children: [
-        SectionHeader(title: 'Demo schedule'),
+        SectionHeader(title: l10n.demoSchedule),
         Card(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(14, 14, 14, 6),

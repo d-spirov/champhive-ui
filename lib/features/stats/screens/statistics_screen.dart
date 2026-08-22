@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../../../shared/models/analytics.dart';
 import '../../../shared/models/payment.dart';
 import '../../../shared/theme/app_theme.dart';
@@ -31,6 +32,7 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isDemo = ref.watch(authNotifierProvider).user?.id == 'demo';
     final club = ref.watch(selectedClubProvider);
 
@@ -46,23 +48,23 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen>
             }
           },
         ),
-        title: Text(club == null ? 'Statistics' : '${club.name} stats'),
+        title: Text(
+          club == null ? l10n.statistics : l10n.clubStatsTitle(club.name),
+        ),
         bottom: TabBar(
           controller: _tabs,
           labelColor: Theme.of(context).colorScheme.primary,
           unselectedLabelColor:
               Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.55),
           indicatorColor: Theme.of(context).colorScheme.primary,
-          tabs: const [
-            Tab(text: 'Membership'),
-            Tab(text: 'Revenue'),
+          tabs: [
+            Tab(text: l10n.membership),
+            Tab(text: l10n.revenue),
           ],
         ),
       ),
       body: isDemo
-          ? const Center(
-              child: Text('Sign in to see club membership and revenue analytics.'),
-            )
+          ? Center(child: Text(l10n.signInToSeeStats))
           : TabBarView(
               controller: _tabs,
               children: const [
@@ -79,22 +81,23 @@ class _MembershipTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final clubId = ref.watch(selectedClubIdProvider);
     final async = ref.watch(membershipAnalyticsProvider);
 
     if (clubId == null) {
-      return const Center(child: Text('Select a club to view membership stats.'));
+      return Center(child: Text(l10n.selectClubToViewMembershipStats));
     }
 
     return async.when(
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (e, _) => _ErrorBody(
-        message: apiErrorMessage(e, fallback: 'Could not load membership stats'),
+        message: apiErrorMessage(e, fallback: l10n.couldNotLoadMembershipStats),
         onRetry: () => ref.invalidate(membershipAnalyticsProvider),
       ),
       data: (data) {
         if (data == null) {
-          return const Center(child: Text('No membership data.'));
+          return Center(child: Text(l10n.noMembershipData));
         }
         return RefreshIndicator(
           onRefresh: () async {
@@ -109,7 +112,7 @@ class _MembershipTab extends ConsumerWidget {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: Text(
-                    'As of ${DateFormat('d MMM yyyy').format(data.asOf!)}',
+                    l10n.asOfDate(DateFormat('d MMM yyyy').format(data.asOf!)),
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ),
@@ -117,14 +120,14 @@ class _MembershipTab extends ConsumerWidget {
                 children: [
                   Expanded(
                     child: StatCard(
-                      label: 'Active now',
+                      label: l10n.activeNow,
                       value: '${data.activeNow}',
                     ),
                   ),
                   const SizedBox(width: 10),
                   Expanded(
                     child: StatCard(
-                      label: 'On the books',
+                      label: l10n.onTheBooks,
                       value: '${data.registeredCount}',
                     ),
                   ),
@@ -135,14 +138,14 @@ class _MembershipTab extends ConsumerWidget {
                 children: [
                   Expanded(
                     child: StatCard(
-                      label: 'Joined (12 mo)',
+                      label: l10n.joined12Mo,
                       value: '${data.joinedInWindow}',
                     ),
                   ),
                   const SizedBox(width: 10),
                   Expanded(
                     child: StatCard(
-                      label: 'Left (12 mo)',
+                      label: l10n.left12Mo,
                       value: '${data.leftInWindow}',
                     ),
                   ),
@@ -150,20 +153,20 @@ class _MembershipTab extends ConsumerWidget {
               ),
               const SizedBox(height: 10),
               StatCard(
-                label: 'Unenrolled (no team)',
+                label: l10n.unenrolledNoTeam,
                 value: '${data.unenrolledCount}',
               ),
               const SizedBox(height: 24),
-              const SectionHeader(title: 'Monthly enrollment'),
+              SectionHeader(title: l10n.monthlyEnrollment),
               const SizedBox(height: 8),
               if (data.trend.isEmpty)
-                const Text('No trend data yet.')
+                Text(l10n.noTrendDataYet)
               else
                 ...data.trend.reversed.take(12).map(
                       (p) => _TrendRow(
                         period: p.period,
-                        primary: '${p.active} active',
-                        secondary: '+${p.joined} / −${p.left}',
+                        primary: l10n.activeCount(p.active),
+                        secondary: l10n.joinedLeftDelta(p.joined, p.left),
                         barValue: p.active.toDouble(),
                         barMax: _maxActive(data.trend).toDouble(),
                         color: Theme.of(context).colorScheme.primary,
@@ -190,22 +193,23 @@ class _RevenueTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final clubId = ref.watch(selectedClubIdProvider);
     final async = ref.watch(revenueAnalyticsProvider);
 
     if (clubId == null) {
-      return const Center(child: Text('Select a club to view revenue stats.'));
+      return Center(child: Text(l10n.selectClubToViewRevenueStats));
     }
 
     return async.when(
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (e, _) => _ErrorBody(
-        message: apiErrorMessage(e, fallback: 'Could not load revenue stats'),
+        message: apiErrorMessage(e, fallback: l10n.couldNotLoadRevenueStats),
         onRetry: () => ref.invalidate(revenueAnalyticsProvider),
       ),
       data: (data) {
         if (data == null) {
-          return const Center(child: Text('No revenue data.'));
+          return Center(child: Text(l10n.noRevenueData));
         }
         final c = data.currency;
         final t = data.totals;
@@ -227,7 +231,10 @@ class _RevenueTab extends ConsumerWidget {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: Text(
-                    'As of ${DateFormat('d MMM yyyy').format(data.asOf!)} · $c',
+                    l10n.asOfDateCurrency(
+                      DateFormat('d MMM yyyy').format(data.asOf!),
+                      c,
+                    ),
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ),
@@ -235,14 +242,14 @@ class _RevenueTab extends ConsumerWidget {
                 children: [
                   Expanded(
                     child: StatCard(
-                      label: 'Collected',
+                      label: l10n.collected,
                       value: MoneyAmount(t.collected, c).formatted,
                     ),
                   ),
                   const SizedBox(width: 10),
                   Expanded(
                     child: StatCard(
-                      label: 'Outstanding',
+                      label: l10n.outstanding,
                       value: MoneyAmount(t.outstanding, c).formatted,
                     ),
                   ),
@@ -253,14 +260,14 @@ class _RevenueTab extends ConsumerWidget {
                 children: [
                   Expanded(
                     child: StatCard(
-                      label: 'Expected',
+                      label: l10n.expected,
                       value: MoneyAmount(t.expected, c).formatted,
                     ),
                   ),
                   const SizedBox(width: 10),
                   Expanded(
                     child: StatCard(
-                      label: 'Collection rate',
+                      label: l10n.collectionRate,
                       value: rateLabel,
                     ),
                   ),
@@ -271,14 +278,14 @@ class _RevenueTab extends ConsumerWidget {
                 children: [
                   Expanded(
                     child: StatCard(
-                      label: 'Cash',
+                      label: l10n.cash,
                       value: MoneyAmount(t.cashCollected, c).formatted,
                     ),
                   ),
                   const SizedBox(width: 10),
                   Expanded(
                     child: StatCard(
-                      label: 'Bank',
+                      label: l10n.bank,
                       value: MoneyAmount(t.bankCollected, c).formatted,
                     ),
                   ),
@@ -289,14 +296,14 @@ class _RevenueTab extends ConsumerWidget {
                 children: [
                   Expanded(
                     child: StatCard(
-                      label: 'Members billed',
+                      label: l10n.membersBilled,
                       value: '${t.memberCount}',
                     ),
                   ),
                   const SizedBox(width: 10),
                   Expanded(
                     child: StatCard(
-                      label: 'In debt',
+                      label: l10n.inDebt,
                       value: '${t.membersInDebt}',
                     ),
                   ),
@@ -305,27 +312,28 @@ class _RevenueTab extends ConsumerWidget {
               if (t.waived > 0) ...[
                 const SizedBox(height: 10),
                 StatCard(
-                  label: 'Waived',
+                  label: l10n.waived,
                   value: MoneyAmount(t.waived, c).formatted,
                 ),
               ],
               const SizedBox(height: 24),
-              const SectionHeader(title: 'Aging (outstanding)'),
+              SectionHeader(title: l10n.agingOutstanding),
               const SizedBox(height: 8),
               _AgingBars(aging: data.aging, currency: c),
               const SizedBox(height: 24),
-              const SectionHeader(title: 'Monthly trend'),
+              SectionHeader(title: l10n.monthlyTrend),
               const SizedBox(height: 8),
               if (data.trend.isEmpty)
-                const Text('No revenue trend yet.')
+                Text(l10n.noRevenueTrendYet)
               else
                 ...data.trend.reversed.take(12).map((p) {
                   final max = _maxCollected(data.trend);
                   return _TrendRow(
                     period: p.period,
                     primary: MoneyAmount(p.collected, c).formatted,
-                    secondary:
-                        'owed ${MoneyAmount(p.outstanding, c).formatted}',
+                    secondary: l10n.owedAmount(
+                      MoneyAmount(p.outstanding, c).formatted,
+                    ),
                     barValue: p.collected,
                     barMax: max <= 0 ? 1 : max,
                     color: AppColors.present,
@@ -333,14 +341,17 @@ class _RevenueTab extends ConsumerWidget {
                 }),
               if (data.teams.isNotEmpty) ...[
                 const SizedBox(height: 24),
-                const SectionHeader(title: 'By team'),
+                SectionHeader(title: l10n.byTeam),
                 const SizedBox(height: 8),
                 ...data.teams.map(
                   (b) => ListTile(
                     contentPadding: EdgeInsets.zero,
                     title: Text(b.name),
                     subtitle: Text(
-                      '${b.memberCount} members · owed ${MoneyAmount(b.outstanding, c).formatted}',
+                      l10n.membersOwed(
+                        b.memberCount,
+                        MoneyAmount(b.outstanding, c).formatted,
+                      ),
                     ),
                     trailing: Text(
                       MoneyAmount(b.collected, c).formatted,
@@ -351,14 +362,17 @@ class _RevenueTab extends ConsumerWidget {
               ],
               if (data.sections.isNotEmpty) ...[
                 const SizedBox(height: 24),
-                const SectionHeader(title: 'By section'),
+                SectionHeader(title: l10n.bySection),
                 const SizedBox(height: 8),
                 ...data.sections.map(
                   (b) => ListTile(
                     contentPadding: EdgeInsets.zero,
                     title: Text(b.name),
                     subtitle: Text(
-                      '${b.memberCount} members · owed ${MoneyAmount(b.outstanding, c).formatted}',
+                      l10n.membersOwed(
+                        b.memberCount,
+                        MoneyAmount(b.outstanding, c).formatted,
+                      ),
                     ),
                     trailing: Text(
                       MoneyAmount(b.collected, c).formatted,
@@ -391,13 +405,14 @@ class _AgingBars extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final max = aging.total <= 0 ? 1.0 : aging.total;
     final rows = [
-      ('Not due', aging.current, Theme.of(context).colorScheme.primary),
-      ('1–30 days', aging.days1To30, AppColors.late),
-      ('31–60 days', aging.days31To60, AppColors.late),
-      ('61–90 days', aging.days61To90, AppColors.danger),
-      ('90+ days', aging.days90Plus, AppColors.danger),
+      (l10n.notDue, aging.current, Theme.of(context).colorScheme.primary),
+      (l10n.days1To30, aging.days1To30, AppColors.late),
+      (l10n.days31To60, aging.days31To60, AppColors.late),
+      (l10n.days61To90, aging.days61To90, AppColors.danger),
+      (l10n.days90Plus, aging.days90Plus, AppColors.danger),
     ];
     return Column(
       children: [
@@ -485,6 +500,7 @@ class _ErrorBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -493,7 +509,7 @@ class _ErrorBody extends StatelessWidget {
           children: [
             Text(message, textAlign: TextAlign.center),
             const SizedBox(height: 16),
-            FilledButton(onPressed: onRetry, child: const Text('Retry')),
+            FilledButton(onPressed: onRetry, child: Text(l10n.retry)),
           ],
         ),
       ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../providers/clubs_provider.dart';
 import '../../../shared/models/club.dart';
 import '../../../shared/utils/api_error_message.dart';
@@ -14,11 +15,12 @@ class ClubDetailsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final asyncClub = ref.watch(clubDetailProvider(clubId));
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Club'),
+        title: Text(l10n.club),
       ),
       body: asyncClub.when(
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -28,11 +30,11 @@ class ClubDetailsScreen extends ConsumerWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(apiErrorMessage(e, fallback: 'Could not load club')),
+                Text(apiErrorMessage(e, fallback: l10n.couldNotLoadClub)),
                 const SizedBox(height: 12),
                 FilledButton(
                   onPressed: () => ref.invalidate(clubDetailProvider(clubId)),
-                  child: const Text('Retry'),
+                  child: Text(l10n.retry),
                 ),
               ],
             ),
@@ -51,6 +53,7 @@ class _ClubBody extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final location = [
       if (club.city != null && club.city!.isNotEmpty) club.city!,
       if (club.countryCode != null && club.countryCode!.isNotEmpty) club.countryCode!,
@@ -94,17 +97,17 @@ class _ClubBody extends ConsumerWidget {
           child: Column(
             children: [
               ListTile(
-                title: const Text('Status'),
+                title: Text(l10n.status),
                 trailing: Text(club.status ?? '—'),
               ),
               const Divider(height: 1),
               ListTile(
-                title: const Text('Timezone'),
+                title: Text(l10n.timezone),
                 trailing: Text(club.timezone ?? '—'),
               ),
               const Divider(height: 1),
               ListTile(
-                title: const Text('Your roles'),
+                title: Text(l10n.yourRoles),
                 subtitle: Text(
                   club.currentUserRoles.isEmpty
                       ? '—'
@@ -114,7 +117,7 @@ class _ClubBody extends ConsumerWidget {
               if (club.contactEmail != null) ...[
                 const Divider(height: 1),
                 ListTile(
-                  title: const Text('Contact'),
+                  title: Text(l10n.contact),
                   subtitle: Text(club.contactEmail!),
                 ),
               ],
@@ -127,13 +130,13 @@ class _ClubBody extends ConsumerWidget {
             await ref.read(selectedClubIdProvider.notifier).select(club.id);
             if (context.mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('${club.name} selected')),
+                SnackBar(content: Text(l10n.clubSelected(club.name))),
               );
               context.go('/home');
             }
           },
           icon: const Icon(Icons.check_circle_outline),
-          label: const Text('Use this club'),
+          label: Text(l10n.useThisClub),
         ),
       ],
     );

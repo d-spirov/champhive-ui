@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../../../shared/models/payment.dart';
 import '../../../shared/theme/app_theme.dart';
 import '../../../shared/utils/api_error_message.dart';
@@ -37,6 +38,7 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isDemo = ref.watch(authNotifierProvider).user?.id == 'demo';
 
     return Scaffold(
@@ -51,30 +53,30 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen>
             }
           },
         ),
-        title: const Text('Payments'),
+        title: Text(l10n.payments),
         bottom: TabBar(
           controller: _tabs,
           labelColor: Theme.of(context).colorScheme.primary,
           unselectedLabelColor:
               Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.55),
           indicatorColor: Theme.of(context).colorScheme.primary,
-          tabs: const [
-            Tab(text: 'Outstanding'),
-            Tab(text: 'Cash'),
-            Tab(text: 'My fees'),
+          tabs: [
+            Tab(text: l10n.outstanding),
+            Tab(text: l10n.cash),
+            Tab(text: l10n.myFees),
           ],
         ),
         actions: [
           if (!isDemo)
             IconButton(
-              tooltip: 'Record payment',
+              tooltip: l10n.recordPayment,
               onPressed: () => _openRecordPayment(context),
               icon: const Icon(Icons.add_card_outlined),
             ),
         ],
       ),
       body: isDemo
-          ? const Center(child: Text('Sign in to manage club payments.'))
+          ? Center(child: Text(l10n.signInToManagePayments))
           : TabBarView(
               controller: _tabs,
               children: const [
@@ -87,10 +89,11 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen>
   }
 
   Future<void> _openRecordPayment(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
     final clubId = ref.read(selectedClubIdProvider);
     if (clubId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Select a club first')),
+        SnackBar(content: Text(l10n.selectClubFirst)),
       );
       return;
     }
@@ -105,7 +108,7 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen>
             memberId: o.memberId,
             name: o.memberName?.isNotEmpty == true
                 ? o.memberName!
-                : 'Member',
+                : l10n.member,
             hintOutstanding: o.outstandingAmount,
             currency: o.currency,
           ),
@@ -149,22 +152,23 @@ class _OutstandingTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final clubId = ref.watch(selectedClubIdProvider);
     final async = ref.watch(clubObligationsProvider);
 
     if (clubId == null) {
-      return const Center(child: Text('Select a club to view charges.'));
+      return Center(child: Text(l10n.selectClubToViewCharges));
     }
 
     return async.when(
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (e, _) => _ErrorBody(
-        message: apiErrorMessage(e, fallback: 'Could not load obligations'),
+        message: apiErrorMessage(e, fallback: l10n.couldNotLoadObligations),
         onRetry: () => ref.invalidate(clubObligationsProvider),
       ),
       data: (page) {
         if (page == null) {
-          return const Center(child: Text('No club selected.'));
+          return Center(child: Text(l10n.noClubSelected));
         }
         return RefreshIndicator(
           onRefresh: () async {
@@ -176,16 +180,16 @@ class _OutstandingTab extends ConsumerWidget {
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
             children: [
               _SummaryCard(
-                title: 'Open charges',
+                title: l10n.openCharges,
                 value: MoneyAmount(page.totalOutstanding, page.currency)
                     .formatted,
-                subtitle: '${page.openCount} open · ${page.totalCount} listed',
+                subtitle: l10n.openListedSummary(page.openCount, page.totalCount),
               ),
               const SizedBox(height: 16),
               if (page.items.isEmpty)
-                const Padding(
-                  padding: EdgeInsets.only(top: 48),
-                  child: Center(child: Text('Nothing outstanding.')),
+                Padding(
+                  padding: const EdgeInsets.only(top: 48),
+                  child: Center(child: Text(l10n.nothingOutstanding)),
                 )
               else
                 ...page.items.map((o) => _ObligationTile(obligation: o)),
@@ -202,22 +206,23 @@ class _CashTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final clubId = ref.watch(selectedClubIdProvider);
     final async = ref.watch(clubPaymentsProvider);
 
     if (clubId == null) {
-      return const Center(child: Text('Select a club to view payments.'));
+      return Center(child: Text(l10n.selectClubToViewPayments));
     }
 
     return async.when(
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (e, _) => _ErrorBody(
-        message: apiErrorMessage(e, fallback: 'Could not load payments'),
+        message: apiErrorMessage(e, fallback: l10n.couldNotLoadPayments),
         onRetry: () => ref.invalidate(clubPaymentsProvider),
       ),
       data: (page) {
         if (page == null) {
-          return const Center(child: Text('No club selected.'));
+          return Center(child: Text(l10n.noClubSelected));
         }
         return RefreshIndicator(
           onRefresh: () async {
@@ -227,9 +232,9 @@ class _CashTab extends ConsumerWidget {
           child: page.items.isEmpty
               ? ListView(
                   physics: const AlwaysScrollableScrollPhysics(),
-                  children: const [
-                    SizedBox(height: 120),
-                    Center(child: Text('No payments recorded yet.')),
+                  children: [
+                    const SizedBox(height: 120),
+                    Center(child: Text(l10n.noPaymentsYet)),
                   ],
                 )
               : ListView.separated(
@@ -252,13 +257,14 @@ class _MyFeesTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final feesAsync = ref.watch(myFeesProvider);
     final historyAsync = ref.watch(myFeeHistoryProvider);
 
     return feesAsync.when(
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (e, _) => _ErrorBody(
-        message: apiErrorMessage(e, fallback: 'Could not load your fees'),
+        message: apiErrorMessage(e, fallback: l10n.couldNotLoadFees),
         onRetry: () {
           ref.invalidate(myFeesProvider);
           ref.invalidate(myFeeHistoryProvider);
@@ -266,7 +272,7 @@ class _MyFeesTab extends ConsumerWidget {
       ),
       data: (fees) {
         if (fees == null) {
-          return const Center(child: Text('Sign in to see your fees.'));
+          return Center(child: Text(l10n.signInToSeeFees));
         }
         return RefreshIndicator(
           onRefresh: () async {
@@ -282,23 +288,23 @@ class _MyFeesTab extends ConsumerWidget {
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
             children: [
               _SummaryCard(
-                title: 'You owe',
+                title: l10n.youOwe,
                 value: fees.mixedCurrency
-                    ? 'Mixed currencies'
+                    ? l10n.mixedCurrencies
                     : MoneyAmount(fees.totalOutstanding, fees.currency)
                         .formatted,
                 subtitle: fees.members.isEmpty
-                    ? 'No family members linked'
-                    : '${fees.members.length} member(s)',
+                    ? l10n.noFamilyMembersLinked
+                    : l10n.membersCountLabel(fees.members.length),
               ),
               const SizedBox(height: 16),
               if (fees.members.isEmpty)
-                const Center(child: Text('No open family fees.'))
+                Center(child: Text(l10n.noOpenFamilyFees))
               else
                 ...fees.members.map((m) => _FamilyMemberCard(member: m)),
               const SizedBox(height: 20),
               Text(
-                'History',
+                l10n.history,
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               const SizedBox(height: 8),
@@ -308,13 +314,13 @@ class _MyFeesTab extends ConsumerWidget {
                   child: Center(child: CircularProgressIndicator()),
                 ),
                 error: (e, _) => Text(
-                  apiErrorMessage(e, fallback: 'Could not load history'),
+                  apiErrorMessage(e, fallback: l10n.couldNotLoadHistory),
                 ),
                 data: (history) {
                   if (history == null ||
                       (history.obligations.isEmpty &&
                           history.payments.isEmpty)) {
-                    return const Text('No fee history yet.');
+                    return Text(l10n.noFeeHistoryYet);
                   }
                   return Column(
                     children: [
@@ -346,6 +352,7 @@ class _FamilyMemberCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       child: Padding(
@@ -385,7 +392,7 @@ class _FamilyMemberCard extends StatelessWidget {
                 member.referenceNumber!.isNotEmpty) ...[
               const SizedBox(height: 10),
               _CopyRow(
-                label: 'Payment reference',
+                label: l10n.paymentReference,
                 value: member.referenceNumber!,
               ),
             ],
@@ -398,7 +405,7 @@ class _FamilyMemberCard extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                 '${MoneyAmount(o.outstandingAmount, o.currency).formatted}'
-                '${o.isOverdue ? ' · overdue' : ''}',
+                '${o.isOverdue ? ' · ${l10n.overdue}' : ''}',
                 style: TextStyle(
                   color: o.isOverdue ? AppColors.danger : null,
                 ),
@@ -428,12 +435,13 @@ class _CopyRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return InkWell(
       onTap: () async {
         await Clipboard.setData(ClipboardData(text: value));
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Copied $label')),
+            SnackBar(content: Text(l10n.copiedLabel(label))),
           );
         }
       },
@@ -483,6 +491,7 @@ class _ObligationTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final due = obligation.dueDate;
     final dueLabel = due == null
         ? obligation.period
@@ -519,7 +528,7 @@ class _ObligationTile extends StatelessWidget {
             obligation.description,
           dueLabel,
           obligation.status,
-          if (overdue) 'overdue',
+          if (overdue) l10n.overdue,
         ].where((e) => e.isNotEmpty).join(' · '),
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
@@ -543,11 +552,12 @@ class _PaymentTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final when = payment.paidOn ?? payment.recordedAtUtc.toLocal();
     final method = switch (payment.method) {
-      'cash' => 'Cash',
-      'bankManual' => 'Bank',
-      'bankImport' => 'Import',
+      'cash' => l10n.cash,
+      'bankManual' => l10n.bank,
+      'bankImport' => l10n.importMethod,
       _ => payment.method,
     };
     final muted = payment.isVoid || payment.isVoided;
@@ -561,7 +571,7 @@ class _PaymentTile extends StatelessWidget {
         label: payment.memberName.isNotEmpty ? payment.memberName : 'P',
       ),
       title: Text(
-        payment.memberName.isNotEmpty ? payment.memberName : 'Payment',
+        payment.memberName.isNotEmpty ? payment.memberName : l10n.payment,
         style: TextStyle(
           decoration: muted ? TextDecoration.lineThrough : null,
         ),
@@ -573,8 +583,8 @@ class _PaymentTile extends StatelessWidget {
           if (payment.recordedByName != null &&
               payment.recordedByName!.isNotEmpty)
             payment.recordedByName!,
-          if (payment.isVoided) 'voided',
-          if (payment.isVoid) 'void',
+          if (payment.isVoided) l10n.voided,
+          if (payment.isVoid) l10n.voidLabel,
         ].join(' · '),
       ),
       trailing: Text(
@@ -640,6 +650,7 @@ class _ErrorBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -648,7 +659,7 @@ class _ErrorBody extends StatelessWidget {
           children: [
             Text(message, textAlign: TextAlign.center),
             const SizedBox(height: 16),
-            FilledButton(onPressed: onRetry, child: const Text('Retry')),
+            FilledButton(onPressed: onRetry, child: Text(l10n.retry)),
           ],
         ),
       ),
@@ -698,14 +709,15 @@ class _RecordPaymentSheetState extends ConsumerState<_RecordPaymentSheet> {
   }
 
   Future<void> _save() async {
+    final l10n = AppLocalizations.of(context)!;
     final memberId = _selected?.memberId ?? _memberIdCtrl.text.trim();
     final amount = double.tryParse(_amountCtrl.text.trim().replaceAll(',', '.'));
     if (memberId.isEmpty) {
-      setState(() => _error = 'Pick a member');
+      setState(() => _error = l10n.pickAMember);
       return;
     }
     if (amount == null || amount <= 0) {
-      setState(() => _error = 'Enter a valid amount');
+      setState(() => _error = l10n.enterValidAmount);
       return;
     }
 
@@ -730,13 +742,14 @@ class _RecordPaymentSheetState extends ConsumerState<_RecordPaymentSheet> {
       if (!mounted) return;
       setState(() {
         _saving = false;
-        _error = apiErrorMessage(e, fallback: 'Could not record payment');
+        _error = apiErrorMessage(e, fallback: l10n.couldNotRecordPayment);
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final bottom = MediaQuery.viewInsetsOf(context).bottom;
     return Padding(
       padding: EdgeInsets.fromLTRB(16, 12, 16, 16 + bottom),
@@ -746,7 +759,7 @@ class _RecordPaymentSheetState extends ConsumerState<_RecordPaymentSheet> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              'Record payment',
+              l10n.recordPayment,
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 12),
@@ -754,7 +767,7 @@ class _RecordPaymentSheetState extends ConsumerState<_RecordPaymentSheet> {
               DropdownButtonFormField<_PayeeOption>(
                 // ignore: deprecated_member_use
                 value: _selected,
-                decoration: const InputDecoration(labelText: 'Member'),
+                decoration: InputDecoration(labelText: l10n.member),
                 items: [
                   for (final p in widget.payees)
                     DropdownMenuItem(
@@ -777,9 +790,9 @@ class _RecordPaymentSheetState extends ConsumerState<_RecordPaymentSheet> {
             else
               TextField(
                 controller: _memberIdCtrl,
-                decoration: const InputDecoration(
-                  labelText: 'Member id',
-                  hintText: 'No open charges — paste member id',
+                decoration: InputDecoration(
+                  labelText: l10n.memberId,
+                  hintText: l10n.pasteMemberIdHint,
                 ),
               ),
             const SizedBox(height: 12),
@@ -787,13 +800,21 @@ class _RecordPaymentSheetState extends ConsumerState<_RecordPaymentSheet> {
               controller: _amountCtrl,
               keyboardType:
                   const TextInputType.numberWithOptions(decimal: true),
-              decoration: const InputDecoration(labelText: 'Amount'),
+              decoration: InputDecoration(labelText: l10n.amount),
             ),
             const SizedBox(height: 12),
             SegmentedButton<String>(
-              segments: const [
-                ButtonSegment(value: 'cash', label: Text('Cash'), icon: Icon(Icons.payments_outlined)),
-                ButtonSegment(value: 'bankManual', label: Text('Bank'), icon: Icon(Icons.account_balance_outlined)),
+              segments: [
+                ButtonSegment(
+                  value: 'cash',
+                  label: Text(l10n.cash),
+                  icon: const Icon(Icons.payments_outlined),
+                ),
+                ButtonSegment(
+                  value: 'bankManual',
+                  label: Text(l10n.bank),
+                  icon: const Icon(Icons.account_balance_outlined),
+                ),
               ],
               selected: {_method},
               onSelectionChanged: (s) => setState(() => _method = s.first),
@@ -801,7 +822,7 @@ class _RecordPaymentSheetState extends ConsumerState<_RecordPaymentSheet> {
             const SizedBox(height: 12),
             TextField(
               controller: _notesCtrl,
-              decoration: const InputDecoration(labelText: 'Notes (optional)'),
+              decoration: InputDecoration(labelText: l10n.notesOptional),
               maxLines: 2,
             ),
             if (_error != null) ...[
@@ -817,7 +838,7 @@ class _RecordPaymentSheetState extends ConsumerState<_RecordPaymentSheet> {
                       height: 20,
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
-                  : const Text('Save payment'),
+                  : Text(l10n.savePayment),
             ),
           ],
         ),
