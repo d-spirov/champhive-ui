@@ -1134,4 +1134,90 @@ class AppLocalizationsMk extends AppLocalizations {
 
   @override
   String get age => 'Возраст';
+
+  @override
+  String get pendingConsents => 'Согласности на чекање';
+
+  @override
+  String get noPendingConsents => 'Нема согласности што ве чекаат.';
+
+  @override
+  String get familyMembers => 'Семејство';
+
+  @override
+  String get noFamilyMembers =>
+      'Нема членови на семејството поврзани со оваа сметка.';
+
+  @override
+  String get notificationPreferences => 'Преференци за известувања';
+
+  @override
+  String get noNotificationPreferences =>
+      'Нема достапни преференци за е-пошта.';
+
+  @override
+  String get prefsLoadFailed => 'Не можеа да се вчитаат преференциите';
+
+  @override
+  String get familyLoadFailed => 'Не можеа да се вчита семејството';
+
+  @override
+  String get consentsLoadFailed => 'Не можеа да се вчитаат согласностите';
+
+  @override
+  String get grantConsent => 'Одобри';
+
+  @override
+  String get consentGrantedSnack => 'Согласноста е одобрена';
+
+  @override
+  String get consentGrantFailed => 'Не можеше да се одобри согласноста';
+
+  @override
+  String consentVersion(int version) {
+    return 'Верзија $version';
+  }
+
+  @override
+  String get consentReasonNeverGranted => 'Сè уште не е одобрена';
+
+  @override
+  String get consentReasonWithdrawn => 'Претходно повлечена';
+
+  @override
+  String get consentReasonNewVersion => 'Достапна е нова верзија';
+
+  @override
+  String get consentReasonOther => 'Потребна е акција';
+
+  @override
+  String get reviewAndGrantConsent => 'Прегледај и одобри';
+
+  @override
+  String consentForMember(String name) {
+    return 'Согласност за $name';
+  }
+
+  @override
+  String get enrolled => 'Запишан';
+
+  @override
+  String get notEnrolled => 'Не е запишан';
+
+  @override
+  String get consentOk => 'Согласност ОК';
+
+  @override
+  String get consentMissing => 'Нема согласност';
+
+  @override
+  String get channelEmail => 'Е-пошта';
+
+  @override
+  String channelOther(String channel) {
+    return '$channel';
+  }
+
+  @override
+  String get preferenceDefault => 'Стандардно';
 }

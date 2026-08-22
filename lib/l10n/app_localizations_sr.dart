@@ -1126,6 +1126,92 @@ class AppLocalizationsSr extends AppLocalizations {
 
   @override
   String get age => 'Starost';
+
+  @override
+  String get pendingConsents => 'Saglasnosti na čekanju';
+
+  @override
+  String get noPendingConsents => 'Nema saglasnosti koje vas čekaju.';
+
+  @override
+  String get familyMembers => 'Porodica';
+
+  @override
+  String get noFamilyMembers =>
+      'Nema članova porodice povezanih sa ovim nalogom.';
+
+  @override
+  String get notificationPreferences => 'Preference obaveštenja';
+
+  @override
+  String get noNotificationPreferences =>
+      'Nema dostupnih preferenci za e-poštu.';
+
+  @override
+  String get prefsLoadFailed => 'Nije moguće učitati preference';
+
+  @override
+  String get familyLoadFailed => 'Nije moguće učitati porodicu';
+
+  @override
+  String get consentsLoadFailed => 'Nije moguće učitati saglasnosti';
+
+  @override
+  String get grantConsent => 'Odobri';
+
+  @override
+  String get consentGrantedSnack => 'Saglasnost je odobrena';
+
+  @override
+  String get consentGrantFailed => 'Nije moguće odobriti saglasnost';
+
+  @override
+  String consentVersion(int version) {
+    return 'Verzija $version';
+  }
+
+  @override
+  String get consentReasonNeverGranted => 'Još nije odobrena';
+
+  @override
+  String get consentReasonWithdrawn => 'Prethodno povučena';
+
+  @override
+  String get consentReasonNewVersion => 'Dostupna je nova verzija';
+
+  @override
+  String get consentReasonOther => 'Potrebna je akcija';
+
+  @override
+  String get reviewAndGrantConsent => 'Pregledaj i odobri';
+
+  @override
+  String consentForMember(String name) {
+    return 'Saglasnost za $name';
+  }
+
+  @override
+  String get enrolled => 'Upisan';
+
+  @override
+  String get notEnrolled => 'Nije upisan';
+
+  @override
+  String get consentOk => 'Saglasnost OK';
+
+  @override
+  String get consentMissing => 'Nedostaje saglasnost';
+
+  @override
+  String get channelEmail => 'E-pošta';
+
+  @override
+  String channelOther(String channel) {
+    return '$channel';
+  }
+
+  @override
+  String get preferenceDefault => 'Podrazumevano';
 }
 
 /// The translations for Serbian, using the Latin script (`sr_Latn`).
@@ -2250,4 +2336,90 @@ class AppLocalizationsSrLatn extends AppLocalizationsSr {
 
   @override
   String get age => 'Starost';
+
+  @override
+  String get pendingConsents => 'Saglasnosti na čekanju';
+
+  @override
+  String get noPendingConsents => 'Nema saglasnosti koje vas čekaju.';
+
+  @override
+  String get familyMembers => 'Porodica';
+
+  @override
+  String get noFamilyMembers =>
+      'Nema članova porodice povezanih sa ovim nalogom.';
+
+  @override
+  String get notificationPreferences => 'Preference obaveštenja';
+
+  @override
+  String get noNotificationPreferences =>
+      'Nema dostupnih preferenci za e-poštu.';
+
+  @override
+  String get prefsLoadFailed => 'Nije moguće učitati preference';
+
+  @override
+  String get familyLoadFailed => 'Nije moguće učitati porodicu';
+
+  @override
+  String get consentsLoadFailed => 'Nije moguće učitati saglasnosti';
+
+  @override
+  String get grantConsent => 'Odobri';
+
+  @override
+  String get consentGrantedSnack => 'Saglasnost je odobrena';
+
+  @override
+  String get consentGrantFailed => 'Nije moguće odobriti saglasnost';
+
+  @override
+  String consentVersion(int version) {
+    return 'Verzija $version';
+  }
+
+  @override
+  String get consentReasonNeverGranted => 'Još nije odobrena';
+
+  @override
+  String get consentReasonWithdrawn => 'Prethodno povučena';
+
+  @override
+  String get consentReasonNewVersion => 'Dostupna je nova verzija';
+
+  @override
+  String get consentReasonOther => 'Potrebna je akcija';
+
+  @override
+  String get reviewAndGrantConsent => 'Pregledaj i odobri';
+
+  @override
+  String consentForMember(String name) {
+    return 'Saglasnost za $name';
+  }
+
+  @override
+  String get enrolled => 'Upisan';
+
+  @override
+  String get notEnrolled => 'Nije upisan';
+
+  @override
+  String get consentOk => 'Saglasnost OK';
+
+  @override
+  String get consentMissing => 'Nedostaje saglasnost';
+
+  @override
+  String get channelEmail => 'E-pošta';
+
+  @override
+  String channelOther(String channel) {
+    return '$channel';
+  }
+
+  @override
+  String get preferenceDefault => 'Podrazumevano';
 }

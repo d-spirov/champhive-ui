@@ -516,5 +516,52 @@
   "attendanceCanceledClosed": "Annullato — presenze chiuse",
   "attendanceOpen": "Presenze aperte",
   "attendanceLockedShort": "Presenze bloccate",
-  "age": "Età"
+  "age": "Età",
+  "pendingConsents": "Consensi in sospeso",
+  "noPendingConsents": "Nessun consenso in attesa.",
+  "familyMembers": "Famiglia",
+  "noFamilyMembers": "Nessun membro della famiglia collegato a questo account.",
+  "notificationPreferences": "Preferenze di notifica",
+  "noNotificationPreferences": "Nessuna preferenza e-mail disponibile.",
+  "prefsLoadFailed": "Impossibile caricare le preferenze",
+  "familyLoadFailed": "Impossibile caricare la famiglia",
+  "consentsLoadFailed": "Impossibile caricare i consensi",
+  "grantConsent": "Concedi",
+  "consentGrantedSnack": "Consenso concesso",
+  "consentGrantFailed": "Impossibile concedere il consenso",
+  "consentVersion": "Versione {version}",
+  "@consentVersion": {
+    "placeholders": {
+      "version": {
+        "type": "int"
+      }
+    }
+  },
+  "consentReasonNeverGranted": "Non ancora concesso",
+  "consentReasonWithdrawn": "Precedentemente ritirato",
+  "consentReasonNewVersion": "Nuova versione disponibile",
+  "consentReasonOther": "Azione richiesta",
+  "reviewAndGrantConsent": "Rivedi e concedi",
+  "consentForMember": "Consenso per {name}",
+  "@consentForMember": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "enrolled": "Iscritto",
+  "notEnrolled": "Non iscritto",
+  "consentOk": "Consenso OK",
+  "consentMissing": "Consenso mancante",
+  "channelEmail": "E-mail",
+  "channelOther": "{channel}",
+  "@channelOther": {
+    "placeholders": {
+      "channel": {
+        "type": "String"
+      }
+    }
+  },
+  "preferenceDefault": "Predefinito"
 }

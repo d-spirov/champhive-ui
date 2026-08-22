@@ -516,5 +516,52 @@
   "attendanceCanceledClosed": "Откажано — присуството е затворено",
   "attendanceOpen": "Присуството е отворено",
   "attendanceLockedShort": "Присуството е заклучено",
-  "age": "Возраст"
+  "age": "Возраст",
+  "pendingConsents": "Согласности на чекање",
+  "noPendingConsents": "Нема согласности што ве чекаат.",
+  "familyMembers": "Семејство",
+  "noFamilyMembers": "Нема членови на семејството поврзани со оваа сметка.",
+  "notificationPreferences": "Преференци за известувања",
+  "noNotificationPreferences": "Нема достапни преференци за е-пошта.",
+  "prefsLoadFailed": "Не можеа да се вчитаат преференциите",
+  "familyLoadFailed": "Не можеа да се вчита семејството",
+  "consentsLoadFailed": "Не можеа да се вчитаат согласностите",
+  "grantConsent": "Одобри",
+  "consentGrantedSnack": "Согласноста е одобрена",
+  "consentGrantFailed": "Не можеше да се одобри согласноста",
+  "consentVersion": "Верзија {version}",
+  "@consentVersion": {
+    "placeholders": {
+      "version": {
+        "type": "int"
+      }
+    }
+  },
+  "consentReasonNeverGranted": "Сè уште не е одобрена",
+  "consentReasonWithdrawn": "Претходно повлечена",
+  "consentReasonNewVersion": "Достапна е нова верзија",
+  "consentReasonOther": "Потребна е акција",
+  "reviewAndGrantConsent": "Прегледај и одобри",
+  "consentForMember": "Согласност за {name}",
+  "@consentForMember": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "enrolled": "Запишан",
+  "notEnrolled": "Не е запишан",
+  "consentOk": "Согласност ОК",
+  "consentMissing": "Нема согласност",
+  "channelEmail": "Е-пошта",
+  "channelOther": "{channel}",
+  "@channelOther": {
+    "placeholders": {
+      "channel": {
+        "type": "String"
+      }
+    }
+  },
+  "preferenceDefault": "Стандардно"
 }

@@ -516,5 +516,52 @@
   "attendanceCanceledClosed": "Canceled — attendance closed",
   "attendanceOpen": "Attendance open",
   "attendanceLockedShort": "Attendance locked",
-  "age": "Age"
+  "age": "Age",
+  "pendingConsents": "Pending consents",
+  "noPendingConsents": "No consents waiting for you.",
+  "familyMembers": "Family",
+  "noFamilyMembers": "No family members linked to this account.",
+  "notificationPreferences": "Notification preferences",
+  "noNotificationPreferences": "No email notification preferences available.",
+  "prefsLoadFailed": "Could not load preferences",
+  "familyLoadFailed": "Could not load family",
+  "consentsLoadFailed": "Could not load consents",
+  "grantConsent": "Grant",
+  "consentGrantedSnack": "Consent granted",
+  "consentGrantFailed": "Could not grant consent",
+  "consentVersion": "Version {version}",
+  "@consentVersion": {
+    "placeholders": {
+      "version": {
+        "type": "int"
+      }
+    }
+  },
+  "consentReasonNeverGranted": "Not granted yet",
+  "consentReasonWithdrawn": "Previously withdrawn",
+  "consentReasonNewVersion": "New version available",
+  "consentReasonOther": "Action needed",
+  "reviewAndGrantConsent": "Review & grant",
+  "consentForMember": "Consent for {name}",
+  "@consentForMember": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "enrolled": "Enrolled",
+  "notEnrolled": "Not enrolled",
+  "consentOk": "Consent OK",
+  "consentMissing": "Consent missing",
+  "channelEmail": "Email",
+  "channelOther": "{channel}",
+  "@channelOther": {
+    "placeholders": {
+      "channel": {
+        "type": "String"
+      }
+    }
+  },
+  "preferenceDefault": "Default"
 }

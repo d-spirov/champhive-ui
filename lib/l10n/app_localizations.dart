@@ -2214,6 +2214,162 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Age'**
   String get age;
+
+  /// No description provided for @pendingConsents.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending consents'**
+  String get pendingConsents;
+
+  /// No description provided for @noPendingConsents.
+  ///
+  /// In en, this message translates to:
+  /// **'No consents waiting for you.'**
+  String get noPendingConsents;
+
+  /// No description provided for @familyMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'Family'**
+  String get familyMembers;
+
+  /// No description provided for @noFamilyMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'No family members linked to this account.'**
+  String get noFamilyMembers;
+
+  /// No description provided for @notificationPreferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification preferences'**
+  String get notificationPreferences;
+
+  /// No description provided for @noNotificationPreferences.
+  ///
+  /// In en, this message translates to:
+  /// **'No email notification preferences available.'**
+  String get noNotificationPreferences;
+
+  /// No description provided for @prefsLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load preferences'**
+  String get prefsLoadFailed;
+
+  /// No description provided for @familyLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load family'**
+  String get familyLoadFailed;
+
+  /// No description provided for @consentsLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load consents'**
+  String get consentsLoadFailed;
+
+  /// No description provided for @grantConsent.
+  ///
+  /// In en, this message translates to:
+  /// **'Grant'**
+  String get grantConsent;
+
+  /// No description provided for @consentGrantedSnack.
+  ///
+  /// In en, this message translates to:
+  /// **'Consent granted'**
+  String get consentGrantedSnack;
+
+  /// No description provided for @consentGrantFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not grant consent'**
+  String get consentGrantFailed;
+
+  /// No description provided for @consentVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'Version {version}'**
+  String consentVersion(int version);
+
+  /// No description provided for @consentReasonNeverGranted.
+  ///
+  /// In en, this message translates to:
+  /// **'Not granted yet'**
+  String get consentReasonNeverGranted;
+
+  /// No description provided for @consentReasonWithdrawn.
+  ///
+  /// In en, this message translates to:
+  /// **'Previously withdrawn'**
+  String get consentReasonWithdrawn;
+
+  /// No description provided for @consentReasonNewVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'New version available'**
+  String get consentReasonNewVersion;
+
+  /// No description provided for @consentReasonOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Action needed'**
+  String get consentReasonOther;
+
+  /// No description provided for @reviewAndGrantConsent.
+  ///
+  /// In en, this message translates to:
+  /// **'Review & grant'**
+  String get reviewAndGrantConsent;
+
+  /// No description provided for @consentForMember.
+  ///
+  /// In en, this message translates to:
+  /// **'Consent for {name}'**
+  String consentForMember(String name);
+
+  /// No description provided for @enrolled.
+  ///
+  /// In en, this message translates to:
+  /// **'Enrolled'**
+  String get enrolled;
+
+  /// No description provided for @notEnrolled.
+  ///
+  /// In en, this message translates to:
+  /// **'Not enrolled'**
+  String get notEnrolled;
+
+  /// No description provided for @consentOk.
+  ///
+  /// In en, this message translates to:
+  /// **'Consent OK'**
+  String get consentOk;
+
+  /// No description provided for @consentMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'Consent missing'**
+  String get consentMissing;
+
+  /// No description provided for @channelEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get channelEmail;
+
+  /// No description provided for @channelOther.
+  ///
+  /// In en, this message translates to:
+  /// **'{channel}'**
+  String channelOther(String channel);
+
+  /// No description provided for @preferenceDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Default'**
+  String get preferenceDefault;
 }
 
 class _AppLocalizationsDelegate

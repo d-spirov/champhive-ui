@@ -1,11 +1,63 @@
 import 'package:dio/dio.dart';
 
 import '../models/notification.dart';
+import '../models/notification_preference.dart';
 
 class NotificationsApi {
   NotificationsApi(this._dio);
 
   final Dio _dio;
+
+  Future<List<NotificationPreference>> getPreferences() async {
+    final response =
+        await _dio.get<dynamic>('/api/v1/me/notification-preferences');
+    final raw = response.data;
+    if (raw is! Map) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        type: DioExceptionType.badResponse,
+        response: response,
+        message: 'Empty notification preferences',
+      );
+    }
+    final list = raw['preferences'];
+    if (list is! List) return const [];
+    return list
+        .whereType<Map>()
+        .map(
+          (e) => NotificationPreference.fromJson(Map<String, dynamic>.from(e)),
+        )
+        .toList();
+  }
+
+  /// Partial update — send only the rows that changed; API returns the full set.
+  Future<List<NotificationPreference>> updatePreferences(
+    List<NotificationPreference> updates,
+  ) async {
+    final response = await _dio.patch<dynamic>(
+      '/api/v1/me/notification-preferences',
+      data: {
+        'preferences': updates.map((e) => e.toUpdateJson()).toList(),
+      },
+    );
+    final raw = response.data;
+    if (raw is! Map) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        type: DioExceptionType.badResponse,
+        response: response,
+        message: 'Empty notification preferences',
+      );
+    }
+    final list = raw['preferences'];
+    if (list is! List) return const [];
+    return list
+        .whereType<Map>()
+        .map(
+          (e) => NotificationPreference.fromJson(Map<String, dynamic>.from(e)),
+        )
+        .toList();
+  }
 
   /// Cursor feed: pass [before] = previous [NotificationFeed.nextBefore].
   Future<NotificationFeed> listMine({

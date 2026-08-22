@@ -4,11 +4,15 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../l10n/app_localizations.dart';
+import '../../../shared/models/family.dart';
+import '../../../shared/models/notification_preference.dart';
 import '../../../shared/models/user.dart';
 import '../../../shared/providers/locale_provider.dart';
 import '../../../shared/theme/app_theme.dart';
+import '../../../shared/utils/api_error_message.dart';
 import '../../../shared/widgets/ui_bits.dart';
 import '../../auth/providers/auth_provider.dart';
+import '../providers/account_extras_provider.dart';
 
 List<(String code, String label)> _profileLocaleOptions(AppLocalizations l10n) {
   return [
@@ -17,6 +21,40 @@ List<(String code, String label)> _profileLocaleOptions(AppLocalizations l10n) {
     ('sr-Latn', l10n.languageSerbian),
     ('it', l10n.languageItalian),
   ];
+}
+
+String _humanizeKey(String raw) {
+  if (raw.isEmpty) return raw;
+  return raw
+      .replaceAll('.', ' ')
+      .replaceAll('_', ' ')
+      .replaceAll('-', ' ')
+      .split(RegExp(r'\s+'))
+      .where((w) => w.isNotEmpty)
+      .map((w) => '${w[0].toUpperCase()}${w.substring(1)}')
+      .join(' ');
+}
+
+String _consentReasonLabel(AppLocalizations l10n, String reason) {
+  switch (reason) {
+    case 'never_granted':
+      return l10n.consentReasonNeverGranted;
+    case 'withdrawn':
+      return l10n.consentReasonWithdrawn;
+    case 'new_version':
+      return l10n.consentReasonNewVersion;
+    default:
+      return l10n.consentReasonOther;
+  }
+}
+
+String _channelLabel(AppLocalizations l10n, String channel) {
+  switch (channel.toLowerCase()) {
+    case 'email':
+      return l10n.channelEmail;
+    default:
+      return l10n.channelOther(channel);
+  }
 }
 
 class AccountScreen extends ConsumerStatefulWidget {
@@ -33,6 +71,8 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
   bool _hydrated = false;
   bool _savingProfile = false;
   bool _changingPassword = false;
+  String? _togglingPrefId;
+  String? _grantingConsentId;
 
   final _currentPwCtrl = TextEditingController();
   final _newPwCtrl = TextEditingController();
@@ -58,7 +98,9 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
   }
 
   Future<void> _reload() async {
-    final user = await ref.read(authNotifierProvider.notifier).refreshCurrentUser();
+    final user =
+        await ref.read(authNotifierProvider.notifier).refreshCurrentUser();
+    await ref.read(accountExtrasControllerProvider).refreshAll();
     if (!mounted || user == null) return;
     setState(() => _hydrateFrom(user));
   }
@@ -142,6 +184,101 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
     );
   }
 
+  Future<void> _togglePreference(NotificationPreference pref, bool enabled) async {
+    final l10n = AppLocalizations.of(context)!;
+    final id = '${pref.key}|${pref.channel}';
+    setState(() => _togglingPrefId = id);
+    try {
+      await ref.read(accountExtrasControllerProvider).setPreferenceEnabled(
+            key: pref.key,
+            channel: pref.channel,
+            enabled: enabled,
+          );
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(apiErrorMessage(e, fallback: l10n.saveFailed))),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _togglingPrefId = null);
+    }
+  }
+
+  Future<void> _openGrantConsent(PendingConsent consent) async {
+    final l10n = AppLocalizations.of(context)!;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) {
+        return AlertDialog(
+          title: Text(l10n.consentForMember(consent.memberFirstName)),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    _humanizeKey(consent.kind),
+                    style: Theme.of(ctx).textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    [
+                      l10n.consentVersion(consent.version),
+                      _consentReasonLabel(l10n, consent.reason),
+                    ].join(' · '),
+                    style: Theme.of(ctx).textTheme.bodySmall,
+                  ),
+                  const SizedBox(height: 12),
+                  Text(consent.body),
+                ],
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(ctx).pop(false),
+              child: Text(l10n.cancel),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.of(ctx).pop(true),
+              child: Text(l10n.grantConsent),
+            ),
+          ],
+        );
+      },
+    );
+    if (confirmed != true || !mounted) return;
+
+    final id = '${consent.memberId}|${consent.kind}|${consent.version}';
+    setState(() => _grantingConsentId = id);
+    try {
+      await ref.read(accountExtrasControllerProvider).grantConsent(
+            memberId: consent.memberId,
+            kind: consent.kind,
+          );
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.consentGrantedSnack)),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            apiErrorMessage(e, fallback: l10n.consentGrantFailed),
+          ),
+        ),
+      );
+    } finally {
+      if (mounted) setState(() => _grantingConsentId = null);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -149,6 +286,9 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
     final user = auth.user;
     final isDemo = user?.id == 'demo';
     final localeOptions = _profileLocaleOptions(l10n);
+    final pendingAsync = ref.watch(pendingConsentsProvider);
+    final familyAsync = ref.watch(familyChildrenProvider);
+    final prefsAsync = ref.watch(notificationPreferencesProvider);
 
     if (user != null && !isDemo && !_hydrated) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -250,6 +390,112 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
                             : Text(l10n.saveProfile),
                       ),
                       const SizedBox(height: 28),
+                      _sectionTitle(context, l10n.pendingConsents),
+                      const SizedBox(height: 8),
+                      pendingAsync.when(
+                        loading: () => const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 12),
+                          child: Center(
+                            child: SizedBox(
+                              width: 24,
+                              height: 24,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            ),
+                          ),
+                        ),
+                        error: (e, _) => Text(
+                          apiErrorMessage(e, fallback: l10n.consentsLoadFailed),
+                        ),
+                        data: (items) {
+                          if (items.isEmpty) {
+                            return Text(l10n.noPendingConsents);
+                          }
+                          return Column(
+                            children: [
+                              for (final c in items)
+                                _PendingConsentTile(
+                                  consent: c,
+                                  busy: _grantingConsentId ==
+                                      '${c.memberId}|${c.kind}|${c.version}',
+                                  onReview: () => _openGrantConsent(c),
+                                ),
+                            ],
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 28),
+                      _sectionTitle(context, l10n.familyMembers),
+                      const SizedBox(height: 8),
+                      familyAsync.when(
+                        loading: () => const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 12),
+                          child: Center(
+                            child: SizedBox(
+                              width: 24,
+                              height: 24,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            ),
+                          ),
+                        ),
+                        error: (e, _) => Text(
+                          apiErrorMessage(e, fallback: l10n.familyLoadFailed),
+                        ),
+                        data: (items) {
+                          if (items.isEmpty) {
+                            return Text(l10n.noFamilyMembers);
+                          }
+                          return Column(
+                            children: [
+                              for (final child in items)
+                                _FamilyChildTile(child: child),
+                            ],
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 28),
+                      _sectionTitle(context, l10n.notificationPreferences),
+                      const SizedBox(height: 8),
+                      prefsAsync.when(
+                        loading: () => const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 12),
+                          child: Center(
+                            child: SizedBox(
+                              width: 24,
+                              height: 24,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            ),
+                          ),
+                        ),
+                        error: (e, _) => Text(
+                          apiErrorMessage(e, fallback: l10n.prefsLoadFailed),
+                        ),
+                        data: (items) {
+                          if (items.isEmpty) {
+                            return Text(l10n.noNotificationPreferences);
+                          }
+                          return Column(
+                            children: [
+                              for (final pref in items)
+                                SwitchListTile(
+                                  contentPadding: EdgeInsets.zero,
+                                  title: Text(_humanizeKey(pref.key)),
+                                  subtitle: Text(
+                                    [
+                                      _channelLabel(l10n, pref.channel),
+                                      if (pref.isDefault) l10n.preferenceDefault,
+                                    ].join(' · '),
+                                  ),
+                                  value: pref.enabled,
+                                  onChanged: _togglingPrefId ==
+                                          '${pref.key}|${pref.channel}'
+                                      ? null
+                                      : (v) => _togglePreference(pref, v),
+                                ),
+                            ],
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 28),
                       Text(
                         l10n.clubsAndRoles,
                         style: Theme.of(context).textTheme.titleMedium,
@@ -339,6 +585,83 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
                     ],
                   ),
                 ),
+    );
+  }
+
+  Widget _sectionTitle(BuildContext context, String title) {
+    return Text(
+      title,
+      style: Theme.of(context).textTheme.titleMedium,
+    );
+  }
+}
+
+class _PendingConsentTile extends StatelessWidget {
+  const _PendingConsentTile({
+    required this.consent,
+    required this.busy,
+    required this.onReview,
+  });
+
+  final PendingConsent consent;
+  final bool busy;
+  final VoidCallback onReview;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return Card(
+      margin: const EdgeInsets.only(bottom: 8),
+      child: ListTile(
+        leading: const Icon(Icons.fact_check_outlined),
+        title: Text(_humanizeKey(consent.kind)),
+        subtitle: Text(
+          [
+            consent.memberFirstName,
+            l10n.consentVersion(consent.version),
+            _consentReasonLabel(l10n, consent.reason),
+          ].join(' · '),
+        ),
+        trailing: busy
+            ? const SizedBox(
+                width: 22,
+                height: 22,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              )
+            : TextButton(
+                onPressed: onReview,
+                child: Text(l10n.reviewAndGrantConsent),
+              ),
+      ),
+    );
+  }
+}
+
+class _FamilyChildTile extends StatelessWidget {
+  const _FamilyChildTile({required this.child});
+
+  final FamilyChild child;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final teamOrSection = [
+      if ((child.teamName ?? '').isNotEmpty) child.teamName!,
+      if ((child.sectionName ?? '').isNotEmpty) child.sectionName!,
+    ].join(' · ');
+    final subtitle = [
+      child.clubName.isNotEmpty ? child.clubName : child.clubId,
+      if (teamOrSection.isNotEmpty) teamOrSection,
+      child.isSelf ? l10n.relationshipSelf : l10n.relationshipGuardian,
+      child.hasActiveEnrollment ? l10n.enrolled : l10n.notEnrolled,
+      child.consentGranted ? l10n.consentOk : l10n.consentMissing,
+    ].join(' · ');
+
+    return ListTile(
+      contentPadding: EdgeInsets.zero,
+      leading: AvatarCircle(label: child.displayName, size: 40),
+      title: Text(child.displayName),
+      subtitle: Text(subtitle),
     );
   }
 }

@@ -1120,4 +1120,89 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get age => 'Age';
+
+  @override
+  String get pendingConsents => 'Pending consents';
+
+  @override
+  String get noPendingConsents => 'No consents waiting for you.';
+
+  @override
+  String get familyMembers => 'Family';
+
+  @override
+  String get noFamilyMembers => 'No family members linked to this account.';
+
+  @override
+  String get notificationPreferences => 'Notification preferences';
+
+  @override
+  String get noNotificationPreferences =>
+      'No email notification preferences available.';
+
+  @override
+  String get prefsLoadFailed => 'Could not load preferences';
+
+  @override
+  String get familyLoadFailed => 'Could not load family';
+
+  @override
+  String get consentsLoadFailed => 'Could not load consents';
+
+  @override
+  String get grantConsent => 'Grant';
+
+  @override
+  String get consentGrantedSnack => 'Consent granted';
+
+  @override
+  String get consentGrantFailed => 'Could not grant consent';
+
+  @override
+  String consentVersion(int version) {
+    return 'Version $version';
+  }
+
+  @override
+  String get consentReasonNeverGranted => 'Not granted yet';
+
+  @override
+  String get consentReasonWithdrawn => 'Previously withdrawn';
+
+  @override
+  String get consentReasonNewVersion => 'New version available';
+
+  @override
+  String get consentReasonOther => 'Action needed';
+
+  @override
+  String get reviewAndGrantConsent => 'Review & grant';
+
+  @override
+  String consentForMember(String name) {
+    return 'Consent for $name';
+  }
+
+  @override
+  String get enrolled => 'Enrolled';
+
+  @override
+  String get notEnrolled => 'Not enrolled';
+
+  @override
+  String get consentOk => 'Consent OK';
+
+  @override
+  String get consentMissing => 'Consent missing';
+
+  @override
+  String get channelEmail => 'Email';
+
+  @override
+  String channelOther(String channel) {
+    return '$channel';
+  }
+
+  @override
+  String get preferenceDefault => 'Default';
 }

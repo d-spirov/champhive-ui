@@ -516,5 +516,52 @@
   "attendanceCanceledClosed": "Otkazano — prisustvo je zatvoreno",
   "attendanceOpen": "Prisustvo je otvoreno",
   "attendanceLockedShort": "Prisustvo je zaključano",
-  "age": "Starost"
+  "age": "Starost",
+  "pendingConsents": "Saglasnosti na čekanju",
+  "noPendingConsents": "Nema saglasnosti koje vas čekaju.",
+  "familyMembers": "Porodica",
+  "noFamilyMembers": "Nema članova porodice povezanih sa ovim nalogom.",
+  "notificationPreferences": "Preference obaveštenja",
+  "noNotificationPreferences": "Nema dostupnih preferenci za e-poštu.",
+  "prefsLoadFailed": "Nije moguće učitati preference",
+  "familyLoadFailed": "Nije moguće učitati porodicu",
+  "consentsLoadFailed": "Nije moguće učitati saglasnosti",
+  "grantConsent": "Odobri",
+  "consentGrantedSnack": "Saglasnost je odobrena",
+  "consentGrantFailed": "Nije moguće odobriti saglasnost",
+  "consentVersion": "Verzija {version}",
+  "@consentVersion": {
+    "placeholders": {
+      "version": {
+        "type": "int"
+      }
+    }
+  },
+  "consentReasonNeverGranted": "Još nije odobrena",
+  "consentReasonWithdrawn": "Prethodno povučena",
+  "consentReasonNewVersion": "Dostupna je nova verzija",
+  "consentReasonOther": "Potrebna je akcija",
+  "reviewAndGrantConsent": "Pregledaj i odobri",
+  "consentForMember": "Saglasnost za {name}",
+  "@consentForMember": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "enrolled": "Upisan",
+  "notEnrolled": "Nije upisan",
+  "consentOk": "Saglasnost OK",
+  "consentMissing": "Nedostaje saglasnost",
+  "channelEmail": "E-pošta",
+  "channelOther": "{channel}",
+  "@channelOther": {
+    "placeholders": {
+      "channel": {
+        "type": "String"
+      }
+    }
+  },
+  "preferenceDefault": "Podrazumevano"
 }
