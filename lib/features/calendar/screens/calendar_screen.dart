@@ -42,11 +42,8 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.menu_rounded),
-          onPressed: () => Scaffold.of(context).openDrawer(),
-        ),
         title: Text(DateFormat('MMMM yyyy').format(_selected)),
+        automaticallyImplyLeading: false,
         actions: [
           IconButton(
             onPressed: () => context.push('/attendance/history'),

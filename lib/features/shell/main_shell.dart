@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../l10n/app_localizations.dart';
-import 'app_drawer.dart';
+import 'app_destinations.dart';
 
 class MainShell extends StatelessWidget {
   const MainShell({super.key, required this.navigationShell});
@@ -12,37 +12,9 @@ class MainShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-
-    final destinations = [
-      (
-        icon: Icons.home_outlined,
-        selected: Icons.home_rounded,
-        label: l10n.home,
-      ),
-      (
-        icon: Icons.calendar_month_outlined,
-        selected: Icons.calendar_month,
-        label: l10n.calendar,
-      ),
-      (
-        icon: Icons.groups_outlined,
-        selected: Icons.groups_rounded,
-        label: l10n.teams,
-      ),
-      (
-        icon: Icons.chat_bubble_outline_rounded,
-        selected: Icons.chat_bubble_rounded,
-        label: l10n.messages,
-      ),
-      (
-        icon: Icons.more_horiz_rounded,
-        selected: Icons.more_horiz_rounded,
-        label: l10n.more,
-      ),
-    ];
+    final destinations = primaryDestinations(l10n);
 
     return Scaffold(
-      drawer: const AppDrawer(),
       body: navigationShell,
       bottomNavigationBar: NavigationBar(
         selectedIndex: navigationShell.currentIndex,
@@ -56,7 +28,7 @@ class MainShell extends StatelessWidget {
           for (final d in destinations)
             NavigationDestination(
               icon: Icon(d.icon),
-              selectedIcon: Icon(d.selected),
+              selectedIcon: Icon(d.effectiveSelectedIcon),
               label: d.label,
             ),
         ],
@@ -65,21 +37,15 @@ class MainShell extends StatelessWidget {
   }
 }
 
-/// Shared app bar used by tab roots (opens the drawer).
+/// Shared app bar for tab roots (no hamburger — bottom nav is primary).
 PreferredSizeWidget shellAppBar(
   BuildContext context, {
   required String title,
   List<Widget>? actions,
-  bool showMenu = true,
 }) {
   return AppBar(
     title: Text(title),
-    leading: showMenu
-        ? IconButton(
-            icon: const Icon(Icons.menu_rounded),
-            onPressed: () => Scaffold.of(context).openDrawer(),
-          )
-        : null,
+    automaticallyImplyLeading: false,
     actions: actions,
   );
 }

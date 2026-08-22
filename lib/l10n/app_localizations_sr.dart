@@ -141,7 +141,16 @@ class AppLocalizationsSr extends AppLocalizations {
   String get language => 'Jezik';
 
   @override
-  String get aboutApp => 'O TeamHive';
+  String get aboutApp => 'O ChampHive';
+
+  @override
+  String get moreManagement => 'Upravljanje';
+
+  @override
+  String get moreAccount => 'Nalog';
+
+  @override
+  String get moreSupport => 'Podrška';
 
   @override
   String get retry => 'Pokušaj ponovo';
@@ -1351,7 +1360,16 @@ class AppLocalizationsSrLatn extends AppLocalizationsSr {
   String get language => 'Jezik';
 
   @override
-  String get aboutApp => 'O TeamHive';
+  String get aboutApp => 'O ChampHive';
+
+  @override
+  String get moreManagement => 'Upravljanje';
+
+  @override
+  String get moreAccount => 'Nalog';
+
+  @override
+  String get moreSupport => 'Podrška';
 
   @override
   String get retry => 'Pokušaj ponovo';

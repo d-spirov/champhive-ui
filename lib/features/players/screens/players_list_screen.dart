@@ -10,7 +10,6 @@ import '../../../shared/utils/api_error_message.dart';
 import '../../../shared/widgets/ui_bits.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../../clubs/providers/clubs_provider.dart';
-import '../../shell/app_drawer.dart';
 import '../providers/players_provider.dart';
 import '../widgets/player_avatar.dart';
 
@@ -40,8 +39,17 @@ class _PlayersListScreenState extends ConsumerState<PlayersListScreen> {
     final playersAsync = ref.watch(clubPlayersProvider);
 
     return Scaffold(
-      drawer: const AppDrawer(),
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_rounded),
+          onPressed: () {
+            if (context.canPop()) {
+              context.pop();
+            } else {
+              context.go('/more');
+            }
+          },
+        ),
         title: Text(l10n.members),
       ),
       body: Column(

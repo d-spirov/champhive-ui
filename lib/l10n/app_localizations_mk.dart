@@ -142,7 +142,16 @@ class AppLocalizationsMk extends AppLocalizations {
   String get language => 'Јазик';
 
   @override
-  String get aboutApp => 'За TeamHive';
+  String get aboutApp => 'За ChampHive';
+
+  @override
+  String get moreManagement => 'Управување';
+
+  @override
+  String get moreAccount => 'Сметка';
+
+  @override
+  String get moreSupport => 'Поддршка';
 
   @override
   String get retry => 'Обиди се повторно';

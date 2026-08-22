@@ -370,8 +370,26 @@ abstract class AppLocalizations {
   /// No description provided for @aboutApp.
   ///
   /// In en, this message translates to:
-  /// **'About TeamHive'**
+  /// **'About ChampHive'**
   String get aboutApp;
+
+  /// No description provided for @moreManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'Management'**
+  String get moreManagement;
+
+  /// No description provided for @moreAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get moreAccount;
+
+  /// No description provided for @moreSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Support'**
+  String get moreSupport;
 
   /// No description provided for @retry.
   ///

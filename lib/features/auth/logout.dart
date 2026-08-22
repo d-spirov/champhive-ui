@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'providers/auth_provider.dart';
 import '../clubs/providers/clubs_provider.dart';
 
-/// Shared logout used by drawer / settings.
+/// Shared logout used by More / account flows.
 Future<void> performLogout(WidgetRef ref, BuildContext context) async {
   final router = GoRouter.of(context);
   // Close drawer/sheet first if this context is under one.

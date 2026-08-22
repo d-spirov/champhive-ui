@@ -141,7 +141,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get language => 'Language';
 
   @override
-  String get aboutApp => 'About TeamHive';
+  String get aboutApp => 'About ChampHive';
+
+  @override
+  String get moreManagement => 'Management';
+
+  @override
+  String get moreAccount => 'Account';
+
+  @override
+  String get moreSupport => 'Support';
 
   @override
   String get retry => 'Retry';

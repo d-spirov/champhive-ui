@@ -35,7 +35,7 @@ class TeamDetailsScreen extends ConsumerWidget {
             tabs: [
               Tab(text: l10n.overview),
               Tab(text: l10n.members),
-              Tab(text: l10n.schedule),
+              Tab(text: l10n.calendar),
             ],
           ),
         ),

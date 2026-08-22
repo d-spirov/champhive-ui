@@ -7,6 +7,8 @@ import '../../../shared/providers/locale_provider.dart';
 import '../../../shared/providers/theme_mode_provider.dart';
 import '../../../shared/theme/app_theme.dart';
 import '../../auth/logout.dart';
+import '../../shell/app_destinations.dart';
+import '../../shell/main_shell.dart';
 
 class MoreScreen extends ConsumerWidget {
   const MoreScreen({super.key});
@@ -18,26 +20,21 @@ class MoreScreen extends ConsumerWidget {
     final locale = ref.watch(localeProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.menu_rounded),
-          onPressed: () => Scaffold.of(context).openDrawer(),
-        ),
-        title: Text(l10n.more),
-      ),
+      appBar: shellAppBar(context, title: l10n.more),
       body: ListView(
         children: [
-          _tile(
+          _sectionHeader(context, l10n.moreManagement),
+          for (final d in moreManagementDestinations(l10n))
+            _routeTile(context, d),
+          const SizedBox(height: 8),
+          _sectionHeader(context, l10n.moreAccount),
+          _routeTile(
             context,
-            Icons.payments_outlined,
-            l10n.payments,
-            () => context.push('/payments'),
-          ),
-          _tile(
-            context,
-            Icons.person_outline_rounded,
-            l10n.myAccount,
-            () => context.push('/account'),
+            AppDestination(
+              label: l10n.myAccount,
+              icon: Icons.person_outline_rounded,
+              route: '/account',
+            ),
           ),
           ListTile(
             leading: const Icon(Icons.brightness_6_outlined),
@@ -53,34 +50,38 @@ class MoreScreen extends ConsumerWidget {
             trailing: const Icon(Icons.chevron_right_rounded),
             onTap: () => _pickLanguage(context, ref, l10n, locale),
           ),
-          _tile(
+          _routeTile(
             context,
-            Icons.notifications_outlined,
-            l10n.notifications,
-            () => context.push('/notifications'),
+            AppDestination(
+              label: l10n.notifications,
+              icon: Icons.notifications_outlined,
+              route: '/notifications',
+            ),
           ),
-          _tile(
-            context,
-            Icons.how_to_reg_outlined,
-            l10n.attendance,
-            () => context.push('/attendance/history'),
+          const SizedBox(height: 8),
+          _sectionHeader(context, l10n.moreSupport),
+          ListTile(
+            leading: const Icon(Icons.help_outline_rounded),
+            title: Text(l10n.helpSupport),
+            trailing: const Icon(Icons.chevron_right_rounded),
+            onTap: () {},
           ),
-          _tile(
-            context,
-            Icons.bar_chart_rounded,
-            l10n.statistics,
-            () => context.push('/statistics'),
+          ListTile(
+            leading: const Icon(Icons.info_outline_rounded),
+            title: Text(l10n.aboutApp),
+            trailing: const Icon(Icons.chevron_right_rounded),
+            onTap: () {
+              showAboutDialog(
+                context: context,
+                applicationName: 'ChampHive',
+                applicationVersion: '1.0.0',
+                applicationLegalese: '© Codeantech',
+              );
+            },
           ),
-          _tile(context, Icons.help_outline_rounded, l10n.helpSupport, () {}),
-          _tile(context, Icons.info_outline_rounded, l10n.aboutApp, () {
-            showAboutDialog(
-              context: context,
-              applicationName: l10n.appTitle,
-              applicationVersion: '1.0.0',
-              applicationLegalese: '© Codeantech',
-            );
-          }),
-          const Divider(height: 24),
+          const SizedBox(height: 24),
+          const Divider(height: 1),
+          const SizedBox(height: 8),
           ListTile(
             leading: const Icon(Icons.logout_rounded, color: AppColors.danger),
             title: Text(
@@ -104,8 +105,35 @@ class MoreScreen extends ConsumerWidget {
                   ),
             ),
           ),
+          const SizedBox(height: 16),
         ],
       ),
+    );
+  }
+
+  Widget _sectionHeader(BuildContext context, String title) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
+      child: Text(
+        title.toUpperCase(),
+        style: Theme.of(context).textTheme.labelMedium?.copyWith(
+              color: Theme.of(context)
+                  .colorScheme
+                  .onSurface
+                  .withValues(alpha: 0.55),
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.6,
+            ),
+      ),
+    );
+  }
+
+  Widget _routeTile(BuildContext context, AppDestination destination) {
+    return ListTile(
+      leading: Icon(destination.icon),
+      title: Text(destination.label),
+      trailing: const Icon(Icons.chevron_right_rounded),
+      onTap: () => context.push(destination.route),
     );
   }
 
@@ -222,19 +250,5 @@ class MoreScreen extends ConsumerWidget {
     await ref.read(localeProvider.notifier).setLocale(
           selected == 'system' ? null : AppLocales.tryParse(selected),
         );
-  }
-
-  Widget _tile(
-    BuildContext context,
-    IconData icon,
-    String title,
-    VoidCallback onTap,
-  ) {
-    return ListTile(
-      leading: Icon(icon),
-      title: Text(title),
-      trailing: const Icon(Icons.chevron_right_rounded),
-      onTap: onTap,
-    );
   }
 }
