@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../session_expired_handler.dart';
 import '../../../shared/models/user.dart';
 import '../../../shared/services/auth_api.dart';
+import '../../../shared/services/biometric_credentials_service.dart';
 import '../../../shared/services/clubs_api.dart';
 import '../../../shared/utils/api_error_message.dart';
 
@@ -27,6 +28,10 @@ final clubsApiProvider = Provider<ClubsApi>((ref) {
   }
   return ClubsApi(authApi.dio);
 });
+
+final biometricCredentialsProvider = Provider<BiometricCredentialsService>(
+  (ref) => BiometricCredentialsService(),
+);
 
 class AuthState {
   const AuthState({
@@ -68,6 +73,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
   final Ref _ref;
 
   Future<AuthApi> get _api async => _ref.read(authApiProvider.future);
+
+  BiometricCredentialsService get _biometrics =>
+      _ref.read(biometricCredentialsProvider);
 
   Future<void> _bootstrap() async {
     try {
@@ -150,6 +158,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
       final api = await _api;
       final user = await api.login(email: email, password: password);
       await _markSession(email: email, demo: false);
+      await _biometrics.saveCredentials(email: email, password: password);
       state = state.copyWith(
         user: user,
         isLoading: false,
@@ -185,6 +194,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
         locale: locale,
       );
       await _markSession(email: email, demo: false);
+      await _biometrics.saveCredentials(email: email, password: password);
       state = state.copyWith(
         user: user,
         isLoading: false,
@@ -261,6 +271,13 @@ class AuthNotifier extends StateNotifier<AuthState> {
         currentPassword: currentPassword,
         newPassword: newPassword,
       );
+      final email = state.user?.email ?? await _biometrics.getStoredEmailQuiet();
+      if (email != null && email.isNotEmpty) {
+        await _biometrics.saveCredentials(
+          email: email,
+          password: newPassword,
+        );
+      }
       state = state.copyWith(user: user, isLoading: false, clearError: true);
       return true;
     } catch (e) {
@@ -312,6 +329,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     await prefs.remove(_emailKey);
     await prefs.remove(_demoKey);
     await prefs.remove(selectedClubPrefsKey);
+    // Keep Face ID credentials for the next login.
   }
 }
 

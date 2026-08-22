@@ -10,6 +10,8 @@
 		<string>mk</string>
 		<string>sr</string>
 		<string>it</string>
+		<string>bs</string>
+		<string>tr</string>
 	</array>
 	<key>CFBundleDisplayName</key>
 	<string>TeamHive</string>
@@ -52,5 +54,7 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Use Face ID to quickly sign in with your saved credentials.</string>
 </dict>
 </plist>

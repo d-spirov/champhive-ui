@@ -78,6 +78,12 @@ class AppLocalizationsIt extends AppLocalizations {
   String get loginFailed => 'Accesso non riuscito. Controlla le credenziali.';
 
   @override
+  String get faceIdSignInPrompt => 'Usa Face ID per accedere';
+
+  @override
+  String get signInWithFaceId => 'Accedi con Face ID';
+
+  @override
   String get registrationFailed => 'Registrazione non riuscita. Riprova.';
 
   @override
@@ -314,6 +320,12 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get languageItalian => 'Italiano';
+
+  @override
+  String get languageBosnian => 'Bosniaco';
+
+  @override
+  String get languageTurkish => 'Turco';
 
   @override
   String get languageSystem => 'Lingua di sistema';

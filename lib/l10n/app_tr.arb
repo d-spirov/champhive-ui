@@ -1,0 +1,578 @@
+{
+  "@@locale": "tr",
+  "appTitle": "TeamHive",
+  "team": "Takım",
+  "hive": "Kovan",
+  "email": "E-posta",
+  "password": "Şifre",
+  "confirmPassword": "Şifreyi onayla",
+  "firstName": "Ad",
+  "lastName": "Soyad",
+  "phone": "Telefon",
+  "logIn": "Giriş yap",
+  "signUp": "Kayıt ol",
+  "logOut": "Çıkış yap",
+  "dontHaveAccount": "Hesabın yok mu? ",
+  "alreadyHaveAccount": "Zaten hesabın var mı? ",
+  "pleaseEnterEmail": "Lütfen e-postanı gir",
+  "pleaseEnterValidEmail": "Lütfen geçerli bir e-posta gir",
+  "pleaseEnterPassword": "Lütfen şifreni gir",
+  "pleaseEnterFirstName": "Lütfen adını gir",
+  "pleaseEnterLastName": "Lütfen soyadını gir",
+  "pleaseConfirmPassword": "Lütfen şifreni onayla",
+  "passwordsDoNotMatch": "Şifreler eşleşmiyor",
+  "passwordMinLength": "Şifre en az 8 karakter olmalı",
+  "loginFailed": "Giriş başarısız. Bilgilerini kontrol et.",
+  "faceIdSignInPrompt": "Giriş için Face ID kullan",
+  "signInWithFaceId": "Face ID ile giriş yap",
+  "registrationFailed": "Kayıt başarısız. Lütfen tekrar dene.",
+  "myClubs": "Kulüplerim",
+  "noClubsYet": "Henüz hiçbir kulübe üye değilsin.",
+  "home": "Ana sayfa",
+  "teams": "Takımlar",
+  "players": "Oyuncular",
+  "members": "Üyeler",
+  "events": "Etkinlikler",
+  "schedule": "Program",
+  "calendar": "Takvim",
+  "attendance": "Yoklama",
+  "messages": "Mesajlar",
+  "notifications": "Bildirimler",
+  "payments": "Ödemeler",
+  "statistics": "İstatistikler",
+  "more": "Daha fazla",
+  "settings": "Ayarlar",
+  "helpSupport": "Yardım ve destek",
+  "myAccount": "Hesabım",
+  "appearance": "Görünüm",
+  "language": "Dil",
+  "aboutApp": "ChampHive hakkında",
+  "moreManagement": "Yönetim",
+  "moreAccount": "Hesap",
+  "moreSupport": "Destek",
+  "retry": "Yeniden dene",
+  "save": "Kaydet",
+  "cancel": "İptal",
+  "create": "Oluştur",
+  "search": "Ara",
+  "comingSoon": "Yakında",
+  "comingSoonNamed": "{label} yakında",
+  "@comingSoonNamed": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "sessionExpired": "Oturumun sona erdi. Lütfen tekrar giriş yap.",
+  "signInToContinue": "Devam etmek için giriş yap",
+  "selectClub": "Bir kulüp seç",
+  "selectClubFirst": "Önce bir kulüp seç",
+  "noData": "Henüz veri yok",
+  "pullToRefresh": "Yenilemek için çek",
+  "dismiss": "Kapat",
+  "continueAction": "Devam",
+  "refresh": "Yenile",
+  "history": "Geçmiş",
+  "report": "Rapor",
+  "overview": "Özet",
+  "info": "Bilgi",
+  "notes": "Notlar",
+  "note": "Not",
+  "optionalNote": "İsteğe bağlı not",
+  "location": "Konum",
+  "title": "Başlık",
+  "type": "Tür",
+  "scope": "Kapsam",
+  "when": "Ne zaman",
+  "repeat": "Tekrar",
+  "duration": "Süre",
+  "amount": "Tutar",
+  "bank": "Banka",
+  "importMethod": "İçe aktar",
+  "member": "Üye",
+  "payment": "Ödeme",
+  "chat": "Sohbet",
+  "session": "Seans",
+  "club": "Kulüp",
+  "status": "Durum",
+  "timezone": "Saat dilimi",
+  "contact": "İletişim",
+  "gender": "Cinsiyet",
+  "dateOfBirth": "Doğum tarihi",
+  "registrationNumber": "Kayıt no",
+  "shirtNumber": "Forma numarası",
+  "shirtNumberValue": "Forma #{number}",
+  "@shirtNumberValue": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "themeLight": "Açık",
+  "themeDark": "Koyu",
+  "themeSystem": "Sistem",
+  "languageEnglish": "İngilizce",
+  "languageMacedonian": "Makedonca",
+  "languageSerbian": "Sırpça",
+  "languageItalian": "İtalyanca",
+  "languageBosnian": "Boşnakça",
+  "languageTurkish": "Türkçe",
+  "languageSystem": "Sistem dili",
+  "newMessage": "Yeni mesaj",
+  "newSchedule": "Yeni program",
+  "markAllRead": "Tümünü okundu işaretle",
+  "recordPayment": "Ödeme kaydet",
+  "profile": "Profil",
+  "saveProfile": "Profili kaydet",
+  "changePassword": "Şifreyi değiştir",
+  "outstanding": "Ödenmemiş",
+  "cash": "Nakit",
+  "myFees": "Aidatlarım",
+  "membership": "Üyelik",
+  "revenue": "Gelir",
+  "exploreDemo": "Demo arayüzü keşfet",
+  "tagline": "Takımın. Tek yer.",
+  "continueWithGoogle": "Google ile devam et",
+  "continueWithApple": "Apple ile devam et",
+  "signInWithEmail": "E-posta ile giriş yap",
+  "orDivider": "VEYA",
+  "newToChampHive": "ChampHive’da yeni misin? ",
+  "createAccount": "Hesap oluştur!",
+  "accountsViaInviteNote": "Hesaplar genellikle davetle oluşturulur. Kayıt bu API’de yalnızca operatörlere açık olabilir.",
+  "coachFallback": "Antrenör",
+  "goodMorning": "Günaydın",
+  "goodAfternoon": "İyi günler",
+  "goodEvening": "İyi akşamlar",
+  "yourTeams": "Takımların",
+  "yourClubs": "Kulüplerin",
+  "upcoming": "Yaklaşan",
+  "recentActivity": "Son hareketler",
+  "nextMatch": "Sonraki maç",
+  "tbd": "Belirlenecek",
+  "nothingOnScheduleToday": "Bugün programda bir şey yok. Göz atmak için Takvim’i aç.",
+  "nothingTodayNextUp": "Bugün yok — sıradaki",
+  "couldNotLoadClubs": "Kulüpler yüklenemedi",
+  "couldNotLoadSchedule": "Program yüklenemedi",
+  "couldNotLoadEvents": "Etkinlikler yüklenemedi",
+  "couldNotLoadTeams": "Takımlar yüklenemedi",
+  "couldNotLoadMembers": "Üyeler yüklenemedi",
+  "couldNotLoadMember": "Üye yüklenemedi",
+  "couldNotLoadRoster": "Kadro yüklenemedi",
+  "couldNotLoadSession": "Seans yüklenemedi",
+  "couldNotLoadReport": "Rapor yüklenemedi",
+  "couldNotLoadHistory": "Geçmiş yüklenemedi",
+  "couldNotLoadConversations": "Sohbetler yüklenemedi",
+  "couldNotLoadChat": "Sohbet yüklenemedi",
+  "couldNotLoadPeople": "Kişiler yüklenemedi",
+  "couldNotLoadNotifications": "Bildirimler yüklenemedi",
+  "couldNotLoadMore": "Daha fazlası yüklenemedi",
+  "couldNotLoadObligations": "Yükümlülükler yüklenemedi",
+  "couldNotLoadPayments": "Ödemeler yüklenemedi",
+  "couldNotLoadFees": "Aidatların yüklenemedi",
+  "couldNotLoadClub": "Kulüp yüklenemedi",
+  "couldNotLoadMembershipStats": "Üyelik istatistikleri yüklenemedi",
+  "couldNotLoadRevenueStats": "Gelir istatistikleri yüklenemedi",
+  "couldNotCreateSchedule": "Program oluşturulamadı",
+  "couldNotSaveStatus": "Durum kaydedilemedi",
+  "couldNotSaveAttendance": "Yoklama kaydedilemedi",
+  "couldNotSendMessage": "Mesaj gönderilemedi",
+  "couldNotOpenConversation": "Sohbet açılamadı",
+  "couldNotMarkAsRead": "Okundu olarak işaretlenemedi",
+  "couldNotRecordPayment": "Ödeme kaydedilemedi",
+  "signInToCreateSchedule": "Program öğeleri oluşturmak için giriş yap",
+  "signInToOpenChat": "Canlı sohbeti açmak için giriş yap",
+  "signInToSeeNotifications": "Bildirimlerini görmek için giriş yap.",
+  "signInToManagePayments": "Kulüp ödemelerini yönetmek için giriş yap.",
+  "signInToSeeFees": "Aidatlarını görmek için giriş yap.",
+  "signInToSeeStats": "Kulüp üyelik ve gelir analizini görmek için giriş yap.",
+  "signInToLoadTeams": "Kulüp takımlarını API’den yüklemek için giriş yap.",
+  "selectClubToViewTeams": "Takımları görmek için bir kulüp seç.",
+  "selectClubToViewMembers": "Üyeleri görmek için bir kulüp seç.",
+  "selectClubToViewCharges": "Borçları görmek için bir kulüp seç.",
+  "selectClubToViewPayments": "Ödemeleri görmek için bir kulüp seç.",
+  "selectClubToViewMembershipStats": "Üyelik istatistiklerini görmek için bir kulüp seç.",
+  "selectClubToViewRevenueStats": "Gelir istatistiklerini görmek için bir kulüp seç.",
+  "noClubSelected": "Kulüp seçilmedi.",
+  "noEventsOnThisDay": "Bu günde etkinlik yok.",
+  "demoSchedule": "Demo program",
+  "noTeamsYet": "Bu kulüpte henüz takım yok.",
+  "tapToOpenRoster": "Kadroyu açmak için dokun",
+  "noMembersFound": "Bu kulüp için üye bulunamadı.",
+  "searchMembers": "Üye ara",
+  "searchMessages": "Mesaj ara",
+  "searchPeople": "Kişi ara",
+  "noConversations": "Sohbet yok.",
+  "noConversationsYet": "Henüz sohbet yok.",
+  "noMessagesYet": "Henüz mesaj yok.",
+  "messageDeleted": "Mesaj silindi",
+  "yesterday": "Dün",
+  "noMatches": "Eşleşme yok.",
+  "noAdultsToMessage": "Mesaj atılacak yetişkin henüz yok.\nKişiler kulüp kadrosu ve takım sohbetlerinden burada görünür.",
+  "sayHello": "Merhaba de",
+  "messageHint": "Mesaj",
+  "readOnly": "Salt okunur",
+  "systemMessage": "Sistem",
+  "cannotSendInChannel": "Bu kanalda gönderemezsin",
+  "couldNotLoadOlder": "Daha eskiler yüklenemedi",
+  "noNotificationsYet": "Henüz bildirim yok.",
+  "loadMore": "Daha fazla yükle",
+  "nothingOutstanding": "Ödenmemiş borç yok.",
+  "noPaymentsYet": "Henüz kayıtlı ödeme yok.",
+  "noOpenFamilyFees": "Açık aile aidatı yok.",
+  "noFeeHistoryYet": "Henüz aidat geçmişi yok.",
+  "openCharges": "Açık borçlar",
+  "youOwe": "Borcun",
+  "paymentReference": "Ödeme referansı",
+  "mixedCurrencies": "Karışık para birimleri",
+  "noFamilyMembersLinked": "Bağlı aile üyesi yok",
+  "copiedLabel": "{label} kopyalandı",
+  "@copiedLabel": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "memberId": "Üye kimliği",
+  "pasteMemberIdHint": "Açık borç yok — üye kimliğini yapıştır",
+  "notesOptional": "Notlar (isteğe bağlı)",
+  "savePayment": "Ödemeyi kaydet",
+  "pickAMember": "Bir üye seç",
+  "enterValidAmount": "Geçerli bir tutar gir",
+  "openListedSummary": "{open} açık · {total} listelendi",
+  "@openListedSummary": {
+    "placeholders": {
+      "open": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "membersCountLabel": "{count} üye",
+  "@membersCountLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "titleRequired": "Başlık gerekli",
+  "pickATeam": "Bir takım seç",
+  "createdNamed": "“{title}” oluşturuldu",
+  "@createdNamed": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "purposeOptional": "Amaç (isteğe bağlı)",
+  "locationOptional": "Konum (isteğe bağlı)",
+  "titleHintTraining": "örn. U14 antrenman",
+  "wholeClub": "Tüm kulüp",
+  "noTeamsCreateOrClub": "Bu kulüpte takım yok. Önce bir takım oluştur veya Tüm kulüp’ü kullan.",
+  "duration45": "45 dk",
+  "duration60": "60 dk",
+  "duration75": "75 dk",
+  "duration90": "90 dk",
+  "duration2h": "2 saat",
+  "duration3h": "3 saat",
+  "oneOff": "Tek seferlik",
+  "weekly": "Haftalık",
+  "daily": "Günlük",
+  "numberOfOccurrences": "Tekrar sayısı",
+  "requestRsvp": "RSVP iste",
+  "requestRsvpSubtitle": "Aileler katılımı önceden onaylayabilir",
+  "eventTypeTraining": "Antrenman",
+  "eventTypeMatch": "Maç",
+  "eventTypeClubEvent": "Kulüp etkinliği",
+  "eventTypeTournament": "Turnuva",
+  "eventTypeEvent": "Etkinlik",
+  "statusPresent": "Geldi",
+  "statusAbsent": "Gelmedi",
+  "statusLate": "Geç kaldı",
+  "statusExcused": "Mazeretli",
+  "statusUnmarked": "İşaretlenmedi",
+  "takeAttendance": "Yoklama al",
+  "roster": "Kadro",
+  "rosterCount": "Kadro ({count})",
+  "@rosterCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "summary": "Özet",
+  "reloadRoster": "Kadroyu yeniden yükle",
+  "saveRemaining": "Kalanı kaydet",
+  "skipNote": "Notu atla",
+  "tapMemberToMark": "İşaretlemek için bir üyeye dokun — durum hemen sunucuya kaydedilir",
+  "noMembersOnRoster": "{scope} kadrosunda üye yok.",
+  "@noMembersOnRoster": {
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "thisSession": "bu seans",
+  "attendanceLocked": "Bu seans için yoklama kilitli.",
+  "sessionCanceled": "Bu seans iptal edildi.",
+  "unmarkedCannotBeSaved": "İşaretlenmemiş kayıt kaydedilemez — önce bir durum seç.",
+  "allMarksAlreadySaved": "Tüm işaretler zaten kaydedildi.",
+  "rsvpStatus": "RSVP: {status}",
+  "@rsvpStatus": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "markNamed": "{name} işaretle",
+  "@markNamed": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "optionalNoteSynced": "İsteğe bağlı not (işaretle birlikte senkronize)",
+  "attendanceReport": "Yoklama raporu",
+  "openWindow": "Açık pencere",
+  "past": "Geçmiş",
+  "noSessionsInWindow": "Şu anda yoklama penceresinde seans yok.",
+  "noPastSessions": "Henüz geçmiş seans yok.",
+  "attendanceSynced": "Yoklama senkronize edildi",
+  "attendancePartiallySynced": "Yoklama kısmen senkronize edildi",
+  "marksSentToPlatform": "İşaretler kulüp platformuna gönderildi.",
+  "marksAppliedRejected": "{applied} uygulandı · {rejected} reddedildi",
+  "@marksAppliedRejected": {
+    "placeholders": {
+      "applied": {
+        "type": "int"
+      },
+      "rejected": {
+        "type": "int"
+      }
+    }
+  },
+  "superseded": "geçersiz kılındı",
+  "backToSession": "Seansa dön",
+  "viewReport": "Raporu gör",
+  "attendanceHistory": "Yoklama geçmişi",
+  "trainingLocation": "Antrenman yeri",
+  "active": "Aktif",
+  "season": "Sezon",
+  "noMembersOnTeamRoster": "Bu takım kadrosunda üye yok.",
+  "noUpcomingSessionsForTeam": "Bu takım için yaklaşan seans yok.",
+  "playerProfile": "Oyuncu profili",
+  "noProfileDetailsYet": "Henüz profil detayı yok.",
+  "notAssignedToTeam": "Bir takıma atanmadı.",
+  "noNotesYet": "Henüz not yok.",
+  "demoNotes": "Demo notlar",
+  "canceled": "İptal edildi",
+  "loadingAttendanceStatus": "Yoklama durumu yükleniyor…",
+  "loadRosterAndMark": "Kadroyu yükle ve üyeleri işaretle",
+  "viewLockedReport": "Bu kilitli seansın raporunu gör",
+  "rosterWithStatuses": "Geldi / geç kaldı / gelmedi / mazeretli kadrosu",
+  "pastAndOpenSessions": "Yoklama için geçmiş ve açık seanslar",
+  "refreshAttendanceStatus": "Yoklama durumunu yenile",
+  "marksAcceptedUntil": "İşaretler {date} · {time} tarihine kadar kabul edilir",
+  "@marksAcceptedUntil": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "clubStatsTitle": "{name} istatistikleri",
+  "@clubStatsTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "noMembershipData": "Üyelik verisi yok.",
+  "noRevenueData": "Gelir verisi yok.",
+  "noTrendDataYet": "Henüz eğilim verisi yok.",
+  "noRevenueTrendYet": "Henüz gelir eğilimi yok.",
+  "asOfDate": "{date} itibarıyla",
+  "@asOfDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "asOfDateCurrency": "{date} itibarıyla · {currency}",
+  "@asOfDateCurrency": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "activeNow": "Şu an aktif",
+  "onTheBooks": "Kayıtlarda",
+  "joined12Mo": "Katılan (12 ay)",
+  "left12Mo": "Ayrılan (12 ay)",
+  "unenrolledNoTeam": "Kayıtsız (takımsız)",
+  "collected": "Tahsil edilen",
+  "expected": "Beklenen",
+  "collectionRate": "Tahsilat oranı",
+  "membersBilled": "Faturalanan üyeler",
+  "inDebt": "Borçlu",
+  "waived": "Affedilen",
+  "monthlyEnrollment": "Aylık kayıt",
+  "agingOutstanding": "Vadesi (ödenmemiş)",
+  "monthlyTrend": "Aylık eğilim",
+  "byTeam": "Takıma göre",
+  "bySection": "Bölüme göre",
+  "notDue": "Vadesi gelmedi",
+  "days1To30": "1–30 gün",
+  "days31To60": "31–60 gün",
+  "days61To90": "61–90 gün",
+  "days90Plus": "90+ gün",
+  "activeCount": "{count} aktif",
+  "@activeCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "joinedLeftDelta": "+{joined} / −{left}",
+  "@joinedLeftDelta": {
+    "placeholders": {
+      "joined": {
+        "type": "int"
+      },
+      "left": {
+        "type": "int"
+      }
+    }
+  },
+  "owedAmount": "{amount} borçlu",
+  "@owedAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "membersOwed": "{count} üye · {amount} borçlu",
+  "@membersOwed": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "yourRoles": "Rollerin",
+  "useThisClub": "Bu kulübü kullan",
+  "clubSelected": "{name} seçildi",
+  "@clubSelected": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "namesRequired": "Ad ve soyad gerekli",
+  "profileSaved": "Profil kaydedildi",
+  "saveFailed": "Kaydetme başarısız",
+  "enterCurrentAndNewPassword": "Mevcut ve yeni şifreyi gir",
+  "newPasswordsDoNotMatch": "Yeni şifreler eşleşmiyor",
+  "newPasswordMinLength": "Yeni şifre en az 8 karakter olmalı",
+  "passwordChangedSessionsSignedOut": "Şifre değiştirildi. Diğer oturumlar kapatıldı.",
+  "couldNotChangePassword": "Şifre değiştirilemedi",
+  "clubsAndRoles": "Kulüpler ve roller",
+  "noRoleGrants": "Bu hesapta atanmış rol yok.",
+  "currentPassword": "Mevcut şifre",
+  "newPassword": "Yeni şifre",
+  "passwordRequirementsHint": "≥8 karakter, büyük, küçük harf ve rakam",
+  "confirmNewPassword": "Yeni şifreyi onayla",
+  "emailVerified": "E-posta doğrulandı",
+  "verificationPending": "Doğrulama bekleniyor",
+  "emailNotVerified": "E-posta doğrulanmadı",
+  "platformRoot": "Platform kökü",
+  "joinedMonthYear": "{when} katıldı",
+  "@joinedMonthYear": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "overdue": "vadesi geçmiş",
+  "voided": "iptal edildi",
+  "voidLabel": "iptal",
+  "relationshipSelf": "kendisi",
+  "relationshipGuardian": "veli",
+  "attendanceCanceledClosed": "İptal edildi — yoklama kapalı",
+  "attendanceOpen": "Yoklama açık",
+  "attendanceLockedShort": "Yoklama kilitli",
+  "age": "Yaş",
+  "pendingConsents": "Bekleyen onaylar",
+  "noPendingConsents": "Seni bekleyen onay yok.",
+  "familyMembers": "Aile",
+  "noFamilyMembers": "Bu hesaba bağlı aile üyesi yok.",
+  "notificationPreferences": "Bildirim tercihleri",
+  "noNotificationPreferences": "Kullanılabilir e-posta bildirim tercihi yok.",
+  "prefsLoadFailed": "Tercihler yüklenemedi",
+  "familyLoadFailed": "Aile yüklenemedi",
+  "consentsLoadFailed": "Onaylar yüklenemedi",
+  "grantConsent": "Onayla",
+  "consentGrantedSnack": "Onay verildi",
+  "consentGrantFailed": "Onay verilemedi",
+  "consentVersion": "Sürüm {version}",
+  "@consentVersion": {
+    "placeholders": {
+      "version": {
+        "type": "int"
+      }
+    }
+  },
+  "consentReasonNeverGranted": "Henüz verilmedi",
+  "consentReasonWithdrawn": "Daha önce geri çekildi",
+  "consentReasonNewVersion": "Yeni sürüm mevcut",
+  "consentReasonOther": "İşlem gerekli",
+  "reviewAndGrantConsent": "İncele ve onayla",
+  "consentForMember": "{name} için onay",
+  "@consentForMember": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "enrolled": "Kayıtlı",
+  "notEnrolled": "Kayıtlı değil",
+  "consentOk": "Onay tamam",
+  "consentMissing": "Onay eksik",
+  "channelEmail": "E-posta",
+  "channelOther": "{channel}",
+  "@channelOther": {
+    "placeholders": {
+      "channel": {
+        "type": "String"
+      }
+    }
+  },
+  "preferenceDefault": "Varsayılan"
+}

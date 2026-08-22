@@ -21,6 +21,66 @@ class LoginScreen extends ConsumerStatefulWidget {
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
+  bool _biometricAttempted = false;
+  bool _showFaceId = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadFaceIdAvailability();
+      Future.delayed(const Duration(milliseconds: 600), _tryBiometricLogin);
+    });
+  }
+
+  Future<void> _loadFaceIdAvailability() async {
+    final service = ref.read(biometricCredentialsProvider);
+    final show =
+        await service.hasStoredCredentials && await service.canUseBiometrics;
+    if (mounted) setState(() => _showFaceId = show);
+  }
+
+  Future<void> _tryBiometricLogin({bool force = false}) async {
+    if (!force && _biometricAttempted) return;
+    if (!mounted) return;
+    _biometricAttempted = true;
+    final reason = AppLocalizations.of(context)!.faceIdSignInPrompt;
+    final service = ref.read(biometricCredentialsProvider);
+    if (!await service.hasStoredCredentials) return;
+    if (!await service.canUseBiometrics) return;
+    if (!mounted) return;
+
+    final credentials = await service.getCredentialsWithBiometrics(
+      localizedReason: reason,
+    );
+    if (!mounted || credentials == null) return;
+    await _loginWithCredentials(
+      email: credentials.email,
+      password: credentials.password,
+    );
+  }
+
+  Future<void> _loginWithCredentials({
+    required String email,
+    required String password,
+  }) async {
+    final ok = await ref.read(authNotifierProvider.notifier).login(
+          email: email,
+          password: password,
+        );
+    if (!mounted) return;
+    if (ok) {
+      context.go('/home');
+      return;
+    }
+    final error = ref.read(authNotifierProvider).error;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(error ?? AppLocalizations.of(context)!.loginFailed),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -140,6 +200,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           borderColor: AppColors.primaryBright,
                           onPressed: () => _openEmailLogin(context),
                         ),
+                        if (_showFaceId) ...[
+                          const SizedBox(height: 12),
+                          _PillButton(
+                            label: l10n.signInWithFaceId,
+                            icon: const Icon(
+                              Icons.face_retouching_natural,
+                              size: 20,
+                              color: Colors.white,
+                            ),
+                            filled: false,
+                            onPressed: () => _tryBiometricLogin(force: true),
+                          ),
+                        ],
                         const SizedBox(height: 18),
                         TextButton(
                           onPressed: () => context.go('/register'),
@@ -217,6 +290,19 @@ class _EmailLoginSheetState extends ConsumerState<_EmailLoginSheet> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscure = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _prefillRememberedEmail();
+  }
+
+  Future<void> _prefillRememberedEmail() async {
+    final email =
+        await ref.read(biometricCredentialsProvider).getStoredEmailQuiet();
+    if (!mounted || email == null || email.isEmpty) return;
+    _emailController.text = email;
+  }
 
   @override
   void dispose() {

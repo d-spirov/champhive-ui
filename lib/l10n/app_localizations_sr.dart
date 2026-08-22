@@ -78,6 +78,12 @@ class AppLocalizationsSr extends AppLocalizations {
   String get loginFailed => 'Prijava nije uspela. Proveri podatke.';
 
   @override
+  String get faceIdSignInPrompt => 'Koristi Face ID za prijavu';
+
+  @override
+  String get signInWithFaceId => 'Prijavi se sa Face ID';
+
+  @override
   String get registrationFailed => 'Registracija nije uspela. Pokušaj ponovo.';
 
   @override
@@ -314,6 +320,12 @@ class AppLocalizationsSr extends AppLocalizations {
 
   @override
   String get languageItalian => 'Italijanski';
+
+  @override
+  String get languageBosnian => 'Bosanski';
+
+  @override
+  String get languageTurkish => 'Turski';
 
   @override
   String get languageSystem => 'Sistemski jezik';
@@ -1309,6 +1321,12 @@ class AppLocalizationsSrLatn extends AppLocalizationsSr {
   String get loginFailed => 'Prijava nije uspela. Proveri podatke.';
 
   @override
+  String get faceIdSignInPrompt => 'Koristi Face ID za prijavu';
+
+  @override
+  String get signInWithFaceId => 'Prijavi se sa Face ID';
+
+  @override
   String get registrationFailed => 'Registracija nije uspela. Pokušaj ponovo.';
 
   @override
@@ -1545,6 +1563,12 @@ class AppLocalizationsSrLatn extends AppLocalizationsSr {
 
   @override
   String get languageItalian => 'Italijanski';
+
+  @override
+  String get languageBosnian => 'Bosanski';
+
+  @override
+  String get languageTurkish => 'Turski';
 
   @override
   String get languageSystem => 'Sistemski jezik';

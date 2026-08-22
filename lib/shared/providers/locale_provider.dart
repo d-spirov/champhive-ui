@@ -18,12 +18,16 @@ class AppLocales {
     scriptCode: 'Latn',
   );
   static const italian = Locale('it');
+  static const bosnian = Locale('bs');
+  static const turkish = Locale('tr');
 
   static const supported = <Locale>[
     english,
     macedonian,
     serbian,
     italian,
+    bosnian,
+    turkish,
   ];
 
   /// API / account locale tags used by ClubPlatform (`sr-Latn`, etc.).
@@ -38,6 +42,8 @@ class AppLocales {
     if (normalized == 'en') return english;
     if (normalized == 'mk') return macedonian;
     if (normalized == 'it') return italian;
+    if (normalized == 'bs') return bosnian;
+    if (normalized == 'tr') return turkish;
     if (normalized == 'sr' ||
         normalized.toLowerCase() == 'sr-latn' ||
         normalized == 'sr_Latn') {

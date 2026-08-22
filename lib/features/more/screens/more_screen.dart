@@ -178,6 +178,8 @@ class MoreScreen extends ConsumerWidget {
       'mk' => l10n.languageMacedonian,
       'sr' => l10n.languageSerbian,
       'it' => l10n.languageItalian,
+      'bs' => l10n.languageBosnian,
+      'tr' => l10n.languageTurkish,
       _ => l10n.languageEnglish,
     };
   }
@@ -244,19 +246,27 @@ class MoreScreen extends ConsumerWidget {
         }
 
         return SafeArea(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              row('system', l10n.languageSystem, current == null),
-              row('en', l10n.languageEnglish, current?.languageCode == 'en'),
-              row('mk', l10n.languageMacedonian, current?.languageCode == 'mk'),
-              row(
-                'sr-Latn',
-                l10n.languageSerbian,
-                current?.languageCode == 'sr',
-              ),
-              row('it', l10n.languageItalian, current?.languageCode == 'it'),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                row('system', l10n.languageSystem, current == null),
+                row('en', l10n.languageEnglish, current?.languageCode == 'en'),
+                row(
+                  'mk',
+                  l10n.languageMacedonian,
+                  current?.languageCode == 'mk',
+                ),
+                row(
+                  'sr-Latn',
+                  l10n.languageSerbian,
+                  current?.languageCode == 'sr',
+                ),
+                row('it', l10n.languageItalian, current?.languageCode == 'it'),
+                row('bs', l10n.languageBosnian, current?.languageCode == 'bs'),
+                row('tr', l10n.languageTurkish, current?.languageCode == 'tr'),
+              ],
+            ),
           ),
         );
       },

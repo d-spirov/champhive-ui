@@ -20,6 +20,8 @@ List<(String code, String label)> _profileLocaleOptions(AppLocalizations l10n) {
     ('mk', l10n.languageMacedonian),
     ('sr-Latn', l10n.languageSerbian),
     ('it', l10n.languageItalian),
+    ('bs', l10n.languageBosnian),
+    ('tr', l10n.languageTurkish),
   ];
 }
 

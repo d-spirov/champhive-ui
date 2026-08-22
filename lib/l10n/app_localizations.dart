@@ -5,10 +5,12 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
+import 'app_localizations_bs.dart';
 import 'app_localizations_en.dart';
 import 'app_localizations_it.dart';
 import 'app_localizations_mk.dart';
 import 'app_localizations_sr.dart';
+import 'app_localizations_tr.dart';
 
 // ignore_for_file: type=lint
 
@@ -96,11 +98,13 @@ abstract class AppLocalizations {
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
+    Locale('bs'),
     Locale('en'),
     Locale('it'),
     Locale('mk'),
     Locale('sr'),
     Locale.fromSubtags(languageCode: 'sr', scriptCode: 'Latn'),
+    Locale('tr'),
   ];
 
   /// No description provided for @appTitle.
@@ -240,6 +244,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Login failed. Check your credentials.'**
   String get loginFailed;
+
+  /// No description provided for @faceIdSignInPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Use Face ID to sign in'**
+  String get faceIdSignInPrompt;
+
+  /// No description provided for @signInWithFaceId.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in with Face ID'**
+  String get signInWithFaceId;
 
   /// No description provided for @registrationFailed.
   ///
@@ -708,6 +724,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Italian'**
   String get languageItalian;
+
+  /// No description provided for @languageBosnian.
+  ///
+  /// In en, this message translates to:
+  /// **'Bosnian'**
+  String get languageBosnian;
+
+  /// No description provided for @languageTurkish.
+  ///
+  /// In en, this message translates to:
+  /// **'Turkish'**
+  String get languageTurkish;
 
   /// No description provided for @languageSystem.
   ///
@@ -2424,8 +2452,14 @@ class _AppLocalizationsDelegate
   }
 
   @override
-  bool isSupported(Locale locale) =>
-      <String>['en', 'it', 'mk', 'sr'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>[
+    'bs',
+    'en',
+    'it',
+    'mk',
+    'sr',
+    'tr',
+  ].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -2446,6 +2480,8 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
 
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
+    case 'bs':
+      return AppLocalizationsBs();
     case 'en':
       return AppLocalizationsEn();
     case 'it':
@@ -2454,6 +2490,8 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
       return AppLocalizationsMk();
     case 'sr':
       return AppLocalizationsSr();
+    case 'tr':
+      return AppLocalizationsTr();
   }
 
   throw FlutterError(

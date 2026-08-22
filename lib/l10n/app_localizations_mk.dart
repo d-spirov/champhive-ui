@@ -78,6 +78,12 @@ class AppLocalizationsMk extends AppLocalizations {
   String get loginFailed => 'Најавата не успеа. Провери ги податоците.';
 
   @override
+  String get faceIdSignInPrompt => 'Користете Face ID за најава';
+
+  @override
+  String get signInWithFaceId => 'Најава со Face ID';
+
+  @override
   String get registrationFailed =>
       'Регистрацијата не успеа. Обиди се повторно.';
 
@@ -315,6 +321,12 @@ class AppLocalizationsMk extends AppLocalizations {
 
   @override
   String get languageItalian => 'Италијански';
+
+  @override
+  String get languageBosnian => 'Босански';
+
+  @override
+  String get languageTurkish => 'Турски';
 
   @override
   String get languageSystem => 'Системски јазик';
