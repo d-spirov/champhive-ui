@@ -710,5 +710,29 @@
         "type": "int"
       }
     }
-  }
+  },
+  "pickTrainingPlan": "Training plan (optional)",
+  "noTrainingPlan": "No training plan",
+  "noTrainingPlansYet": "No training plans in this club yet.",
+  "couldNotLoadTrainingPlan": "Could not load the training plan",
+  "trainingPlanExercises": "Drills",
+  "trainingPlanDurationSummary": "{session} session · {drills} of drills",
+  "@trainingPlanDurationSummary": {
+    "placeholders": {
+      "session": { "type": "String" },
+      "drills": { "type": "String" }
+    }
+  },
+  "repetitionsValue": "{count} reps",
+  "@repetitionsValue": {
+    "placeholders": {
+      "count": { "type": "String" }
+    }
+  },
+  "watchVideo": "Watch video",
+  "exercises": "Exercises",
+  "noCoachesYet": "No coaches assigned yet",
+  "noTrainingPlanAttached": "No training plan is attached to this session",
+  "noExercisesInPlan": "This plan has no drills yet",
+  "rsvpNotRequestedLabel": "RSVP not requested"
 }

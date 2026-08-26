@@ -1542,4 +1542,50 @@ class AppLocalizationsMk extends AppLocalizations {
   String durationMinutes(int minutes) {
     return '$minutes мин';
   }
+
+  @override
+  String get pickTrainingPlan => 'План за тренинг (опционално)';
+
+  @override
+  String get noTrainingPlan => 'Без план за тренинг';
+
+  @override
+  String get noTrainingPlansYet =>
+      'Сè уште нема планови за тренинг во овој клуб.';
+
+  @override
+  String get couldNotLoadTrainingPlan =>
+      'Планот за тренинг не можеше да се вчита';
+
+  @override
+  String get trainingPlanExercises => 'Вежби';
+
+  @override
+  String trainingPlanDurationSummary(String session, String drills) {
+    return '$session сесија · $drills вежби';
+  }
+
+  @override
+  String repetitionsValue(String count) {
+    return '$count повторувања';
+  }
+
+  @override
+  String get watchVideo => 'Гледај видео';
+
+  @override
+  String get exercises => 'Вежби';
+
+  @override
+  String get noCoachesYet => 'Сè уште нема доделени тренери';
+
+  @override
+  String get noTrainingPlanAttached =>
+      'Нема прикачен план за тренинг на оваа сесија';
+
+  @override
+  String get noExercisesInPlan => 'Овој план сè уште нема вежби';
+
+  @override
+  String get rsvpNotRequestedLabel => 'Не е побарано RSVP';
 }

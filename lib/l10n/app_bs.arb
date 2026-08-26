@@ -689,5 +689,18 @@
   "rsvpYes": "Zatraženo",
   "rsvpNo": "Nije zatraženo",
   "originallyScheduled": "Prvobitno",
-  "durationMinutes": "{minutes} min"
+  "durationMinutes": "{minutes} min",
+  "pickTrainingPlan": "Plan treninga (opcionalno)",
+  "noTrainingPlan": "Bez plana treninga",
+  "noTrainingPlansYet": "Još nema planova treninga u ovom klubu.",
+  "couldNotLoadTrainingPlan": "Plan treninga se nije mogao učitati",
+  "trainingPlanExercises": "Vježbe",
+  "trainingPlanDurationSummary": "{session} sesija · {drills} vježbi",
+  "repetitionsValue": "{count} ponavljanja",
+  "watchVideo": "Pogledaj video",
+  "exercises": "Vježbe",
+  "noCoachesYet": "Još nema dodijeljenih trenera",
+  "noTrainingPlanAttached": "Ovoj sesiji nije priložen plan treninga",
+  "noExercisesInPlan": "Ovaj plan još nema vježbi",
+  "rsvpNotRequestedLabel": "RSVP nije zatražen"
 }

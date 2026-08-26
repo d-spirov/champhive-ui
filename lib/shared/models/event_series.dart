@@ -22,6 +22,7 @@ class SaveEventSeriesRequest {
   final String? purpose;
   final String? location;
   final String? timeZone;
+
   /// Local wall-clock without offset, e.g. `2026-08-22T18:00:00`.
   final String firstStartLocal;
   final int durationMin;
@@ -30,21 +31,24 @@ class SaveEventSeriesRequest {
   final String? visibility;
   final String? trainingPlanId;
 
-  Map<String, dynamic> toJson() => {
-        'scopeKind': scopeKind,
-        'scopeId': scopeId,
-        'type': type,
-        'title': title,
-        'purpose': purpose,
-        'location': location,
-        'timeZone': timeZone,
-        'firstStartLocal': firstStartLocal,
-        'durationMin': durationMin,
-        'rrule': rrule,
-        'rsvpRequested': rsvpRequested,
-        'visibility': visibility,
-        'trainingPlanId': trainingPlanId,
-      };
+  Map<String, dynamic> toJson() {
+    final planId = trainingPlanId;
+    return {
+      'scopeKind': scopeKind,
+      'scopeId': scopeId,
+      'type': type,
+      'title': title,
+      'purpose': purpose,
+      'location': location,
+      'timeZone': timeZone,
+      'firstStartLocal': firstStartLocal,
+      'durationMin': durationMin,
+      'rrule': rrule,
+      'rsvpRequested': rsvpRequested,
+      'visibility': visibility,
+      if (planId != null && planId.isNotEmpty) 'trainingPlanId': planId,
+    };
+  }
 }
 
 class EventSeries {
@@ -105,7 +109,7 @@ class EventSeries {
       firstStartLocal: json['firstStartLocal'] as String? ?? '',
       firstStartUtc:
           DateTime.tryParse(json['firstStartUtc'] as String? ?? '')?.toUtc() ??
-              DateTime.now().toUtc(),
+          DateTime.now().toUtc(),
       durationMin: (json['durationMin'] as num?)?.toInt() ?? 0,
       rrule: json['rrule'] as String?,
       rsvpRequested: json['rsvpRequested'] as bool? ?? false,
@@ -113,7 +117,7 @@ class EventSeries {
       canceled: json['canceled'] as bool? ?? false,
       createdAtUtc:
           DateTime.tryParse(json['createdAtUtc'] as String? ?? '')?.toUtc() ??
-              DateTime.now().toUtc(),
+          DateTime.now().toUtc(),
       trainingPlanId: json['trainingPlanId']?.toString(),
     );
   }

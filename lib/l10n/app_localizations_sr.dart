@@ -1531,6 +1531,50 @@ class AppLocalizationsSr extends AppLocalizations {
   String durationMinutes(int minutes) {
     return '$minutes min';
   }
+
+  @override
+  String get pickTrainingPlan => 'Plan treninga (opciono)';
+
+  @override
+  String get noTrainingPlan => 'Bez plana treninga';
+
+  @override
+  String get noTrainingPlansYet => 'Još nema planova treninga u ovom klubu.';
+
+  @override
+  String get couldNotLoadTrainingPlan => 'Plan treninga se nije mogao učitati';
+
+  @override
+  String get trainingPlanExercises => 'Vežbe';
+
+  @override
+  String trainingPlanDurationSummary(String session, String drills) {
+    return '$session sesija · $drills vežbi';
+  }
+
+  @override
+  String repetitionsValue(String count) {
+    return '$count ponavljanja';
+  }
+
+  @override
+  String get watchVideo => 'Pogledaj video';
+
+  @override
+  String get exercises => 'Vežbe';
+
+  @override
+  String get noCoachesYet => 'Još nema dodeljenih trenera';
+
+  @override
+  String get noTrainingPlanAttached =>
+      'Ovoj sesiji nije priložen plan treninga';
+
+  @override
+  String get noExercisesInPlan => 'Ovaj plan još nema vežbi';
+
+  @override
+  String get rsvpNotRequestedLabel => 'RSVP nije zatražen';
 }
 
 /// The translations for Serbian, using the Latin script (`sr_Latn`).
@@ -3060,4 +3104,48 @@ class AppLocalizationsSrLatn extends AppLocalizationsSr {
   String durationMinutes(int minutes) {
     return '$minutes min';
   }
+
+  @override
+  String get pickTrainingPlan => 'Plan treninga (opciono)';
+
+  @override
+  String get noTrainingPlan => 'Bez plana treninga';
+
+  @override
+  String get noTrainingPlansYet => 'Još nema planova treninga u ovom klubu.';
+
+  @override
+  String get couldNotLoadTrainingPlan => 'Plan treninga se nije mogao učitati';
+
+  @override
+  String get trainingPlanExercises => 'Vežbe';
+
+  @override
+  String trainingPlanDurationSummary(String session, String drills) {
+    return '$session sesija · $drills vežbi';
+  }
+
+  @override
+  String repetitionsValue(String count) {
+    return '$count ponavljanja';
+  }
+
+  @override
+  String get watchVideo => 'Pogledaj video';
+
+  @override
+  String get exercises => 'Vežbe';
+
+  @override
+  String get noCoachesYet => 'Još nema dodeljenih trenera';
+
+  @override
+  String get noTrainingPlanAttached =>
+      'Ovoj sesiji nije priložen plan treninga';
+
+  @override
+  String get noExercisesInPlan => 'Ovaj plan još nema vežbi';
+
+  @override
+  String get rsvpNotRequestedLabel => 'RSVP nije zatražen';
 }

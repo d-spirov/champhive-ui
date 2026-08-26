@@ -1544,4 +1544,50 @@ class AppLocalizationsIt extends AppLocalizations {
   String durationMinutes(int minutes) {
     return '$minutes min';
   }
+
+  @override
+  String get pickTrainingPlan => 'Piano di allenamento (facoltativo)';
+
+  @override
+  String get noTrainingPlan => 'Nessun piano';
+
+  @override
+  String get noTrainingPlansYet =>
+      'Non ci sono ancora piani di allenamento in questa società.';
+
+  @override
+  String get couldNotLoadTrainingPlan =>
+      'Impossibile caricare il piano di allenamento';
+
+  @override
+  String get trainingPlanExercises => 'Esercizi';
+
+  @override
+  String trainingPlanDurationSummary(String session, String drills) {
+    return '$session sessione · $drills di esercizi';
+  }
+
+  @override
+  String repetitionsValue(String count) {
+    return '$count ripetizioni';
+  }
+
+  @override
+  String get watchVideo => 'Guarda il video';
+
+  @override
+  String get exercises => 'Esercizi';
+
+  @override
+  String get noCoachesYet => 'Nessun allenatore assegnato';
+
+  @override
+  String get noTrainingPlanAttached =>
+      'Nessun piano di allenamento è collegato a questa sessione';
+
+  @override
+  String get noExercisesInPlan => 'Questo piano non ha ancora esercizi';
+
+  @override
+  String get rsvpNotRequestedLabel => 'RSVP non richiesto';
 }

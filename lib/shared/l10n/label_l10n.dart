@@ -28,6 +28,18 @@ String occurrenceStatusLabel(AppLocalizations l10n, String? status) {
   }
 }
 
+String durationMinutesLabel(AppLocalizations l10n, int minutes) {
+  return switch (minutes) {
+    45 => l10n.duration45,
+    60 => l10n.duration60,
+    75 => l10n.duration75,
+    90 => l10n.duration90,
+    120 => l10n.duration2h,
+    180 => l10n.duration3h,
+    _ => l10n.durationMinutes(minutes),
+  };
+}
+
 String scopeKindLabel(AppLocalizations l10n, String? kind) {
   switch ((kind ?? '').toLowerCase()) {
     case 'team':

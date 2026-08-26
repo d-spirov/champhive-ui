@@ -689,5 +689,18 @@
   "rsvpYes": "İstendi",
   "rsvpNo": "İstenmedi",
   "originallyScheduled": "Orijinal",
-  "durationMinutes": "{minutes} dk"
+  "durationMinutes": "{minutes} dk",
+  "pickTrainingPlan": "Antrenman planı (isteğe bağlı)",
+  "noTrainingPlan": "Antrenman planı yok",
+  "noTrainingPlansYet": "Bu kulüpte henüz antrenman planı yok.",
+  "couldNotLoadTrainingPlan": "Antrenman planı yüklenemedi",
+  "trainingPlanExercises": "Egzersizler",
+  "trainingPlanDurationSummary": "{session} seans · {drills} egzersiz",
+  "repetitionsValue": "{count} tekrar",
+  "watchVideo": "Videoyu izle",
+  "exercises": "Egzersizler",
+  "noCoachesYet": "Henüz antrenör atanmadı",
+  "noTrainingPlanAttached": "Bu seansa antrenman planı eklenmedi",
+  "noExercisesInPlan": "Bu planda henüz egzersiz yok",
+  "rsvpNotRequestedLabel": "RSVP istenmedi"
 }

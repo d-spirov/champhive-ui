@@ -2962,6 +2962,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{minutes} min'**
   String durationMinutes(int minutes);
+
+  /// No description provided for @pickTrainingPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Training plan (optional)'**
+  String get pickTrainingPlan;
+
+  /// No description provided for @noTrainingPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'No training plan'**
+  String get noTrainingPlan;
+
+  /// No description provided for @noTrainingPlansYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No training plans in this club yet.'**
+  String get noTrainingPlansYet;
+
+  /// No description provided for @couldNotLoadTrainingPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load the training plan'**
+  String get couldNotLoadTrainingPlan;
+
+  /// No description provided for @trainingPlanExercises.
+  ///
+  /// In en, this message translates to:
+  /// **'Drills'**
+  String get trainingPlanExercises;
+
+  /// No description provided for @trainingPlanDurationSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'{session} session · {drills} of drills'**
+  String trainingPlanDurationSummary(String session, String drills);
+
+  /// No description provided for @repetitionsValue.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} reps'**
+  String repetitionsValue(String count);
+
+  /// No description provided for @watchVideo.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch video'**
+  String get watchVideo;
+
+  /// No description provided for @exercises.
+  ///
+  /// In en, this message translates to:
+  /// **'Exercises'**
+  String get exercises;
+
+  /// No description provided for @noCoachesYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No coaches assigned yet'**
+  String get noCoachesYet;
+
+  /// No description provided for @noTrainingPlanAttached.
+  ///
+  /// In en, this message translates to:
+  /// **'No training plan is attached to this session'**
+  String get noTrainingPlanAttached;
+
+  /// No description provided for @noExercisesInPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'This plan has no drills yet'**
+  String get noExercisesInPlan;
+
+  /// No description provided for @rsvpNotRequestedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'RSVP not requested'**
+  String get rsvpNotRequestedLabel;
 }
 
 class _AppLocalizationsDelegate

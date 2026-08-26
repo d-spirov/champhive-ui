@@ -1527,4 +1527,47 @@ class AppLocalizationsTr extends AppLocalizations {
   String durationMinutes(int minutes) {
     return '$minutes dk';
   }
+
+  @override
+  String get pickTrainingPlan => 'Antrenman planı (isteğe bağlı)';
+
+  @override
+  String get noTrainingPlan => 'Antrenman planı yok';
+
+  @override
+  String get noTrainingPlansYet => 'Bu kulüpte henüz antrenman planı yok.';
+
+  @override
+  String get couldNotLoadTrainingPlan => 'Antrenman planı yüklenemedi';
+
+  @override
+  String get trainingPlanExercises => 'Egzersizler';
+
+  @override
+  String trainingPlanDurationSummary(String session, String drills) {
+    return '$session seans · $drills egzersiz';
+  }
+
+  @override
+  String repetitionsValue(String count) {
+    return '$count tekrar';
+  }
+
+  @override
+  String get watchVideo => 'Videoyu izle';
+
+  @override
+  String get exercises => 'Egzersizler';
+
+  @override
+  String get noCoachesYet => 'Henüz antrenör atanmadı';
+
+  @override
+  String get noTrainingPlanAttached => 'Bu seansa antrenman planı eklenmedi';
+
+  @override
+  String get noExercisesInPlan => 'Bu planda henüz egzersiz yok';
+
+  @override
+  String get rsvpNotRequestedLabel => 'RSVP istenmedi';
 }

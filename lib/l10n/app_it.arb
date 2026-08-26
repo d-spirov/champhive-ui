@@ -689,5 +689,18 @@
   "rsvpYes": "Richiesto",
   "rsvpNo": "Non richiesto",
   "originallyScheduled": "Originariamente",
-  "durationMinutes": "{minutes} min"
+  "durationMinutes": "{minutes} min",
+  "pickTrainingPlan": "Piano di allenamento (facoltativo)",
+  "noTrainingPlan": "Nessun piano",
+  "noTrainingPlansYet": "Non ci sono ancora piani di allenamento in questa società.",
+  "couldNotLoadTrainingPlan": "Impossibile caricare il piano di allenamento",
+  "trainingPlanExercises": "Esercizi",
+  "trainingPlanDurationSummary": "{session} sessione · {drills} di esercizi",
+  "repetitionsValue": "{count} ripetizioni",
+  "watchVideo": "Guarda il video",
+  "exercises": "Esercizi",
+  "noCoachesYet": "Nessun allenatore assegnato",
+  "noTrainingPlanAttached": "Nessun piano di allenamento è collegato a questa sessione",
+  "noExercisesInPlan": "Questo piano non ha ancora esercizi",
+  "rsvpNotRequestedLabel": "RSVP non richiesto"
 }

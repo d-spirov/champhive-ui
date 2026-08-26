@@ -4,6 +4,7 @@ import 'package:team_hive/shared/models/user.dart';
 import 'package:team_hive/shared/models/club.dart';
 import 'package:team_hive/shared/models/event_attendance.dart';
 import 'package:team_hive/shared/models/compliance.dart';
+import 'package:team_hive/shared/models/training_plan.dart';
 
 void main() {
   test('User.fromMeJson maps ClubPlatform fields', () {
@@ -163,5 +164,42 @@ void main() {
     expect(picture.status, 'missing');
     expect(picture.requirements.single.isRequired, isTrue);
     expect(picture.requirements.single.satisfied, isFalse);
+  });
+
+  test('TrainingPlan.fromJson maps drills and attached images', () {
+    final plan = TrainingPlan.fromJson({
+      'id': 'p1',
+      'clubId': 'c1',
+      'name': 'U12 pressing',
+      'description': 'High press',
+      'durationMinutes': '90',
+      'totalExerciseMinutes': 75,
+      'authorUserId': 'u1',
+      'teamName': 'U12',
+      'exercises': [
+        {
+          'id': 'slot1',
+          'exerciseId': 'ex1',
+          'exerciseName': 'Rondo',
+          'purpose': 'Warm-up',
+          'position': 1,
+          'durationMinutes': 15,
+          'repetitions': '3x',
+          'images': [
+            {
+              'id': 'img1',
+              'exerciseId': 'ex1',
+              'contentType': 'image/jpeg',
+              'sizeBytes': 12000,
+              'position': 0,
+            },
+          ],
+        },
+      ],
+    });
+    expect(plan.name, 'U12 pressing');
+    expect(plan.durationMinutes, 90);
+    expect(plan.exercises.single.exerciseName, 'Rondo');
+    expect(plan.exercises.single.images.single.id, 'img1');
   });
 }

@@ -1526,4 +1526,48 @@ class AppLocalizationsEn extends AppLocalizations {
   String durationMinutes(int minutes) {
     return '$minutes min';
   }
+
+  @override
+  String get pickTrainingPlan => 'Training plan (optional)';
+
+  @override
+  String get noTrainingPlan => 'No training plan';
+
+  @override
+  String get noTrainingPlansYet => 'No training plans in this club yet.';
+
+  @override
+  String get couldNotLoadTrainingPlan => 'Could not load the training plan';
+
+  @override
+  String get trainingPlanExercises => 'Drills';
+
+  @override
+  String trainingPlanDurationSummary(String session, String drills) {
+    return '$session session · $drills of drills';
+  }
+
+  @override
+  String repetitionsValue(String count) {
+    return '$count reps';
+  }
+
+  @override
+  String get watchVideo => 'Watch video';
+
+  @override
+  String get exercises => 'Exercises';
+
+  @override
+  String get noCoachesYet => 'No coaches assigned yet';
+
+  @override
+  String get noTrainingPlanAttached =>
+      'No training plan is attached to this session';
+
+  @override
+  String get noExercisesInPlan => 'This plan has no drills yet';
+
+  @override
+  String get rsvpNotRequestedLabel => 'RSVP not requested';
 }

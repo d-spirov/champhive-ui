@@ -689,5 +689,18 @@
   "rsvpYes": "Побарано",
   "rsvpNo": "Не е побарано",
   "originallyScheduled": "Првично",
-  "durationMinutes": "{minutes} мин"
+  "durationMinutes": "{minutes} мин",
+  "pickTrainingPlan": "План за тренинг (опционално)",
+  "noTrainingPlan": "Без план за тренинг",
+  "noTrainingPlansYet": "Сè уште нема планови за тренинг во овој клуб.",
+  "couldNotLoadTrainingPlan": "Планот за тренинг не можеше да се вчита",
+  "trainingPlanExercises": "Вежби",
+  "trainingPlanDurationSummary": "{session} сесија · {drills} вежби",
+  "repetitionsValue": "{count} повторувања",
+  "watchVideo": "Гледај видео",
+  "exercises": "Вежби",
+  "noCoachesYet": "Сè уште нема доделени тренери",
+  "noTrainingPlanAttached": "Нема прикачен план за тренинг на оваа сесија",
+  "noExercisesInPlan": "Овој план сè уште нема вежби",
+  "rsvpNotRequestedLabel": "Не е побарано RSVP"
 }
