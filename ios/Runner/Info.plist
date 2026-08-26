@@ -14,7 +14,7 @@
 		<string>tr</string>
 	</array>
 	<key>CFBundleDisplayName</key>
-	<string>TeamHive</string>
+	<string>ChampHive</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -22,7 +22,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>team_hive</string>
+	<string>ChampHive</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>

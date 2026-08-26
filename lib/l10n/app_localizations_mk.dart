@@ -9,7 +9,7 @@ class AppLocalizationsMk extends AppLocalizations {
   AppLocalizationsMk([String locale = 'mk']) : super(locale);
 
   @override
-  String get appTitle => 'TeamHive';
+  String get appTitle => 'ChampHive';
 
   @override
   String get team => 'Тим';

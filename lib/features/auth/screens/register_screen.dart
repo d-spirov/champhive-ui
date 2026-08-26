@@ -74,7 +74,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const TeamHiveLogo(size: 64, showWordmark: true),
+                    const TeamHiveLogo(size: 72, showWordmark: true),
                     const SizedBox(height: 24),
                     TextFormField(
                       controller: _firstNameController,

@@ -323,7 +323,7 @@ class _AppState extends ConsumerState<App> {
     final localeOverride = ref.watch(localeProvider);
 
     return MaterialApp.router(
-      title: 'TeamHive',
+      onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
       themeMode: themeOverride ?? ThemeMode.system,

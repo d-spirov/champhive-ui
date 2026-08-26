@@ -252,26 +252,7 @@ class _AppMark extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(24),
-          gradient: AppGradients.heroCard,
-          boxShadow: AppTheme.mediumShadow,
-        ),
-        child: const SizedBox(
-          width: 88,
-          height: 88,
-          child: Center(
-            child: TeamHiveLogo(
-              size: 64,
-              solidWhiteMark: true,
-              showShadow: false,
-            ),
-          ),
-        ),
-      ),
-    );
+    return const Center(child: TeamHiveLogo(size: 88, showShadow: true));
   }
 }
 

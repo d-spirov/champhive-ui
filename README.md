@@ -1,4 +1,4 @@
-# TeamHive
+# ChampHive
 
 Sport club management app (Flutter) — iOS, Android, and web.
 
@@ -21,11 +21,10 @@ Architecture mirrors [ParkHive](../parking/park_hive): feature-first UI + Riverp
 
 ## App icon
 
-ParkHive-style vector hexagon + H. Regenerate:
+ChampHive mark (hexagon + team) from `assets/brand/champhive_lockup_source.png`.
 
 ```bash
 dart run tools/generate_app_icon.dart
-dart run tools/add_icon_padding.dart
 dart run flutter_launcher_icons
 ```
 

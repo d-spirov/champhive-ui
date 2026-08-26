@@ -47,13 +47,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              TeamHiveLogo(
-                size: 108,
-                showWordmark: true,
-                showShadow: true,
-                solidWhiteMark: true,
-                wordmarkColor: Colors.white,
-              ),
+              TeamHiveLogo(size: 108, showWordmark: true, showShadow: true),
               SizedBox(height: 28),
               CircularProgressIndicator(color: Colors.white),
             ],

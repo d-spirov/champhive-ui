@@ -9,7 +9,7 @@ class AppLocalizationsTr extends AppLocalizations {
   AppLocalizationsTr([String locale = 'tr']) : super(locale);
 
   @override
-  String get appTitle => 'TeamHive';
+  String get appTitle => 'ChampHive';
 
   @override
   String get team => 'Takım';

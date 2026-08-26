@@ -9,7 +9,7 @@ class AppLocalizationsSr extends AppLocalizations {
   AppLocalizationsSr([String locale = 'sr']) : super(locale);
 
   @override
-  String get appTitle => 'TeamHive';
+  String get appTitle => 'ChampHive';
 
   @override
   String get team => 'Tim';
@@ -1582,7 +1582,7 @@ class AppLocalizationsSrLatn extends AppLocalizationsSr {
   AppLocalizationsSrLatn() : super('sr_Latn');
 
   @override
-  String get appTitle => 'TeamHive';
+  String get appTitle => 'ChampHive';
 
   @override
   String get team => 'Tim';

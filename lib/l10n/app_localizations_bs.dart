@@ -9,7 +9,7 @@ class AppLocalizationsBs extends AppLocalizations {
   AppLocalizationsBs([String locale = 'bs']) : super(locale);
 
   @override
-  String get appTitle => 'TeamHive';
+  String get appTitle => 'ChampHive';
 
   @override
   String get team => 'Tim';

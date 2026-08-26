@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 
-/// TeamHive ClubPlatform API.
+/// ChampHive ClubPlatform API.
 /// Docs: https://api.champhive.app/scalar/v1
 /// OpenAPI: https://api.champhive.app/openapi/v1.json
 const String apiBaseUrl = 'https://api.champhive.app';
@@ -23,7 +23,7 @@ Dio createApiDio({List<Interceptor> interceptors = const []}) {
       headers: const {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'User-Agent': 'TeamHive/1.0 (Flutter)',
+        'User-Agent': 'ChampHive/1.0 (Flutter)',
       },
     ),
   );

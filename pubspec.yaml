@@ -1,5 +1,5 @@
 name: team_hive
-description: "TeamHive - Sport club management by Codeantech."
+description: "ChampHive - Sport club management by Codeantech."
 homepage: https://codeantech.com
 publish_to: 'none'
 version: 1.0.0+1
@@ -48,8 +48,9 @@ flutter_launcher_icons:
   web:
     generate: true
   image_path: "assets/icon/icon.png"
-  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_background: "#00A3F4"
   adaptive_icon_foreground: "assets/icon/icon.png"
+  remove_alpha_ios: true
 
 flutter:
   generate: true
@@ -62,3 +63,4 @@ flutter:
     - assets/images/sports/volleyball/
     - assets/images/sports/generic/
     - assets/icon/
+    - assets/brand/

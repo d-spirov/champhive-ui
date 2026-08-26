@@ -64,10 +64,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     required String email,
     required String password,
   }) async {
-    final ok = await ref.read(authNotifierProvider.notifier).login(
-          email: email,
-          password: password,
-        );
+    final ok = await ref
+        .read(authNotifierProvider.notifier)
+        .login(email: email, password: password);
     if (!mounted) return;
     if (ok) {
       context.go('/home');
@@ -142,11 +141,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       children: [
                         const SizedBox(height: 10),
                         const TeamHiveLogo(
-                          size: 100,
+                          size: 88,
                           showWordmark: true,
                           showShadow: true,
-                          solidWhiteMark: true,
-                          wordmarkColor: Colors.white,
                         ),
                         const SizedBox(height: 10),
                         Text(
@@ -298,8 +295,9 @@ class _EmailLoginSheetState extends ConsumerState<_EmailLoginSheet> {
   }
 
   Future<void> _prefillRememberedEmail() async {
-    final email =
-        await ref.read(biometricCredentialsProvider).getStoredEmailQuiet();
+    final email = await ref
+        .read(biometricCredentialsProvider)
+        .getStoredEmailQuiet();
     if (!mounted || email == null || email.isEmpty) return;
     _emailController.text = email;
   }
@@ -573,10 +571,7 @@ class _OrDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final line = Expanded(
-      child: Container(
-        height: 1,
-        color: Colors.white.withValues(alpha: 0.22),
-      ),
+      child: Container(height: 1, color: Colors.white.withValues(alpha: 0.22)),
     );
     return Row(
       children: [

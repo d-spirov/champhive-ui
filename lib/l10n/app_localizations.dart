@@ -110,7 +110,7 @@ abstract class AppLocalizations {
   /// No description provided for @appTitle.
   ///
   /// In en, this message translates to:
-  /// **'TeamHive'**
+  /// **'ChampHive'**
   String get appTitle;
 
   /// No description provided for @team.

@@ -5,7 +5,7 @@ import 'api_client.dart';
 import 'auth_interceptor.dart';
 import 'token_store.dart';
 
-/// Auth against TeamHive ClubPlatform Bearer JWT.
+/// Auth against ChampHive ClubPlatform Bearer JWT.
 ///
 /// Mobile must send `client: "mobile"` so refresh tokens are returned in the body.
 class AuthApi {
