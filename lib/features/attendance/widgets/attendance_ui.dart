@@ -9,7 +9,11 @@ import '../../../shared/theme/app_theme.dart';
 import '../../clubs/providers/sport_theme_provider.dart';
 
 export '../../../shared/l10n/label_l10n.dart'
-    show attendanceStatusLabel, eventTypeLabel, attendanceLockStatusLabel;
+    show
+        attendanceStatusLabel,
+        eventTypeLabel,
+        attendanceLockStatusLabel,
+        occurrenceStatusLabel;
 
 
 Color clubEventTypeColor(EventType type) {

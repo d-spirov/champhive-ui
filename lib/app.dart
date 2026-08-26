@@ -18,6 +18,7 @@ import 'features/clubs/screens/club_details_screen.dart';
 import 'features/compliance/screens/compliance_hub_screen.dart';
 import 'features/compliance/screens/member_compliance_screen.dart';
 import 'features/events/screens/event_detail_screen.dart';
+import 'features/events/screens/event_details_screen.dart';
 import 'features/home/screens/home_dashboard_screen.dart';
 import 'features/messages/screens/chat_thread_screen.dart';
 import 'features/messages/screens/compose_direct_message_screen.dart';
@@ -213,6 +214,12 @@ class _AppState extends ConsumerState<App> {
               EventDetailScreen(eventId: state.pathParameters['occurrenceId']!),
           routes: [
             GoRoute(
+              path: 'details',
+              builder: (context, state) => EventDetailsScreen(
+                occurrenceId: state.pathParameters['occurrenceId']!,
+              ),
+            ),
+            GoRoute(
               path: 'attendance',
               builder: (context, state) => MarkAttendanceScreen(
                 eventId: state.pathParameters['occurrenceId']!,
@@ -244,6 +251,11 @@ class _AppState extends ConsumerState<App> {
           redirect: (context, state) =>
               '/occurrences/${state.pathParameters['eventId']}',
           routes: [
+            GoRoute(
+              path: 'details',
+              redirect: (context, state) =>
+                  '/occurrences/${state.pathParameters['eventId']}/details',
+            ),
             GoRoute(
               path: 'attendance',
               redirect: (context, state) =>

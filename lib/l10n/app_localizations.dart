@@ -2878,6 +2878,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Could not open the website'**
   String get aboutCouldNotOpenWebsite;
+
+  /// No description provided for @sessionDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Session details'**
+  String get sessionDetails;
+
+  /// No description provided for @sessionDetailsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Title, time, location and other fields from the API'**
+  String get sessionDetailsSubtitle;
+
+  /// No description provided for @sessionDetailsIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'These are the details saved for this session.'**
+  String get sessionDetailsIntro;
+
+  /// No description provided for @purpose.
+  ///
+  /// In en, this message translates to:
+  /// **'Purpose'**
+  String get purpose;
+
+  /// No description provided for @coaches.
+  ///
+  /// In en, this message translates to:
+  /// **'Coaches'**
+  String get coaches;
+
+  /// No description provided for @trainingPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Training plan'**
+  String get trainingPlan;
+
+  /// No description provided for @section.
+  ///
+  /// In en, this message translates to:
+  /// **'Section'**
+  String get section;
+
+  /// No description provided for @statusScheduled.
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduled'**
+  String get statusScheduled;
+
+  /// No description provided for @statusMoved.
+  ///
+  /// In en, this message translates to:
+  /// **'Moved'**
+  String get statusMoved;
+
+  /// No description provided for @statusCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get statusCompleted;
+
+  /// No description provided for @rsvpYes.
+  ///
+  /// In en, this message translates to:
+  /// **'Requested'**
+  String get rsvpYes;
+
+  /// No description provided for @rsvpNo.
+  ///
+  /// In en, this message translates to:
+  /// **'Not requested'**
+  String get rsvpNo;
+
+  /// No description provided for @originallyScheduled.
+  ///
+  /// In en, this message translates to:
+  /// **'Originally'**
+  String get originallyScheduled;
+
+  /// No description provided for @durationMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min'**
+  String durationMinutes(int minutes);
 }
 
 class _AppLocalizationsDelegate

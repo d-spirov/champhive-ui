@@ -86,7 +86,8 @@ class _OccurrenceBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final color = clubEventTypeColor(occurrence.type);
-    final scope = occurrence.scopeName ??
+    final scope =
+        occurrence.scopeName ??
         (occurrence.teams.isEmpty ? null : occurrence.teams.join(', '));
     final canceled = (occurrence.status ?? '').toLowerCase() == 'canceled';
     final snapshot = roster;
@@ -162,9 +163,7 @@ class _OccurrenceBody extends StatelessWidget {
                     if (occurrence.status != null)
                       Chip(
                         label: Text(
-                          occurrence.status!.toLowerCase() == 'canceled'
-                              ? l10n.canceled
-                              : occurrence.status!,
+                          occurrenceStatusLabel(l10n, occurrence.status),
                         ),
                         visualDensity: VisualDensity.compact,
                       ),
@@ -184,8 +183,8 @@ class _OccurrenceBody extends StatelessWidget {
                   Text(
                     scope,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
                   ),
                 ],
                 const SizedBox(height: 20),
@@ -218,7 +217,23 @@ class _OccurrenceBody extends StatelessWidget {
                       formatEventTimeRange(lockAt, null),
                     ),
                   ),
-                if (occurrence.description != null &&
+                if (occurrence.purpose != null &&
+                    occurrence.purpose!.trim().isNotEmpty) ...[
+                  const SizedBox(height: 16),
+                  Text(
+                    l10n.purpose,
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    occurrence.purpose!,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withValues(alpha: 0.7),
+                    ),
+                  ),
+                ] else if (occurrence.description != null &&
                     occurrence.description!.trim().isNotEmpty) ...[
                   const SizedBox(height: 16),
                   Text(
@@ -229,14 +244,22 @@ class _OccurrenceBody extends StatelessWidget {
                   Text(
                     occurrence.description!,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSurface
-                              .withValues(alpha: 0.7),
-                        ),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withValues(alpha: 0.7),
+                    ),
                   ),
                 ],
                 const SizedBox(height: 28),
+                _ActionTile(
+                  icon: Icons.info_outline_rounded,
+                  title: l10n.sessionDetails,
+                  subtitle: l10n.sessionDetailsSubtitle,
+                  color: AppColors.primary,
+                  onTap: () =>
+                      context.push('/occurrences/${occurrence.id}/details'),
+                ),
+                const SizedBox(height: 12),
                 if (!canceled && open)
                   _ActionTile(
                     icon: Icons.how_to_reg_rounded,

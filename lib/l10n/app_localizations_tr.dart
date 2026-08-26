@@ -1481,4 +1481,50 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get aboutCouldNotOpenWebsite => 'Web sitesi açılamadı';
+
+  @override
+  String get sessionDetails => 'Seans ayrıntıları';
+
+  @override
+  String get sessionDetailsSubtitle =>
+      'API’den başlık, saat, konum ve diğer alanlar';
+
+  @override
+  String get sessionDetailsIntro =>
+      'Bu seans için kaydedilen ayrıntılar bunlardır.';
+
+  @override
+  String get purpose => 'Amaç';
+
+  @override
+  String get coaches => 'Antrenörler';
+
+  @override
+  String get trainingPlan => 'Antrenman planı';
+
+  @override
+  String get section => 'Bölüm';
+
+  @override
+  String get statusScheduled => 'Planlandı';
+
+  @override
+  String get statusMoved => 'Taşındı';
+
+  @override
+  String get statusCompleted => 'Tamamlandı';
+
+  @override
+  String get rsvpYes => 'İstendi';
+
+  @override
+  String get rsvpNo => 'İstenmedi';
+
+  @override
+  String get originallyScheduled => 'Orijinal';
+
+  @override
+  String durationMinutes(int minutes) {
+    return '$minutes dk';
+  }
 }

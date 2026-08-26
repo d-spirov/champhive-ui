@@ -1498,4 +1498,50 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get aboutCouldNotOpenWebsite => 'Impossibile aprire il sito';
+
+  @override
+  String get sessionDetails => 'Dettagli della sessione';
+
+  @override
+  String get sessionDetailsSubtitle =>
+      'Titolo, orario, luogo e altri campi dall\'API';
+
+  @override
+  String get sessionDetailsIntro =>
+      'Questi sono i dettagli salvati per questa sessione.';
+
+  @override
+  String get purpose => 'Scopo';
+
+  @override
+  String get coaches => 'Allenatori';
+
+  @override
+  String get trainingPlan => 'Piano di allenamento';
+
+  @override
+  String get section => 'Sezione';
+
+  @override
+  String get statusScheduled => 'Programmato';
+
+  @override
+  String get statusMoved => 'Spostato';
+
+  @override
+  String get statusCompleted => 'Completato';
+
+  @override
+  String get rsvpYes => 'Richiesto';
+
+  @override
+  String get rsvpNo => 'Non richiesto';
+
+  @override
+  String get originallyScheduled => 'Originariamente';
+
+  @override
+  String durationMinutes(int minutes) {
+    return '$minutes min';
+  }
 }

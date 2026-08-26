@@ -17,19 +17,14 @@ void main() {
       'emailVerificationPending': false,
       'isPlatformRoot': false,
       'roles': [
-        {
-          'role': 'coach',
-          'clubId': 'c1',
-          'scope': 'club',
-          'scopeId': 'c1',
-        }
+        {'role': 'coach', 'clubId': 'c1', 'scope': 'club', 'scopeId': 'c1'},
       ],
       'fam': <String>[],
       'clubPermissions': [
         {
           'clubId': 'c1',
           'permissions': ['attendance.mark'],
-        }
+        },
       ],
       'createdAtUtc': '2024-01-01T00:00:00Z',
     });
@@ -92,7 +87,45 @@ void main() {
     expect(event.type, EventType.training);
     expect(event.teams, ['U12']);
     expect(event.location.display, 'Hall A');
+    expect(event.clubName, 'FC Example');
+    expect(event.scopeKind, 'team');
+    expect(event.durationMin, 90);
+    expect(event.rsvpRequested, isFalse);
+    expect(event.coaches, isEmpty);
+    expect(event.purpose, isNull);
   });
+
+  test(
+    'ClubEvent.fromOccurrenceJson maps coaches, purpose and training plan',
+    () {
+      final event = ClubEvent.fromOccurrenceJson({
+        'occurrenceId': 'o2',
+        'clubId': 'c1',
+        'type': 'training',
+        'title': 'Tactics',
+        'purpose': 'Pressing drill',
+        'note': 'Moved indoors',
+        'location': 'Hall B',
+        'startsAtUtc': '2024-06-01T16:00:00Z',
+        'endsAtUtc': '2024-06-01T17:00:00Z',
+        'originalStartUtc': '2024-06-01T15:00:00Z',
+        'durationMin': 60,
+        'status': 'moved',
+        'rsvpRequested': true,
+        'coaches': [
+          {'name': 'Ana Coach', 'userAccountId': 'u9', 'scopeKind': 'team'},
+        ],
+        'trainingPlanName': 'U12 block 3',
+      });
+      expect(event.purpose, 'Pressing drill');
+      expect(event.note, 'Moved indoors');
+      expect(event.rsvpRequested, isTrue);
+      expect(event.coaches.single.name, 'Ana Coach');
+      expect(event.trainingPlanName, 'U12 block 3');
+      expect(event.wasMoved, isTrue);
+      expect(event.resolvedDurationMin, 60);
+    },
+  );
 
   test('Attendance batch entry uses lowercase status', () {
     final update = AttendanceUpdate(
@@ -124,7 +157,7 @@ void main() {
           'satisfied': false,
           'expiresOn': null,
           'latestDocument': null,
-        }
+        },
       ],
     });
     expect(picture.status, 'missing');

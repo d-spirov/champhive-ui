@@ -675,5 +675,19 @@
   "aboutMadeBy": "da Codeantech",
   "aboutCodeantechBlurb": "Codeantech crea soluzioni digitali che aiutano imprese e comunità a crescere attraverso la tecnologia.",
   "aboutCopyright": "© {year} Codeantech. Tutti i diritti riservati.",
-  "aboutCouldNotOpenWebsite": "Impossibile aprire il sito"
+  "aboutCouldNotOpenWebsite": "Impossibile aprire il sito",
+  "sessionDetails": "Dettagli della sessione",
+  "sessionDetailsSubtitle": "Titolo, orario, luogo e altri campi dall'API",
+  "sessionDetailsIntro": "Questi sono i dettagli salvati per questa sessione.",
+  "purpose": "Scopo",
+  "coaches": "Allenatori",
+  "trainingPlan": "Piano di allenamento",
+  "section": "Sezione",
+  "statusScheduled": "Programmato",
+  "statusMoved": "Spostato",
+  "statusCompleted": "Completato",
+  "rsvpYes": "Richiesto",
+  "rsvpNo": "Non richiesto",
+  "originallyScheduled": "Originariamente",
+  "durationMinutes": "{minutes} min"
 }

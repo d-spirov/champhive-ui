@@ -88,41 +88,41 @@ AttendanceState parseAttendanceState({
 
 extension EventTypeX on EventType {
   String get apiValue => switch (this) {
-        EventType.training => 'training',
-        EventType.match => 'match',
-        EventType.tournament => 'tournament',
-        EventType.meeting => 'clubEvent',
-        EventType.other => 'clubEvent',
-      };
+    EventType.training => 'training',
+    EventType.match => 'match',
+    EventType.tournament => 'tournament',
+    EventType.meeting => 'clubEvent',
+    EventType.other => 'clubEvent',
+  };
 
   /// English fallback. Prefer [eventTypeLabel] from `label_l10n.dart` in UI.
   String get label => switch (this) {
-        EventType.training => 'Training',
-        EventType.match => 'Match',
-        EventType.tournament => 'Tournament',
-        EventType.meeting => 'Club Event',
-        EventType.other => 'Event',
-      };
+    EventType.training => 'Training',
+    EventType.match => 'Match',
+    EventType.tournament => 'Tournament',
+    EventType.meeting => 'Club Event',
+    EventType.other => 'Event',
+  };
 }
 
 extension AttendanceStatusX on AttendanceStatus {
   /// Wire values for attendance batch: present|late|excused|absent.
   String get apiValue => switch (this) {
-        AttendanceStatus.notMarked => 'absent', // should not be sent
-        AttendanceStatus.present => 'present',
-        AttendanceStatus.absent => 'absent',
-        AttendanceStatus.late => 'late',
-        AttendanceStatus.excused => 'excused',
-      };
+    AttendanceStatus.notMarked => 'absent', // should not be sent
+    AttendanceStatus.present => 'present',
+    AttendanceStatus.absent => 'absent',
+    AttendanceStatus.late => 'late',
+    AttendanceStatus.excused => 'excused',
+  };
 
   /// English fallback. Prefer [attendanceStatusLabel] from `label_l10n.dart` in UI.
   String get label => switch (this) {
-        AttendanceStatus.notMarked => 'Unmarked',
-        AttendanceStatus.present => 'Present',
-        AttendanceStatus.absent => 'Absent',
-        AttendanceStatus.late => 'Late',
-        AttendanceStatus.excused => 'Excused',
-      };
+    AttendanceStatus.notMarked => 'Unmarked',
+    AttendanceStatus.present => 'Present',
+    AttendanceStatus.absent => 'Absent',
+    AttendanceStatus.late => 'Late',
+    AttendanceStatus.excused => 'Excused',
+  };
 
   bool get isMarkable => this != AttendanceStatus.notMarked;
 }
@@ -131,15 +131,15 @@ extension AbsenceReasonX on AbsenceReason {
   String get apiValue => name.toUpperCase();
 
   String get label => switch (this) {
-        AbsenceReason.illness => 'Illness',
-        AbsenceReason.injury => 'Injured',
-        AbsenceReason.school => 'School',
-        AbsenceReason.family => 'Family',
-        AbsenceReason.travel => 'Travel',
-        AbsenceReason.work => 'Work',
-        AbsenceReason.other => 'Other',
-        AbsenceReason.unspecified => 'Unspecified',
-      };
+    AbsenceReason.illness => 'Illness',
+    AbsenceReason.injury => 'Injured',
+    AbsenceReason.school => 'School',
+    AbsenceReason.family => 'Family',
+    AbsenceReason.travel => 'Travel',
+    AbsenceReason.work => 'Work',
+    AbsenceReason.other => 'Other',
+    AbsenceReason.unspecified => 'Unspecified',
+  };
 }
 
 class EventLocation {
@@ -171,6 +171,47 @@ class EventLocation {
   }
 }
 
+class OccurrenceCoach {
+  const OccurrenceCoach({
+    required this.name,
+    this.userAccountId,
+    this.scopeKind,
+  });
+
+  final String name;
+  final String? userAccountId;
+  final String? scopeKind;
+
+  factory OccurrenceCoach.fromJson(Map<String, dynamic> json) {
+    final name =
+        json['name'] as String? ??
+        json['displayName'] as String? ??
+        [
+          json['firstName'] as String? ?? '',
+          json['lastName'] as String? ?? '',
+        ].where((p) => p.trim().isNotEmpty).join(' ');
+    return OccurrenceCoach(
+      name: name.trim().isEmpty ? 'Coach' : name.trim(),
+      userAccountId:
+          json['userAccountId']?.toString() ?? json['id']?.toString(),
+      scopeKind: json['scopeKind'] as String?,
+    );
+  }
+}
+
+List<OccurrenceCoach> parseOccurrenceCoaches(Object? raw) {
+  if (raw is! List) return const [];
+  final coaches = <OccurrenceCoach>[];
+  for (final item in raw) {
+    if (item is Map) {
+      coaches.add(OccurrenceCoach.fromJson(Map<String, dynamic>.from(item)));
+    } else if (item != null && item.toString().trim().isNotEmpty) {
+      coaches.add(OccurrenceCoach(name: item.toString().trim()));
+    }
+  }
+  return coaches;
+}
+
 /// Calendar / detail model mapped from [ScheduleOccurrenceResponse].
 class ClubEvent {
   const ClubEvent({
@@ -192,6 +233,16 @@ class ClubEvent {
     this.seriesId,
     this.scopeName,
     this.clubName,
+    this.purpose,
+    this.note,
+    this.durationMin,
+    this.rsvpRequested = false,
+    this.scopeKind,
+    this.scopeId,
+    this.originalStartUtc,
+    this.coaches = const [],
+    this.trainingPlanId,
+    this.trainingPlanName,
   });
 
   final String id;
@@ -212,36 +263,76 @@ class ClubEvent {
   final String? seriesId;
   final String? scopeName;
   final String? clubName;
+  final String? purpose;
+  final String? note;
+  final int? durationMin;
+  final bool rsvpRequested;
+  final String? scopeKind;
+  final String? scopeId;
+  final DateTime? originalStartUtc;
+  final List<OccurrenceCoach> coaches;
+  final String? trainingPlanId;
+  final String? trainingPlanName;
 
   /// Occurrence id (opaque).
   String get occurrenceId => id;
 
+  int? get resolvedDurationMin {
+    if (durationMin != null && durationMin! > 0) return durationMin;
+    final end = endAt;
+    if (end == null) return null;
+    final minutes = end.difference(startAt).inMinutes;
+    return minutes > 0 ? minutes : null;
+  }
+
+  bool get wasMoved {
+    final original = originalStartUtc;
+    if (original == null) return false;
+    return original.difference(startAt).inMinutes.abs() >= 1;
+  }
+
   factory ClubEvent.fromOccurrenceJson(Map<String, dynamic> json) {
-    final starts = DateTime.tryParse(json['startsAtUtc'] as String? ?? '')
-            ?.toLocal() ??
+    final starts =
+        DateTime.tryParse(json['startsAtUtc'] as String? ?? '')?.toLocal() ??
         DateTime.now();
-    final ends =
-        DateTime.tryParse(json['endsAtUtc'] as String? ?? '')?.toLocal();
+    final ends = DateTime.tryParse(
+      json['endsAtUtc'] as String? ?? '',
+    )?.toLocal();
+    final original = DateTime.tryParse(
+      json['originalStartUtc'] as String? ?? '',
+    )?.toLocal();
     final scopeName = json['scopeName'] as String?;
     final status = json['status'] as String?;
+    final purpose = (json['purpose'] as String?)?.trim();
+    final note = (json['note'] as String?)?.trim();
     return ClubEvent(
       id: json['occurrenceId']?.toString() ?? json['id']?.toString() ?? '',
       clubId: json['clubId']?.toString() ?? '',
       seriesId: json['seriesId']?.toString(),
       type: parseEventType(json['type'] as String?),
       title: json['title'] as String? ?? '',
-      description: json['purpose'] as String? ?? json['note'] as String?,
+      purpose: (purpose == null || purpose.isEmpty) ? null : purpose,
+      note: (note == null || note.isEmpty) ? null : note,
+      description: (purpose != null && purpose.isNotEmpty)
+          ? purpose
+          : ((note != null && note.isNotEmpty) ? note : null),
       startAt: starts,
       endAt: ends,
+      originalStartUtc: original,
+      durationMin: (json['durationMin'] as num?)?.toInt(),
       timezone: json['timeZone'] as String? ?? json['timezone'] as String?,
       isPast: starts.isBefore(DateTime.now()),
       status: status,
-      teams: scopeName != null && scopeName.isNotEmpty
-          ? [scopeName]
-          : const [],
+      rsvpRequested: json['rsvpRequested'] as bool? ?? false,
+      scopeKind: json['scopeKind'] as String?,
+      scopeId: json['scopeId']?.toString(),
+      teams: scopeName != null && scopeName.isNotEmpty ? [scopeName] : const [],
       scopeName: scopeName,
       clubName: json['clubName'] as String?,
       location: EventLocation.fromString(json['location'] as String?),
+      coaches: parseOccurrenceCoaches(json['coaches']),
+      trainingPlanId: json['trainingPlanId']?.toString(),
+      trainingPlanName: json['trainingPlanName'] as String?,
     );
   }
 
@@ -262,7 +353,8 @@ class ClubEvent {
       type: parseEventType(json['type'] as String?),
       title: json['title'] as String? ?? '',
       description: json['description'] as String?,
-      startAt: DateTime.tryParse(json['startAt'] as String? ?? '')?.toLocal() ??
+      startAt:
+          DateTime.tryParse(json['startAt'] as String? ?? '')?.toLocal() ??
           DateTime.now(),
       endAt: DateTime.tryParse(json['endAt'] as String? ?? '')?.toLocal(),
       timezone: json['timezone'] as String? ?? json['timeZone'] as String?,
@@ -306,7 +398,8 @@ class AttendanceSummaryCounts {
       absent: (json['absent'] as num?)?.toInt() ?? 0,
       late: (json['late'] as num?)?.toInt() ?? 0,
       excused: (json['excused'] as num?)?.toInt() ?? 0,
-      notMarked: (json['notMarked'] as num?)?.toInt() ??
+      notMarked:
+          (json['notMarked'] as num?)?.toInt() ??
           (json['unmarked'] as num?)?.toInt() ??
           0,
     );
@@ -381,7 +474,9 @@ class AttendanceParticipant {
     return AttendanceParticipant(
       id: memberId,
       playerId: memberId,
-      displayName: '$first $last'.trim().isEmpty ? 'Member' : '$first $last'.trim(),
+      displayName: '$first $last'.trim().isEmpty
+          ? 'Member'
+          : '$first $last'.trim(),
       version: 0,
       status: parseAttendanceStatus(json['attendanceStatus'] as String?),
       note: json['attendanceNote'] as String?,
@@ -403,7 +498,9 @@ class AttendanceParticipant {
     return AttendanceParticipant(
       id: memberId,
       playerId: memberId,
-      displayName: '$first $last'.trim().isEmpty ? 'Member' : '$first $last'.trim(),
+      displayName: '$first $last'.trim().isEmpty
+          ? 'Member'
+          : '$first $last'.trim(),
       version: 0,
       status: parseAttendanceStatus(json['status'] as String?),
       note: json['note'] as String?,
@@ -509,8 +606,7 @@ class AttendanceSession {
 
   String get occurrenceId => eventId;
 
-  bool get isCanceled =>
-      (occurrenceStatus ?? '').toLowerCase() == 'canceled';
+  bool get isCanceled => (occurrenceStatus ?? '').toLowerCase() == 'canceled';
 
   String get lockStatusLabel {
     if (isCanceled) return 'Canceled — attendance closed';
@@ -537,11 +633,12 @@ class AttendanceSession {
     final open = json['attendanceOpen'] as bool? ?? false;
     final type = parseEventType(json['type'] as String?);
     final status = json['status'] as String?;
-    final start = DateTime.tryParse(json['startsAtUtc'] as String? ?? '')
-            ?.toLocal() ??
+    final start =
+        DateTime.tryParse(json['startsAtUtc'] as String? ?? '')?.toLocal() ??
         DateTime.now();
-    final end =
-        DateTime.tryParse(json['endsAtUtc'] as String? ?? '')?.toLocal();
+    final end = DateTime.tryParse(
+      json['endsAtUtc'] as String? ?? '',
+    )?.toLocal();
     return AttendanceSession(
       eventId: json['occurrenceId']?.toString() ?? '',
       title: json['title'] as String? ?? 'Session',
@@ -592,8 +689,8 @@ class AttendanceSession {
       eventId: json['occurrenceId']?.toString() ?? '',
       title: json['title'] as String? ?? 'Session',
       type: EventType.other,
-      startAt: DateTime.tryParse(json['startsAtUtc'] as String? ?? '')
-              ?.toLocal() ??
+      startAt:
+          DateTime.tryParse(json['startsAtUtc'] as String? ?? '')?.toLocal() ??
           DateTime.now(),
       timezone: json['timeZone'] as String?,
       attendanceEnabled: true,
@@ -622,7 +719,8 @@ class AttendanceSession {
   }
 
   factory AttendanceSession.fromJson(Map<String, dynamic> json) {
-    if (json.containsKey('snapshotAtUtc') || json.containsKey('syncWindowDays')) {
+    if (json.containsKey('snapshotAtUtc') ||
+        json.containsKey('syncWindowDays')) {
       return AttendanceSession.fromRosterSnapshot(json);
     }
     return AttendanceSession.fromOccurrenceAttendance(json);
@@ -630,10 +728,7 @@ class AttendanceSession {
 }
 
 class AttendanceSaveResult {
-  const AttendanceSaveResult({
-    required this.batch,
-    required this.session,
-  });
+  const AttendanceSaveResult({required this.batch, required this.session});
 
   final AttendanceBatchResult batch;
   final AttendanceSession session;
@@ -658,17 +753,15 @@ class AttendanceUpdate {
   final DateTime? recordedAtClientUtc;
   final String? clientRecordId;
 
-  Map<String, dynamic> toBatchEntry({
-    required String occurrenceId,
-  }) {
+  Map<String, dynamic> toBatchEntry({required String occurrenceId}) {
     final trimmed = note?.trim();
     return {
       'clientRecordId': clientRecordId ?? newClientRecordId(),
       'occurrenceId': occurrenceId,
       'memberId': participantId,
       'status': status.apiValue,
-      'recordedAtClientUtc':
-          (recordedAtClientUtc ?? DateTime.now().toUtc()).toIso8601String(),
+      'recordedAtClientUtc': (recordedAtClientUtc ?? DateTime.now().toUtc())
+          .toIso8601String(),
       'note': ?trimmed,
     };
   }

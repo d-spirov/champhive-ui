@@ -689,5 +689,26 @@
       }
     }
   },
-  "aboutCouldNotOpenWebsite": "Could not open the website"
+  "aboutCouldNotOpenWebsite": "Could not open the website",
+  "sessionDetails": "Session details",
+  "sessionDetailsSubtitle": "Title, time, location and other fields from the API",
+  "sessionDetailsIntro": "These are the details saved for this session.",
+  "purpose": "Purpose",
+  "coaches": "Coaches",
+  "trainingPlan": "Training plan",
+  "section": "Section",
+  "statusScheduled": "Scheduled",
+  "statusMoved": "Moved",
+  "statusCompleted": "Completed",
+  "rsvpYes": "Requested",
+  "rsvpNo": "Not requested",
+  "originallyScheduled": "Originally",
+  "durationMinutes": "{minutes} min",
+  "@durationMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  }
 }

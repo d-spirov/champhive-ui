@@ -675,5 +675,19 @@
   "aboutMadeBy": "Codeantech",
   "aboutCodeantechBlurb": "Codeantech, işletmelerin ve toplulukların teknolojiyle büyümesine yardımcı olan dijital çözümler üretir.",
   "aboutCopyright": "© {year} Codeantech. Tüm hakları saklıdır.",
-  "aboutCouldNotOpenWebsite": "Web sitesi açılamadı"
+  "aboutCouldNotOpenWebsite": "Web sitesi açılamadı",
+  "sessionDetails": "Seans ayrıntıları",
+  "sessionDetailsSubtitle": "API’den başlık, saat, konum ve diğer alanlar",
+  "sessionDetailsIntro": "Bu seans için kaydedilen ayrıntılar bunlardır.",
+  "purpose": "Amaç",
+  "coaches": "Antrenörler",
+  "trainingPlan": "Antrenman planı",
+  "section": "Bölüm",
+  "statusScheduled": "Planlandı",
+  "statusMoved": "Taşındı",
+  "statusCompleted": "Tamamlandı",
+  "rsvpYes": "İstendi",
+  "rsvpNo": "İstenmedi",
+  "originallyScheduled": "Orijinal",
+  "durationMinutes": "{minutes} dk"
 }

@@ -1497,4 +1497,49 @@ class AppLocalizationsMk extends AppLocalizations {
   @override
   String get aboutCouldNotOpenWebsite =>
       'Веб-страницата не можеше да се отвори';
+
+  @override
+  String get sessionDetails => 'Детали за сесијата';
+
+  @override
+  String get sessionDetailsSubtitle =>
+      'Наслов, време, локација и други полиња од API';
+
+  @override
+  String get sessionDetailsIntro => 'Ова се деталите зачувани за оваа сесија.';
+
+  @override
+  String get purpose => 'Цел';
+
+  @override
+  String get coaches => 'Тренери';
+
+  @override
+  String get trainingPlan => 'План за тренинг';
+
+  @override
+  String get section => 'Секција';
+
+  @override
+  String get statusScheduled => 'Закажано';
+
+  @override
+  String get statusMoved => 'Преместено';
+
+  @override
+  String get statusCompleted => 'Завршено';
+
+  @override
+  String get rsvpYes => 'Побарано';
+
+  @override
+  String get rsvpNo => 'Не е побарано';
+
+  @override
+  String get originallyScheduled => 'Првично';
+
+  @override
+  String durationMinutes(int minutes) {
+    return '$minutes мин';
+  }
 }

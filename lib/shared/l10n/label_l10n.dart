@@ -11,6 +11,36 @@ String eventTypeLabel(AppLocalizations l10n, EventType type) {
   };
 }
 
+String occurrenceStatusLabel(AppLocalizations l10n, String? status) {
+  switch ((status ?? '').toLowerCase()) {
+    case 'canceled':
+    case 'cancelled':
+      return l10n.canceled;
+    case 'moved':
+      return l10n.statusMoved;
+    case 'completed':
+      return l10n.statusCompleted;
+    case 'scheduled':
+      return l10n.statusScheduled;
+    default:
+      if (status == null || status.isEmpty) return l10n.statusScheduled;
+      return status[0].toUpperCase() + status.substring(1).toLowerCase();
+  }
+}
+
+String scopeKindLabel(AppLocalizations l10n, String? kind) {
+  switch ((kind ?? '').toLowerCase()) {
+    case 'team':
+      return l10n.team;
+    case 'club':
+      return l10n.club;
+    case 'section':
+      return l10n.section;
+    default:
+      return l10n.scope;
+  }
+}
+
 String attendanceStatusLabel(AppLocalizations l10n, AttendanceStatus status) {
   return switch (status) {
     AttendanceStatus.notMarked => l10n.statusUnmarked,

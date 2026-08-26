@@ -23,7 +23,9 @@ final attendanceApiProvider = Provider<AttendanceApi>((ref) {
 });
 
 /// Club schedule occurrences for the selected club (last 7 / next 21 days).
-final clubEventsProvider = FutureProvider.autoDispose<List<ClubEvent>>((ref) async {
+final clubEventsProvider = FutureProvider.autoDispose<List<ClubEvent>>((
+  ref,
+) async {
   final auth = ref.watch(authNotifierProvider);
   if (!auth.isAuthenticated || auth.user?.id == 'demo') {
     return const [];
@@ -39,8 +41,9 @@ final clubEventsProvider = FutureProvider.autoDispose<List<ClubEvent>>((ref) asy
   return api.listEvents(clubId: clubId, from: from, to: to, size: 200);
 });
 
-final pastClubEventsProvider =
-    FutureProvider.autoDispose<List<ClubEvent>>((ref) async {
+final pastClubEventsProvider = FutureProvider.autoDispose<List<ClubEvent>>((
+  ref,
+) async {
   final auth = ref.watch(authNotifierProvider);
   if (!auth.isAuthenticated || auth.user?.id == 'demo') {
     return const [];
@@ -61,45 +64,45 @@ final pastClubEventsProvider =
   );
 });
 
-final eventDetailProvider =
-    FutureProvider.autoDispose.family<ClubEvent, String>((ref, eventId) async {
-  final clubId = ref.watch(selectedClubIdProvider);
-  if (clubId == null) {
-    throw StateError('No club selected');
-  }
-  await ref.watch(authApiProvider.future);
-  return ref.watch(eventsApiProvider).getEvent(clubId: clubId, eventId: eventId);
-});
+final eventDetailProvider = FutureProvider.autoDispose
+    .family<ClubEvent, String>((ref, eventId) async {
+      final clubId = ref.watch(selectedClubIdProvider);
+      if (clubId == null) {
+        throw StateError('No club selected');
+      }
+      await ref.watch(authApiProvider.future);
+      return ref
+          .watch(eventsApiProvider)
+          .getEvent(clubId: clubId, eventId: eventId);
+    });
 
 final attendanceSessionProvider = FutureProvider.autoDispose
     .family<AttendanceSession, String>((ref, occurrenceId) async {
-  ref.watch(selectedClubIdProvider);
-  await ref.watch(authApiProvider.future);
-  final api = ref.watch(attendanceApiProvider);
-  return api.getRosterSnapshot(occurrenceId: occurrenceId);
-});
+      ref.watch(selectedClubIdProvider);
+      await ref.watch(authApiProvider.future);
+      final api = ref.watch(attendanceApiProvider);
+      return api.getRosterSnapshot(occurrenceId: occurrenceId);
+    });
 
 /// Server attendance report for an occurrence (works after lock too).
 final occurrenceAttendanceReportProvider = FutureProvider.autoDispose
     .family<AttendanceSession, String>((ref, occurrenceId) async {
-  ref.watch(selectedClubIdProvider);
-  await ref.watch(authApiProvider.future);
-  return ref
-      .watch(attendanceApiProvider)
-      .getOccurrenceAttendance(occurrenceId: occurrenceId);
-});
+      ref.watch(selectedClubIdProvider);
+      await ref.watch(authApiProvider.future);
+      return ref
+          .watch(attendanceApiProvider)
+          .getOccurrenceAttendance(occurrenceId: occurrenceId);
+    });
 
 /// Upcoming schedule items still inside the typical attendance window.
 final openAttendanceOccurrencesProvider =
     FutureProvider.autoDispose<List<ClubEvent>>((ref) async {
-  final events = await ref.watch(clubEventsProvider.future);
-  final now = DateTime.now();
-  return events
-      .where((e) {
+      final events = await ref.watch(clubEventsProvider.future);
+      final now = DateTime.now();
+      return events.where((e) {
         final status = (e.status ?? '').toLowerCase();
         if (status == 'canceled') return false;
         final lockAt = e.startAt.add(const Duration(hours: 72));
         return lockAt.isAfter(now);
-      })
-      .toList();
-});
+      }).toList();
+    });

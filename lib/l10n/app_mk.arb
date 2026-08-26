@@ -675,5 +675,19 @@
   "aboutMadeBy": "од Codeantech",
   "aboutCodeantechBlurb": "Codeantech гради дигитални решенија што им помагаат на бизнисите и заедниците да растат преку технологија.",
   "aboutCopyright": "© {year} Codeantech. Сите права се задржани.",
-  "aboutCouldNotOpenWebsite": "Веб-страницата не можеше да се отвори"
+  "aboutCouldNotOpenWebsite": "Веб-страницата не можеше да се отвори",
+  "sessionDetails": "Детали за сесијата",
+  "sessionDetailsSubtitle": "Наслов, време, локација и други полиња од API",
+  "sessionDetailsIntro": "Ова се деталите зачувани за оваа сесија.",
+  "purpose": "Цел",
+  "coaches": "Тренери",
+  "trainingPlan": "План за тренинг",
+  "section": "Секција",
+  "statusScheduled": "Закажано",
+  "statusMoved": "Преместено",
+  "statusCompleted": "Завршено",
+  "rsvpYes": "Побарано",
+  "rsvpNo": "Не е побарано",
+  "originallyScheduled": "Првично",
+  "durationMinutes": "{minutes} мин"
 }

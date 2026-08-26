@@ -1487,4 +1487,49 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get aboutCouldNotOpenWebsite => 'Sajt se nije mogao otvoriti';
+
+  @override
+  String get sessionDetails => 'Detalji sesije';
+
+  @override
+  String get sessionDetailsSubtitle =>
+      'Naslov, vrijeme, lokacija i ostala polja iz API-ja';
+
+  @override
+  String get sessionDetailsIntro => 'Ovo su detalji sačuvani za ovu sesiju.';
+
+  @override
+  String get purpose => 'Svrha';
+
+  @override
+  String get coaches => 'Treneri';
+
+  @override
+  String get trainingPlan => 'Plan treninga';
+
+  @override
+  String get section => 'Sekcija';
+
+  @override
+  String get statusScheduled => 'Zakazano';
+
+  @override
+  String get statusMoved => 'Premješteno';
+
+  @override
+  String get statusCompleted => 'Završeno';
+
+  @override
+  String get rsvpYes => 'Zatraženo';
+
+  @override
+  String get rsvpNo => 'Nije zatraženo';
+
+  @override
+  String get originallyScheduled => 'Prvobitno';
+
+  @override
+  String durationMinutes(int minutes) {
+    return '$minutes min';
+  }
 }
