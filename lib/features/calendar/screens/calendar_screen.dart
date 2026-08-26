@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 
 import '../../../l10n/app_localizations.dart';
 import '../../auth/providers/auth_provider.dart';
@@ -43,7 +42,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(DateFormat('MMMM yyyy').format(_selected)),
+        title: Text(appDateFormat(context, 'MMMM yyyy').format(_selected)),
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
@@ -90,7 +89,10 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          DateFormat('EEE').format(day).toUpperCase(),
+                          appDateFormat(
+                            context,
+                            'EEE',
+                          ).format(day).toUpperCase(),
                           style: TextStyle(
                             fontSize: 11,
                             fontWeight: FontWeight.w600,
@@ -175,7 +177,10 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                           padding: const EdgeInsets.fromLTRB(16, 8, 16, 88),
                           children: [
                             SectionHeader(
-                              title: DateFormat('EEE, d MMM').format(_selected),
+                              title: appDateFormat(
+                                context,
+                                'EEE, d MMM',
+                              ).format(_selected),
                             ),
                             if (dayEvents.isEmpty)
                               Card(

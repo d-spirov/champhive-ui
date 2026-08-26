@@ -144,6 +144,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           size: 88,
                           showWordmark: true,
                           showShadow: true,
+                          onDarkBackground: true,
                         ),
                         const SizedBox(height: 10),
                         Text(

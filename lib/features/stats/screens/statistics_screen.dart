@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 
 import '../../../l10n/app_localizations.dart';
+import '../../../shared/l10n/date_l10n.dart';
 import '../../../shared/models/analytics.dart';
 import '../../../shared/models/payment.dart';
 import '../../../shared/theme/app_theme.dart';
@@ -54,8 +54,9 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen>
         bottom: TabBar(
           controller: _tabs,
           labelColor: Theme.of(context).colorScheme.primary,
-          unselectedLabelColor:
-              Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.55),
+          unselectedLabelColor: Theme.of(
+            context,
+          ).colorScheme.onSurface.withValues(alpha: 0.55),
           indicatorColor: Theme.of(context).colorScheme.primary,
           tabs: [
             Tab(text: l10n.membership),
@@ -67,10 +68,7 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen>
           ? Center(child: Text(l10n.signInToSeeStats))
           : TabBarView(
               controller: _tabs,
-              children: const [
-                _MembershipTab(),
-                _RevenueTab(),
-              ],
+              children: const [_MembershipTab(), _RevenueTab()],
             ),
     );
   }
@@ -112,7 +110,9 @@ class _MembershipTab extends ConsumerWidget {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: Text(
-                    l10n.asOfDate(DateFormat('d MMM yyyy').format(data.asOf!)),
+                    l10n.asOfDate(
+                      appDateFormat(context, 'd MMM yyyy').format(data.asOf!),
+                    ),
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ),
@@ -162,7 +162,9 @@ class _MembershipTab extends ConsumerWidget {
               if (data.trend.isEmpty)
                 Text(l10n.noTrendDataYet)
               else
-                ...data.trend.reversed.take(12).map(
+                ...data.trend.reversed
+                    .take(12)
+                    .map(
                       (p) => _TrendRow(
                         period: p.period,
                         primary: l10n.activeCount(p.active),
@@ -232,7 +234,7 @@ class _RevenueTab extends ConsumerWidget {
                   padding: const EdgeInsets.only(bottom: 8),
                   child: Text(
                     l10n.asOfDateCurrency(
-                      DateFormat('d MMM yyyy').format(data.asOf!),
+                      appDateFormat(context, 'd MMM yyyy').format(data.asOf!),
                       c,
                     ),
                     style: Theme.of(context).textTheme.bodySmall,
@@ -466,15 +468,15 @@ class _TrendRow extends StatelessWidget {
                   style: const TextStyle(fontWeight: FontWeight.w600),
                 ),
               ),
-              Text(primary, style: const TextStyle(fontWeight: FontWeight.w700)),
+              Text(
+                primary,
+                style: const TextStyle(fontWeight: FontWeight.w700),
+              ),
             ],
           ),
           if (secondary.isNotEmpty) ...[
             const SizedBox(height: 2),
-            Text(
-              secondary,
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
+            Text(secondary, style: Theme.of(context).textTheme.bodySmall),
           ],
           const SizedBox(height: 6),
           ClipRRect(

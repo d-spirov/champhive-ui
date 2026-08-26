@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 
 import '../../../l10n/app_localizations.dart';
 import '../../attendance/widgets/attendance_ui.dart';
@@ -429,7 +428,7 @@ class _YourTeamCard extends StatelessWidget {
                       Text(
                         next == null
                             ? 'vs $opponent'
-                            : 'vs $opponent · ${DateFormat('d MMM, HH:mm').format(next)}',
+                            : 'vs $opponent · ${appDateFormat(context, 'd MMM, HH:mm').format(next)}',
                         style: GoogleFonts.inter(
                           color: Colors.white,
                           fontSize: 14,

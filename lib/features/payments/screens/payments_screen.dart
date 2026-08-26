@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 
 import '../../../l10n/app_localizations.dart';
+import '../../../shared/l10n/date_l10n.dart';
 import '../../../shared/models/payment.dart';
 import '../../../shared/theme/app_theme.dart';
 import '../../../shared/utils/api_error_message.dart';
@@ -57,8 +57,9 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen>
         bottom: TabBar(
           controller: _tabs,
           labelColor: Theme.of(context).colorScheme.primary,
-          unselectedLabelColor:
-              Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.55),
+          unselectedLabelColor: Theme.of(
+            context,
+          ).colorScheme.onSurface.withValues(alpha: 0.55),
           indicatorColor: Theme.of(context).colorScheme.primary,
           tabs: [
             Tab(text: l10n.outstanding),
@@ -79,11 +80,7 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen>
           ? Center(child: Text(l10n.signInToManagePayments))
           : TabBarView(
               controller: _tabs,
-              children: const [
-                _OutstandingTab(),
-                _CashTab(),
-                _MyFeesTab(),
-              ],
+              children: const [_OutstandingTab(), _CashTab(), _MyFeesTab()],
             ),
     );
   }
@@ -92,9 +89,9 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen>
     final l10n = AppLocalizations.of(context)!;
     final clubId = ref.read(selectedClubIdProvider);
     if (clubId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.selectClubFirst)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.selectClubFirst)));
       return;
     }
     final obligations =
@@ -119,10 +116,8 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen>
     final saved = await showModalBottomSheet<bool>(
       context: context,
       isScrollControlled: true,
-      builder: (context) => _RecordPaymentSheet(
-        clubId: clubId,
-        payees: members,
-      ),
+      builder: (context) =>
+          _RecordPaymentSheet(clubId: clubId, payees: members),
     );
     if (saved == true && mounted) {
       ref.invalidate(clubObligationsProvider);
@@ -181,9 +176,14 @@ class _OutstandingTab extends ConsumerWidget {
             children: [
               _SummaryCard(
                 title: l10n.openCharges,
-                value: MoneyAmount(page.totalOutstanding, page.currency)
-                    .formatted,
-                subtitle: l10n.openListedSummary(page.openCount, page.totalCount),
+                value: MoneyAmount(
+                  page.totalOutstanding,
+                  page.currency,
+                ).formatted,
+                subtitle: l10n.openListedSummary(
+                  page.openCount,
+                  page.totalCount,
+                ),
               ),
               const SizedBox(height: 16),
               if (page.items.isEmpty)
@@ -291,8 +291,10 @@ class _MyFeesTab extends ConsumerWidget {
                 title: l10n.youOwe,
                 value: fees.mixedCurrency
                     ? l10n.mixedCurrencies
-                    : MoneyAmount(fees.totalOutstanding, fees.currency)
-                        .formatted,
+                    : MoneyAmount(
+                        fees.totalOutstanding,
+                        fees.currency,
+                      ).formatted,
                 subtitle: fees.members.isEmpty
                     ? l10n.noFamilyMembersLinked
                     : l10n.membersCountLabel(fees.members.length),
@@ -324,10 +326,12 @@ class _MyFeesTab extends ConsumerWidget {
                   }
                   return Column(
                     children: [
-                      ...history.payments.take(10).map(
-                            (p) => _PaymentTile(payment: p, compact: true),
-                          ),
-                      ...history.obligations.take(10).map(
+                      ...history.payments
+                          .take(10)
+                          .map((p) => _PaymentTile(payment: p, compact: true)),
+                      ...history.obligations
+                          .take(10)
+                          .map(
                             (o) => _ObligationTile(
                               obligation: o,
                               showMember: false,
@@ -369,8 +373,8 @@ class _FamilyMemberCard extends StatelessWidget {
                       Text(
                         member.displayName,
                         style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                              fontWeight: FontWeight.w700,
-                            ),
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                       Text(
                         '${member.clubName} · ${member.relationship}',
@@ -380,11 +384,13 @@ class _FamilyMemberCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  MoneyAmount(member.totalOutstanding, member.currency)
-                      .formatted,
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
+                  MoneyAmount(
+                    member.totalOutstanding,
+                    member.currency,
+                  ).formatted,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
                 ),
               ],
             ),
@@ -406,9 +412,7 @@ class _FamilyMemberCard extends StatelessWidget {
               Text(
                 '${MoneyAmount(o.outstandingAmount, o.currency).formatted}'
                 '${o.isOverdue ? ' · ${l10n.overdue}' : ''}',
-                style: TextStyle(
-                  color: o.isOverdue ? AppColors.danger : null,
-                ),
+                style: TextStyle(color: o.isOverdue ? AppColors.danger : null),
               ),
               if (o.paymentInstruction != null) ...[
                 const SizedBox(height: 8),
@@ -440,9 +444,9 @@ class _CopyRow extends StatelessWidget {
       onTap: () async {
         await Clipboard.setData(ClipboardData(text: value));
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n.copiedLabel(label))),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(l10n.copiedLabel(label))));
         }
       },
       borderRadius: BorderRadius.circular(8),
@@ -454,10 +458,7 @@ class _CopyRow extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    label,
-                    style: Theme.of(context).textTheme.labelSmall,
-                  ),
+                  Text(label, style: Theme.of(context).textTheme.labelSmall),
                   Text(
                     value,
                     style: const TextStyle(fontWeight: FontWeight.w600),
@@ -468,10 +469,9 @@ class _CopyRow extends StatelessWidget {
             Icon(
               Icons.copy_rounded,
               size: 18,
-              color: Theme.of(context)
-                  .colorScheme
-                  .onSurface
-                  .withValues(alpha: 0.45),
+              color: Theme.of(
+                context,
+              ).colorScheme.onSurface.withValues(alpha: 0.45),
             ),
           ],
         ),
@@ -481,10 +481,7 @@ class _CopyRow extends StatelessWidget {
 }
 
 class _ObligationTile extends StatelessWidget {
-  const _ObligationTile({
-    required this.obligation,
-    this.showMember = true,
-  });
+  const _ObligationTile({required this.obligation, this.showMember = true});
 
   final FeeObligation obligation;
   final bool showMember;
@@ -495,8 +492,9 @@ class _ObligationTile extends StatelessWidget {
     final due = obligation.dueDate;
     final dueLabel = due == null
         ? obligation.period
-        : DateFormat('d MMM yyyy').format(due);
-    final overdue = obligation.isOverdue ||
+        : appDateFormat(context, 'd MMM yyyy').format(due);
+    final overdue =
+        obligation.isOverdue ||
         (obligation.isOpen &&
             due != null &&
             due.isBefore(DateTime.now().subtract(const Duration(days: 1))));
@@ -572,14 +570,12 @@ class _PaymentTile extends StatelessWidget {
       ),
       title: Text(
         payment.memberName.isNotEmpty ? payment.memberName : l10n.payment,
-        style: TextStyle(
-          decoration: muted ? TextDecoration.lineThrough : null,
-        ),
+        style: TextStyle(decoration: muted ? TextDecoration.lineThrough : null),
       ),
       subtitle: Text(
         [
           method,
-          DateFormat('d MMM yyyy').format(when),
+          appDateFormat(context, 'd MMM yyyy').format(when),
           if (payment.recordedByName != null &&
               payment.recordedByName!.isNotEmpty)
             payment.recordedByName!,
@@ -627,15 +623,12 @@ class _SummaryCard extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             value,
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 2),
-          Text(
-            subtitle,
-            style: Theme.of(context).textTheme.bodySmall,
-          ),
+          Text(subtitle, style: Theme.of(context).textTheme.bodySmall),
         ],
       ),
     );
@@ -668,10 +661,7 @@ class _ErrorBody extends StatelessWidget {
 }
 
 class _RecordPaymentSheet extends ConsumerStatefulWidget {
-  const _RecordPaymentSheet({
-    required this.clubId,
-    required this.payees,
-  });
+  const _RecordPaymentSheet({required this.clubId, required this.payees});
 
   final String clubId;
   final List<_PayeeOption> payees;
@@ -695,8 +685,7 @@ class _RecordPaymentSheetState extends ConsumerState<_RecordPaymentSheet> {
     super.initState();
     if (widget.payees.isNotEmpty) {
       _selected = widget.payees.first;
-      _amountCtrl.text =
-          widget.payees.first.hintOutstanding.toStringAsFixed(2);
+      _amountCtrl.text = widget.payees.first.hintOutstanding.toStringAsFixed(2);
     }
   }
 
@@ -711,7 +700,9 @@ class _RecordPaymentSheetState extends ConsumerState<_RecordPaymentSheet> {
   Future<void> _save() async {
     final l10n = AppLocalizations.of(context)!;
     final memberId = _selected?.memberId ?? _memberIdCtrl.text.trim();
-    final amount = double.tryParse(_amountCtrl.text.trim().replaceAll(',', '.'));
+    final amount = double.tryParse(
+      _amountCtrl.text.trim().replaceAll(',', '.'),
+    );
     if (memberId.isEmpty) {
       setState(() => _error = l10n.pickAMember);
       return;
@@ -726,7 +717,9 @@ class _RecordPaymentSheetState extends ConsumerState<_RecordPaymentSheet> {
       _error = null;
     });
     try {
-      await ref.read(paymentsApiProvider).recordPayment(
+      await ref
+          .read(paymentsApiProvider)
+          .recordPayment(
             widget.clubId,
             memberId: memberId,
             amount: amount,
@@ -798,8 +791,9 @@ class _RecordPaymentSheetState extends ConsumerState<_RecordPaymentSheet> {
             const SizedBox(height: 12),
             TextField(
               controller: _amountCtrl,
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
               decoration: InputDecoration(labelText: l10n.amount),
             ),
             const SizedBox(height: 12),

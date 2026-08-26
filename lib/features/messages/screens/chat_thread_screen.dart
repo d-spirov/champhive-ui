@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 
 import '../../../l10n/app_localizations.dart';
+import '../../../shared/l10n/date_l10n.dart';
 import '../../../shared/models/chat.dart';
 import '../../../shared/services/chat_api.dart';
 import '../../../shared/theme/app_theme.dart';
@@ -94,11 +94,9 @@ class _ChatThreadScreenState extends ConsumerState<ChatThreadScreen> {
     if (cursor == null || _loadingMore) return;
     setState(() => _loadingMore = true);
     try {
-      final page = await ref.read(chatApiProvider).listMessages(
-            widget.channelId,
-            before: cursor,
-            limit: 40,
-          );
+      final page = await ref
+          .read(chatApiProvider)
+          .listMessages(widget.channelId, before: cursor, limit: 40);
       if (!mounted) return;
       final older = page.items.reversed.toList();
       setState(() {
@@ -122,10 +120,9 @@ class _ChatThreadScreenState extends ConsumerState<ChatThreadScreen> {
     if (_messages.isEmpty) return;
     final newest = _messages.last;
     try {
-      await ref.read(chatApiProvider).markRead(
-            widget.channelId,
-            messageId: newest.messageId,
-          );
+      await ref
+          .read(chatApiProvider)
+          .markRead(widget.channelId, messageId: newest.messageId);
       ref.invalidate(chatChannelsProvider);
     } catch (_) {}
   }
@@ -135,9 +132,9 @@ class _ChatThreadScreenState extends ConsumerState<ChatThreadScreen> {
     if (text.isEmpty || _sending) return;
     final l10n = AppLocalizations.of(context)!;
     if (_channel?.canSend == false) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.cannotSendInChannel)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.cannotSendInChannel)));
       return;
     }
 
@@ -162,11 +159,9 @@ class _ChatThreadScreenState extends ConsumerState<ChatThreadScreen> {
     });
 
     try {
-      final sent = await ref.read(chatApiProvider).sendMessage(
-            widget.channelId,
-            body: text,
-            clientMessageId: clientId,
-          );
+      final sent = await ref
+          .read(chatApiProvider)
+          .sendMessage(widget.channelId, body: text, clientMessageId: clientId);
       if (!mounted) return;
       setState(() {
         final i = _messages.indexWhere((m) => m.clientMessageId == clientId);
@@ -186,9 +181,7 @@ class _ChatThreadScreenState extends ConsumerState<ChatThreadScreen> {
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            apiErrorMessage(e, fallback: l10n.couldNotSendMessage),
-          ),
+          content: Text(apiErrorMessage(e, fallback: l10n.couldNotSendMessage)),
         ),
       );
     } finally {
@@ -225,11 +218,10 @@ class _ChatThreadScreenState extends ConsumerState<ChatThreadScreen> {
                     ? l10n.membersCountLabel(_channel!.participantCount)
                     : (_channel!.type),
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withValues(alpha: 0.55),
-                    ),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: 0.55),
+                ),
               ),
           ],
         ),
@@ -237,97 +229,94 @@ class _ChatThreadScreenState extends ConsumerState<ChatThreadScreen> {
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : _error != null && _messages.isEmpty
-              ? Center(
+          ? Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(_error!, textAlign: TextAlign.center),
+                    const SizedBox(height: 16),
+                    FilledButton(
+                      onPressed: _bootstrap,
+                      child: Text(l10n.retry),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          : Column(
+              children: [
+                if (_loadingMore) const LinearProgressIndicator(minHeight: 2),
+                Expanded(
+                  child: _messages.isEmpty
+                      ? Center(child: Text(l10n.sayHello))
+                      : ListView.builder(
+                          controller: _scroll,
+                          reverse: true,
+                          padding: const EdgeInsets.fromLTRB(12, 12, 12, 8),
+                          itemCount: _messages.length,
+                          itemBuilder: (context, index) {
+                            // reverse:true → index 0 is newest
+                            final msg = _messages[_messages.length - 1 - index];
+                            final mine =
+                                myId != null && msg.senderUserAccountId == myId;
+                            return _Bubble(message: msg, mine: mine);
+                          },
+                        ),
+                ),
+                SafeArea(
+                  top: false,
                   child: Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
+                    padding: const EdgeInsets.fromLTRB(12, 4, 12, 12),
+                    child: Row(
                       children: [
-                        Text(_error!, textAlign: TextAlign.center),
-                        const SizedBox(height: 16),
-                        FilledButton(
-                          onPressed: _bootstrap,
-                          child: Text(l10n.retry),
+                        Expanded(
+                          child: TextField(
+                            controller: _controller,
+                            enabled: canSend && !_sending,
+                            minLines: 1,
+                            maxLines: 4,
+                            textInputAction: TextInputAction.send,
+                            onSubmitted: (_) => _send(),
+                            decoration: InputDecoration(
+                              hintText: canSend
+                                  ? l10n.messageHint
+                                  : l10n.readOnly,
+                              filled: true,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(
+                                  AppTheme.radiusSm,
+                                ),
+                                borderSide: BorderSide.none,
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 14,
+                                vertical: 10,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        IconButton.filled(
+                          onPressed: canSend && !_sending ? _send : null,
+                          icon: _sending
+                              ? const SizedBox(
+                                  width: 18,
+                                  height: 18,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : const Icon(Icons.send_rounded),
                         ),
                       ],
                     ),
                   ),
-                )
-              : Column(
-                  children: [
-                    if (_loadingMore)
-                      const LinearProgressIndicator(minHeight: 2),
-                    Expanded(
-                      child: _messages.isEmpty
-                          ? Center(child: Text(l10n.sayHello))
-                          : ListView.builder(
-                              controller: _scroll,
-                              reverse: true,
-                              padding: const EdgeInsets.fromLTRB(12, 12, 12, 8),
-                              itemCount: _messages.length,
-                              itemBuilder: (context, index) {
-                                // reverse:true → index 0 is newest
-                                final msg =
-                                    _messages[_messages.length - 1 - index];
-                                final mine = myId != null &&
-                                    msg.senderUserAccountId == myId;
-                                return _Bubble(message: msg, mine: mine);
-                              },
-                            ),
-                    ),
-                    SafeArea(
-                      top: false,
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(12, 4, 12, 12),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: TextField(
-                                controller: _controller,
-                                enabled: canSend && !_sending,
-                                minLines: 1,
-                                maxLines: 4,
-                                textInputAction: TextInputAction.send,
-                                onSubmitted: (_) => _send(),
-                                decoration: InputDecoration(
-                                  hintText: canSend
-                                      ? l10n.messageHint
-                                      : l10n.readOnly,
-                                  filled: true,
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(
-                                      AppTheme.radiusSm,
-                                    ),
-                                    borderSide: BorderSide.none,
-                                  ),
-                                  contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 14,
-                                    vertical: 10,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            IconButton.filled(
-                              onPressed:
-                                  canSend && !_sending ? _send : null,
-                              icon: _sending
-                                  ? const SizedBox(
-                                      width: 18,
-                                      height: 18,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                        color: Colors.white,
-                                      ),
-                                    )
-                                  : const Icon(Icons.send_rounded),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
                 ),
+              ],
+            ),
     );
   }
 }
@@ -344,10 +333,11 @@ class _Bubble extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
     final isSystem = message.isSystem;
     final deleted = message.isDeleted;
-    final body = deleted
-        ? l10n.messageDeleted
-        : (message.body ?? '');
-    final when = DateFormat('HH:mm').format(message.sentAtUtc.toLocal());
+    final body = deleted ? l10n.messageDeleted : (message.body ?? '');
+    final when = appDateFormat(
+      context,
+      'HH:mm',
+    ).format(message.sentAtUtc.toLocal());
 
     if (isSystem) {
       return Padding(
@@ -356,17 +346,15 @@ class _Bubble extends StatelessWidget {
           child: Text(
             body.isEmpty ? l10n.systemMessage : body,
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: scheme.onSurface.withValues(alpha: 0.55),
-                ),
+              color: scheme.onSurface.withValues(alpha: 0.55),
+            ),
             textAlign: TextAlign.center,
           ),
         ),
       );
     }
 
-    final bg = mine
-        ? scheme.primary
-        : scheme.surfaceContainerHighest;
+    final bg = mine ? scheme.primary : scheme.surfaceContainerHighest;
     final fg = mine ? scheme.onPrimary : scheme.onSurface;
 
     return Align(
@@ -388,8 +376,9 @@ class _Bubble extends StatelessWidget {
             ),
           ),
           child: Column(
-            crossAxisAlignment:
-                mine ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+            crossAxisAlignment: mine
+                ? CrossAxisAlignment.end
+                : CrossAxisAlignment.start,
             children: [
               if (!mine && (message.senderDisplayName?.isNotEmpty ?? false))
                 Padding(
@@ -397,25 +386,25 @@ class _Bubble extends StatelessWidget {
                   child: Text(
                     message.senderDisplayName!,
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: fg.withValues(alpha: 0.75),
-                          fontWeight: FontWeight.w600,
-                        ),
+                      color: fg.withValues(alpha: 0.75),
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
               Text(
                 body,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: fg,
-                      fontStyle: deleted ? FontStyle.italic : null,
-                    ),
+                  color: fg,
+                  fontStyle: deleted ? FontStyle.italic : null,
+                ),
               ),
               const SizedBox(height: 2),
               Text(
                 when,
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: fg.withValues(alpha: 0.65),
-                      fontSize: 10,
-                    ),
+                  color: fg.withValues(alpha: 0.65),
+                  fontSize: 10,
+                ),
               ),
             ],
           ),

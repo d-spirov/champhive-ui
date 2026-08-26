@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 
 import '../../../l10n/app_localizations.dart';
+import '../../../shared/l10n/date_l10n.dart';
 import '../../../shared/demo/demo_data.dart';
 import '../../../shared/models/chat.dart';
 import '../../../shared/utils/api_error_message.dart';
@@ -255,7 +255,7 @@ class _ChannelTile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Text(
-            _formatWhen(when, l10n),
+            _formatWhen(context, when, l10n),
             style: Theme.of(context).textTheme.bodySmall,
           ),
           const SizedBox(height: 6),
@@ -266,16 +266,20 @@ class _ChannelTile extends StatelessWidget {
     );
   }
 
-  String _formatWhen(DateTime utc, AppLocalizations l10n) {
+  String _formatWhen(
+    BuildContext context,
+    DateTime utc,
+    AppLocalizations l10n,
+  ) {
     final local = utc.toLocal();
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final day = DateTime(local.year, local.month, local.day);
-    if (day == today) return DateFormat('HH:mm').format(local);
+    if (day == today) return appDateFormat(context, 'HH:mm').format(local);
     if (day == today.subtract(const Duration(days: 1))) return l10n.yesterday;
     if (now.difference(local).inDays < 7) {
-      return DateFormat('EEE').format(local);
+      return appDateFormat(context, 'EEE').format(local);
     }
-    return DateFormat('d MMM').format(local);
+    return appDateFormat(context, 'd MMM').format(local);
   }
 }

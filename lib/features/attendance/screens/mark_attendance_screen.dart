@@ -394,8 +394,9 @@ class _SessionHeader extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             [
-              formatEventDate(session.startAt),
+              formatEventDate(context, session.startAt),
               formatEventTimeRange(
+                context,
                 session.startAt,
                 occurrence?.endAt ?? session.endAt,
               ),

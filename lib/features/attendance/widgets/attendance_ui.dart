@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 
 import '../../../l10n/app_localizations.dart';
+import '../../../shared/l10n/date_l10n.dart';
 import '../../../shared/l10n/label_l10n.dart';
 import '../../../shared/models/event_attendance.dart';
 import '../../../shared/theme/app_theme.dart';
 import '../../clubs/providers/sport_theme_provider.dart';
 
+export '../../../shared/l10n/date_l10n.dart'
+    show formatEventDate, formatEventTimeRange, appDateFormat;
 export '../../../shared/l10n/label_l10n.dart'
     show
         attendanceStatusLabel,
         eventTypeLabel,
         attendanceLockStatusLabel,
         occurrenceStatusLabel;
-
 
 Color clubEventTypeColor(EventType type) {
   switch (type) {
@@ -98,22 +99,8 @@ bool statusNeedsNote(AttendanceStatus status) {
 /// New API only has an optional free-text note — never a required reason enum.
 bool statusOffersNote(AttendanceStatus status) => statusNeedsNote(status);
 
-String formatEventTimeRange(DateTime start, DateTime? end) {
-  final a = DateFormat.jm().format(start);
-  if (end == null) return a;
-  return '$a – ${DateFormat.jm().format(end)}';
-}
-
-String formatEventDate(DateTime dt) {
-  return DateFormat('EEE, d MMM').format(dt);
-}
-
 class ClubEventListTile extends ConsumerWidget {
-  const ClubEventListTile({
-    super.key,
-    required this.event,
-    this.onTap,
-  });
+  const ClubEventListTile({super.key, required this.event, this.onTap});
 
   final ClubEvent event;
   final VoidCallback? onTap;
@@ -124,7 +111,7 @@ class ClubEventListTile extends ConsumerWidget {
     final color = clubEventTypeColor(event.type);
     final sportIcon = ref.watch(sportThemeProvider).icon;
     final subtitle = [
-      formatEventTimeRange(event.startAt, event.endAt),
+      formatEventTimeRange(context, event.startAt, event.endAt),
       if (event.location.display != l10n.tbd) event.location.display,
     ].join(' · ');
 
@@ -163,11 +150,10 @@ class ClubEventListTile extends ConsumerWidget {
                   Text(
                     subtitle,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSurface
-                              .withValues(alpha: 0.6),
-                        ),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withValues(alpha: 0.6),
+                    ),
                   ),
                 ],
               ),
@@ -175,10 +161,9 @@ class ClubEventListTile extends ConsumerWidget {
             if (onTap != null)
               Icon(
                 Icons.chevron_right_rounded,
-                color: Theme.of(context)
-                    .colorScheme
-                    .onSurface
-                    .withValues(alpha: 0.35),
+                color: Theme.of(
+                  context,
+                ).colorScheme.onSurface.withValues(alpha: 0.35),
               ),
           ],
         ),
@@ -242,7 +227,9 @@ class AttendanceStatusBadge extends StatelessWidget {
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: color.withValues(alpha: status == AttendanceStatus.notMarked ? 0.2 : 1),
+        color: color.withValues(
+          alpha: status == AttendanceStatus.notMarked ? 0.2 : 1,
+        ),
         shape: BoxShape.circle,
       ),
       child: Icon(

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 
 import '../../../l10n/app_localizations.dart';
+import '../../../shared/l10n/date_l10n.dart';
 import '../../../shared/models/family.dart';
 import '../../../shared/models/notification_preference.dart';
 import '../../../shared/models/user.dart';
@@ -25,7 +25,6 @@ List<(String code, String label)> _profileLocaleOptions(AppLocalizations l10n) {
     ('tr', l10n.languageTurkish),
   ];
 }
-
 
 String _humanizeKey(String raw) {
   if (raw.isEmpty) return raw;
@@ -445,8 +444,7 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
                       apiErrorMessage(e, fallback: l10n.familyLoadFailed),
                     ),
                     data: (items) {
-                      final children =
-                          items.where((c) => !c.isSelf).toList();
+                      final children = items.where((c) => !c.isSelf).toList();
                       if (children.isEmpty) {
                         return Text(l10n.noFamilyMembers);
                       }
@@ -666,9 +664,9 @@ class _FamilyChildTile extends StatelessWidget {
           memberId: child.memberId,
           label: child.displayName,
           size: 44,
-          sheetTitle: l10n.changeChildPhoto(child.firstName.isEmpty
-              ? child.displayName
-              : child.firstName),
+          sheetTitle: l10n.changeChildPhoto(
+            child.firstName.isEmpty ? child.displayName : child.firstName,
+          ),
         ),
         Expanded(
           child: ListTile(
@@ -751,7 +749,10 @@ class _ProfileHeader extends StatelessWidget {
                       _chip(
                         context,
                         l10n.joinedMonthYear(
-                          DateFormat('MMM yyyy').format(created.toLocal()),
+                          appDateFormat(
+                            context,
+                            'MMM yyyy',
+                          ).format(created.toLocal()),
                         ),
                         ok: true,
                       ),
@@ -809,9 +810,9 @@ class _UnlinkedAccountPhoto extends StatelessWidget {
     return InkWell(
       onTap: loading
           ? null
-          : () => ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(l10n.photoNeedLinkedMember)),
-              ),
+          : () => ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(l10n.photoNeedLinkedMember))),
       customBorder: const CircleBorder(),
       child: SizedBox(
         width: 64,

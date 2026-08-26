@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../l10n/app_localizations.dart';
+import '../../../shared/l10n/date_l10n.dart';
 import '../../../shared/models/compliance.dart';
 import '../../../shared/theme/app_theme.dart';
 import '../../../shared/utils/api_error_message.dart';
@@ -121,7 +121,9 @@ class _MemberComplianceScreenState
 
     setState(() => _busyKey = 'upload:${requirement.documentTypeId}');
     try {
-      await ref.read(complianceControllerProvider).upload(
+      await ref
+          .read(complianceControllerProvider)
+          .upload(
             memberId: widget.memberId,
             documentTypeId: requirement.documentTypeId,
             fileName: name,
@@ -172,7 +174,7 @@ class _MemberComplianceScreenState
                     label: Text(
                       issuedOn == null
                           ? l10n.issuedOn
-                          : DateFormat.yMMMd().format(issuedOn!),
+                          : appYMMMd(context).format(issuedOn!),
                     ),
                   ),
                 ],
@@ -183,8 +185,7 @@ class _MemberComplianceScreenState
                   child: Text(l10n.cancel),
                 ),
                 FilledButton(
-                  onPressed: () =>
-                      Navigator.pop(context, issuedOn ?? 'nodate'),
+                  onPressed: () => Navigator.pop(context, issuedOn ?? 'nodate'),
                   child: Text(l10n.uploadDocument),
                 ),
               ],
@@ -199,13 +200,14 @@ class _MemberComplianceScreenState
     final l10n = AppLocalizations.of(context)!;
     setState(() => _busyKey = 'view:${doc.id}');
     try {
-      final ticket =
-          await ref.read(complianceControllerProvider).contentUrl(doc.id);
+      final ticket = await ref
+          .read(complianceControllerProvider)
+          .contentUrl(doc.id);
       if (!mounted) return;
       if (ticket.audited) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.contentViewAudited)),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.contentViewAudited)));
       }
       final uri = Uri.tryParse(ticket.url);
       if (uri != null && uri.hasScheme && (doc.isPdf || !doc.isImage)) {
@@ -270,10 +272,9 @@ class _MemberComplianceScreenState
     if (ok != true || !mounted) return;
     setState(() => _busyKey = 'del:${doc.id}');
     try {
-      await ref.read(complianceControllerProvider).delete(
-            doc.id,
-            memberId: widget.memberId,
-          );
+      await ref
+          .read(complianceControllerProvider)
+          .delete(doc.id, memberId: widget.memberId);
       if (!mounted) return;
       _snack(l10n.documentDeleted);
     } catch (e) {
@@ -294,9 +295,7 @@ class _MemberComplianceScreenState
         return StatefulBuilder(
           builder: (context, setLocal) {
             return AlertDialog(
-              title: Text(
-                approved ? l10n.verifyDocument : l10n.rejectDocument,
-              ),
+              title: Text(approved ? l10n.verifyDocument : l10n.rejectDocument),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -328,7 +327,7 @@ class _MemberComplianceScreenState
                       label: Text(
                         expiresOn == null
                             ? l10n.expiresOn
-                            : DateFormat.yMMMd().format(expiresOn!),
+                            : appYMMMd(context).format(expiresOn!),
                       ),
                     ),
                   ],
@@ -360,7 +359,9 @@ class _MemberComplianceScreenState
     }
     setState(() => _busyKey = 'rev:${doc.id}');
     try {
-      await ref.read(complianceControllerProvider).review(
+      await ref
+          .read(complianceControllerProvider)
+          .review(
             documentId: doc.id,
             memberId: widget.memberId,
             approved: approved,
@@ -368,7 +369,9 @@ class _MemberComplianceScreenState
             expiresOn: approved ? expiresOn : null,
           );
       if (!mounted) return;
-      _snack(approved ? l10n.documentVerifiedSnack : l10n.documentRejectedSnack);
+      _snack(
+        approved ? l10n.documentVerifiedSnack : l10n.documentRejectedSnack,
+      );
     } catch (e) {
       if (!mounted) return;
       _snack(apiErrorMessage(e, fallback: l10n.photoUpdateFailed));
@@ -381,7 +384,9 @@ class _MemberComplianceScreenState
     final l10n = AppLocalizations.of(context)!;
     setState(() => _busyKey = 'ask:${req.documentTypeId}');
     try {
-      final result = await ref.read(complianceControllerProvider).askFamily(
+      final result = await ref
+          .read(complianceControllerProvider)
+          .askFamily(
             clubId: picture.clubId,
             memberId: widget.memberId,
             documentTypeId: req.documentTypeId,
@@ -423,9 +428,11 @@ class _MemberComplianceScreenState
             }
           },
         ),
-        title: Text(widget.memberName?.isNotEmpty == true
-            ? widget.memberName!
-            : l10n.documents),
+        title: Text(
+          widget.memberName?.isNotEmpty == true
+              ? widget.memberName!
+              : l10n.documents,
+        ),
       ),
       body: isDemo
           ? Center(child: Text(l10n.signInToSeeDocuments))
@@ -436,12 +443,12 @@ class _MemberComplianceScreenState
                   e,
                   fallback: l10n.couldNotLoadCompliance,
                 ),
-                onRetry: () => ref.invalidate(
-                  memberComplianceProvider(widget.memberId),
-                ),
+                onRetry: () =>
+                    ref.invalidate(memberComplianceProvider(widget.memberId)),
               ),
               data: (picture) {
-                final canVerify = user?.hasClubPermission(
+                final canVerify =
+                    user?.hasClubPermission(
                       picture.clubId,
                       'DOCUMENT_VERIFY',
                     ) ??
@@ -486,16 +493,14 @@ class _MemberComplianceScreenState
                               ? null
                               : () => _delete(req.latestDocument!),
                           onVerify: req.latestDocument?.isPending == true
-                              ? () => _review(
-                                    req.latestDocument!,
-                                    approved: true,
-                                  )
+                              ? () =>
+                                    _review(req.latestDocument!, approved: true)
                               : null,
                           onReject: req.latestDocument?.isPending == true
                               ? () => _review(
-                                    req.latestDocument!,
-                                    approved: false,
-                                  )
+                                  req.latestDocument!,
+                                  approved: false,
+                                )
                               : null,
                           onAsk: canVerify && !req.satisfied
                               ? () => _ask(picture, req)
@@ -540,7 +545,7 @@ class _RequirementCard extends StatelessWidget {
     final uploading = busy == 'upload:${requirement.documentTypeId}';
     final asking = busy == 'ask:${requirement.documentTypeId}';
     final viewing = doc != null && busy == 'view:${doc.id}';
-    final dateFmt = DateFormat.yMMMd();
+    final dateFmt = appYMMMd(context);
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),

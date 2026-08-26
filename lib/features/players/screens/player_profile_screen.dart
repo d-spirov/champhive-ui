@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 
 import '../../../l10n/app_localizations.dart';
+import '../../../shared/l10n/date_l10n.dart';
 import '../../../shared/demo/demo_data.dart';
 import '../../../shared/models/player.dart';
 import '../../../shared/utils/api_error_message.dart';
@@ -108,13 +108,12 @@ class _PlayerProfileBody extends ConsumerWidget {
                         const SizedBox(height: 4),
                         Text(
                           player.teamsLabel,
-                          style:
-                              Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurface
-                                        .withValues(alpha: 0.65),
-                                  ),
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurface.withValues(alpha: 0.65),
+                              ),
                         ),
                         const SizedBox(height: 8),
                         Chip(label: Text(_statusLabel(l10n, player.status))),
@@ -156,7 +155,7 @@ class _InfoTab extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final dob = player.dateOfBirth == null
         ? null
-        : DateFormat.yMMMd().format(player.dateOfBirth!);
+        : appYMMMd(context).format(player.dateOfBirth!);
     final rows = <(String, String)>[
       if (dob != null) (l10n.dateOfBirth, dob),
       if (player.age != null) (l10n.age, '${player.age}'),
@@ -199,11 +198,10 @@ class _InfoTab extends StatelessWidget {
               title: Text(
                 rows[i].$1,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withValues(alpha: 0.55),
-                    ),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: 0.55),
+                ),
               ),
               subtitle: Text(
                 rows[i].$2,
@@ -260,9 +258,7 @@ class _NotesTab extends StatelessWidget {
     }
     return ListView(
       padding: const EdgeInsets.all(16),
-      children: [
-        Text(notes!, style: Theme.of(context).textTheme.bodyLarge),
-      ],
+      children: [Text(notes!, style: Theme.of(context).textTheme.bodyLarge)],
     );
   }
 }

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 
 import '../../../l10n/app_localizations.dart';
+import '../../../shared/l10n/date_l10n.dart';
 import '../../../shared/models/notification.dart';
 import '../../../shared/theme/app_theme.dart';
 import '../../../shared/utils/api_error_message.dart';
@@ -85,10 +85,9 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
     if (cursor == null || _loadingMore) return;
     setState(() => _loadingMore = true);
     try {
-      final feed = await ref.read(notificationsApiProvider).listMine(
-            before: cursor,
-            limit: 30,
-          );
+      final feed = await ref
+          .read(notificationsApiProvider)
+          .listMine(before: cursor, limit: 30);
       if (!mounted) return;
       _applyFeed(feed, replace: false);
     } catch (e) {
@@ -123,9 +122,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
       final l10n = AppLocalizations.of(context)!;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            apiErrorMessage(e, fallback: l10n.couldNotMarkAsRead),
-          ),
+          content: Text(apiErrorMessage(e, fallback: l10n.couldNotMarkAsRead)),
         ),
       );
     }
@@ -134,9 +131,9 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
   Future<void> _open(AppNotification n) async {
     if (!n.isRead) {
       try {
-        final result = await ref.read(notificationsApiProvider).markRead(
-              notificationIds: [n.id],
-            );
+        final result = await ref
+            .read(notificationsApiProvider)
+            .markRead(notificationIds: [n.id]);
         if (mounted) {
           setState(() {
             _unreadCount = result.unreadCount;
@@ -177,36 +174,28 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
         title: Text(l10n.notifications),
         actions: [
           if (_unreadCount > 0)
-            TextButton(
-              onPressed: _markAllRead,
-              child: Text(l10n.markAllRead),
-            ),
+            TextButton(onPressed: _markAllRead, child: Text(l10n.markAllRead)),
         ],
       ),
       body: isDemo
-          ? Center(
-              child: Text(l10n.signInToSeeNotifications),
-            )
+          ? Center(child: Text(l10n.signInToSeeNotifications))
           : !_initialLoadDone
-              ? const Center(child: CircularProgressIndicator())
-              : _error != null && _items.isEmpty
-                  ? Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(24),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(_error!, textAlign: TextAlign.center),
-                            const SizedBox(height: 16),
-                            FilledButton(
-                              onPressed: _reload,
-                              child: Text(l10n.retry),
-                            ),
-                          ],
-                        ),
-                      ),
-                    )
-                  : _buildList(l10n),
+          ? const Center(child: CircularProgressIndicator())
+          : _error != null && _items.isEmpty
+          ? Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(_error!, textAlign: TextAlign.center),
+                    const SizedBox(height: 16),
+                    FilledButton(onPressed: _reload, child: Text(l10n.retry)),
+                  ],
+                ),
+              ),
+            )
+          : _buildList(l10n),
     );
   }
 
@@ -266,21 +255,20 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
 }
 
 class _NotificationTile extends StatelessWidget {
-  const _NotificationTile({
-    required this.notification,
-    required this.onTap,
-  });
+  const _NotificationTile({required this.notification, required this.onTap});
 
   final AppNotification notification;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    final muted =
-        Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.55);
-    final when = DateFormat('d MMM · HH:mm').format(
-      notification.createdAtUtc.toLocal(),
-    );
+    final muted = Theme.of(
+      context,
+    ).colorScheme.onSurface.withValues(alpha: 0.55);
+    final when = appDateFormat(
+      context,
+      'd MMM · HH:mm',
+    ).format(notification.createdAtUtc.toLocal());
 
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
@@ -299,9 +287,8 @@ class _NotificationTile extends StatelessWidget {
       title: Text(
         notification.title,
         style: Theme.of(context).textTheme.titleSmall?.copyWith(
-              fontWeight:
-                  notification.isRead ? FontWeight.w500 : FontWeight.w700,
-            ),
+          fontWeight: notification.isRead ? FontWeight.w500 : FontWeight.w700,
+        ),
       ),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -320,8 +307,9 @@ class _NotificationTile extends StatelessWidget {
               when,
               if (notification.kind.isNotEmpty) notification.kind,
             ].join(' · '),
-            style:
-                Theme.of(context).textTheme.labelSmall?.copyWith(color: muted),
+            style: Theme.of(
+              context,
+            ).textTheme.labelSmall?.copyWith(color: muted),
           ),
         ],
       ),

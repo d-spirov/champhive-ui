@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 
 import '../../../l10n/app_localizations.dart';
+import '../../../shared/l10n/date_l10n.dart';
 import '../../../shared/models/event_series.dart';
 import '../../../shared/models/team.dart';
 import '../../../shared/utils/api_error_message.dart';
@@ -284,7 +284,12 @@ class _CreateScheduleScreenState extends ConsumerState<CreateScheduleScreen> {
                       child: OutlinedButton.icon(
                         onPressed: _pickDate,
                         icon: const Icon(Icons.calendar_today_outlined),
-                        label: Text(DateFormat('EEE d MMM yyyy').format(_date)),
+                        label: Text(
+                          appDateFormat(
+                            context,
+                            'EEE d MMM yyyy',
+                          ).format(_date),
+                        ),
                       ),
                     ),
                     const SizedBox(width: 8),

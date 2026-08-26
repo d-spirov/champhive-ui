@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 
 import '../../../l10n/app_localizations.dart';
+import '../../../shared/l10n/date_l10n.dart';
 import '../../../shared/theme/app_theme.dart';
 import '../../../shared/utils/api_error_message.dart';
 import '../../../shared/widgets/ui_bits.dart';
@@ -54,8 +54,9 @@ class _ComplianceHubScreenState extends ConsumerState<ComplianceHubScreen>
         bottom: TabBar(
           controller: _tabs,
           labelColor: Theme.of(context).colorScheme.primary,
-          unselectedLabelColor:
-              Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.55),
+          unselectedLabelColor: Theme.of(
+            context,
+          ).colorScheme.onSurface.withValues(alpha: 0.55),
           indicatorColor: Theme.of(context).colorScheme.primary,
           tabs: [
             Tab(text: l10n.complianceOverview),
@@ -67,10 +68,7 @@ class _ComplianceHubScreenState extends ConsumerState<ComplianceHubScreen>
           ? Center(child: Text(l10n.signInToSeeDocuments))
           : TabBarView(
               controller: _tabs,
-              children: const [
-                _OverviewTab(),
-                _QueueTab(),
-              ],
+              children: const [_OverviewTab(), _QueueTab()],
             ),
     );
   }
@@ -196,7 +194,7 @@ class _QueueTab extends ConsumerWidget {
         if (items.isEmpty) {
           return Center(child: Text(l10n.noDocumentsPending));
         }
-        final fmt = DateFormat.yMMMd();
+        final fmt = appYMMMd(context);
         return RefreshIndicator(
           onRefresh: () async {
             ref.invalidate(pendingComplianceDocumentsProvider);
@@ -260,9 +258,9 @@ class _CountCard extends StatelessWidget {
           Text(
             value,
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  color: color,
-                  fontWeight: FontWeight.w800,
-                ),
+              color: color,
+              fontWeight: FontWeight.w800,
+            ),
           ),
           const SizedBox(height: 4),
           Text(

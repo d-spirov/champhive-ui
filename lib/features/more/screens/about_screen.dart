@@ -53,7 +53,7 @@ class AboutScreen extends StatelessWidget {
                   fontWeight: FontWeight.w800,
                   fontSize: 28,
                   letterSpacing: -0.6,
-                  color: navy,
+                  color: isDark ? Colors.white : AppColors.primaryNavy,
                 ),
               ),
               const SizedBox(height: 6),

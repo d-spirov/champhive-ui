@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 
 import '../../../l10n/app_localizations.dart';
 import '../../clubs/providers/sport_theme_provider.dart';
@@ -57,8 +56,9 @@ class _AttendanceHistoryScreenState
         bottom: TabBar(
           controller: _tabs,
           labelColor: Theme.of(context).colorScheme.primary,
-          unselectedLabelColor:
-              Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.55),
+          unselectedLabelColor: Theme.of(
+            context,
+          ).colorScheme.onSurface.withValues(alpha: 0.55),
           indicatorColor: Theme.of(context).colorScheme.primary,
           tabs: [
             Tab(text: l10n.openWindow),
@@ -73,14 +73,11 @@ class _AttendanceHistoryScreenState
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (e, _) => _Error(
               message: apiErrorMessage(e, fallback: l10n.couldNotLoadSchedule),
-              onRetry: () =>
-                  ref.invalidate(openAttendanceOccurrencesProvider),
+              onRetry: () => ref.invalidate(openAttendanceOccurrencesProvider),
             ),
             data: (events) {
               if (events.isEmpty) {
-                return Center(
-                  child: Text(l10n.noSessionsInWindow),
-                );
+                return Center(child: Text(l10n.noSessionsInWindow));
               }
               return RefreshIndicator(
                 onRefresh: () async {
@@ -96,8 +93,9 @@ class _AttendanceHistoryScreenState
                     return Card(
                       child: ListTile(
                         leading: CircleAvatar(
-                          backgroundColor: clubEventTypeColor(event.type)
-                              .withValues(alpha: 0.15),
+                          backgroundColor: clubEventTypeColor(
+                            event.type,
+                          ).withValues(alpha: 0.15),
                           child: Icon(
                             clubEventTypeIcon(
                               event.type,
@@ -112,7 +110,7 @@ class _AttendanceHistoryScreenState
                               : eventTypeLabel(l10n, event.type),
                         ),
                         subtitle: Text(
-                          '${formatEventDate(event.startAt)} · ${formatEventTimeRange(event.startAt, event.endAt)}'
+                          '${formatEventDate(context, event.startAt)} · ${formatEventTimeRange(context, event.startAt, event.endAt)}'
                           '${event.scopeName != null ? ' · ${event.scopeName}' : ''}',
                         ),
                         trailing: const Icon(Icons.chevron_right_rounded),
@@ -136,7 +134,7 @@ class _AttendanceHistoryScreenState
                 return Center(child: Text(l10n.noPastSessions));
               }
               final grouped = <String, List<ClubEvent>>{};
-              final monthFmt = DateFormat('MMMM yyyy');
+              final monthFmt = appDateFormat(context, 'MMMM yyyy');
               for (final e in events) {
                 final key = monthFmt.format(e.startAt);
                 grouped.putIfAbsent(key, () => []).add(e);
@@ -166,13 +164,17 @@ class _AttendanceHistoryScreenState
                                 title: Text(
                                   entry.value[i].title.isNotEmpty
                                       ? entry.value[i].title
-                                      : eventTypeLabel(l10n, entry.value[i].type),
+                                      : eventTypeLabel(
+                                          l10n,
+                                          entry.value[i].type,
+                                        ),
                                 ),
                                 subtitle: Text(
-                                  '${formatEventDate(entry.value[i].startAt)} · ${formatEventTimeRange(entry.value[i].startAt, entry.value[i].endAt)}',
+                                  '${formatEventDate(context, entry.value[i].startAt)} · ${formatEventTimeRange(context, entry.value[i].startAt, entry.value[i].endAt)}',
                                 ),
-                                trailing:
-                                    const Icon(Icons.chevron_right_rounded),
+                                trailing: const Icon(
+                                  Icons.chevron_right_rounded,
+                                ),
                                 onTap: () => context.push(
                                   '/occurrences/${entry.value[i].id}/attendance/report',
                                 ),

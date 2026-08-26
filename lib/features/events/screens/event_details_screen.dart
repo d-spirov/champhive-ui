@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 
 import '../../../l10n/app_localizations.dart';
 import '../../../shared/l10n/label_l10n.dart';
@@ -139,8 +138,15 @@ class _SessionHero extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final date = DateFormat('EEE, d MMM yyyy').format(occurrence.startAt);
-    final time = formatEventTimeRange(occurrence.startAt, occurrence.endAt);
+    final date = appDateFormat(
+      context,
+      'EEE, d MMM yyyy',
+    ).format(occurrence.startAt);
+    final time = formatEventTimeRange(
+      context,
+      occurrence.startAt,
+      occurrence.endAt,
+    );
     final duration = occurrence.resolvedDurationMin;
     final scope =
         occurrence.scopeName ??
@@ -405,7 +411,7 @@ class _OverviewTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final cells = _detailCells(l10n, occurrence);
+    final cells = _detailCells(context, l10n, occurrence);
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
       children: [
@@ -489,9 +495,16 @@ class _OverviewTab extends StatelessWidget {
     );
   }
 
-  List<_DetailCell> _detailCells(AppLocalizations l10n, ClubEvent event) {
-    final date = DateFormat('EEE, d MMM yyyy').format(event.startAt);
-    final time = formatEventTimeRange(event.startAt, event.endAt);
+  List<_DetailCell> _detailCells(
+    BuildContext context,
+    AppLocalizations l10n,
+    ClubEvent event,
+  ) {
+    final date = appDateFormat(
+      context,
+      'EEE, d MMM yyyy',
+    ).format(event.startAt);
+    final time = formatEventTimeRange(context, event.startAt, event.endAt);
     final duration = event.resolvedDurationMin;
     final scope =
         event.scopeName ??
@@ -558,7 +571,7 @@ class _OverviewTab extends StatelessWidget {
           icon: Icons.update_outlined,
           label: l10n.originallyScheduled,
           value:
-              '${DateFormat('EEE, d MMM yyyy').format(event.originalStartUtc!)}, ${formatEventTimeRange(event.originalStartUtc!, null)}',
+              '${appDateFormat(context, 'EEE, d MMM yyyy').format(event.originalStartUtc!)}, ${formatEventTimeRange(context, event.originalStartUtc!, null)}',
         ),
       _DetailCell(
         icon: Icons.event_available_outlined,

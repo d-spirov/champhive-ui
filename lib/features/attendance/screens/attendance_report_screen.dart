@@ -77,8 +77,9 @@ class AttendanceReportScreen extends ConsumerWidget {
                 const SizedBox(height: 4),
                 Text(
                   [
-                    formatEventDate(report.startAt),
+                    formatEventDate(context, report.startAt),
                     formatEventTimeRange(
+                      context,
                       report.startAt,
                       occurrence?.endAt ?? report.endAt,
                     ),
@@ -90,10 +91,22 @@ class AttendanceReportScreen extends ConsumerWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    _Stat(l10n.statusPresent, report.summary.present, AppColors.present),
+                    _Stat(
+                      l10n.statusPresent,
+                      report.summary.present,
+                      AppColors.present,
+                    ),
                     _Stat(l10n.statusLate, report.summary.late, AppColors.late),
-                    _Stat(l10n.statusAbsent, report.summary.absent, AppColors.absent),
-                    _Stat(l10n.statusExcused, report.summary.excused, AppColors.excused),
+                    _Stat(
+                      l10n.statusAbsent,
+                      report.summary.absent,
+                      AppColors.absent,
+                    ),
+                    _Stat(
+                      l10n.statusExcused,
+                      report.summary.excused,
+                      AppColors.excused,
+                    ),
                     _Stat(
                       l10n.statusUnmarked,
                       report.summary.notMarked,
@@ -136,9 +149,9 @@ class _Stat extends StatelessWidget {
         Text(
           '$count',
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                color: color,
-                fontWeight: FontWeight.w800,
-              ),
+            color: color,
+            fontWeight: FontWeight.w800,
+          ),
         ),
         Text(label, style: Theme.of(context).textTheme.labelSmall),
       ],

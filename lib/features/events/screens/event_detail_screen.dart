@@ -190,11 +190,12 @@ class _OccurrenceBody extends StatelessWidget {
                 const SizedBox(height: 20),
                 _MetaRow(
                   icon: Icons.calendar_today_outlined,
-                  label: formatEventDate(occurrence.startAt),
+                  label: formatEventDate(context, occurrence.startAt),
                 ),
                 _MetaRow(
                   icon: Icons.schedule_outlined,
                   label: formatEventTimeRange(
+                    context,
                     occurrence.startAt,
                     occurrence.endAt,
                   ),
@@ -213,8 +214,8 @@ class _OccurrenceBody extends StatelessWidget {
                   _MetaRow(
                     icon: Icons.timer_outlined,
                     label: l10n.marksAcceptedUntil(
-                      formatEventDate(lockAt),
-                      formatEventTimeRange(lockAt, null),
+                      formatEventDate(context, lockAt),
+                      formatEventTimeRange(context, lockAt, null),
                     ),
                   ),
                 if (occurrence.purpose != null &&
