@@ -574,5 +574,89 @@
       }
     }
   },
-  "preferenceDefault": "Predefinito"
+  "preferenceDefault": "Predefinito",
+  "changePhoto": "Cambia foto",
+  "changeYourPhoto": "Cambia la tua foto",
+  "changeChildPhoto": "Cambia la foto di {name}",
+  "@changeChildPhoto": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "takePhoto": "Scatta foto",
+  "chooseFromLibrary": "Scegli dalla libreria",
+  "removePhoto": "Rimuovi foto",
+  "photoUpdated": "Foto aggiornata",
+  "photoRemoved": "Foto rimossa",
+  "photoUpdateFailed": "Impossibile aggiornare la foto",
+  "photoNeedLinkedMember": "Questo account non è collegato a un tesserato. Cambia la foto di un familiare qui sotto, oppure apri il suo profilo.",
+  "photoSelectClubFirst": "Seleziona prima un club, poi riprova.",
+  "photoNoPermission": "Non hai i permessi per cambiare questa foto.",
+  "documents": "Documenti",
+  "yourDocuments": "I tuoi documenti",
+  "clubDocumentsTitle": "Documenti {club}",
+  "@clubDocumentsTitle": {
+    "placeholders": {
+      "club": {
+        "type": "String"
+      }
+    }
+  },
+  "complianceOverview": "Panoramica",
+  "reviewQueue": "Da revisionare",
+  "noDocumentsPending": "Niente in attesa di revisione.",
+  "noComplianceMembers": "Tutto in regola.",
+  "complianceValid": "Valido",
+  "complianceExpiring": "In scadenza",
+  "complianceMissing": "Mancante",
+  "complianceUnknown": "Sconosciuto",
+  "requirementRequired": "Obbligatorio",
+  "requirementOptional": "Facoltativo",
+  "uploadDocument": "Carica",
+  "choosePdf": "Scegli PDF o file",
+  "issuedOn": "Data di emissione",
+  "issuedOnHint": "Se il certificato ha una data stampata, aggiungila: la scadenza parte da quel giorno.",
+  "expiresOn": "Data di scadenza",
+  "expiresOnDate": "Scade il {date}",
+  "@expiresOnDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "documentPending": "In revisione",
+  "documentVerified": "Verificato",
+  "documentRejected": "Rifiutato",
+  "documentAwaitingUpload": "Caricamento avviato",
+  "viewDocument": "Apri",
+  "deleteDocument": "Elimina",
+  "verifyDocument": "Verifica",
+  "rejectDocument": "Rifiuta",
+  "rejectionReason": "Motivo per la famiglia",
+  "askFamily": "Chiedi alla famiglia",
+  "familyAsked": "Richiesta inviata a {count} account famiglia",
+  "@familyAsked": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "familyAlreadyAsked": "Già chiesto oggi",
+  "documentUploaded": "Documento caricato — in attesa di revisione",
+  "uploadFailed": "Impossibile caricare il documento",
+  "couldNotLoadCompliance": "Impossibile caricare i documenti",
+  "signInToSeeDocuments": "Accedi per gestire i documenti",
+  "contentViewAudited": "L’apertura di questo file viene registrata",
+  "noRequirements": "Nessun documento richiesto per questo membro.",
+  "confirmDeleteDocument": "Rimuovere questo documento?",
+  "rejectReasonRequired": "Spiega perché è stato rifiutato",
+  "documentVerifiedSnack": "Documento verificato",
+  "documentRejectedSnack": "Documento rifiutato",
+  "documentDeleted": "Documento rimosso",
+  "documentTooLarge": "Il file deve essere da 15 MB o meno",
+  "couldNotOpenDocument": "Impossibile aprire il file"
 }

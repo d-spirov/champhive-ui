@@ -1253,4 +1253,172 @@ class AppLocalizationsMk extends AppLocalizations {
 
   @override
   String get preferenceDefault => 'Стандардно';
+
+  @override
+  String get changePhoto => 'Промени фотографија';
+
+  @override
+  String get changeYourPhoto => 'Промени ја својата фотографија';
+
+  @override
+  String changeChildPhoto(String name) {
+    return 'Промени ја фотографијата на $name';
+  }
+
+  @override
+  String get takePhoto => 'Сликај';
+
+  @override
+  String get chooseFromLibrary => 'Избери од галерија';
+
+  @override
+  String get removePhoto => 'Отстрани фотографија';
+
+  @override
+  String get photoUpdated => 'Фотографијата е ажурирана';
+
+  @override
+  String get photoRemoved => 'Фотографијата е отстранета';
+
+  @override
+  String get photoUpdateFailed => 'Фотографијата не можеше да се ажурира';
+
+  @override
+  String get documents => 'Документи';
+
+  @override
+  String get yourDocuments => 'Твои документи';
+
+  @override
+  String clubDocumentsTitle(String club) {
+    return 'Документи — $club';
+  }
+
+  @override
+  String get complianceOverview => 'Преглед';
+
+  @override
+  String get reviewQueue => 'За проверка';
+
+  @override
+  String get noDocumentsPending => 'Нема документи за проверка.';
+
+  @override
+  String get noComplianceMembers => 'Сè е во ред.';
+
+  @override
+  String get complianceValid => 'Важечко';
+
+  @override
+  String get complianceExpiring => 'Истекува';
+
+  @override
+  String get complianceMissing => 'Недостасува';
+
+  @override
+  String get complianceUnknown => 'Непознато';
+
+  @override
+  String get requirementRequired => 'Задолжително';
+
+  @override
+  String get requirementOptional => 'Изборно';
+
+  @override
+  String get uploadDocument => 'Прикачи';
+
+  @override
+  String get choosePdf => 'Избери PDF или датотека';
+
+  @override
+  String get issuedOn => 'Датум на издавање';
+
+  @override
+  String get issuedOnHint =>
+      'Ако уверението има печатен датум, внеси го за рокот да се смета од тој ден.';
+
+  @override
+  String get expiresOn => 'Датум на истек';
+
+  @override
+  String expiresOnDate(String date) {
+    return 'Истекува $date';
+  }
+
+  @override
+  String get documentPending => 'На проверка';
+
+  @override
+  String get documentVerified => 'Потврдено';
+
+  @override
+  String get documentRejected => 'Одбиено';
+
+  @override
+  String get documentAwaitingUpload => 'Прикачувањето е започнато';
+
+  @override
+  String get viewDocument => 'Отвори';
+
+  @override
+  String get deleteDocument => 'Избриши';
+
+  @override
+  String get verifyDocument => 'Потврди';
+
+  @override
+  String get rejectDocument => 'Одбиј';
+
+  @override
+  String get rejectionReason => 'Образложение за семејството';
+
+  @override
+  String get askFamily => 'Побарај од семејството';
+
+  @override
+  String familyAsked(int count) {
+    return 'Испратено до $count семеен налог';
+  }
+
+  @override
+  String get familyAlreadyAsked => 'Веќе побарано денес';
+
+  @override
+  String get documentUploaded => 'Документот е прикачен — чека проверка';
+
+  @override
+  String get uploadFailed => 'Документот не можеше да се прикачи';
+
+  @override
+  String get couldNotLoadCompliance => 'Документите не можеа да се вчитаат';
+
+  @override
+  String get signInToSeeDocuments => 'Најави се за да ги управуваш документите';
+
+  @override
+  String get contentViewAudited => 'Отворањето на оваа датотека се евидентира';
+
+  @override
+  String get noRequirements => 'Нема барања за документи за овој член.';
+
+  @override
+  String get confirmDeleteDocument => 'Да се отстрани овој документ?';
+
+  @override
+  String get rejectReasonRequired => 'Наведи зошто е одбиено';
+
+  @override
+  String get documentVerifiedSnack => 'Документот е потврден';
+
+  @override
+  String get documentRejectedSnack => 'Документот е одбиен';
+
+  @override
+  String get documentDeleted => 'Документот е отстранет';
+
+  @override
+  String get documentTooLarge => 'Датотеката мора да биде 15 MB или помала';
+
+  @override
+  String get couldNotOpenDocument => 'Датотеката не можеше да се отвори';
 }

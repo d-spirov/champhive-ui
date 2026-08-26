@@ -1238,4 +1238,172 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get preferenceDefault => 'Default';
+
+  @override
+  String get changePhoto => 'Change photo';
+
+  @override
+  String get changeYourPhoto => 'Change your photo';
+
+  @override
+  String changeChildPhoto(String name) {
+    return 'Change $name\'s photo';
+  }
+
+  @override
+  String get takePhoto => 'Take photo';
+
+  @override
+  String get chooseFromLibrary => 'Choose from library';
+
+  @override
+  String get removePhoto => 'Remove photo';
+
+  @override
+  String get photoUpdated => 'Photo updated';
+
+  @override
+  String get photoRemoved => 'Photo removed';
+
+  @override
+  String get photoUpdateFailed => 'Could not update photo';
+
+  @override
+  String get documents => 'Documents';
+
+  @override
+  String get yourDocuments => 'Your documents';
+
+  @override
+  String clubDocumentsTitle(String club) {
+    return '$club documents';
+  }
+
+  @override
+  String get complianceOverview => 'Overview';
+
+  @override
+  String get reviewQueue => 'To review';
+
+  @override
+  String get noDocumentsPending => 'Nothing waiting for review.';
+
+  @override
+  String get noComplianceMembers => 'Everyone is in order.';
+
+  @override
+  String get complianceValid => 'Valid';
+
+  @override
+  String get complianceExpiring => 'Expiring';
+
+  @override
+  String get complianceMissing => 'Missing';
+
+  @override
+  String get complianceUnknown => 'Unknown';
+
+  @override
+  String get requirementRequired => 'Required';
+
+  @override
+  String get requirementOptional => 'Optional';
+
+  @override
+  String get uploadDocument => 'Upload';
+
+  @override
+  String get choosePdf => 'Choose PDF or file';
+
+  @override
+  String get issuedOn => 'Issue date';
+
+  @override
+  String get issuedOnHint =>
+      'If the certificate has a printed date, add it so expiry is counted from that day.';
+
+  @override
+  String get expiresOn => 'Expiry date';
+
+  @override
+  String expiresOnDate(String date) {
+    return 'Expires $date';
+  }
+
+  @override
+  String get documentPending => 'Pending review';
+
+  @override
+  String get documentVerified => 'Verified';
+
+  @override
+  String get documentRejected => 'Rejected';
+
+  @override
+  String get documentAwaitingUpload => 'Upload started';
+
+  @override
+  String get viewDocument => 'View';
+
+  @override
+  String get deleteDocument => 'Delete';
+
+  @override
+  String get verifyDocument => 'Verify';
+
+  @override
+  String get rejectDocument => 'Reject';
+
+  @override
+  String get rejectionReason => 'Reason for the family';
+
+  @override
+  String get askFamily => 'Ask family';
+
+  @override
+  String familyAsked(int count) {
+    return 'Asked $count family account(s)';
+  }
+
+  @override
+  String get familyAlreadyAsked => 'Already asked today';
+
+  @override
+  String get documentUploaded => 'Document uploaded — waiting for review';
+
+  @override
+  String get uploadFailed => 'Could not upload document';
+
+  @override
+  String get couldNotLoadCompliance => 'Could not load documents';
+
+  @override
+  String get signInToSeeDocuments => 'Sign in to manage documents';
+
+  @override
+  String get contentViewAudited => 'Opening this file is logged';
+
+  @override
+  String get noRequirements => 'No document requirements for this member.';
+
+  @override
+  String get confirmDeleteDocument => 'Remove this document?';
+
+  @override
+  String get rejectReasonRequired => 'Please explain why it was rejected';
+
+  @override
+  String get documentVerifiedSnack => 'Document verified';
+
+  @override
+  String get documentRejectedSnack => 'Document rejected';
+
+  @override
+  String get documentDeleted => 'Document removed';
+
+  @override
+  String get documentTooLarge => 'File must be 15 MB or smaller';
+
+  @override
+  String get couldNotOpenDocument => 'Could not open the file';
 }

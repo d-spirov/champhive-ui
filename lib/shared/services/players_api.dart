@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
+import 'package:http_parser/http_parser.dart';
 
 import '../models/player.dart';
 
@@ -104,5 +105,56 @@ class PlayersApi {
       }
     }
     return null;
+  }
+
+  /// `multipart/form-data` with a single `file` part (JPEG, PNG, or WebP).
+  /// Replaces the photograph for this person across every club they belong to.
+  Future<void> uploadPhoto({
+    required String clubId,
+    required String memberId,
+    required List<int> bytes,
+    required String filename,
+  }) async {
+    final name = _photoFilename(filename);
+    final form = FormData.fromMap({
+      'file': MultipartFile.fromBytes(
+        bytes,
+        filename: name,
+        contentType: _photoContentType(name),
+      ),
+    });
+    await _dio.post<dynamic>(
+      '/api/v1/clubs/$clubId/members/$memberId/photo',
+      data: form,
+    );
+  }
+
+  /// Removes the photograph for this person in every club. Idempotent.
+  Future<void> deletePhoto({
+    required String clubId,
+    required String memberId,
+  }) async {
+    await _dio.delete<dynamic>(
+      '/api/v1/clubs/$clubId/members/$memberId/photo',
+    );
+  }
+
+  static String _photoFilename(String raw) {
+    final name = raw.trim().isEmpty ? 'photo.jpg' : raw.trim();
+    final lower = name.toLowerCase();
+    if (lower.endsWith('.jpg') ||
+        lower.endsWith('.jpeg') ||
+        lower.endsWith('.png') ||
+        lower.endsWith('.webp')) {
+      return name;
+    }
+    return 'photo.jpg';
+  }
+
+  static MediaType _photoContentType(String filename) {
+    final lower = filename.toLowerCase();
+    if (lower.endsWith('.png')) return MediaType('image', 'png');
+    if (lower.endsWith('.webp')) return MediaType('image', 'webp');
+    return MediaType('image', 'jpeg');
   }
 }

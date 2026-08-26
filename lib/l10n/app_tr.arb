@@ -574,5 +574,89 @@
       }
     }
   },
-  "preferenceDefault": "Varsayılan"
+  "preferenceDefault": "Varsayılan",
+  "changePhoto": "Fotoğrafı değiştir",
+  "changeYourPhoto": "Fotoğrafını değiştir",
+  "changeChildPhoto": "{name} adlı kişinin fotoğrafını değiştir",
+  "@changeChildPhoto": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "takePhoto": "Fotoğraf çek",
+  "chooseFromLibrary": "Galeriden seç",
+  "removePhoto": "Fotoğrafı kaldır",
+  "photoUpdated": "Fotoğraf güncellendi",
+  "photoRemoved": "Fotoğraf kaldırıldı",
+  "photoUpdateFailed": "Fotoğraf güncellenemedi",
+  "photoNeedLinkedMember": "Bu giriş bir üye kaydına bağlı değil. Aşağıdan bir aile üyesinin fotoğrafını değiştir veya profilini aç.",
+  "photoSelectClubFirst": "Önce bir kulüp seç, sonra tekrar dene.",
+  "photoNoPermission": "Bu fotoğrafı değiştirme iznin yok.",
+  "documents": "Belgeler",
+  "yourDocuments": "Belgelerin",
+  "clubDocumentsTitle": "{club} belgeleri",
+  "@clubDocumentsTitle": {
+    "placeholders": {
+      "club": {
+        "type": "String"
+      }
+    }
+  },
+  "complianceOverview": "Özet",
+  "reviewQueue": "İnceleme",
+  "noDocumentsPending": "İnceleme bekleyen belge yok.",
+  "noComplianceMembers": "Herkes uygun.",
+  "complianceValid": "Geçerli",
+  "complianceExpiring": "Süresi doluyor",
+  "complianceMissing": "Eksik",
+  "complianceUnknown": "Bilinmiyor",
+  "requirementRequired": "Zorunlu",
+  "requirementOptional": "İsteğe bağlı",
+  "uploadDocument": "Yükle",
+  "choosePdf": "PDF veya dosya seç",
+  "issuedOn": "Düzenleme tarihi",
+  "issuedOnHint": "Sertifikada basılı bir tarih varsa ekle; süre o günden sayılır.",
+  "expiresOn": "Son geçerlilik",
+  "expiresOnDate": "{date} tarihinde doluyor",
+  "@expiresOnDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "documentPending": "İncelemede",
+  "documentVerified": "Onaylandı",
+  "documentRejected": "Reddedildi",
+  "documentAwaitingUpload": "Yükleme başladı",
+  "viewDocument": "Görüntüle",
+  "deleteDocument": "Sil",
+  "verifyDocument": "Onayla",
+  "rejectDocument": "Reddet",
+  "rejectionReason": "Aileye gerekçe",
+  "askFamily": "Aileden iste",
+  "familyAsked": "{count} aile hesabına soruldu",
+  "@familyAsked": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "familyAlreadyAsked": "Bugün zaten soruldu",
+  "documentUploaded": "Belge yüklendi — inceleme bekleniyor",
+  "uploadFailed": "Belge yüklenemedi",
+  "couldNotLoadCompliance": "Belgeler yüklenemedi",
+  "signInToSeeDocuments": "Belgeleri yönetmek için giriş yap",
+  "contentViewAudited": "Bu dosyayı açmak kaydedilir",
+  "noRequirements": "Bu üye için belge şartı yok.",
+  "confirmDeleteDocument": "Bu belge kaldırılsın mı?",
+  "rejectReasonRequired": "Neden reddedildiğini yaz",
+  "documentVerifiedSnack": "Belge onaylandı",
+  "documentRejectedSnack": "Belge reddedildi",
+  "documentDeleted": "Belge kaldırıldı",
+  "documentTooLarge": "Dosya 15 MB veya daha küçük olmalı",
+  "couldNotOpenDocument": "Dosya açılamadı"
 }

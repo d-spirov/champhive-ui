@@ -25,7 +25,45 @@ class PlayerAvatar extends ConsumerWidget {
       return AvatarCircle(label: label, size: size);
     }
 
-    final photoAsync = ref.watch(playerPhotoProvider(playerId));
+    final photoAsync = ref.watch(memberPhotoBytesProvider(playerId));
+    return photoAsync.when(
+      loading: () => AvatarCircle(label: label, size: size),
+      error: (_, _) => AvatarCircle(label: label, size: size),
+      data: (bytes) {
+        if (bytes == null || bytes.isEmpty) {
+          return AvatarCircle(label: label, size: size);
+        }
+        return CircleAvatar(
+          radius: size / 2,
+          backgroundColor:
+              Theme.of(context).colorScheme.primary.withValues(alpha: 0.12),
+          backgroundImage: MemoryImage(bytes),
+        );
+      },
+    );
+  }
+}
+
+/// Always attempts to load the member photograph (404 → initials).
+class MemberPhotoAvatar extends ConsumerWidget {
+  const MemberPhotoAvatar({
+    super.key,
+    required this.memberId,
+    required this.label,
+    this.size = 48,
+  });
+
+  final String memberId;
+  final String label;
+  final double size;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    if (memberId.isEmpty) {
+      return AvatarCircle(label: label, size: size);
+    }
+
+    final photoAsync = ref.watch(memberPhotoBytesProvider(memberId));
     return photoAsync.when(
       loading: () => AvatarCircle(label: label, size: size),
       error: (_, _) => AvatarCircle(label: label, size: size),

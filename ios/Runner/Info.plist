@@ -56,5 +56,14 @@
 	<true/>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Use Face ID to quickly sign in with your saved credentials.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>ChampHive uses the camera so you can take a profile photo.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>ChampHive uses your photo library so you can choose a profile photo.</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>https</string>
+		<string>http</string>
+	</array>
 </dict>
 </plist>

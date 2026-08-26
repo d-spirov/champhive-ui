@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:team_hive/shared/models/user.dart';
 import 'package:team_hive/shared/models/club.dart';
 import 'package:team_hive/shared/models/event_attendance.dart';
+import 'package:team_hive/shared/models/compliance.dart';
 
 void main() {
   test('User.fromMeJson maps ClubPlatform fields', () {
@@ -36,6 +37,8 @@ void main() {
     expect(user.emailVerified, isTrue);
     expect(user.clubIds, {'c1'});
     expect(user.rolesForClub('c1'), ['coach']);
+    expect(user.hasClubPermission('c1', 'attendance.mark'), isTrue);
+    expect(user.hasClubPermission('c1', 'DOCUMENT_VERIFY'), isFalse);
   });
 
   test('Club.fromJson maps ClubResponse fields', () {
@@ -103,5 +106,29 @@ void main() {
     expect(entry['memberId'], 'm1');
     expect(entry['occurrenceId'], 'o1');
     expect(entry['clientRecordId'], '11111111-1111-4111-8111-111111111111');
+  });
+
+  test('MemberCompliance.fromJson maps requirements', () {
+    final picture = MemberCompliance.fromJson({
+      'memberId': 'm1',
+      'memberName': 'Kid',
+      'clubId': 'c1',
+      'status': 'missing',
+      'requirements': [
+        {
+          'documentTypeId': 't1',
+          'code': 'medical-cert',
+          'name': 'Medical certificate',
+          'required': true,
+          'validityMonths': 12,
+          'satisfied': false,
+          'expiresOn': null,
+          'latestDocument': null,
+        }
+      ],
+    });
+    expect(picture.status, 'missing');
+    expect(picture.requirements.single.isRequired, isTrue);
+    expect(picture.requirements.single.satisfied, isFalse);
   });
 }

@@ -15,6 +15,8 @@ import 'features/auth/screens/splash_screen.dart';
 import 'features/calendar/screens/calendar_screen.dart';
 import 'features/calendar/screens/create_schedule_screen.dart';
 import 'features/clubs/screens/club_details_screen.dart';
+import 'features/compliance/screens/compliance_hub_screen.dart';
+import 'features/compliance/screens/member_compliance_screen.dart';
 import 'features/events/screens/event_detail_screen.dart';
 import 'features/home/screens/home_dashboard_screen.dart';
 import 'features/messages/screens/chat_thread_screen.dart';
@@ -157,6 +159,17 @@ class _AppState extends ConsumerState<App> {
         GoRoute(
           path: '/payments',
           builder: (context, state) => const PaymentsScreen(),
+        ),
+        GoRoute(
+          path: '/compliance',
+          builder: (context, state) => const ComplianceHubScreen(),
+        ),
+        GoRoute(
+          path: '/compliance/members/:memberId',
+          builder: (context, state) => MemberComplianceScreen(
+            memberId: state.pathParameters['memberId']!,
+            memberName: state.uri.queryParameters['name'],
+          ),
         ),
         GoRoute(
           path: '/account',

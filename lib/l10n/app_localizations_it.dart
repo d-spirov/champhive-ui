@@ -1256,4 +1256,172 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get preferenceDefault => 'Predefinito';
+
+  @override
+  String get changePhoto => 'Cambia foto';
+
+  @override
+  String get changeYourPhoto => 'Cambia la tua foto';
+
+  @override
+  String changeChildPhoto(String name) {
+    return 'Cambia la foto di $name';
+  }
+
+  @override
+  String get takePhoto => 'Scatta foto';
+
+  @override
+  String get chooseFromLibrary => 'Scegli dalla libreria';
+
+  @override
+  String get removePhoto => 'Rimuovi foto';
+
+  @override
+  String get photoUpdated => 'Foto aggiornata';
+
+  @override
+  String get photoRemoved => 'Foto rimossa';
+
+  @override
+  String get photoUpdateFailed => 'Impossibile aggiornare la foto';
+
+  @override
+  String get documents => 'Documenti';
+
+  @override
+  String get yourDocuments => 'I tuoi documenti';
+
+  @override
+  String clubDocumentsTitle(String club) {
+    return 'Documenti $club';
+  }
+
+  @override
+  String get complianceOverview => 'Panoramica';
+
+  @override
+  String get reviewQueue => 'Da revisionare';
+
+  @override
+  String get noDocumentsPending => 'Niente in attesa di revisione.';
+
+  @override
+  String get noComplianceMembers => 'Tutto in regola.';
+
+  @override
+  String get complianceValid => 'Valido';
+
+  @override
+  String get complianceExpiring => 'In scadenza';
+
+  @override
+  String get complianceMissing => 'Mancante';
+
+  @override
+  String get complianceUnknown => 'Sconosciuto';
+
+  @override
+  String get requirementRequired => 'Obbligatorio';
+
+  @override
+  String get requirementOptional => 'Facoltativo';
+
+  @override
+  String get uploadDocument => 'Carica';
+
+  @override
+  String get choosePdf => 'Scegli PDF o file';
+
+  @override
+  String get issuedOn => 'Data di emissione';
+
+  @override
+  String get issuedOnHint =>
+      'Se il certificato ha una data stampata, aggiungila: la scadenza parte da quel giorno.';
+
+  @override
+  String get expiresOn => 'Data di scadenza';
+
+  @override
+  String expiresOnDate(String date) {
+    return 'Scade il $date';
+  }
+
+  @override
+  String get documentPending => 'In revisione';
+
+  @override
+  String get documentVerified => 'Verificato';
+
+  @override
+  String get documentRejected => 'Rifiutato';
+
+  @override
+  String get documentAwaitingUpload => 'Caricamento avviato';
+
+  @override
+  String get viewDocument => 'Apri';
+
+  @override
+  String get deleteDocument => 'Elimina';
+
+  @override
+  String get verifyDocument => 'Verifica';
+
+  @override
+  String get rejectDocument => 'Rifiuta';
+
+  @override
+  String get rejectionReason => 'Motivo per la famiglia';
+
+  @override
+  String get askFamily => 'Chiedi alla famiglia';
+
+  @override
+  String familyAsked(int count) {
+    return 'Richiesta inviata a $count account famiglia';
+  }
+
+  @override
+  String get familyAlreadyAsked => 'Già chiesto oggi';
+
+  @override
+  String get documentUploaded => 'Documento caricato — in attesa di revisione';
+
+  @override
+  String get uploadFailed => 'Impossibile caricare il documento';
+
+  @override
+  String get couldNotLoadCompliance => 'Impossibile caricare i documenti';
+
+  @override
+  String get signInToSeeDocuments => 'Accedi per gestire i documenti';
+
+  @override
+  String get contentViewAudited => 'L’apertura di questo file viene registrata';
+
+  @override
+  String get noRequirements => 'Nessun documento richiesto per questo membro.';
+
+  @override
+  String get confirmDeleteDocument => 'Rimuovere questo documento?';
+
+  @override
+  String get rejectReasonRequired => 'Spiega perché è stato rifiutato';
+
+  @override
+  String get documentVerifiedSnack => 'Documento verificato';
+
+  @override
+  String get documentRejectedSnack => 'Documento rifiutato';
+
+  @override
+  String get documentDeleted => 'Documento rimosso';
+
+  @override
+  String get documentTooLarge => 'Il file deve essere da 15 MB o meno';
+
+  @override
+  String get couldNotOpenDocument => 'Impossibile aprire il file';
 }

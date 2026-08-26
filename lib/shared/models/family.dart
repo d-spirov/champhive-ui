@@ -39,14 +39,17 @@ class FamilyChild {
   }
 
   factory FamilyChild.fromJson(Map<String, dynamic> json) {
+    final club = json['club'];
+    final nestedClubId = club is Map ? club['id']?.toString() ?? '' : '';
+    final nestedClubName = club is Map ? club['name'] as String? ?? '' : '';
     return FamilyChild(
       memberId: json['memberId']?.toString() ?? '',
       firstName: json['firstName'] as String? ?? '',
       lastName: json['lastName'] as String? ?? '',
       dateOfBirth: DateTime.tryParse(json['dateOfBirth'] as String? ?? ''),
       status: json['status'] as String? ?? '',
-      clubId: json['clubId']?.toString() ?? '',
-      clubName: json['clubName'] as String? ?? '',
+      clubId: json['clubId']?.toString() ?? nestedClubId,
+      clubName: json['clubName'] as String? ?? nestedClubName,
       sectionId: json['sectionId']?.toString(),
       sectionName: json['sectionName'] as String?,
       teamId: json['teamId']?.toString(),
@@ -54,9 +57,20 @@ class FamilyChild {
       hasActiveEnrollment: json['hasActiveEnrollment'] as bool? ?? false,
       consentGranted: json['consentGranted'] as bool? ?? false,
       complianceStatus: json['complianceStatus'] as String?,
-      isSelf: json['isSelf'] as bool? ?? false,
+      isSelf: _readBool(json['isSelf']) ||
+          _readBool(json['self']) ||
+          _readBool(json['own']),
     );
   }
+}
+
+bool _readBool(Object? value) {
+  if (value == true || value == 1) return true;
+  if (value is String) {
+    final lower = value.toLowerCase();
+    return lower == 'true' || lower == '1';
+  }
+  return false;
 }
 
 class PendingConsent {

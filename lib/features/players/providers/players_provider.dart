@@ -50,29 +50,17 @@ final playerDetailProvider =
 });
 
 /// Loads member photo bytes through the authenticated Dio client.
-final playerPhotoProvider =
-    FutureProvider.autoDispose.family<Uint8List?, String>((ref, playerId) async {
+/// Not club-scoped — the same person photo is shared across clubs.
+final memberPhotoBytesProvider =
+    FutureProvider.autoDispose.family<Uint8List?, String>((ref, memberId) async {
   final auth = ref.watch(authNotifierProvider);
-  if (!auth.isAuthenticated || auth.user?.id == 'demo') {
+  if (!auth.isAuthenticated || auth.user?.id == 'demo' || memberId.isEmpty) {
     return null;
   }
-  final clubId = ref.watch(selectedClubIdProvider);
-  if (clubId == null) return null;
 
   await ref.watch(authApiProvider.future);
-  String? photoUrl;
-  final listed = ref.watch(clubPlayersProvider).valueOrNull;
-  if (listed != null) {
-    for (final p in listed) {
-      if (p.id == playerId) {
-        photoUrl = p.photoUrl;
-        break;
-      }
-    }
-  }
   return ref.watch(playersApiProvider).getPhotoBytes(
-        clubId: clubId,
-        playerId: playerId,
-        photoUrl: photoUrl,
+        clubId: '',
+        playerId: memberId,
       );
 });

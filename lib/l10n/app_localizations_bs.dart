@@ -1245,4 +1245,172 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get preferenceDefault => 'Zadano';
+
+  @override
+  String get changePhoto => 'Promijeni fotografiju';
+
+  @override
+  String get changeYourPhoto => 'Promijeni svoju fotografiju';
+
+  @override
+  String changeChildPhoto(String name) {
+    return 'Promijeni fotografiju za $name';
+  }
+
+  @override
+  String get takePhoto => 'Uslikaj';
+
+  @override
+  String get chooseFromLibrary => 'Odaberi iz galerije';
+
+  @override
+  String get removePhoto => 'Ukloni fotografiju';
+
+  @override
+  String get photoUpdated => 'Fotografija je ažurirana';
+
+  @override
+  String get photoRemoved => 'Fotografija je uklonjena';
+
+  @override
+  String get photoUpdateFailed => 'Fotografija se nije mogla ažurirati';
+
+  @override
+  String get documents => 'Dokumenti';
+
+  @override
+  String get yourDocuments => 'Tvoji dokumenti';
+
+  @override
+  String clubDocumentsTitle(String club) {
+    return 'Dokumenti — $club';
+  }
+
+  @override
+  String get complianceOverview => 'Pregled';
+
+  @override
+  String get reviewQueue => 'Za pregled';
+
+  @override
+  String get noDocumentsPending => 'Nema dokumenata na čekanju.';
+
+  @override
+  String get noComplianceMembers => 'Sve je u redu.';
+
+  @override
+  String get complianceValid => 'Važeće';
+
+  @override
+  String get complianceExpiring => 'Ističe';
+
+  @override
+  String get complianceMissing => 'Nedostaje';
+
+  @override
+  String get complianceUnknown => 'Nepoznato';
+
+  @override
+  String get requirementRequired => 'Obavezno';
+
+  @override
+  String get requirementOptional => 'Opciono';
+
+  @override
+  String get uploadDocument => 'Pošalji';
+
+  @override
+  String get choosePdf => 'Odaberi PDF ili datoteku';
+
+  @override
+  String get issuedOn => 'Datum izdavanja';
+
+  @override
+  String get issuedOnHint =>
+      'Ako certifikat ima štampani datum, unesi ga da se važenje računa od tog dana.';
+
+  @override
+  String get expiresOn => 'Datum isteka';
+
+  @override
+  String expiresOnDate(String date) {
+    return 'Ističe $date';
+  }
+
+  @override
+  String get documentPending => 'Na pregledu';
+
+  @override
+  String get documentVerified => 'Potvrđeno';
+
+  @override
+  String get documentRejected => 'Odbijeno';
+
+  @override
+  String get documentAwaitingUpload => 'Slanje započeto';
+
+  @override
+  String get viewDocument => 'Pogledaj';
+
+  @override
+  String get deleteDocument => 'Obriši';
+
+  @override
+  String get verifyDocument => 'Potvrdi';
+
+  @override
+  String get rejectDocument => 'Odbij';
+
+  @override
+  String get rejectionReason => 'Obrazloženje za porodicu';
+
+  @override
+  String get askFamily => 'Traži od porodice';
+
+  @override
+  String familyAsked(int count) {
+    return 'Poslano na $count porodični nalog';
+  }
+
+  @override
+  String get familyAlreadyAsked => 'Već traženo danas';
+
+  @override
+  String get documentUploaded => 'Dokument poslan — čeka pregled';
+
+  @override
+  String get uploadFailed => 'Dokument se nije mogao poslati';
+
+  @override
+  String get couldNotLoadCompliance => 'Dokumenti se nisu mogli učitati';
+
+  @override
+  String get signInToSeeDocuments => 'Prijavi se da upravljaš dokumentima';
+
+  @override
+  String get contentViewAudited => 'Otvaranje ovog fajla se evidentira';
+
+  @override
+  String get noRequirements => 'Nema zahtjeva za dokumente za ovog člana.';
+
+  @override
+  String get confirmDeleteDocument => 'Ukloniti ovaj dokument?';
+
+  @override
+  String get rejectReasonRequired => 'Navedi zašto je odbijen';
+
+  @override
+  String get documentVerifiedSnack => 'Dokument je potvrđen';
+
+  @override
+  String get documentRejectedSnack => 'Dokument je odbijen';
+
+  @override
+  String get documentDeleted => 'Dokument je uklonjen';
+
+  @override
+  String get documentTooLarge => 'Fajl mora biti 15 MB ili manji';
+
+  @override
+  String get couldNotOpenDocument => 'Fajl se nije mogao otvoriti';
 }

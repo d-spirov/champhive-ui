@@ -78,5 +78,10 @@ List<AppDestination> moreManagementDestinations(AppLocalizations l10n) {
       icon: Icons.payments_outlined,
       route: '/payments',
     ),
+    AppDestination(
+      label: l10n.documents,
+      icon: Icons.folder_copy_outlined,
+      route: '/compliance',
+    ),
   ];
 }

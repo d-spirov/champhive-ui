@@ -574,5 +574,89 @@
       }
     }
   },
-  "preferenceDefault": "Стандардно"
+  "preferenceDefault": "Стандардно",
+  "changePhoto": "Промени фотографија",
+  "changeYourPhoto": "Промени ја својата фотографија",
+  "changeChildPhoto": "Промени ја фотографијата на {name}",
+  "@changeChildPhoto": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "takePhoto": "Сликај",
+  "chooseFromLibrary": "Избери од галерија",
+  "removePhoto": "Отстрани фотографија",
+  "photoUpdated": "Фотографијата е ажурирана",
+  "photoRemoved": "Фотографијата е отстранета",
+  "photoUpdateFailed": "Фотографијата не можеше да се ажурира",
+  "photoNeedLinkedMember": "Оваа најава не е поврзана со член. Промени ја фотографијата на член од семејството подолу, или отвори го нивниот профил.",
+  "photoSelectClubFirst": "Прво избери клуб, па обидете се повторно.",
+  "photoNoPermission": "Немаш дозвола да ја промениш оваа фотографија.",
+  "documents": "Документи",
+  "yourDocuments": "Твои документи",
+  "clubDocumentsTitle": "Документи — {club}",
+  "@clubDocumentsTitle": {
+    "placeholders": {
+      "club": {
+        "type": "String"
+      }
+    }
+  },
+  "complianceOverview": "Преглед",
+  "reviewQueue": "За проверка",
+  "noDocumentsPending": "Нема документи за проверка.",
+  "noComplianceMembers": "Сè е во ред.",
+  "complianceValid": "Важечко",
+  "complianceExpiring": "Истекува",
+  "complianceMissing": "Недостасува",
+  "complianceUnknown": "Непознато",
+  "requirementRequired": "Задолжително",
+  "requirementOptional": "Изборно",
+  "uploadDocument": "Прикачи",
+  "choosePdf": "Избери PDF или датотека",
+  "issuedOn": "Датум на издавање",
+  "issuedOnHint": "Ако уверението има печатен датум, внеси го за рокот да се смета од тој ден.",
+  "expiresOn": "Датум на истек",
+  "expiresOnDate": "Истекува {date}",
+  "@expiresOnDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "documentPending": "На проверка",
+  "documentVerified": "Потврдено",
+  "documentRejected": "Одбиено",
+  "documentAwaitingUpload": "Прикачувањето е започнато",
+  "viewDocument": "Отвори",
+  "deleteDocument": "Избриши",
+  "verifyDocument": "Потврди",
+  "rejectDocument": "Одбиј",
+  "rejectionReason": "Образложение за семејството",
+  "askFamily": "Побарај од семејството",
+  "familyAsked": "Испратено до {count} семеен налог",
+  "@familyAsked": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "familyAlreadyAsked": "Веќе побарано денес",
+  "documentUploaded": "Документот е прикачен — чека проверка",
+  "uploadFailed": "Документот не можеше да се прикачи",
+  "couldNotLoadCompliance": "Документите не можеа да се вчитаат",
+  "signInToSeeDocuments": "Најави се за да ги управуваш документите",
+  "contentViewAudited": "Отворањето на оваа датотека се евидентира",
+  "noRequirements": "Нема барања за документи за овој член.",
+  "confirmDeleteDocument": "Да се отстрани овој документ?",
+  "rejectReasonRequired": "Наведи зошто е одбиено",
+  "documentVerifiedSnack": "Документот е потврден",
+  "documentRejectedSnack": "Документот е одбиен",
+  "documentDeleted": "Документот е отстранет",
+  "documentTooLarge": "Датотеката мора да биде 15 MB или помала",
+  "couldNotOpenDocument": "Датотеката не можеше да се отвори"
 }

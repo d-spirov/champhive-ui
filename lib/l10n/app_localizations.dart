@@ -2440,6 +2440,324 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Default'**
   String get preferenceDefault;
+
+  /// No description provided for @changePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Change photo'**
+  String get changePhoto;
+
+  /// No description provided for @changeYourPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Change your photo'**
+  String get changeYourPhoto;
+
+  /// No description provided for @changeChildPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Change {name}\'s photo'**
+  String changeChildPhoto(String name);
+
+  /// No description provided for @takePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Take photo'**
+  String get takePhoto;
+
+  /// No description provided for @chooseFromLibrary.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from library'**
+  String get chooseFromLibrary;
+
+  /// No description provided for @removePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove photo'**
+  String get removePhoto;
+
+  /// No description provided for @photoUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo updated'**
+  String get photoUpdated;
+
+  /// No description provided for @photoRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo removed'**
+  String get photoRemoved;
+
+  /// No description provided for @photoUpdateFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not update photo'**
+  String get photoUpdateFailed;
+
+  /// No description provided for @documents.
+  ///
+  /// In en, this message translates to:
+  /// **'Documents'**
+  String get documents;
+
+  /// No description provided for @yourDocuments.
+  ///
+  /// In en, this message translates to:
+  /// **'Your documents'**
+  String get yourDocuments;
+
+  /// No description provided for @clubDocumentsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{club} documents'**
+  String clubDocumentsTitle(String club);
+
+  /// No description provided for @complianceOverview.
+  ///
+  /// In en, this message translates to:
+  /// **'Overview'**
+  String get complianceOverview;
+
+  /// No description provided for @reviewQueue.
+  ///
+  /// In en, this message translates to:
+  /// **'To review'**
+  String get reviewQueue;
+
+  /// No description provided for @noDocumentsPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing waiting for review.'**
+  String get noDocumentsPending;
+
+  /// No description provided for @noComplianceMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'Everyone is in order.'**
+  String get noComplianceMembers;
+
+  /// No description provided for @complianceValid.
+  ///
+  /// In en, this message translates to:
+  /// **'Valid'**
+  String get complianceValid;
+
+  /// No description provided for @complianceExpiring.
+  ///
+  /// In en, this message translates to:
+  /// **'Expiring'**
+  String get complianceExpiring;
+
+  /// No description provided for @complianceMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'Missing'**
+  String get complianceMissing;
+
+  /// No description provided for @complianceUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get complianceUnknown;
+
+  /// No description provided for @requirementRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Required'**
+  String get requirementRequired;
+
+  /// No description provided for @requirementOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional'**
+  String get requirementOptional;
+
+  /// No description provided for @uploadDocument.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload'**
+  String get uploadDocument;
+
+  /// No description provided for @choosePdf.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose PDF or file'**
+  String get choosePdf;
+
+  /// No description provided for @issuedOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Issue date'**
+  String get issuedOn;
+
+  /// No description provided for @issuedOnHint.
+  ///
+  /// In en, this message translates to:
+  /// **'If the certificate has a printed date, add it so expiry is counted from that day.'**
+  String get issuedOnHint;
+
+  /// No description provided for @expiresOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Expiry date'**
+  String get expiresOn;
+
+  /// No description provided for @expiresOnDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Expires {date}'**
+  String expiresOnDate(String date);
+
+  /// No description provided for @documentPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending review'**
+  String get documentPending;
+
+  /// No description provided for @documentVerified.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified'**
+  String get documentVerified;
+
+  /// No description provided for @documentRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected'**
+  String get documentRejected;
+
+  /// No description provided for @documentAwaitingUpload.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload started'**
+  String get documentAwaitingUpload;
+
+  /// No description provided for @viewDocument.
+  ///
+  /// In en, this message translates to:
+  /// **'View'**
+  String get viewDocument;
+
+  /// No description provided for @deleteDocument.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get deleteDocument;
+
+  /// No description provided for @verifyDocument.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify'**
+  String get verifyDocument;
+
+  /// No description provided for @rejectDocument.
+  ///
+  /// In en, this message translates to:
+  /// **'Reject'**
+  String get rejectDocument;
+
+  /// No description provided for @rejectionReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Reason for the family'**
+  String get rejectionReason;
+
+  /// No description provided for @askFamily.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask family'**
+  String get askFamily;
+
+  /// No description provided for @familyAsked.
+  ///
+  /// In en, this message translates to:
+  /// **'Asked {count} family account(s)'**
+  String familyAsked(int count);
+
+  /// No description provided for @familyAlreadyAsked.
+  ///
+  /// In en, this message translates to:
+  /// **'Already asked today'**
+  String get familyAlreadyAsked;
+
+  /// No description provided for @documentUploaded.
+  ///
+  /// In en, this message translates to:
+  /// **'Document uploaded — waiting for review'**
+  String get documentUploaded;
+
+  /// No description provided for @uploadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not upload document'**
+  String get uploadFailed;
+
+  /// No description provided for @couldNotLoadCompliance.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load documents'**
+  String get couldNotLoadCompliance;
+
+  /// No description provided for @signInToSeeDocuments.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to manage documents'**
+  String get signInToSeeDocuments;
+
+  /// No description provided for @contentViewAudited.
+  ///
+  /// In en, this message translates to:
+  /// **'Opening this file is logged'**
+  String get contentViewAudited;
+
+  /// No description provided for @noRequirements.
+  ///
+  /// In en, this message translates to:
+  /// **'No document requirements for this member.'**
+  String get noRequirements;
+
+  /// No description provided for @confirmDeleteDocument.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove this document?'**
+  String get confirmDeleteDocument;
+
+  /// No description provided for @rejectReasonRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please explain why it was rejected'**
+  String get rejectReasonRequired;
+
+  /// No description provided for @documentVerifiedSnack.
+  ///
+  /// In en, this message translates to:
+  /// **'Document verified'**
+  String get documentVerifiedSnack;
+
+  /// No description provided for @documentRejectedSnack.
+  ///
+  /// In en, this message translates to:
+  /// **'Document rejected'**
+  String get documentRejectedSnack;
+
+  /// No description provided for @documentDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Document removed'**
+  String get documentDeleted;
+
+  /// No description provided for @documentTooLarge.
+  ///
+  /// In en, this message translates to:
+  /// **'File must be 15 MB or smaller'**
+  String get documentTooLarge;
+
+  /// No description provided for @couldNotOpenDocument.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open the file'**
+  String get couldNotOpenDocument;
 }
 
 class _AppLocalizationsDelegate

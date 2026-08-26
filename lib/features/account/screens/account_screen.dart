@@ -13,6 +13,7 @@ import '../../../shared/utils/api_error_message.dart';
 import '../../../shared/widgets/ui_bits.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../providers/account_extras_provider.dart';
+import '../widgets/editable_member_photo.dart';
 
 List<(String code, String label)> _profileLocaleOptions(AppLocalizations l10n) {
   return [
@@ -24,6 +25,7 @@ List<(String code, String label)> _profileLocaleOptions(AppLocalizations l10n) {
     ('tr', l10n.languageTurkish),
   ];
 }
+
 
 String _humanizeKey(String raw) {
   if (raw.isEmpty) return raw;
@@ -333,7 +335,10 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
                 physics: const AlwaysScrollableScrollPhysics(),
                 padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
                 children: [
-                  _ProfileHeader(user: user),
+                  _ProfileHeader(
+                    user: user,
+                    photoTarget: ref.watch(selfPhotoTargetProvider),
+                  ),
                   const SizedBox(height: 20),
                   Text(
                     l10n.profile,
@@ -440,12 +445,14 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
                       apiErrorMessage(e, fallback: l10n.familyLoadFailed),
                     ),
                     data: (items) {
-                      if (items.isEmpty) {
+                      final children =
+                          items.where((c) => !c.isSelf).toList();
+                      if (children.isEmpty) {
                         return Text(l10n.noFamilyMembers);
                       }
                       return Column(
                         children: [
-                          for (final child in items)
+                          for (final child in children)
                             _FamilyChildTile(child: child),
                         ],
                       );
@@ -651,24 +658,46 @@ class _FamilyChildTile extends StatelessWidget {
       child.consentGranted ? l10n.consentOk : l10n.consentMissing,
     ].join(' · ');
 
-    return ListTile(
-      contentPadding: EdgeInsets.zero,
-      leading: AvatarCircle(label: child.displayName, size: 40),
-      title: Text(child.displayName),
-      subtitle: Text(subtitle),
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        EditableMemberPhoto(
+          clubId: child.clubId,
+          memberId: child.memberId,
+          label: child.displayName,
+          size: 44,
+          sheetTitle: l10n.changeChildPhoto(child.firstName.isEmpty
+              ? child.displayName
+              : child.firstName),
+        ),
+        Expanded(
+          child: ListTile(
+            contentPadding: const EdgeInsets.only(left: 12),
+            title: Text(child.displayName),
+            subtitle: Text(subtitle),
+            trailing: const Icon(Icons.chevron_right_rounded),
+            onTap: () => context.push(
+              '/compliance/members/${child.memberId}'
+              '?name=${Uri.encodeComponent(child.displayName)}',
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
 
 class _ProfileHeader extends StatelessWidget {
-  const _ProfileHeader({required this.user});
+  const _ProfileHeader({required this.user, required this.photoTarget});
 
   final User user;
+  final AsyncValue<MemberPhotoTarget?> photoTarget;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final created = user.createdAt;
+    final target = photoTarget.valueOrNull;
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -677,7 +706,19 @@ class _ProfileHeader extends StatelessWidget {
       ),
       child: Row(
         children: [
-          AvatarCircle(label: user.displayName, size: 64),
+          if (target != null)
+            EditableMemberPhoto(
+              clubId: target.clubId,
+              memberId: target.memberId,
+              label: user.displayName,
+              size: 64,
+              sheetTitle: l10n.changeYourPhoto,
+            )
+          else
+            _UnlinkedAccountPhoto(
+              label: user.displayName,
+              loading: photoTarget.isLoading,
+            ),
           const SizedBox(width: 14),
           Expanded(
             child: Column(
@@ -716,6 +757,18 @@ class _ProfileHeader extends StatelessWidget {
                       ),
                   ],
                 ),
+                if (target != null)
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.zero,
+                      visualDensity: VisualDensity.compact,
+                    ),
+                    onPressed: () => context.push(
+                      '/compliance/members/${target.memberId}'
+                      '?name=${Uri.encodeComponent(user.displayName)}',
+                    ),
+                    child: Text(l10n.yourDocuments),
+                  ),
               ],
             ),
           ),
@@ -738,6 +791,46 @@ class _ProfileHeader extends StatelessWidget {
         style: Theme.of(context).textTheme.labelSmall?.copyWith(
           color: ok ? AppColors.present : AppColors.late,
           fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
+}
+
+class _UnlinkedAccountPhoto extends StatelessWidget {
+  const _UnlinkedAccountPhoto({required this.label, required this.loading});
+
+  final String label;
+  final bool loading;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return InkWell(
+      onTap: loading
+          ? null
+          : () => ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(l10n.photoNeedLinkedMember)),
+              ),
+      customBorder: const CircleBorder(),
+      child: SizedBox(
+        width: 64,
+        height: 64,
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            AvatarCircle(label: label, size: 64),
+            if (loading)
+              const Positioned.fill(
+                child: Center(
+                  child: SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                ),
+              ),
+          ],
         ),
       ),
     );

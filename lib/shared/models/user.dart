@@ -95,6 +95,18 @@ class User {
         .toList();
   }
 
+  bool hasClubPermission(String? clubId, String permission) {
+    if (clubId == null || clubId.isEmpty || permission.isEmpty) return false;
+    final wanted = permission.toUpperCase();
+    for (final c in clubPermissions) {
+      if (c.clubId != clubId) continue;
+      for (final p in c.permissions) {
+        if (p.toUpperCase() == wanted) return true;
+      }
+    }
+    return false;
+  }
+
   factory User.fromMeJson(Map<String, dynamic> json) {
     final rolesRaw = json['roles'];
     final famRaw = json['fam'];

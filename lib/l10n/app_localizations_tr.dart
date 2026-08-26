@@ -1240,4 +1240,172 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get preferenceDefault => 'Varsayılan';
+
+  @override
+  String get changePhoto => 'Fotoğrafı değiştir';
+
+  @override
+  String get changeYourPhoto => 'Fotoğrafını değiştir';
+
+  @override
+  String changeChildPhoto(String name) {
+    return '$name adlı kişinin fotoğrafını değiştir';
+  }
+
+  @override
+  String get takePhoto => 'Fotoğraf çek';
+
+  @override
+  String get chooseFromLibrary => 'Galeriden seç';
+
+  @override
+  String get removePhoto => 'Fotoğrafı kaldır';
+
+  @override
+  String get photoUpdated => 'Fotoğraf güncellendi';
+
+  @override
+  String get photoRemoved => 'Fotoğraf kaldırıldı';
+
+  @override
+  String get photoUpdateFailed => 'Fotoğraf güncellenemedi';
+
+  @override
+  String get documents => 'Belgeler';
+
+  @override
+  String get yourDocuments => 'Belgelerin';
+
+  @override
+  String clubDocumentsTitle(String club) {
+    return '$club belgeleri';
+  }
+
+  @override
+  String get complianceOverview => 'Özet';
+
+  @override
+  String get reviewQueue => 'İnceleme';
+
+  @override
+  String get noDocumentsPending => 'İnceleme bekleyen belge yok.';
+
+  @override
+  String get noComplianceMembers => 'Herkes uygun.';
+
+  @override
+  String get complianceValid => 'Geçerli';
+
+  @override
+  String get complianceExpiring => 'Süresi doluyor';
+
+  @override
+  String get complianceMissing => 'Eksik';
+
+  @override
+  String get complianceUnknown => 'Bilinmiyor';
+
+  @override
+  String get requirementRequired => 'Zorunlu';
+
+  @override
+  String get requirementOptional => 'İsteğe bağlı';
+
+  @override
+  String get uploadDocument => 'Yükle';
+
+  @override
+  String get choosePdf => 'PDF veya dosya seç';
+
+  @override
+  String get issuedOn => 'Düzenleme tarihi';
+
+  @override
+  String get issuedOnHint =>
+      'Sertifikada basılı bir tarih varsa ekle; süre o günden sayılır.';
+
+  @override
+  String get expiresOn => 'Son geçerlilik';
+
+  @override
+  String expiresOnDate(String date) {
+    return '$date tarihinde doluyor';
+  }
+
+  @override
+  String get documentPending => 'İncelemede';
+
+  @override
+  String get documentVerified => 'Onaylandı';
+
+  @override
+  String get documentRejected => 'Reddedildi';
+
+  @override
+  String get documentAwaitingUpload => 'Yükleme başladı';
+
+  @override
+  String get viewDocument => 'Görüntüle';
+
+  @override
+  String get deleteDocument => 'Sil';
+
+  @override
+  String get verifyDocument => 'Onayla';
+
+  @override
+  String get rejectDocument => 'Reddet';
+
+  @override
+  String get rejectionReason => 'Aileye gerekçe';
+
+  @override
+  String get askFamily => 'Aileden iste';
+
+  @override
+  String familyAsked(int count) {
+    return '$count aile hesabına soruldu';
+  }
+
+  @override
+  String get familyAlreadyAsked => 'Bugün zaten soruldu';
+
+  @override
+  String get documentUploaded => 'Belge yüklendi — inceleme bekleniyor';
+
+  @override
+  String get uploadFailed => 'Belge yüklenemedi';
+
+  @override
+  String get couldNotLoadCompliance => 'Belgeler yüklenemedi';
+
+  @override
+  String get signInToSeeDocuments => 'Belgeleri yönetmek için giriş yap';
+
+  @override
+  String get contentViewAudited => 'Bu dosyayı açmak kaydedilir';
+
+  @override
+  String get noRequirements => 'Bu üye için belge şartı yok.';
+
+  @override
+  String get confirmDeleteDocument => 'Bu belge kaldırılsın mı?';
+
+  @override
+  String get rejectReasonRequired => 'Neden reddedildiğini yaz';
+
+  @override
+  String get documentVerifiedSnack => 'Belge onaylandı';
+
+  @override
+  String get documentRejectedSnack => 'Belge reddedildi';
+
+  @override
+  String get documentDeleted => 'Belge kaldırıldı';
+
+  @override
+  String get documentTooLarge => 'Dosya 15 MB veya daha küçük olmalı';
+
+  @override
+  String get couldNotOpenDocument => 'Dosya açılamadı';
 }

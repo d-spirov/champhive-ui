@@ -574,5 +574,89 @@
       }
     }
   },
-  "preferenceDefault": "Podrazumevano"
+  "preferenceDefault": "Podrazumevano",
+  "changePhoto": "Promeni fotografiju",
+  "changeYourPhoto": "Promeni svoju fotografiju",
+  "changeChildPhoto": "Promeni fotografiju za {name}",
+  "@changeChildPhoto": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "takePhoto": "Uslikaj",
+  "chooseFromLibrary": "Izaberi iz galerije",
+  "removePhoto": "Ukloni fotografiju",
+  "photoUpdated": "Fotografija je ažurirana",
+  "photoRemoved": "Fotografija je uklonjena",
+  "photoUpdateFailed": "Fotografija se nije mogla ažurirati",
+  "photoNeedLinkedMember": "Ova prijava nije povezana sa članom. Promeni fotografiju člana porodice ispod, ili otvori njihov profil.",
+  "photoSelectClubFirst": "Prvo izaberi klub, pa pokušaj ponovo.",
+  "photoNoPermission": "Nemaš dozvolu da promeniš ovu fotografiju.",
+  "documents": "Dokumenti",
+  "yourDocuments": "Tvoji dokumenti",
+  "clubDocumentsTitle": "Dokumenti — {club}",
+  "@clubDocumentsTitle": {
+    "placeholders": {
+      "club": {
+        "type": "String"
+      }
+    }
+  },
+  "complianceOverview": "Pregled",
+  "reviewQueue": "Za pregled",
+  "noDocumentsPending": "Nema dokumenata na čekanju.",
+  "noComplianceMembers": "Sve je u redu.",
+  "complianceValid": "Važeće",
+  "complianceExpiring": "Ističe",
+  "complianceMissing": "Nedostaje",
+  "complianceUnknown": "Nepoznato",
+  "requirementRequired": "Obavezno",
+  "requirementOptional": "Opciono",
+  "uploadDocument": "Pošalji",
+  "choosePdf": "Izaberi PDF ili datoteku",
+  "issuedOn": "Datum izdavanja",
+  "issuedOnHint": "Ako uverenje ima štampani datum, unesi ga da se važenje računa od tog dana.",
+  "expiresOn": "Datum isteka",
+  "expiresOnDate": "Ističe {date}",
+  "@expiresOnDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "documentPending": "Na pregledu",
+  "documentVerified": "Potvrđeno",
+  "documentRejected": "Odbijeno",
+  "documentAwaitingUpload": "Slanje započeto",
+  "viewDocument": "Pogledaj",
+  "deleteDocument": "Obriši",
+  "verifyDocument": "Potvrdi",
+  "rejectDocument": "Odbij",
+  "rejectionReason": "Obrazloženje za porodicu",
+  "askFamily": "Traži od porodice",
+  "familyAsked": "Poslato na {count} porodični nalog",
+  "@familyAsked": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "familyAlreadyAsked": "Već traženo danas",
+  "documentUploaded": "Dokument poslat — čeka pregled",
+  "uploadFailed": "Dokument se nije mogao poslati",
+  "couldNotLoadCompliance": "Dokumenti se nisu mogli učitati",
+  "signInToSeeDocuments": "Prijavi se da upravljaš dokumentima",
+  "contentViewAudited": "Otvaranje ovog fajla se evidentira",
+  "noRequirements": "Nema zahteva za dokumente za ovog člana.",
+  "confirmDeleteDocument": "Ukloniti ovaj dokument?",
+  "rejectReasonRequired": "Navedi zašto je odbijen",
+  "documentVerifiedSnack": "Dokument je potvrđen",
+  "documentRejectedSnack": "Dokument je odbijen",
+  "documentDeleted": "Dokument je uklonjen",
+  "documentTooLarge": "Fajl mora biti 15 MB ili manji",
+  "couldNotOpenDocument": "Fajl se nije mogao otvoriti"
 }

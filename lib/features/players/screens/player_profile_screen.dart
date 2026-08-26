@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../l10n/app_localizations.dart';
@@ -8,8 +9,9 @@ import '../../../shared/models/player.dart';
 import '../../../shared/utils/api_error_message.dart';
 import '../../../shared/widgets/ui_bits.dart';
 import '../../auth/providers/auth_provider.dart';
+import '../../account/widgets/editable_member_photo.dart';
+import '../../clubs/providers/clubs_provider.dart';
 import '../providers/players_provider.dart';
-import '../widgets/player_avatar.dart';
 
 class PlayerProfileScreen extends ConsumerWidget {
   const PlayerProfileScreen({super.key, required this.playerId});
@@ -59,14 +61,15 @@ class PlayerProfileScreen extends ConsumerWidget {
   }
 }
 
-class _PlayerProfileBody extends StatelessWidget {
+class _PlayerProfileBody extends ConsumerWidget {
   const _PlayerProfileBody({required this.player});
 
   final ClubPlayer player;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
+    final clubId = player.clubId ?? ref.watch(selectedClubIdProvider) ?? '';
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -86,11 +89,12 @@ class _PlayerProfileBody extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
               child: Row(
                 children: [
-                  PlayerAvatar(
-                    playerId: player.id,
+                  EditableMemberPhoto(
+                    clubId: clubId,
+                    memberId: player.id,
                     label: player.name,
-                    hasPhoto: player.hasPhoto,
                     size: 72,
+                    sheetTitle: l10n.changePhoto,
                   ),
                   const SizedBox(width: 16),
                   Expanded(
@@ -168,33 +172,46 @@ class _InfoTab extends StatelessWidget {
         (l10n.shirtNumber, '#${player.primaryShirtNumber}'),
     ];
 
-    if (rows.isEmpty) {
-      return Center(child: Text(l10n.noProfileDetailsYet));
-    }
-
-    return ListView.separated(
+    return ListView(
       padding: const EdgeInsets.all(16),
-      itemCount: rows.length,
-      separatorBuilder: (_, _) => const Divider(height: 1),
-      itemBuilder: (context, index) {
-        final row = rows[index];
-        return ListTile(
+      children: [
+        ListTile(
           contentPadding: EdgeInsets.zero,
-          title: Text(
-            row.$1,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurface
-                      .withValues(alpha: 0.55),
-                ),
+          leading: const Icon(Icons.folder_copy_outlined),
+          title: Text(l10n.documents),
+          trailing: const Icon(Icons.chevron_right_rounded),
+          onTap: () => context.push(
+            '/compliance/members/${player.id}'
+            '?name=${Uri.encodeComponent(player.name)}',
           ),
-          subtitle: Text(
-            row.$2,
-            style: Theme.of(context).textTheme.titleSmall,
-          ),
-        );
-      },
+        ),
+        const Divider(height: 1),
+        if (rows.isEmpty)
+          Padding(
+            padding: const EdgeInsets.only(top: 24),
+            child: Center(child: Text(l10n.noProfileDetailsYet)),
+          )
+        else
+          for (var i = 0; i < rows.length; i++) ...[
+            if (i > 0) const Divider(height: 1),
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              title: Text(
+                rows[i].$1,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withValues(alpha: 0.55),
+                    ),
+              ),
+              subtitle: Text(
+                rows[i].$2,
+                style: Theme.of(context).textTheme.titleSmall,
+              ),
+            ),
+          ],
+      ],
     );
   }
 }

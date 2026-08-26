@@ -574,5 +574,89 @@
       }
     }
   },
-  "preferenceDefault": "Default"
+  "preferenceDefault": "Default",
+  "changePhoto": "Change photo",
+  "changeYourPhoto": "Change your photo",
+  "changeChildPhoto": "Change {name}'s photo",
+  "@changeChildPhoto": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "takePhoto": "Take photo",
+  "chooseFromLibrary": "Choose from library",
+  "removePhoto": "Remove photo",
+  "photoUpdated": "Photo updated",
+  "photoRemoved": "Photo removed",
+  "photoUpdateFailed": "Could not update photo",
+  "photoNeedLinkedMember": "This login isn't linked to a member record. Change a family member's photo below, or open their profile.",
+  "photoSelectClubFirst": "Select a club first, then try again.",
+  "photoNoPermission": "You don't have permission to change this photo.",
+  "documents": "Documents",
+  "yourDocuments": "Your documents",
+  "clubDocumentsTitle": "{club} documents",
+  "@clubDocumentsTitle": {
+    "placeholders": {
+      "club": {
+        "type": "String"
+      }
+    }
+  },
+  "complianceOverview": "Overview",
+  "reviewQueue": "To review",
+  "noDocumentsPending": "Nothing waiting for review.",
+  "noComplianceMembers": "Everyone is in order.",
+  "complianceValid": "Valid",
+  "complianceExpiring": "Expiring",
+  "complianceMissing": "Missing",
+  "complianceUnknown": "Unknown",
+  "requirementRequired": "Required",
+  "requirementOptional": "Optional",
+  "uploadDocument": "Upload",
+  "choosePdf": "Choose PDF or file",
+  "issuedOn": "Issue date",
+  "issuedOnHint": "If the certificate has a printed date, add it so expiry is counted from that day.",
+  "expiresOn": "Expiry date",
+  "expiresOnDate": "Expires {date}",
+  "@expiresOnDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "documentPending": "Pending review",
+  "documentVerified": "Verified",
+  "documentRejected": "Rejected",
+  "documentAwaitingUpload": "Upload started",
+  "viewDocument": "View",
+  "deleteDocument": "Delete",
+  "verifyDocument": "Verify",
+  "rejectDocument": "Reject",
+  "rejectionReason": "Reason for the family",
+  "askFamily": "Ask family",
+  "familyAsked": "Asked {count} family account(s)",
+  "@familyAsked": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "familyAlreadyAsked": "Already asked today",
+  "documentUploaded": "Document uploaded — waiting for review",
+  "uploadFailed": "Could not upload document",
+  "couldNotLoadCompliance": "Could not load documents",
+  "signInToSeeDocuments": "Sign in to manage documents",
+  "contentViewAudited": "Opening this file is logged",
+  "noRequirements": "No document requirements for this member.",
+  "confirmDeleteDocument": "Remove this document?",
+  "rejectReasonRequired": "Please explain why it was rejected",
+  "documentVerifiedSnack": "Document verified",
+  "documentRejectedSnack": "Document rejected",
+  "documentDeleted": "Document removed",
+  "documentTooLarge": "File must be 15 MB or smaller",
+  "couldNotOpenDocument": "Could not open the file"
 }
