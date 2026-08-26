@@ -1271,6 +1271,16 @@ class AppLocalizationsTr extends AppLocalizations {
   String get photoUpdateFailed => 'Fotoğraf güncellenemedi';
 
   @override
+  String get photoNeedLinkedMember =>
+      'Bu giriş bir üye kaydına bağlı değil. Aşağıdan bir aile üyesinin fotoğrafını değiştir veya profilini aç.';
+
+  @override
+  String get photoSelectClubFirst => 'Önce bir kulüp seç, sonra tekrar dene.';
+
+  @override
+  String get photoNoPermission => 'Bu fotoğrafı değiştirme iznin yok.';
+
+  @override
   String get documents => 'Belgeler';
 
   @override
@@ -1408,4 +1418,67 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get couldNotOpenDocument => 'Dosya açılamadı';
+
+  @override
+  String get aboutTagline => 'Yönet. İlham ver. Birlikte kazanın.';
+
+  @override
+  String get aboutIntro =>
+      'ChampHive, spor kulüpleri, antrenörler ve ebeveynler için hepsi bir arada platformdur. Takımların düzenli kalmasına, daha iyi iletişim kurmasına ve her sporcuyu geliştirmesine yardımcı oluruz.';
+
+  @override
+  String aboutVersion(String version) {
+    return 'Sürüm $version';
+  }
+
+  @override
+  String get aboutMissionTitle => 'Misyonumuz';
+
+  @override
+  String get aboutMissionSubtitle =>
+      'Spor takımlarının tam potansiyellerine ulaşmasına güç katıyoruz.';
+
+  @override
+  String get aboutMissionBody =>
+      'Her kulüp, sahadaki enerjiye yakışan araçları hak eder.\n\nChampHive, antrenörlerin ve ebeveynlerin üzerindeki idari yükü azaltmak için var; böylece daha fazla zaman antrenmana, gelişime ve takımı oluşturan insanlara kalır. Gerçek kulüp hayatına göre tasarlıyoruz: yoğun akşamlar, karışık yaş grupları ve önemseyen gönüllüler.';
+
+  @override
+  String get aboutTeamsTitle => 'Takımlar için tasarlandı';
+
+  @override
+  String get aboutTeamsSubtitle =>
+      'Antrenörler, oyuncular ve ebeveynler düşünülerek tasarlandı.';
+
+  @override
+  String get aboutTeamsBody =>
+      'Antrenörler, oyuncular, ebeveynler ve kulüp personeli aynı sezonun net bir görünümüne ihtiyaç duyar — üç ayrı uygulamaya değil.\n\nChampHive bu rollere göre kuruldu. Antrenman, yoklama, mesajlar, ödemeler ve belgeler tek yerde kalır; her kişi için doğru erişimle.';
+
+  @override
+  String get aboutPrivacyTitle => 'Verilerin önemli';
+
+  @override
+  String get aboutPrivacySubtitle =>
+      'Gizlilik ve veri güvenliğini ciddiye alıyoruz.';
+
+  @override
+  String get aboutPrivacyBody =>
+      'Kulüp verisi bir üründen çok bir güvendir.\n\nFotoğraflar, belgeler ve kişisel bilgiler kulübünün ve rolünün kapsamında kalır. ChampHive büyürken gizlilik ve güvenliği ciddiye alıyoruz ve yalnızca kulübün çalışması için gerekeni topluyoruz.';
+
+  @override
+  String get aboutMadeWith => 'Hazırlayan';
+
+  @override
+  String get aboutMadeBy => 'Codeantech';
+
+  @override
+  String get aboutCodeantechBlurb =>
+      'Codeantech, işletmelerin ve toplulukların teknolojiyle büyümesine yardımcı olan dijital çözümler üretir.';
+
+  @override
+  String aboutCopyright(String year) {
+    return '© $year Codeantech. Tüm hakları saklıdır.';
+  }
+
+  @override
+  String get aboutCouldNotOpenWebsite => 'Web sitesi açılamadı';
 }

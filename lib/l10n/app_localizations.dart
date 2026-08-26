@@ -2495,6 +2495,24 @@ abstract class AppLocalizations {
   /// **'Could not update photo'**
   String get photoUpdateFailed;
 
+  /// No description provided for @photoNeedLinkedMember.
+  ///
+  /// In en, this message translates to:
+  /// **'This login isn\'t linked to a member record. Change a family member\'s photo below, or open their profile.'**
+  String get photoNeedLinkedMember;
+
+  /// No description provided for @photoSelectClubFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a club first, then try again.'**
+  String get photoSelectClubFirst;
+
+  /// No description provided for @photoNoPermission.
+  ///
+  /// In en, this message translates to:
+  /// **'You don\'t have permission to change this photo.'**
+  String get photoNoPermission;
+
   /// No description provided for @documents.
   ///
   /// In en, this message translates to:
@@ -2758,6 +2776,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Could not open the file'**
   String get couldNotOpenDocument;
+
+  /// No description provided for @aboutTagline.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage. Inspire. Win together.'**
+  String get aboutTagline;
+
+  /// No description provided for @aboutIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'ChampHive is the all-in-one platform for sports clubs, coaches and parents. We help teams stay organized, communicate better and develop every athlete.'**
+  String get aboutIntro;
+
+  /// No description provided for @aboutVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'Version {version}'**
+  String aboutVersion(String version);
+
+  /// No description provided for @aboutMissionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Our Mission'**
+  String get aboutMissionTitle;
+
+  /// No description provided for @aboutMissionSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Empowering sports teams to achieve their full potential.'**
+  String get aboutMissionSubtitle;
+
+  /// No description provided for @aboutMissionBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Every club deserves tools that match the energy on the pitch.\n\nChampHive exists to take admin off coaches\' and parents\' plates, so more time goes to training, development and the people who make a team. We build for real club life — busy evenings, mixed-age groups, and volunteers who care.'**
+  String get aboutMissionBody;
+
+  /// No description provided for @aboutTeamsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Built for Teams'**
+  String get aboutTeamsTitle;
+
+  /// No description provided for @aboutTeamsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Designed with coaches, players and parents in mind.'**
+  String get aboutTeamsSubtitle;
+
+  /// No description provided for @aboutTeamsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Coaches, players, parents and club staff all need a clear view of the same season — not three different apps.\n\nChampHive is built around those roles. Training, attendance, messages, payments and documents stay in one place, with the right access for each person.'**
+  String get aboutTeamsBody;
+
+  /// No description provided for @aboutPrivacyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Data Matters'**
+  String get aboutPrivacyTitle;
+
+  /// No description provided for @aboutPrivacySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'We take privacy and data security seriously.'**
+  String get aboutPrivacySubtitle;
+
+  /// No description provided for @aboutPrivacyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Club data is a trust, not a product.\n\nPhotos, documents and personal details stay scoped to your club and your role. We take privacy and security seriously as ChampHive grows, and we only collect what the club needs to run.'**
+  String get aboutPrivacyBody;
+
+  /// No description provided for @aboutMadeWith.
+  ///
+  /// In en, this message translates to:
+  /// **'Made with'**
+  String get aboutMadeWith;
+
+  /// No description provided for @aboutMadeBy.
+  ///
+  /// In en, this message translates to:
+  /// **'by Codeantech'**
+  String get aboutMadeBy;
+
+  /// No description provided for @aboutCodeantechBlurb.
+  ///
+  /// In en, this message translates to:
+  /// **'Codeantech builds digital solutions that help businesses and communities grow through technology.'**
+  String get aboutCodeantechBlurb;
+
+  /// No description provided for @aboutCopyright.
+  ///
+  /// In en, this message translates to:
+  /// **'© {year} Codeantech. All rights reserved.'**
+  String aboutCopyright(String year);
+
+  /// No description provided for @aboutCouldNotOpenWebsite.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open the website'**
+  String get aboutCouldNotOpenWebsite;
 }
 
 class _AppLocalizationsDelegate

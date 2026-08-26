@@ -1284,6 +1284,18 @@ class AppLocalizationsMk extends AppLocalizations {
   String get photoUpdateFailed => 'Фотографијата не можеше да се ажурира';
 
   @override
+  String get photoNeedLinkedMember =>
+      'Оваа најава не е поврзана со член. Промени ја фотографијата на член од семејството подолу, или отвори го нивниот профил.';
+
+  @override
+  String get photoSelectClubFirst =>
+      'Прво избери клуб, па обидете се повторно.';
+
+  @override
+  String get photoNoPermission =>
+      'Немаш дозвола да ја промениш оваа фотографија.';
+
+  @override
   String get documents => 'Документи';
 
   @override
@@ -1421,4 +1433,68 @@ class AppLocalizationsMk extends AppLocalizations {
 
   @override
   String get couldNotOpenDocument => 'Датотеката не можеше да се отвори';
+
+  @override
+  String get aboutTagline => 'Менаџирај. Инспирирај. Победувајте заедно.';
+
+  @override
+  String get aboutIntro =>
+      'ChampHive е се-во-едно платформа за спортски клубови, тренери и родители. Им помагаме на тимовите да бидат организирани, подобро да комуницираат и да го развиваат секој спортист.';
+
+  @override
+  String aboutVersion(String version) {
+    return 'Верзија $version';
+  }
+
+  @override
+  String get aboutMissionTitle => 'Нашата мисија';
+
+  @override
+  String get aboutMissionSubtitle =>
+      'Им помагаме на спортските тимови да го достигнат својот полн потенцијал.';
+
+  @override
+  String get aboutMissionBody =>
+      'Секој клуб заслужува алатки што одговараат на енергијата на теренот.\n\nChampHive постои за да ја тргне администрацијата од тренерите и родителите, за повеќе време да оди на тренинзи, развој и луѓето што го прават тимот. Градиме за вистинскиот клупски живот — зафатени вечери, мешани возрасти и волонтери на кои им е гајле.';
+
+  @override
+  String get aboutTeamsTitle => 'Направено за тимови';
+
+  @override
+  String get aboutTeamsSubtitle =>
+      'Дизајнирано со тренери, играчи и родители на ум.';
+
+  @override
+  String get aboutTeamsBody =>
+      'Тренерите, играчите, родителите и клупскиот кадар треба јасен преглед на истата сезона — не три различни апликации.\n\nChampHive е изграден околу тие улоги. Тренинзи, присуство, пораки, плаќања и документи се на едно место, со правилен пристап за секоја личност.';
+
+  @override
+  String get aboutPrivacyTitle => 'Твоите податоци се важни';
+
+  @override
+  String get aboutPrivacySubtitle =>
+      'Приватноста и безбедноста на податоците ги земаме сериозно.';
+
+  @override
+  String get aboutPrivacyBody =>
+      'Клупските податоци се доверба, не производ.\n\nФотографиите, документите и личните податоци остануваат во рамки на твојот клуб и твојата улога. Приватноста и безбедноста ги земаме сериозно додека ChampHive расте, и собираме само она што му треба на клубот за да работи.';
+
+  @override
+  String get aboutMadeWith => 'Направено со';
+
+  @override
+  String get aboutMadeBy => 'од Codeantech';
+
+  @override
+  String get aboutCodeantechBlurb =>
+      'Codeantech гради дигитални решенија што им помагаат на бизнисите и заедниците да растат преку технологија.';
+
+  @override
+  String aboutCopyright(String year) {
+    return '© $year Codeantech. Сите права се задржани.';
+  }
+
+  @override
+  String get aboutCouldNotOpenWebsite =>
+      'Веб-страницата не можеше да се отвори';
 }

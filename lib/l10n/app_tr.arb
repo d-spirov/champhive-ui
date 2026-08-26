@@ -658,5 +658,22 @@
   "documentRejectedSnack": "Belge reddedildi",
   "documentDeleted": "Belge kaldırıldı",
   "documentTooLarge": "Dosya 15 MB veya daha küçük olmalı",
-  "couldNotOpenDocument": "Dosya açılamadı"
+  "couldNotOpenDocument": "Dosya açılamadı",
+  "aboutTagline": "Yönet. İlham ver. Birlikte kazanın.",
+  "aboutIntro": "ChampHive, spor kulüpleri, antrenörler ve ebeveynler için hepsi bir arada platformdur. Takımların düzenli kalmasına, daha iyi iletişim kurmasına ve her sporcuyu geliştirmesine yardımcı oluruz.",
+  "aboutVersion": "Sürüm {version}",
+  "aboutMissionTitle": "Misyonumuz",
+  "aboutMissionSubtitle": "Spor takımlarının tam potansiyellerine ulaşmasına güç katıyoruz.",
+  "aboutMissionBody": "Her kulüp, sahadaki enerjiye yakışan araçları hak eder.\n\nChampHive, antrenörlerin ve ebeveynlerin üzerindeki idari yükü azaltmak için var; böylece daha fazla zaman antrenmana, gelişime ve takımı oluşturan insanlara kalır. Gerçek kulüp hayatına göre tasarlıyoruz: yoğun akşamlar, karışık yaş grupları ve önemseyen gönüllüler.",
+  "aboutTeamsTitle": "Takımlar için tasarlandı",
+  "aboutTeamsSubtitle": "Antrenörler, oyuncular ve ebeveynler düşünülerek tasarlandı.",
+  "aboutTeamsBody": "Antrenörler, oyuncular, ebeveynler ve kulüp personeli aynı sezonun net bir görünümüne ihtiyaç duyar — üç ayrı uygulamaya değil.\n\nChampHive bu rollere göre kuruldu. Antrenman, yoklama, mesajlar, ödemeler ve belgeler tek yerde kalır; her kişi için doğru erişimle.",
+  "aboutPrivacyTitle": "Verilerin önemli",
+  "aboutPrivacySubtitle": "Gizlilik ve veri güvenliğini ciddiye alıyoruz.",
+  "aboutPrivacyBody": "Kulüp verisi bir üründen çok bir güvendir.\n\nFotoğraflar, belgeler ve kişisel bilgiler kulübünün ve rolünün kapsamında kalır. ChampHive büyürken gizlilik ve güvenliği ciddiye alıyoruz ve yalnızca kulübün çalışması için gerekeni topluyoruz.",
+  "aboutMadeWith": "Hazırlayan",
+  "aboutMadeBy": "Codeantech",
+  "aboutCodeantechBlurb": "Codeantech, işletmelerin ve toplulukların teknolojiyle büyümesine yardımcı olan dijital çözümler üretir.",
+  "aboutCopyright": "© {year} Codeantech. Tüm hakları saklıdır.",
+  "aboutCouldNotOpenWebsite": "Web sitesi açılamadı"
 }

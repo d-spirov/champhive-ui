@@ -658,5 +658,36 @@
   "documentRejectedSnack": "Document rejected",
   "documentDeleted": "Document removed",
   "documentTooLarge": "File must be 15 MB or smaller",
-  "couldNotOpenDocument": "Could not open the file"
+  "couldNotOpenDocument": "Could not open the file",
+  "aboutTagline": "Manage. Inspire. Win together.",
+  "aboutIntro": "ChampHive is the all-in-one platform for sports clubs, coaches and parents. We help teams stay organized, communicate better and develop every athlete.",
+  "aboutVersion": "Version {version}",
+  "@aboutVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "aboutMissionTitle": "Our Mission",
+  "aboutMissionSubtitle": "Empowering sports teams to achieve their full potential.",
+  "aboutMissionBody": "Every club deserves tools that match the energy on the pitch.\n\nChampHive exists to take admin off coaches' and parents' plates, so more time goes to training, development and the people who make a team. We build for real club life — busy evenings, mixed-age groups, and volunteers who care.",
+  "aboutTeamsTitle": "Built for Teams",
+  "aboutTeamsSubtitle": "Designed with coaches, players and parents in mind.",
+  "aboutTeamsBody": "Coaches, players, parents and club staff all need a clear view of the same season — not three different apps.\n\nChampHive is built around those roles. Training, attendance, messages, payments and documents stay in one place, with the right access for each person.",
+  "aboutPrivacyTitle": "Your Data Matters",
+  "aboutPrivacySubtitle": "We take privacy and data security seriously.",
+  "aboutPrivacyBody": "Club data is a trust, not a product.\n\nPhotos, documents and personal details stay scoped to your club and your role. We take privacy and security seriously as ChampHive grows, and we only collect what the club needs to run.",
+  "aboutMadeWith": "Made with",
+  "aboutMadeBy": "by Codeantech",
+  "aboutCodeantechBlurb": "Codeantech builds digital solutions that help businesses and communities grow through technology.",
+  "aboutCopyright": "© {year} Codeantech. All rights reserved.",
+  "@aboutCopyright": {
+    "placeholders": {
+      "year": {
+        "type": "String"
+      }
+    }
+  },
+  "aboutCouldNotOpenWebsite": "Could not open the website"
 }

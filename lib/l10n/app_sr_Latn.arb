@@ -658,5 +658,22 @@
   "documentRejectedSnack": "Dokument je odbijen",
   "documentDeleted": "Dokument je uklonjen",
   "documentTooLarge": "Fajl mora biti 15 MB ili manji",
-  "couldNotOpenDocument": "Fajl se nije mogao otvoriti"
+  "couldNotOpenDocument": "Fajl se nije mogao otvoriti",
+  "aboutTagline": "Upravljaj. Inspiriši. Pobeđujte zajedno.",
+  "aboutIntro": "ChampHive je sve-u-jednom platforma za sportske klubove, trenere i roditelje. Pomažemo timovima da ostanu organizovani, bolje komuniciraju i razvijaju svakog sportistu.",
+  "aboutVersion": "Verzija {version}",
+  "aboutMissionTitle": "Naša misija",
+  "aboutMissionSubtitle": "Osnažujemo sportske timove da ostvare pun potencijal.",
+  "aboutMissionBody": "Svaki klub zaslužuje alate koji prate energiju na terenu.\n\nChampHive postoji da skine administraciju sa trenera i roditelja, da više vremena ode na treninge, razvoj i ljude koji čine tim. Gradimo za pravi klupski život — užurbane večeri, mešovite uzraste i volontere kojima je stalo.",
+  "aboutTeamsTitle": "Napravljeno za timove",
+  "aboutTeamsSubtitle": "Dizajnirano sa trenerima, igračima i roditeljima na umu.",
+  "aboutTeamsBody": "Treneri, igrači, roditelji i klupsko osoblje treba jasan pregled iste sezone — ne tri različite aplikacije.\n\nChampHive je izgrađen oko tih uloga. Treninzi, prisustvo, poruke, plaćanja i dokumenti ostaju na jednom mestu, uz pravi pristup za svaku osobu.",
+  "aboutPrivacyTitle": "Tvoji podaci su važni",
+  "aboutPrivacySubtitle": "Privatnost i bezbednost podataka shvatamo ozbiljno.",
+  "aboutPrivacyBody": "Klupski podaci su poverenje, ne proizvod.\n\nFotografije, dokumenti i lični podaci ostaju u okviru tvog kluba i tvoje uloge. Privatnost i bezbednost shvatamo ozbiljno dok ChampHive raste, i prikupljamo samo ono što klubu treba da radi.",
+  "aboutMadeWith": "Napravljeno sa",
+  "aboutMadeBy": "od Codeantech",
+  "aboutCodeantechBlurb": "Codeantech gradi digitalna rešenja koja pomažu biznisima i zajednicama da rastu kroz tehnologiju.",
+  "aboutCopyright": "© {year} Codeantech. Sva prava zadržana.",
+  "aboutCouldNotOpenWebsite": "Sajt se nije mogao otvoriti"
 }

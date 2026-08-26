@@ -1287,6 +1287,17 @@ class AppLocalizationsIt extends AppLocalizations {
   String get photoUpdateFailed => 'Impossibile aggiornare la foto';
 
   @override
+  String get photoNeedLinkedMember =>
+      'Questo account non è collegato a un tesserato. Cambia la foto di un familiare qui sotto, oppure apri il suo profilo.';
+
+  @override
+  String get photoSelectClubFirst => 'Seleziona prima un club, poi riprova.';
+
+  @override
+  String get photoNoPermission =>
+      'Non hai i permessi per cambiare questa foto.';
+
+  @override
   String get documents => 'Documenti';
 
   @override
@@ -1424,4 +1435,67 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get couldNotOpenDocument => 'Impossibile aprire il file';
+
+  @override
+  String get aboutTagline => 'Gestisci. Ispira. Vincete insieme.';
+
+  @override
+  String get aboutIntro =>
+      'ChampHive è la piattaforma all-in-one per società sportive, allenatori e genitori. Aiutiamo le squadre a restare organizzate, comunicare meglio e far crescere ogni atleta.';
+
+  @override
+  String aboutVersion(String version) {
+    return 'Versione $version';
+  }
+
+  @override
+  String get aboutMissionTitle => 'La nostra missione';
+
+  @override
+  String get aboutMissionSubtitle =>
+      'Aiutiamo le squadre sportive a esprimere tutto il loro potenziale.';
+
+  @override
+  String get aboutMissionBody =>
+      'Ogni società merita strumenti all\'altezza dell\'energia in campo.\n\nChampHive esiste per togliere l\'amministrazione dalle spalle di allenatori e genitori, così resta più tempo per gli allenamenti, la crescita e le persone che fanno una squadra. Progettiamo per la vita reale dei club: serate piene, gruppi di età miste e volontari a cui sta a cuore.';
+
+  @override
+  String get aboutTeamsTitle => 'Pensato per le squadre';
+
+  @override
+  String get aboutTeamsSubtitle =>
+      'Progettato con allenatori, giocatori e genitori in mente.';
+
+  @override
+  String get aboutTeamsBody =>
+      'Allenatori, giocatori, genitori e staff del club hanno bisogno di una visione chiara della stessa stagione — non di tre app diverse.\n\nChampHive è costruito intorno a quei ruoli. Allenamenti, presenze, messaggi, pagamenti e documenti restano in un solo posto, con l\'accesso giusto per ciascuno.';
+
+  @override
+  String get aboutPrivacyTitle => 'I tuoi dati contano';
+
+  @override
+  String get aboutPrivacySubtitle =>
+      'Prendiamo sul serio privacy e sicurezza dei dati.';
+
+  @override
+  String get aboutPrivacyBody =>
+      'I dati del club sono una fiducia, non un prodotto.\n\nFoto, documenti e dati personali restano nell\'ambito del tuo club e del tuo ruolo. Prendiamo sul serio privacy e sicurezza mentre ChampHive cresce, e raccogliamo solo ciò che serve al club per funzionare.';
+
+  @override
+  String get aboutMadeWith => 'Realizzato con';
+
+  @override
+  String get aboutMadeBy => 'da Codeantech';
+
+  @override
+  String get aboutCodeantechBlurb =>
+      'Codeantech crea soluzioni digitali che aiutano imprese e comunità a crescere attraverso la tecnologia.';
+
+  @override
+  String aboutCopyright(String year) {
+    return '© $year Codeantech. Tutti i diritti riservati.';
+  }
+
+  @override
+  String get aboutCouldNotOpenWebsite => 'Impossibile aprire il sito';
 }

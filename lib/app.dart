@@ -22,6 +22,8 @@ import 'features/home/screens/home_dashboard_screen.dart';
 import 'features/messages/screens/chat_thread_screen.dart';
 import 'features/messages/screens/compose_direct_message_screen.dart';
 import 'features/messages/screens/messages_screen.dart';
+import 'features/more/screens/about_screen.dart';
+import 'features/more/screens/about_topic_screen.dart';
 import 'features/more/screens/more_screen.dart';
 import 'features/notifications/screens/notifications_screen.dart';
 import 'features/payments/screens/payments_screen.dart';
@@ -57,10 +59,7 @@ class _AppState extends ConsumerState<App> {
       refreshListenable: _authRefresh,
       redirect: _redirect,
       routes: [
-        GoRoute(
-          path: '/',
-          builder: (context, state) => const SplashScreen(),
-        ),
+        GoRoute(path: '/', builder: (context, state) => const SplashScreen()),
         GoRoute(
           path: '/login',
           builder: (context, state) => const LoginScreen(),
@@ -118,15 +117,13 @@ class _AppState extends ConsumerState<App> {
         ),
         GoRoute(
           path: '/clubs/:clubId',
-          builder: (context, state) => ClubDetailsScreen(
-            clubId: state.pathParameters['clubId']!,
-          ),
+          builder: (context, state) =>
+              ClubDetailsScreen(clubId: state.pathParameters['clubId']!),
         ),
         GoRoute(
           path: '/teams/:teamId',
-          builder: (context, state) => TeamDetailsScreen(
-            teamId: state.pathParameters['teamId']!,
-          ),
+          builder: (context, state) =>
+              TeamDetailsScreen(teamId: state.pathParameters['teamId']!),
         ),
         GoRoute(
           path: '/members',
@@ -134,15 +131,11 @@ class _AppState extends ConsumerState<App> {
         ),
         GoRoute(
           path: '/members/:memberId',
-          builder: (context, state) => PlayerProfileScreen(
-            playerId: state.pathParameters['memberId']!,
-          ),
+          builder: (context, state) =>
+              PlayerProfileScreen(playerId: state.pathParameters['memberId']!),
         ),
         // Legacy aliases
-        GoRoute(
-          path: '/players',
-          redirect: (context, state) => '/members',
-        ),
+        GoRoute(path: '/players', redirect: (context, state) => '/members'),
         GoRoute(
           path: '/players/:playerId',
           redirect: (context, state) =>
@@ -176,6 +169,27 @@ class _AppState extends ConsumerState<App> {
           builder: (context, state) => const AccountScreen(),
         ),
         GoRoute(
+          path: '/about',
+          builder: (context, state) => const AboutScreen(),
+          routes: [
+            GoRoute(
+              path: 'mission',
+              builder: (context, state) =>
+                  const AboutTopicScreen(topic: AboutTopic.mission),
+            ),
+            GoRoute(
+              path: 'teams',
+              builder: (context, state) =>
+                  const AboutTopicScreen(topic: AboutTopic.teams),
+            ),
+            GoRoute(
+              path: 'privacy',
+              builder: (context, state) =>
+                  const AboutTopicScreen(topic: AboutTopic.privacy),
+            ),
+          ],
+        ),
+        GoRoute(
           path: '/schedule/create',
           builder: (context, state) {
             final extra = state.extra;
@@ -190,15 +204,13 @@ class _AppState extends ConsumerState<App> {
         ),
         GoRoute(
           path: '/messages/:channelId',
-          builder: (context, state) => ChatThreadScreen(
-            channelId: state.pathParameters['channelId']!,
-          ),
+          builder: (context, state) =>
+              ChatThreadScreen(channelId: state.pathParameters['channelId']!),
         ),
         GoRoute(
           path: '/occurrences/:occurrenceId',
-          builder: (context, state) => EventDetailScreen(
-            eventId: state.pathParameters['occurrenceId']!,
-          ),
+          builder: (context, state) =>
+              EventDetailScreen(eventId: state.pathParameters['occurrenceId']!),
           routes: [
             GoRoute(
               path: 'attendance',

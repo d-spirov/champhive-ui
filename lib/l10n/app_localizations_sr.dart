@@ -1276,6 +1276,16 @@ class AppLocalizationsSr extends AppLocalizations {
   String get photoUpdateFailed => 'Fotografija se nije mogla ažurirati';
 
   @override
+  String get photoNeedLinkedMember =>
+      'Ova prijava nije povezana sa članom. Promeni fotografiju člana porodice ispod, ili otvori njihov profil.';
+
+  @override
+  String get photoSelectClubFirst => 'Prvo izaberi klub, pa pokušaj ponovo.';
+
+  @override
+  String get photoNoPermission => 'Nemaš dozvolu da promeniš ovu fotografiju.';
+
+  @override
   String get documents => 'Dokumenti';
 
   @override
@@ -1413,6 +1423,69 @@ class AppLocalizationsSr extends AppLocalizations {
 
   @override
   String get couldNotOpenDocument => 'Fajl se nije mogao otvoriti';
+
+  @override
+  String get aboutTagline => 'Upravljaj. Inspiriši. Pobeđujte zajedno.';
+
+  @override
+  String get aboutIntro =>
+      'ChampHive je sve-u-jednom platforma za sportske klubove, trenere i roditelje. Pomažemo timovima da ostanu organizovani, bolje komuniciraju i razvijaju svakog sportistu.';
+
+  @override
+  String aboutVersion(String version) {
+    return 'Verzija $version';
+  }
+
+  @override
+  String get aboutMissionTitle => 'Naša misija';
+
+  @override
+  String get aboutMissionSubtitle =>
+      'Osnažujemo sportske timove da ostvare pun potencijal.';
+
+  @override
+  String get aboutMissionBody =>
+      'Svaki klub zaslužuje alate koji prate energiju na terenu.\n\nChampHive postoji da skine administraciju sa trenera i roditelja, da više vremena ode na treninge, razvoj i ljude koji čine tim. Gradimo za pravi klupski život — užurbane večeri, mešovite uzraste i volontere kojima je stalo.';
+
+  @override
+  String get aboutTeamsTitle => 'Napravljeno za timove';
+
+  @override
+  String get aboutTeamsSubtitle =>
+      'Dizajnirano sa trenerima, igračima i roditeljima na umu.';
+
+  @override
+  String get aboutTeamsBody =>
+      'Treneri, igrači, roditelji i klupsko osoblje treba jasan pregled iste sezone — ne tri različite aplikacije.\n\nChampHive je izgrađen oko tih uloga. Treninzi, prisustvo, poruke, plaćanja i dokumenti ostaju na jednom mestu, uz pravi pristup za svaku osobu.';
+
+  @override
+  String get aboutPrivacyTitle => 'Tvoji podaci su važni';
+
+  @override
+  String get aboutPrivacySubtitle =>
+      'Privatnost i bezbednost podataka shvatamo ozbiljno.';
+
+  @override
+  String get aboutPrivacyBody =>
+      'Klupski podaci su poverenje, ne proizvod.\n\nFotografije, dokumenti i lični podaci ostaju u okviru tvog kluba i tvoje uloge. Privatnost i bezbednost shvatamo ozbiljno dok ChampHive raste, i prikupljamo samo ono što klubu treba da radi.';
+
+  @override
+  String get aboutMadeWith => 'Napravljeno sa';
+
+  @override
+  String get aboutMadeBy => 'od Codeantech';
+
+  @override
+  String get aboutCodeantechBlurb =>
+      'Codeantech gradi digitalna rešenja koja pomažu biznisima i zajednicama da rastu kroz tehnologiju.';
+
+  @override
+  String aboutCopyright(String year) {
+    return '© $year Codeantech. Sva prava zadržana.';
+  }
+
+  @override
+  String get aboutCouldNotOpenWebsite => 'Sajt se nije mogao otvoriti';
 }
 
 /// The translations for Serbian, using the Latin script (`sr_Latn`).
@@ -2687,6 +2760,16 @@ class AppLocalizationsSrLatn extends AppLocalizationsSr {
   String get photoUpdateFailed => 'Fotografija se nije mogla ažurirati';
 
   @override
+  String get photoNeedLinkedMember =>
+      'Ova prijava nije povezana sa članom. Promeni fotografiju člana porodice ispod, ili otvori njihov profil.';
+
+  @override
+  String get photoSelectClubFirst => 'Prvo izaberi klub, pa pokušaj ponovo.';
+
+  @override
+  String get photoNoPermission => 'Nemaš dozvolu da promeniš ovu fotografiju.';
+
+  @override
   String get documents => 'Dokumenti';
 
   @override
@@ -2824,4 +2907,67 @@ class AppLocalizationsSrLatn extends AppLocalizationsSr {
 
   @override
   String get couldNotOpenDocument => 'Fajl se nije mogao otvoriti';
+
+  @override
+  String get aboutTagline => 'Upravljaj. Inspiriši. Pobeđujte zajedno.';
+
+  @override
+  String get aboutIntro =>
+      'ChampHive je sve-u-jednom platforma za sportske klubove, trenere i roditelje. Pomažemo timovima da ostanu organizovani, bolje komuniciraju i razvijaju svakog sportistu.';
+
+  @override
+  String aboutVersion(String version) {
+    return 'Verzija $version';
+  }
+
+  @override
+  String get aboutMissionTitle => 'Naša misija';
+
+  @override
+  String get aboutMissionSubtitle =>
+      'Osnažujemo sportske timove da ostvare pun potencijal.';
+
+  @override
+  String get aboutMissionBody =>
+      'Svaki klub zaslužuje alate koji prate energiju na terenu.\n\nChampHive postoji da skine administraciju sa trenera i roditelja, da više vremena ode na treninge, razvoj i ljude koji čine tim. Gradimo za pravi klupski život — užurbane večeri, mešovite uzraste i volontere kojima je stalo.';
+
+  @override
+  String get aboutTeamsTitle => 'Napravljeno za timove';
+
+  @override
+  String get aboutTeamsSubtitle =>
+      'Dizajnirano sa trenerima, igračima i roditeljima na umu.';
+
+  @override
+  String get aboutTeamsBody =>
+      'Treneri, igrači, roditelji i klupsko osoblje treba jasan pregled iste sezone — ne tri različite aplikacije.\n\nChampHive je izgrađen oko tih uloga. Treninzi, prisustvo, poruke, plaćanja i dokumenti ostaju na jednom mestu, uz pravi pristup za svaku osobu.';
+
+  @override
+  String get aboutPrivacyTitle => 'Tvoji podaci su važni';
+
+  @override
+  String get aboutPrivacySubtitle =>
+      'Privatnost i bezbednost podataka shvatamo ozbiljno.';
+
+  @override
+  String get aboutPrivacyBody =>
+      'Klupski podaci su poverenje, ne proizvod.\n\nFotografije, dokumenti i lični podaci ostaju u okviru tvog kluba i tvoje uloge. Privatnost i bezbednost shvatamo ozbiljno dok ChampHive raste, i prikupljamo samo ono što klubu treba da radi.';
+
+  @override
+  String get aboutMadeWith => 'Napravljeno sa';
+
+  @override
+  String get aboutMadeBy => 'od Codeantech';
+
+  @override
+  String get aboutCodeantechBlurb =>
+      'Codeantech gradi digitalna rešenja koja pomažu biznisima i zajednicama da rastu kroz tehnologiju.';
+
+  @override
+  String aboutCopyright(String year) {
+    return '© $year Codeantech. Sva prava zadržana.';
+  }
+
+  @override
+  String get aboutCouldNotOpenWebsite => 'Sajt se nije mogao otvoriti';
 }

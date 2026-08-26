@@ -658,5 +658,22 @@
   "documentRejectedSnack": "Documento rifiutato",
   "documentDeleted": "Documento rimosso",
   "documentTooLarge": "Il file deve essere da 15 MB o meno",
-  "couldNotOpenDocument": "Impossibile aprire il file"
+  "couldNotOpenDocument": "Impossibile aprire il file",
+  "aboutTagline": "Gestisci. Ispira. Vincete insieme.",
+  "aboutIntro": "ChampHive è la piattaforma all-in-one per società sportive, allenatori e genitori. Aiutiamo le squadre a restare organizzate, comunicare meglio e far crescere ogni atleta.",
+  "aboutVersion": "Versione {version}",
+  "aboutMissionTitle": "La nostra missione",
+  "aboutMissionSubtitle": "Aiutiamo le squadre sportive a esprimere tutto il loro potenziale.",
+  "aboutMissionBody": "Ogni società merita strumenti all'altezza dell'energia in campo.\n\nChampHive esiste per togliere l'amministrazione dalle spalle di allenatori e genitori, così resta più tempo per gli allenamenti, la crescita e le persone che fanno una squadra. Progettiamo per la vita reale dei club: serate piene, gruppi di età miste e volontari a cui sta a cuore.",
+  "aboutTeamsTitle": "Pensato per le squadre",
+  "aboutTeamsSubtitle": "Progettato con allenatori, giocatori e genitori in mente.",
+  "aboutTeamsBody": "Allenatori, giocatori, genitori e staff del club hanno bisogno di una visione chiara della stessa stagione — non di tre app diverse.\n\nChampHive è costruito intorno a quei ruoli. Allenamenti, presenze, messaggi, pagamenti e documenti restano in un solo posto, con l'accesso giusto per ciascuno.",
+  "aboutPrivacyTitle": "I tuoi dati contano",
+  "aboutPrivacySubtitle": "Prendiamo sul serio privacy e sicurezza dei dati.",
+  "aboutPrivacyBody": "I dati del club sono una fiducia, non un prodotto.\n\nFoto, documenti e dati personali restano nell'ambito del tuo club e del tuo ruolo. Prendiamo sul serio privacy e sicurezza mentre ChampHive cresce, e raccogliamo solo ciò che serve al club per funzionare.",
+  "aboutMadeWith": "Realizzato con",
+  "aboutMadeBy": "da Codeantech",
+  "aboutCodeantechBlurb": "Codeantech crea soluzioni digitali che aiutano imprese e comunità a crescere attraverso la tecnologia.",
+  "aboutCopyright": "© {year} Codeantech. Tutti i diritti riservati.",
+  "aboutCouldNotOpenWebsite": "Impossibile aprire il sito"
 }

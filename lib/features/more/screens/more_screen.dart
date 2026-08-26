@@ -95,14 +95,7 @@ class MoreScreen extends ConsumerWidget {
                   leading: const Icon(Icons.info_outline_rounded),
                   title: Text(l10n.aboutApp),
                   trailing: const Icon(Icons.chevron_right_rounded),
-                  onTap: () {
-                    showAboutDialog(
-                      context: context,
-                      applicationName: 'ChampHive',
-                      applicationVersion: '1.0.0',
-                      applicationLegalese: '© Codeantech',
-                    );
-                  },
+                  onTap: () => context.push('/about'),
                 ),
               ],
             ),
