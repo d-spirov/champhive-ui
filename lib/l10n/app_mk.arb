@@ -273,6 +273,7 @@
   "purposeOptional": "Цел (опционално)",
   "locationOptional": "Локација (опционално)",
   "titleHintTraining": "на пр. тренинг U14",
+  "titleHintTesting": "на пр. физичко тестирање U14",
   "wholeClub": "Цел клуб",
   "noTeamsCreateOrClub": "Нема тимови во овој клуб. Прво креирај тим или користи Цел клуб.",
   "duration45": "45 мин",
@@ -291,6 +292,7 @@
   "eventTypeMatch": "Натпревар",
   "eventTypeClubEvent": "Клубски настан",
   "eventTypeTournament": "Турнир",
+  "eventTypeTesting": "Тестирање",
   "eventTypeEvent": "Настан",
   "statusPresent": "Присутен",
   "statusAbsent": "Отсутен",
@@ -740,5 +742,61 @@
   "noCoachesYet": "Сè уште нема доделени тренери",
   "noTrainingPlanAttached": "Нема прикачен план за тренинг на оваа сесија",
   "noExercisesInPlan": "Овој план сè уште нема вежби",
-  "rsvpNotRequestedLabel": "Не е побарано RSVP"
+  "rsvpNotRequestedLabel": "Не е побарано RSVP",
+  "sport": "Спорт",
+  "pickTestSet": "Сет тестови",
+  "noTestSetsYet": "Сè уште нема сетови тестови во овој клуб. Креирајте еден за да закажете ден за тестирање.",
+  "couldNotLoadTestSets": "Сетовите тестови не можеа да се вчитаат",
+  "createTestSet": "Креирај сет тестови",
+  "testSetName": "Име на сетот",
+  "testSetNameRequired": "Внесете име на сетот",
+  "pickMetrics": "Станици (метрики)",
+  "pickAtLeastOneMetric": "Изберете барем една метрика",
+  "testSetRequired": "Изберете сет тестови. Денот за тестирање мора да каже кои метрики се мерат.",
+  "testSet": "Сет тестови",
+  "couldNotLoadTestingDay": "Денот за тестирање не можеше да се вчита",
+  "couldNotCreateTestSet": "Сетот тестови не можеше да се креира",
+  "pickASport": "Изберете спорт",
+  "noSportsForTestSets": "Овој клуб сè уште нема спортови. Прво додајте секција.",
+  "noMetricsForSport": "Нема метрики за овој спорт.",
+  "stationCount": "{count} станици",
+  "@stationCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "noStationsInTestSet": "Овој сет сè уште нема станици",
+  "retiredStation": "Повлечена",
+  "recordResults": "Внеси резултати",
+  "recordResultsSubtitle": "Внесете броеви за секоја станица",
+  "recordStation": "Внес на станица",
+  "saveResults": "Зачувај резултати",
+  "resultsSaved": "Резултатите се зачувани",
+  "someResultsFailed": "{failed} од {total} не се зачувани",
+  "@someResultsFailed": {
+    "placeholders": {
+      "failed": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "recordedOf": "{done} од {total} внесени",
+  "@recordedOf": {
+    "placeholders": {
+      "done": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "noPlayersOnTestingDay": "Нема состав на овој ден за тестирање.",
+  "stationRetiredCannotRecord": "Оваа станица е повлечена и не прима нови вредности.",
+  "madeLabel": "Погодени",
+  "attemptedLabel": "Обиди",
+  "releaseResults": "Објави резултати",
+  "resultsReleased": "Резултатите се објавени во историјата на играчот",
+  "couldNotRecordResults": "Резултатите не можеа да се зачуваат",
+  "noValuesToSave": "Внесете барем една вредност пред зачувување.",
+  "teamRequiredForRecording": "Внесувањето бара ден за тестирање врзан за тим.",
+  "tapStationToRecord": "Допрете станица за да внесете броеви за составот.",
+  "noDraftsToRelease": "Сè уште нема што да се објави. Прво зачувајте ги резултатите."
 }

@@ -715,6 +715,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get titleHintTraining => 'örn. U14 antrenman';
 
   @override
+  String get titleHintTesting => 'örn. U14 fiziksel test';
+
+  @override
   String get wholeClub => 'Tüm kulüp';
 
   @override
@@ -768,6 +771,9 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get eventTypeTournament => 'Turnuva';
+
+  @override
+  String get eventTypeTesting => 'Test';
 
   @override
   String get eventTypeEvent => 'Etkinlik';
@@ -1620,4 +1626,128 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get rsvpNotRequestedLabel => 'RSVP istenmedi';
+
+  @override
+  String get sport => 'Spor';
+
+  @override
+  String get pickTestSet => 'Test seti';
+
+  @override
+  String get noTestSetsYet =>
+      'Bu kulüpte henüz test seti yok. Test günü planlamak için bir tane oluşturun.';
+
+  @override
+  String get couldNotLoadTestSets => 'Test setleri yüklenemedi';
+
+  @override
+  String get createTestSet => 'Test seti oluştur';
+
+  @override
+  String get testSetName => 'Test seti adı';
+
+  @override
+  String get testSetNameRequired => 'Test setine bir ad verin';
+
+  @override
+  String get pickMetrics => 'İstasyonlar (metrikler)';
+
+  @override
+  String get pickAtLeastOneMetric => 'En az bir metrik seçin';
+
+  @override
+  String get testSetRequired =>
+      'Bir test seti seçin. Test günü hangi metriklerin ölçüleceğini belirtmelidir.';
+
+  @override
+  String get testSet => 'Test seti';
+
+  @override
+  String get couldNotLoadTestingDay => 'Bu test günü yüklenemedi';
+
+  @override
+  String get couldNotCreateTestSet => 'Test seti oluşturulamadı';
+
+  @override
+  String get pickASport => 'Spor seçin';
+
+  @override
+  String get noSportsForTestSets =>
+      'Bu kulüpte henüz spor yok. Önce bir bölüm ekleyin.';
+
+  @override
+  String get noMetricsForSport => 'Bu spor için toplanabilir metrik yok.';
+
+  @override
+  String stationCount(int count) {
+    return '$count istasyon';
+  }
+
+  @override
+  String get noStationsInTestSet => 'Bu sette henüz istasyon yok';
+
+  @override
+  String get retiredStation => 'Kullanımdan kalktı';
+
+  @override
+  String get recordResults => 'Sonuçları kaydet';
+
+  @override
+  String get recordResultsSubtitle => 'Her istasyon için sayıları girin';
+
+  @override
+  String get recordStation => 'İstasyon kaydı';
+
+  @override
+  String get saveResults => 'Sonuçları kaydet';
+
+  @override
+  String get resultsSaved => 'Sonuçlar kaydedildi';
+
+  @override
+  String someResultsFailed(int failed, int total) {
+    return '$failed / $total kaydedilemedi';
+  }
+
+  @override
+  String recordedOf(int done, int total) {
+    return '$done / $total kaydedildi';
+  }
+
+  @override
+  String get noPlayersOnTestingDay => 'Bu test gününde kadro yok.';
+
+  @override
+  String get stationRetiredCannotRecord =>
+      'Bu istasyon kullanımdan kalktı, yeni değer alınamaz.';
+
+  @override
+  String get madeLabel => 'İsabet';
+
+  @override
+  String get attemptedLabel => 'Deneme';
+
+  @override
+  String get releaseResults => 'Sonuçları yayınla';
+
+  @override
+  String get resultsReleased => 'Sonuçlar oyuncu geçmişine yayınlandı';
+
+  @override
+  String get couldNotRecordResults => 'Sonuçlar kaydedilemedi';
+
+  @override
+  String get noValuesToSave => 'Kaydetmeden önce en az bir değer girin.';
+
+  @override
+  String get teamRequiredForRecording =>
+      'Kayıt için takıma bağlı bir test günü gerekir.';
+
+  @override
+  String get tapStationToRecord =>
+      'Kadro için sayı girmek üzere bir istasyona dokunun.';
+
+  @override
+  String get noDraftsToRelease =>
+      'Yayınlanacak bir şey yok. Önce istasyon sonuçlarını kaydedin.';
 }

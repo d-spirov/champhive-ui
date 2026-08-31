@@ -26,6 +26,8 @@ Color clubEventTypeColor(EventType type) {
     case EventType.match:
     case EventType.tournament:
       return AppColors.match;
+    case EventType.testing:
+      return AppColors.testing;
     case EventType.other:
       return AppColors.lightMuted;
   }
@@ -40,6 +42,8 @@ IconData clubEventTypeIcon(EventType type, {IconData? sportIcon}) {
     case EventType.match:
     case EventType.tournament:
       return Icons.emoji_events_rounded;
+    case EventType.testing:
+      return Icons.speed_rounded;
     case EventType.other:
       return Icons.event_rounded;
   }

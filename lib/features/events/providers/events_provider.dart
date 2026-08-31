@@ -71,9 +71,25 @@ final eventDetailProvider = FutureProvider.autoDispose
         throw StateError('No club selected');
       }
       await ref.watch(authApiProvider.future);
-      return ref
-          .watch(eventsApiProvider)
-          .getEvent(clubId: clubId, eventId: eventId);
+      final api = ref.watch(eventsApiProvider);
+      final event = await api.getEvent(clubId: clubId, eventId: eventId);
+      if (event.type != EventType.testing) return event;
+      final seriesId = event.seriesId;
+      if (seriesId == null ||
+          seriesId.isEmpty ||
+          (event.metricBatteryName != null &&
+              event.metricBatteryName!.isNotEmpty)) {
+        return event;
+      }
+      try {
+        final series = await api.getSeries(clubId: clubId, seriesId: seriesId);
+        return event.copyWith(
+          metricBatteryId: series.metricBatteryId,
+          metricBatteryName: series.metricBatteryName,
+        );
+      } catch (_) {
+        return event;
+      }
     });
 
 final attendanceSessionProvider = FutureProvider.autoDispose

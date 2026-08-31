@@ -13,6 +13,7 @@ class SaveEventSeriesRequest {
     this.rsvpRequested = false,
     this.visibility,
     this.trainingPlanId,
+    this.metricBatteryId,
   });
 
   final String scopeKind;
@@ -30,9 +31,11 @@ class SaveEventSeriesRequest {
   final bool rsvpRequested;
   final String? visibility;
   final String? trainingPlanId;
+  final String? metricBatteryId;
 
   Map<String, dynamic> toJson() {
     final planId = trainingPlanId;
+    final batteryId = metricBatteryId;
     return {
       'scopeKind': scopeKind,
       'scopeId': scopeId,
@@ -47,6 +50,8 @@ class SaveEventSeriesRequest {
       'rsvpRequested': rsvpRequested,
       'visibility': visibility,
       if (planId != null && planId.isNotEmpty) 'trainingPlanId': planId,
+      if (batteryId != null && batteryId.isNotEmpty)
+        'metricBatteryId': batteryId,
     };
   }
 }
@@ -72,6 +77,8 @@ class EventSeries {
     this.location,
     this.rrule,
     this.trainingPlanId,
+    this.metricBatteryId,
+    this.metricBatteryName,
   });
 
   final String id;
@@ -93,6 +100,8 @@ class EventSeries {
   final bool canceled;
   final DateTime createdAtUtc;
   final String? trainingPlanId;
+  final String? metricBatteryId;
+  final String? metricBatteryName;
 
   factory EventSeries.fromJson(Map<String, dynamic> json) {
     return EventSeries(
@@ -119,6 +128,8 @@ class EventSeries {
           DateTime.tryParse(json['createdAtUtc'] as String? ?? '')?.toUtc() ??
           DateTime.now().toUtc(),
       trainingPlanId: json['trainingPlanId']?.toString(),
+      metricBatteryId: json['metricBatteryId']?.toString(),
+      metricBatteryName: json['metricBatteryName'] as String?,
     );
   }
 }

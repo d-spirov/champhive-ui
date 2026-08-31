@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../l10n/app_localizations.dart';
@@ -9,16 +10,23 @@ import '../../../shared/theme/app_theme.dart';
 import '../../../shared/utils/api_error_message.dart';
 import '../../../shared/widgets/ui_bits.dart';
 import '../../attendance/widgets/attendance_ui.dart';
+import '../../clubs/providers/clubs_provider.dart';
 import '../providers/events_provider.dart';
+import '../providers/performance_provider.dart';
 import '../providers/training_plans_provider.dart';
 import '../widgets/training_plan_panel.dart';
 import 'event_detail_screen.dart';
 
 /// Tabbed occurrence details: overview, training plan, exercises.
 class EventDetailsScreen extends ConsumerWidget {
-  const EventDetailsScreen({super.key, required this.occurrenceId});
+  const EventDetailsScreen({
+    super.key,
+    required this.occurrenceId,
+    this.openTestSet = false,
+  });
 
   final String occurrenceId;
+  final bool openTestSet;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -56,6 +64,7 @@ class EventDetailsScreen extends ConsumerWidget {
       data: (occurrence) => _SessionDetailsBody(
         occurrence: occurrence,
         occurrenceId: occurrenceId,
+        openTestSet: openTestSet,
       ),
     );
   }
@@ -65,16 +74,20 @@ class _SessionDetailsBody extends ConsumerWidget {
   const _SessionDetailsBody({
     required this.occurrence,
     required this.occurrenceId,
+    this.openTestSet = false,
   });
 
   final ClubEvent occurrence;
   final String occurrenceId;
+  final bool openTestSet;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
+    final isTesting = occurrence.type == EventType.testing;
     return DefaultTabController(
-      length: 3,
+      length: isTesting ? 2 : 3,
+      initialIndex: isTesting && openTestSet ? 1 : 0,
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -91,6 +104,9 @@ class _SessionDetailsBody extends ConsumerWidget {
                   final planId = occurrence.trainingPlanId;
                   if (planId != null && planId.isNotEmpty) {
                     ref.invalidate(trainingPlanDetailProvider(planId));
+                  }
+                  if (isTesting) {
+                    ref.invalidate(testingDayProvider(occurrenceId));
                   }
                 }
               },
@@ -110,16 +126,22 @@ class _SessionDetailsBody extends ConsumerWidget {
             TabBar(
               tabs: [
                 Tab(text: l10n.overview),
-                Tab(text: l10n.trainingPlan),
-                Tab(text: l10n.exercises),
+                if (isTesting)
+                  Tab(text: l10n.testSet)
+                else
+                  Tab(text: l10n.trainingPlan),
+                if (!isTesting) Tab(text: l10n.exercises),
               ],
             ),
             Expanded(
               child: TabBarView(
                 children: [
                   _OverviewTab(occurrence: occurrence),
-                  _PlanTab(occurrence: occurrence),
-                  _ExercisesTab(occurrence: occurrence),
+                  if (isTesting)
+                    _TestSetTab(occurrence: occurrence)
+                  else
+                    _PlanTab(occurrence: occurrence),
+                  if (!isTesting) _ExercisesTab(occurrence: occurrence),
                 ],
               ),
             ),
@@ -578,6 +600,12 @@ class _OverviewTab extends StatelessWidget {
         label: l10n.requestRsvp,
         value: event.rsvpRequested ? l10n.rsvpYes : l10n.rsvpNo,
       ),
+      if ((event.metricBatteryName ?? '').trim().isNotEmpty)
+        _DetailCell(
+          icon: Icons.speed_rounded,
+          label: l10n.testSet,
+          value: event.metricBatteryName!.trim(),
+        ),
     ];
   }
 }
@@ -626,6 +654,160 @@ class _DetailCell extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _TestSetTab extends ConsumerWidget {
+  const _TestSetTab({required this.occurrence});
+
+  final ClubEvent occurrence;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
+    final async = ref.watch(testingDayProvider(occurrence.id));
+    return async.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (e, _) => _EmptyTab(
+        icon: Icons.speed_rounded,
+        message: apiErrorMessage(e, fallback: l10n.couldNotLoadTestingDay),
+      ),
+      data: (day) {
+        final name = day.batteryName.isNotEmpty
+            ? day.batteryName
+            : (occurrence.metricBatteryName ?? l10n.testSet);
+        if (day.stations.isEmpty) {
+          return _EmptyTab(
+            icon: Icons.speed_rounded,
+            message: l10n.noStationsInTestSet,
+          );
+        }
+        return ListView(
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+          children: [
+            Text(name, style: Theme.of(context).textTheme.titleMedium),
+            const SizedBox(height: 4),
+            Text(
+              l10n.stationCount(day.stations.length),
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              l10n.tapStationToRecord,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            const SizedBox(height: 12),
+            for (var i = 0; i < day.stations.length; i++) ...[
+              if (i > 0) const Divider(height: 1),
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: CircleAvatar(child: Text('${i + 1}')),
+                title: Text(
+                  day.stations[i].name,
+                  style: TextStyle(
+                    decoration: day.stations[i].isRetired
+                        ? TextDecoration.lineThrough
+                        : null,
+                  ),
+                ),
+                subtitle: Text(
+                  [
+                    if ((day.stations[i].unit ?? '').isNotEmpty)
+                      day.stations[i].unit!,
+                    l10n.recordedOf(
+                      day.recordedCount(day.stations[i].code),
+                      day.players.length,
+                    ),
+                    if (day.stations[i].isRetired) l10n.retiredStation,
+                  ].join(' · '),
+                ),
+                trailing: day.stations[i].canRecord
+                    ? const Icon(Icons.chevron_right_rounded)
+                    : null,
+                onTap: day.stations[i].canRecord
+                    ? () => context.push(
+                        '/occurrences/${occurrence.id}/testing/${Uri.encodeComponent(day.stations[i].code)}',
+                      )
+                    : null,
+              ),
+            ],
+            const SizedBox(height: 20),
+            _ReleaseResultsButton(occurrenceId: occurrence.id),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _ReleaseResultsButton extends ConsumerStatefulWidget {
+  const _ReleaseResultsButton({required this.occurrenceId});
+
+  final String occurrenceId;
+
+  @override
+  ConsumerState<_ReleaseResultsButton> createState() =>
+      _ReleaseResultsButtonState();
+}
+
+class _ReleaseResultsButtonState extends ConsumerState<_ReleaseResultsButton> {
+  bool _busy = false;
+
+  Future<void> _release() async {
+    final l10n = AppLocalizations.of(context)!;
+    final clubId = ref.read(selectedClubIdProvider);
+    if (clubId == null || clubId.isEmpty) return;
+    setState(() => _busy = true);
+    try {
+      final api = ref.read(performanceApiProvider);
+      final drafts = await api.listMyDrafts(clubId: clubId);
+      final mine = drafts
+          .where((d) => d.occurrenceId == widget.occurrenceId)
+          .toList();
+      if (mine.isEmpty) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.noDraftsToRelease)));
+        setState(() => _busy = false);
+        return;
+      }
+      for (final draft in mine) {
+        await api.finalizeSitting(clubId: clubId, assessmentId: draft.id);
+      }
+      ref.invalidate(testingDayProvider(widget.occurrenceId));
+      if (!mounted) return;
+      setState(() => _busy = false);
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.resultsReleased)));
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _busy = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            apiErrorMessage(e, fallback: l10n.couldNotRecordResults),
+          ),
+        ),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return OutlinedButton.icon(
+      onPressed: _busy ? null : _release,
+      icon: _busy
+          ? const SizedBox(
+              width: 16,
+              height: 16,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            )
+          : const Icon(Icons.publish_rounded),
+      label: Text(l10n.releaseResults),
     );
   }
 }

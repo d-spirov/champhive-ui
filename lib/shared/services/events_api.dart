@@ -43,9 +43,7 @@ class EventsApi {
     required String clubId,
     required String eventId,
   }) async {
-    final response = await _dio.get<dynamic>(
-      '/api/v1/occurrences/$eventId',
-    );
+    final response = await _dio.get<dynamic>('/api/v1/occurrences/$eventId');
     final raw = response.data;
     if (raw is! Map) {
       throw DioException(
@@ -56,6 +54,25 @@ class EventsApi {
       );
     }
     return ClubEvent.fromOccurrenceJson(Map<String, dynamic>.from(raw));
+  }
+
+  Future<EventSeries> getSeries({
+    required String clubId,
+    required String seriesId,
+  }) async {
+    final response = await _dio.get<dynamic>(
+      '/api/v1/clubs/$clubId/events/$seriesId',
+    );
+    final raw = response.data;
+    if (raw is! Map) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        type: DioExceptionType.badResponse,
+        response: response,
+        message: 'Empty series response',
+      );
+    }
+    return EventSeries.fromJson(Map<String, dynamic>.from(raw));
   }
 
   Future<EventSeries> createSeries({

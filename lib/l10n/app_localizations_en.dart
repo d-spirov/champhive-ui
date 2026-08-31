@@ -712,6 +712,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get titleHintTraining => 'e.g. U14 training';
 
   @override
+  String get titleHintTesting => 'e.g. U14 physical testing';
+
+  @override
   String get wholeClub => 'Whole club';
 
   @override
@@ -766,6 +769,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get eventTypeTournament => 'Tournament';
+
+  @override
+  String get eventTypeTesting => 'Testing';
 
   @override
   String get eventTypeEvent => 'Event';
@@ -1619,4 +1625,128 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get rsvpNotRequestedLabel => 'RSVP not requested';
+
+  @override
+  String get sport => 'Sport';
+
+  @override
+  String get pickTestSet => 'Test set';
+
+  @override
+  String get noTestSetsYet =>
+      'No test sets in this club yet. Create one to schedule a testing day.';
+
+  @override
+  String get couldNotLoadTestSets => 'Could not load test sets';
+
+  @override
+  String get createTestSet => 'Create test set';
+
+  @override
+  String get testSetName => 'Test set name';
+
+  @override
+  String get testSetNameRequired => 'Name the test set';
+
+  @override
+  String get pickMetrics => 'Stations (metrics)';
+
+  @override
+  String get pickAtLeastOneMetric => 'Pick at least one metric';
+
+  @override
+  String get testSetRequired =>
+      'Pick a test set. A testing day has to say which metrics it runs.';
+
+  @override
+  String get testSet => 'Test set';
+
+  @override
+  String get couldNotLoadTestingDay => 'Could not load this testing day';
+
+  @override
+  String get couldNotCreateTestSet => 'Could not create the test set';
+
+  @override
+  String get pickASport => 'Pick a sport';
+
+  @override
+  String get noSportsForTestSets =>
+      'This club has no sports yet. Add a section first.';
+
+  @override
+  String get noMetricsForSport => 'No collectable metrics for this sport.';
+
+  @override
+  String stationCount(int count) {
+    return '$count stations';
+  }
+
+  @override
+  String get noStationsInTestSet => 'This test set has no stations yet';
+
+  @override
+  String get retiredStation => 'Retired';
+
+  @override
+  String get recordResults => 'Record results';
+
+  @override
+  String get recordResultsSubtitle => 'Enter numbers for each station';
+
+  @override
+  String get recordStation => 'Record station';
+
+  @override
+  String get saveResults => 'Save results';
+
+  @override
+  String get resultsSaved => 'Results saved';
+
+  @override
+  String someResultsFailed(int failed, int total) {
+    return '$failed of $total could not be saved';
+  }
+
+  @override
+  String recordedOf(int done, int total) {
+    return '$done of $total recorded';
+  }
+
+  @override
+  String get noPlayersOnTestingDay => 'No squad on this testing day.';
+
+  @override
+  String get stationRetiredCannotRecord =>
+      'This station is retired and cannot take new values.';
+
+  @override
+  String get madeLabel => 'Made';
+
+  @override
+  String get attemptedLabel => 'Attempted';
+
+  @override
+  String get releaseResults => 'Release results';
+
+  @override
+  String get resultsReleased => 'Results released to player history';
+
+  @override
+  String get couldNotRecordResults => 'Could not save results';
+
+  @override
+  String get noValuesToSave => 'Enter at least one value before saving.';
+
+  @override
+  String get teamRequiredForRecording =>
+      'Recording needs a team-scoped testing day.';
+
+  @override
+  String get tapStationToRecord =>
+      'Tap a station to enter numbers for the squad.';
+
+  @override
+  String get noDraftsToRelease =>
+      'Nothing to release yet. Save station results first.';
 }

@@ -273,6 +273,7 @@
   "purposeOptional": "Svrha (opciono)",
   "locationOptional": "Lokacija (opciono)",
   "titleHintTraining": "npr. U14 trening",
+  "titleHintTesting": "npr. U14 fizičko testiranje",
   "wholeClub": "Ceo klub",
   "noTeamsCreateOrClub": "Nema timova u ovom klubu. Prvo kreiraj tim ili koristi Ceo klub.",
   "duration45": "45 min",
@@ -291,6 +292,7 @@
   "eventTypeMatch": "Utakmica",
   "eventTypeClubEvent": "Klupski događaj",
   "eventTypeTournament": "Turnir",
+  "eventTypeTesting": "Testiranje",
   "eventTypeEvent": "Događaj",
   "statusPresent": "Prisutan",
   "statusAbsent": "Odsutan",
@@ -740,5 +742,61 @@
   "noCoachesYet": "Još nema dodijeljenih trenera",
   "noTrainingPlanAttached": "Ovoj sesiji nije priložen plan treninga",
   "noExercisesInPlan": "Ovaj plan još nema vježbi",
-  "rsvpNotRequestedLabel": "RSVP nije zatražen"
+  "rsvpNotRequestedLabel": "RSVP nije zatražen",
+  "sport": "Sport",
+  "pickTestSet": "Set testova",
+  "noTestSetsYet": "Još nema setova testova u ovom klubu. Kreirajte jedan da zakažete dan testiranja.",
+  "couldNotLoadTestSets": "Setovi testova se nisu mogli učitati",
+  "createTestSet": "Kreiraj set testova",
+  "testSetName": "Naziv seta",
+  "testSetNameRequired": "Unesite naziv seta",
+  "pickMetrics": "Stanice (metrike)",
+  "pickAtLeastOneMetric": "Izaberite barem jednu metriku",
+  "testSetRequired": "Izaberite set testova. Dan testiranja mora reći koje metrike se mjere.",
+  "testSet": "Set testova",
+  "couldNotLoadTestingDay": "Dan testiranja se nije mogao učitati",
+  "couldNotCreateTestSet": "Set testova se nije mogao kreirati",
+  "pickASport": "Izaberite sport",
+  "noSportsForTestSets": "Ovaj klub još nema sportove. Prvo dodajte sekciju.",
+  "noMetricsForSport": "Nema metrika za ovaj sport.",
+  "stationCount": "{count} stanica",
+  "@stationCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "noStationsInTestSet": "Ovaj set još nema stanica",
+  "retiredStation": "Povučen",
+  "recordResults": "Unesi rezultate",
+  "recordResultsSubtitle": "Unesite brojeve za svaku stanicu",
+  "recordStation": "Unos na stanici",
+  "saveResults": "Sačuvaj rezultate",
+  "resultsSaved": "Rezultati su sačuvani",
+  "someResultsFailed": "{failed} od {total} nije sačuvano",
+  "@someResultsFailed": {
+    "placeholders": {
+      "failed": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "recordedOf": "{done} od {total} uneseno",
+  "@recordedOf": {
+    "placeholders": {
+      "done": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "noPlayersOnTestingDay": "Nema sastava na ovom danu testiranja.",
+  "stationRetiredCannotRecord": "Ova stanica je povučena i ne može primati nove vrijednosti.",
+  "madeLabel": "Pogođeno",
+  "attemptedLabel": "Pokušano",
+  "releaseResults": "Objavi rezultate",
+  "resultsReleased": "Rezultati su objavljeni u historiju igrača",
+  "couldNotRecordResults": "Rezultati se nisu mogli sačuvati",
+  "noValuesToSave": "Unesite barem jednu vrijednost prije čuvanja.",
+  "teamRequiredForRecording": "Unos treba dan testiranja vezan za tim.",
+  "tapStationToRecord": "Dodirnite stanicu da unesete brojeve za sastav.",
+  "noDraftsToRelease": "Još nema šta objaviti. Prvo sačuvajte rezultate stanice."
 }

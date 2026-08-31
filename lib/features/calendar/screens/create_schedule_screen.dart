@@ -12,13 +12,10 @@ import '../../clubs/providers/clubs_provider.dart';
 import '../../events/providers/events_provider.dart';
 import '../../events/providers/training_plans_provider.dart';
 import '../../teams/providers/teams_provider.dart';
+import '../widgets/test_set_picker.dart';
 
 class CreateScheduleScreen extends ConsumerStatefulWidget {
-  const CreateScheduleScreen({
-    super.key,
-    this.initialDate,
-    this.initialTeamId,
-  });
+  const CreateScheduleScreen({super.key, this.initialDate, this.initialTeamId});
 
   final DateTime? initialDate;
   final String? initialTeamId;
@@ -43,6 +40,7 @@ class _CreateScheduleScreenState extends ConsumerState<CreateScheduleScreen> {
   int _repeatCount = 8;
   bool _rsvpRequested = false;
   String? _trainingPlanId;
+  String? _metricBatteryId;
   bool _saving = false;
   String? _error;
 
@@ -108,6 +106,11 @@ class _CreateScheduleScreenState extends ConsumerState<CreateScheduleScreen> {
       setState(() => _error = l10n.pickATeam);
       return;
     }
+    if (_type == 'testing' &&
+        (_metricBatteryId == null || _metricBatteryId!.isEmpty)) {
+      setState(() => _error = l10n.testSetRequired);
+      return;
+    }
 
     final club = ref.read(selectedClubProvider);
     final localStart = DateTime(
@@ -145,7 +148,8 @@ class _CreateScheduleScreenState extends ConsumerState<CreateScheduleScreen> {
               rrule: _buildRrule(),
               rsvpRequested: _rsvpRequested,
               visibility: 'scope',
-              trainingPlanId: _trainingPlanId,
+              trainingPlanId: _type == 'testing' ? null : _trainingPlanId,
+              metricBatteryId: _type == 'testing' ? _metricBatteryId : null,
             ),
           );
       ref.invalidate(clubEventsProvider);
@@ -228,6 +232,7 @@ class _CreateScheduleScreenState extends ConsumerState<CreateScheduleScreen> {
                   children: [
                     for (final t in [
                       ('training', l10n.eventTypeTraining),
+                      ('testing', l10n.eventTypeTesting),
                       ('match', l10n.eventTypeMatch),
                       ('clubEvent', l10n.eventTypeClubEvent),
                       ('tournament', l10n.eventTypeTournament),
@@ -235,7 +240,14 @@ class _CreateScheduleScreenState extends ConsumerState<CreateScheduleScreen> {
                       ChoiceChip(
                         label: Text(t.$2),
                         selected: _type == t.$1,
-                        onSelected: (_) => setState(() => _type = t.$1),
+                        onSelected: (_) => setState(() {
+                          _type = t.$1;
+                          if (_type == 'testing') {
+                            _trainingPlanId = null;
+                          } else {
+                            _metricBatteryId = null;
+                          }
+                        }),
                       ),
                   ],
                 ),
@@ -245,7 +257,9 @@ class _CreateScheduleScreenState extends ConsumerState<CreateScheduleScreen> {
                   textCapitalization: TextCapitalization.sentences,
                   decoration: InputDecoration(
                     labelText: l10n.title,
-                    hintText: l10n.titleHintTraining,
+                    hintText: _type == 'testing'
+                        ? l10n.titleHintTesting
+                        : l10n.titleHintTraining,
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -392,11 +406,17 @@ class _CreateScheduleScreenState extends ConsumerState<CreateScheduleScreen> {
                   onChanged: (v) => setState(() => _rsvpRequested = v),
                 ),
                 const SizedBox(height: 8),
-                _TrainingPlanPicker(
-                  teamId: _scopeKind == 'team' ? _teamId : null,
-                  selectedId: _trainingPlanId,
-                  onChanged: (id) => setState(() => _trainingPlanId = id),
-                ),
+                if (_type == 'testing')
+                  TestSetPicker(
+                    selectedId: _metricBatteryId,
+                    onChanged: (id) => setState(() => _metricBatteryId = id),
+                  )
+                else
+                  _TrainingPlanPicker(
+                    teamId: _scopeKind == 'team' ? _teamId : null,
+                    selectedId: _trainingPlanId,
+                    onChanged: (id) => setState(() => _trainingPlanId = id),
+                  ),
                 if (_error != null) ...[
                   const SizedBox(height: 8),
                   Text(

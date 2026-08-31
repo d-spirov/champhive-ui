@@ -721,6 +721,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get titleHintTraining => 'es. allenamento U14';
 
   @override
+  String get titleHintTesting => 'es. test fisico U14';
+
+  @override
   String get wholeClub => 'Tutto il club';
 
   @override
@@ -775,6 +778,9 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get eventTypeTournament => 'Torneo';
+
+  @override
+  String get eventTypeTesting => 'Test';
 
   @override
   String get eventTypeEvent => 'Evento';
@@ -1640,4 +1646,132 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get rsvpNotRequestedLabel => 'RSVP non richiesto';
+
+  @override
+  String get sport => 'Sport';
+
+  @override
+  String get pickTestSet => 'Batteria di test';
+
+  @override
+  String get noTestSetsYet =>
+      'Non ci sono ancora batterie di test in questa società. Creane una per programmare un giorno di test.';
+
+  @override
+  String get couldNotLoadTestSets => 'Impossibile caricare le batterie di test';
+
+  @override
+  String get createTestSet => 'Crea batteria di test';
+
+  @override
+  String get testSetName => 'Nome della batteria';
+
+  @override
+  String get testSetNameRequired => 'Dai un nome alla batteria';
+
+  @override
+  String get pickMetrics => 'Stazioni (metriche)';
+
+  @override
+  String get pickAtLeastOneMetric => 'Scegli almeno una metrica';
+
+  @override
+  String get testSetRequired =>
+      'Scegli una batteria di test. Un giorno di test deve indicare quali metriche misura.';
+
+  @override
+  String get testSet => 'Batteria di test';
+
+  @override
+  String get couldNotLoadTestingDay =>
+      'Impossibile caricare questo giorno di test';
+
+  @override
+  String get couldNotCreateTestSet => 'Impossibile creare la batteria di test';
+
+  @override
+  String get pickASport => 'Scegli uno sport';
+
+  @override
+  String get noSportsForTestSets =>
+      'Questa società non ha ancora sport. Aggiungi prima una sezione.';
+
+  @override
+  String get noMetricsForSport =>
+      'Nessuna metrica disponibile per questo sport.';
+
+  @override
+  String stationCount(int count) {
+    return '$count stazioni';
+  }
+
+  @override
+  String get noStationsInTestSet => 'Questa batteria non ha ancora stazioni';
+
+  @override
+  String get retiredStation => 'Ritirata';
+
+  @override
+  String get recordResults => 'Registra i risultati';
+
+  @override
+  String get recordResultsSubtitle => 'Inserisci i numeri per ogni stazione';
+
+  @override
+  String get recordStation => 'Registra stazione';
+
+  @override
+  String get saveResults => 'Salva i risultati';
+
+  @override
+  String get resultsSaved => 'Risultati salvati';
+
+  @override
+  String someResultsFailed(int failed, int total) {
+    return '$failed di $total non sono stati salvati';
+  }
+
+  @override
+  String recordedOf(int done, int total) {
+    return '$done di $total registrati';
+  }
+
+  @override
+  String get noPlayersOnTestingDay =>
+      'Nessuna squadra in questo giorno di test.';
+
+  @override
+  String get stationRetiredCannotRecord =>
+      'Questa stazione è ritirata e non accetta nuovi valori.';
+
+  @override
+  String get madeLabel => 'Realizzati';
+
+  @override
+  String get attemptedLabel => 'Tentati';
+
+  @override
+  String get releaseResults => 'Pubblica i risultati';
+
+  @override
+  String get resultsReleased =>
+      'Risultati pubblicati nella cronologia del giocatore';
+
+  @override
+  String get couldNotRecordResults => 'Impossibile salvare i risultati';
+
+  @override
+  String get noValuesToSave => 'Inserisci almeno un valore prima di salvare.';
+
+  @override
+  String get teamRequiredForRecording =>
+      'La registrazione richiede un giorno di test della squadra.';
+
+  @override
+  String get tapStationToRecord =>
+      'Tocca una stazione per inserire i numeri della squadra.';
+
+  @override
+  String get noDraftsToRelease =>
+      'Niente da pubblicare. Salva prima i risultati della stazione.';
 }

@@ -273,6 +273,7 @@
   "purposeOptional": "Amaç (isteğe bağlı)",
   "locationOptional": "Konum (isteğe bağlı)",
   "titleHintTraining": "örn. U14 antrenman",
+  "titleHintTesting": "örn. U14 fiziksel test",
   "wholeClub": "Tüm kulüp",
   "noTeamsCreateOrClub": "Bu kulüpte takım yok. Önce bir takım oluştur veya Tüm kulüp’ü kullan.",
   "duration45": "45 dk",
@@ -291,6 +292,7 @@
   "eventTypeMatch": "Maç",
   "eventTypeClubEvent": "Kulüp etkinliği",
   "eventTypeTournament": "Turnuva",
+  "eventTypeTesting": "Test",
   "eventTypeEvent": "Etkinlik",
   "statusPresent": "Geldi",
   "statusAbsent": "Gelmedi",
@@ -740,5 +742,61 @@
   "noCoachesYet": "Henüz antrenör atanmadı",
   "noTrainingPlanAttached": "Bu seansa antrenman planı eklenmedi",
   "noExercisesInPlan": "Bu planda henüz egzersiz yok",
-  "rsvpNotRequestedLabel": "RSVP istenmedi"
+  "rsvpNotRequestedLabel": "RSVP istenmedi",
+  "sport": "Spor",
+  "pickTestSet": "Test seti",
+  "noTestSetsYet": "Bu kulüpte henüz test seti yok. Test günü planlamak için bir tane oluşturun.",
+  "couldNotLoadTestSets": "Test setleri yüklenemedi",
+  "createTestSet": "Test seti oluştur",
+  "testSetName": "Test seti adı",
+  "testSetNameRequired": "Test setine bir ad verin",
+  "pickMetrics": "İstasyonlar (metrikler)",
+  "pickAtLeastOneMetric": "En az bir metrik seçin",
+  "testSetRequired": "Bir test seti seçin. Test günü hangi metriklerin ölçüleceğini belirtmelidir.",
+  "testSet": "Test seti",
+  "couldNotLoadTestingDay": "Bu test günü yüklenemedi",
+  "couldNotCreateTestSet": "Test seti oluşturulamadı",
+  "pickASport": "Spor seçin",
+  "noSportsForTestSets": "Bu kulüpte henüz spor yok. Önce bir bölüm ekleyin.",
+  "noMetricsForSport": "Bu spor için toplanabilir metrik yok.",
+  "stationCount": "{count} istasyon",
+  "@stationCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "noStationsInTestSet": "Bu sette henüz istasyon yok",
+  "retiredStation": "Kullanımdan kalktı",
+  "recordResults": "Sonuçları kaydet",
+  "recordResultsSubtitle": "Her istasyon için sayıları girin",
+  "recordStation": "İstasyon kaydı",
+  "saveResults": "Sonuçları kaydet",
+  "resultsSaved": "Sonuçlar kaydedildi",
+  "someResultsFailed": "{failed} / {total} kaydedilemedi",
+  "@someResultsFailed": {
+    "placeholders": {
+      "failed": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "recordedOf": "{done} / {total} kaydedildi",
+  "@recordedOf": {
+    "placeholders": {
+      "done": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "noPlayersOnTestingDay": "Bu test gününde kadro yok.",
+  "stationRetiredCannotRecord": "Bu istasyon kullanımdan kalktı, yeni değer alınamaz.",
+  "madeLabel": "İsabet",
+  "attemptedLabel": "Deneme",
+  "releaseResults": "Sonuçları yayınla",
+  "resultsReleased": "Sonuçlar oyuncu geçmişine yayınlandı",
+  "couldNotRecordResults": "Sonuçlar kaydedilemedi",
+  "noValuesToSave": "Kaydetmeden önce en az bir değer girin.",
+  "teamRequiredForRecording": "Kayıt için takıma bağlı bir test günü gerekir.",
+  "tapStationToRecord": "Kadro için sayı girmek üzere bir istasyona dokunun.",
+  "noDraftsToRelease": "Yayınlanacak bir şey yok. Önce istasyon sonuçlarını kaydedin."
 }

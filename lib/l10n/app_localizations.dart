@@ -1475,6 +1475,12 @@ abstract class AppLocalizations {
   /// **'e.g. U14 training'**
   String get titleHintTraining;
 
+  /// No description provided for @titleHintTesting.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. U14 physical testing'**
+  String get titleHintTesting;
+
   /// No description provided for @wholeClub.
   ///
   /// In en, this message translates to:
@@ -1582,6 +1588,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Tournament'**
   String get eventTypeTournament;
+
+  /// No description provided for @eventTypeTesting.
+  ///
+  /// In en, this message translates to:
+  /// **'Testing'**
+  String get eventTypeTesting;
 
   /// No description provided for @eventTypeEvent.
   ///
@@ -3124,6 +3136,228 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'RSVP not requested'**
   String get rsvpNotRequestedLabel;
+
+  /// No description provided for @sport.
+  ///
+  /// In en, this message translates to:
+  /// **'Sport'**
+  String get sport;
+
+  /// No description provided for @pickTestSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Test set'**
+  String get pickTestSet;
+
+  /// No description provided for @noTestSetsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No test sets in this club yet. Create one to schedule a testing day.'**
+  String get noTestSetsYet;
+
+  /// No description provided for @couldNotLoadTestSets.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load test sets'**
+  String get couldNotLoadTestSets;
+
+  /// No description provided for @createTestSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Create test set'**
+  String get createTestSet;
+
+  /// No description provided for @testSetName.
+  ///
+  /// In en, this message translates to:
+  /// **'Test set name'**
+  String get testSetName;
+
+  /// No description provided for @testSetNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Name the test set'**
+  String get testSetNameRequired;
+
+  /// No description provided for @pickMetrics.
+  ///
+  /// In en, this message translates to:
+  /// **'Stations (metrics)'**
+  String get pickMetrics;
+
+  /// No description provided for @pickAtLeastOneMetric.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick at least one metric'**
+  String get pickAtLeastOneMetric;
+
+  /// No description provided for @testSetRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a test set. A testing day has to say which metrics it runs.'**
+  String get testSetRequired;
+
+  /// No description provided for @testSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Test set'**
+  String get testSet;
+
+  /// No description provided for @couldNotLoadTestingDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load this testing day'**
+  String get couldNotLoadTestingDay;
+
+  /// No description provided for @couldNotCreateTestSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not create the test set'**
+  String get couldNotCreateTestSet;
+
+  /// No description provided for @pickASport.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a sport'**
+  String get pickASport;
+
+  /// No description provided for @noSportsForTestSets.
+  ///
+  /// In en, this message translates to:
+  /// **'This club has no sports yet. Add a section first.'**
+  String get noSportsForTestSets;
+
+  /// No description provided for @noMetricsForSport.
+  ///
+  /// In en, this message translates to:
+  /// **'No collectable metrics for this sport.'**
+  String get noMetricsForSport;
+
+  /// No description provided for @stationCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} stations'**
+  String stationCount(int count);
+
+  /// No description provided for @noStationsInTestSet.
+  ///
+  /// In en, this message translates to:
+  /// **'This test set has no stations yet'**
+  String get noStationsInTestSet;
+
+  /// No description provided for @retiredStation.
+  ///
+  /// In en, this message translates to:
+  /// **'Retired'**
+  String get retiredStation;
+
+  /// No description provided for @recordResults.
+  ///
+  /// In en, this message translates to:
+  /// **'Record results'**
+  String get recordResults;
+
+  /// No description provided for @recordResultsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter numbers for each station'**
+  String get recordResultsSubtitle;
+
+  /// No description provided for @recordStation.
+  ///
+  /// In en, this message translates to:
+  /// **'Record station'**
+  String get recordStation;
+
+  /// No description provided for @saveResults.
+  ///
+  /// In en, this message translates to:
+  /// **'Save results'**
+  String get saveResults;
+
+  /// No description provided for @resultsSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Results saved'**
+  String get resultsSaved;
+
+  /// No description provided for @someResultsFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'{failed} of {total} could not be saved'**
+  String someResultsFailed(int failed, int total);
+
+  /// No description provided for @recordedOf.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {total} recorded'**
+  String recordedOf(int done, int total);
+
+  /// No description provided for @noPlayersOnTestingDay.
+  ///
+  /// In en, this message translates to:
+  /// **'No squad on this testing day.'**
+  String get noPlayersOnTestingDay;
+
+  /// No description provided for @stationRetiredCannotRecord.
+  ///
+  /// In en, this message translates to:
+  /// **'This station is retired and cannot take new values.'**
+  String get stationRetiredCannotRecord;
+
+  /// No description provided for @madeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Made'**
+  String get madeLabel;
+
+  /// No description provided for @attemptedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Attempted'**
+  String get attemptedLabel;
+
+  /// No description provided for @releaseResults.
+  ///
+  /// In en, this message translates to:
+  /// **'Release results'**
+  String get releaseResults;
+
+  /// No description provided for @resultsReleased.
+  ///
+  /// In en, this message translates to:
+  /// **'Results released to player history'**
+  String get resultsReleased;
+
+  /// No description provided for @couldNotRecordResults.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not save results'**
+  String get couldNotRecordResults;
+
+  /// No description provided for @noValuesToSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter at least one value before saving.'**
+  String get noValuesToSave;
+
+  /// No description provided for @teamRequiredForRecording.
+  ///
+  /// In en, this message translates to:
+  /// **'Recording needs a team-scoped testing day.'**
+  String get teamRequiredForRecording;
+
+  /// No description provided for @tapStationToRecord.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap a station to enter numbers for the squad.'**
+  String get tapStationToRecord;
+
+  /// No description provided for @noDraftsToRelease.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing to release yet. Save station results first.'**
+  String get noDraftsToRelease;
 }
 
 class _AppLocalizationsDelegate

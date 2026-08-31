@@ -273,6 +273,7 @@
   "purposeOptional": "Purpose (optional)",
   "locationOptional": "Location (optional)",
   "titleHintTraining": "e.g. U14 training",
+  "titleHintTesting": "e.g. U14 physical testing",
   "wholeClub": "Whole club",
   "noTeamsCreateOrClub": "No teams in this club. Create a team first, or use Whole club.",
   "duration45": "45 min",
@@ -291,6 +292,7 @@
   "eventTypeMatch": "Match",
   "eventTypeClubEvent": "Club event",
   "eventTypeTournament": "Tournament",
+  "eventTypeTesting": "Testing",
   "eventTypeEvent": "Event",
   "statusPresent": "Present",
   "statusAbsent": "Absent",
@@ -772,5 +774,61 @@
   "noCoachesYet": "No coaches assigned yet",
   "noTrainingPlanAttached": "No training plan is attached to this session",
   "noExercisesInPlan": "This plan has no drills yet",
-  "rsvpNotRequestedLabel": "RSVP not requested"
+  "rsvpNotRequestedLabel": "RSVP not requested",
+  "sport": "Sport",
+  "pickTestSet": "Test set",
+  "noTestSetsYet": "No test sets in this club yet. Create one to schedule a testing day.",
+  "couldNotLoadTestSets": "Could not load test sets",
+  "createTestSet": "Create test set",
+  "testSetName": "Test set name",
+  "testSetNameRequired": "Name the test set",
+  "pickMetrics": "Stations (metrics)",
+  "pickAtLeastOneMetric": "Pick at least one metric",
+  "testSetRequired": "Pick a test set. A testing day has to say which metrics it runs.",
+  "testSet": "Test set",
+  "couldNotLoadTestingDay": "Could not load this testing day",
+  "couldNotCreateTestSet": "Could not create the test set",
+  "pickASport": "Pick a sport",
+  "noSportsForTestSets": "This club has no sports yet. Add a section first.",
+  "noMetricsForSport": "No collectable metrics for this sport.",
+  "stationCount": "{count} stations",
+  "@stationCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "noStationsInTestSet": "This test set has no stations yet",
+  "retiredStation": "Retired",
+  "recordResults": "Record results",
+  "recordResultsSubtitle": "Enter numbers for each station",
+  "recordStation": "Record station",
+  "saveResults": "Save results",
+  "resultsSaved": "Results saved",
+  "someResultsFailed": "{failed} of {total} could not be saved",
+  "@someResultsFailed": {
+    "placeholders": {
+      "failed": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "recordedOf": "{done} of {total} recorded",
+  "@recordedOf": {
+    "placeholders": {
+      "done": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "noPlayersOnTestingDay": "No squad on this testing day.",
+  "stationRetiredCannotRecord": "This station is retired and cannot take new values.",
+  "madeLabel": "Made",
+  "attemptedLabel": "Attempted",
+  "releaseResults": "Release results",
+  "resultsReleased": "Results released to player history",
+  "couldNotRecordResults": "Could not save results",
+  "noValuesToSave": "Enter at least one value before saving.",
+  "teamRequiredForRecording": "Recording needs a team-scoped testing day.",
+  "tapStationToRecord": "Tap a station to enter numbers for the squad.",
+  "noDraftsToRelease": "Nothing to release yet. Save station results first."
 }

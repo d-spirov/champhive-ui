@@ -273,6 +273,7 @@
   "purposeOptional": "Scopo (facoltativo)",
   "locationOptional": "Luogo (facoltativo)",
   "titleHintTraining": "es. allenamento U14",
+  "titleHintTesting": "es. test fisico U14",
   "wholeClub": "Tutto il club",
   "noTeamsCreateOrClub": "Nessuna squadra in questo club. Crea prima una squadra o usa Tutto il club.",
   "duration45": "45 min",
@@ -291,6 +292,7 @@
   "eventTypeMatch": "Partita",
   "eventTypeClubEvent": "Evento del club",
   "eventTypeTournament": "Torneo",
+  "eventTypeTesting": "Test",
   "eventTypeEvent": "Evento",
   "statusPresent": "Presente",
   "statusAbsent": "Assente",
@@ -740,5 +742,61 @@
   "noCoachesYet": "Nessun allenatore assegnato",
   "noTrainingPlanAttached": "Nessun piano di allenamento è collegato a questa sessione",
   "noExercisesInPlan": "Questo piano non ha ancora esercizi",
-  "rsvpNotRequestedLabel": "RSVP non richiesto"
+  "rsvpNotRequestedLabel": "RSVP non richiesto",
+  "sport": "Sport",
+  "pickTestSet": "Batteria di test",
+  "noTestSetsYet": "Non ci sono ancora batterie di test in questa società. Creane una per programmare un giorno di test.",
+  "couldNotLoadTestSets": "Impossibile caricare le batterie di test",
+  "createTestSet": "Crea batteria di test",
+  "testSetName": "Nome della batteria",
+  "testSetNameRequired": "Dai un nome alla batteria",
+  "pickMetrics": "Stazioni (metriche)",
+  "pickAtLeastOneMetric": "Scegli almeno una metrica",
+  "testSetRequired": "Scegli una batteria di test. Un giorno di test deve indicare quali metriche misura.",
+  "testSet": "Batteria di test",
+  "couldNotLoadTestingDay": "Impossibile caricare questo giorno di test",
+  "couldNotCreateTestSet": "Impossibile creare la batteria di test",
+  "pickASport": "Scegli uno sport",
+  "noSportsForTestSets": "Questa società non ha ancora sport. Aggiungi prima una sezione.",
+  "noMetricsForSport": "Nessuna metrica disponibile per questo sport.",
+  "stationCount": "{count} stazioni",
+  "@stationCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "noStationsInTestSet": "Questa batteria non ha ancora stazioni",
+  "retiredStation": "Ritirata",
+  "recordResults": "Registra i risultati",
+  "recordResultsSubtitle": "Inserisci i numeri per ogni stazione",
+  "recordStation": "Registra stazione",
+  "saveResults": "Salva i risultati",
+  "resultsSaved": "Risultati salvati",
+  "someResultsFailed": "{failed} di {total} non sono stati salvati",
+  "@someResultsFailed": {
+    "placeholders": {
+      "failed": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "recordedOf": "{done} di {total} registrati",
+  "@recordedOf": {
+    "placeholders": {
+      "done": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "noPlayersOnTestingDay": "Nessuna squadra in questo giorno di test.",
+  "stationRetiredCannotRecord": "Questa stazione è ritirata e non accetta nuovi valori.",
+  "madeLabel": "Realizzati",
+  "attemptedLabel": "Tentati",
+  "releaseResults": "Pubblica i risultati",
+  "resultsReleased": "Risultati pubblicati nella cronologia del giocatore",
+  "couldNotRecordResults": "Impossibile salvare i risultati",
+  "noValuesToSave": "Inserisci almeno un valore prima di salvare.",
+  "teamRequiredForRecording": "La registrazione richiede un giorno di test della squadra.",
+  "tapStationToRecord": "Tocca una stazione per inserire i numeri della squadra.",
+  "noDraftsToRelease": "Niente da pubblicare. Salva prima i risultati della stazione."
 }

@@ -716,6 +716,9 @@ class AppLocalizationsSr extends AppLocalizations {
   String get titleHintTraining => 'npr. U14 trening';
 
   @override
+  String get titleHintTesting => 'npr. U14 fizičko testiranje';
+
+  @override
   String get wholeClub => 'Ceo klub';
 
   @override
@@ -769,6 +772,9 @@ class AppLocalizationsSr extends AppLocalizations {
 
   @override
   String get eventTypeTournament => 'Turnir';
+
+  @override
+  String get eventTypeTesting => 'Testiranje';
 
   @override
   String get eventTypeEvent => 'Događaj';
@@ -1624,6 +1630,130 @@ class AppLocalizationsSr extends AppLocalizations {
 
   @override
   String get rsvpNotRequestedLabel => 'RSVP nije zatražen';
+
+  @override
+  String get sport => 'Sport';
+
+  @override
+  String get pickTestSet => 'Set testova';
+
+  @override
+  String get noTestSetsYet =>
+      'Još nema setova testova u ovom klubu. Kreirajte jedan da zakažete dan testiranja.';
+
+  @override
+  String get couldNotLoadTestSets => 'Setovi testova se nisu mogli učitati';
+
+  @override
+  String get createTestSet => 'Kreiraj set testova';
+
+  @override
+  String get testSetName => 'Naziv seta';
+
+  @override
+  String get testSetNameRequired => 'Unesite naziv seta';
+
+  @override
+  String get pickMetrics => 'Stanice (metrike)';
+
+  @override
+  String get pickAtLeastOneMetric => 'Izaberite barem jednu metriku';
+
+  @override
+  String get testSetRequired =>
+      'Izaberite set testova. Dan testiranja mora reći koje metrike se mere.';
+
+  @override
+  String get testSet => 'Set testova';
+
+  @override
+  String get couldNotLoadTestingDay => 'Dan testiranja se nije mogao učitati';
+
+  @override
+  String get couldNotCreateTestSet => 'Set testova se nije mogao kreirati';
+
+  @override
+  String get pickASport => 'Izaberite sport';
+
+  @override
+  String get noSportsForTestSets =>
+      'Ovaj klub još nema sportove. Prvo dodajte sekciju.';
+
+  @override
+  String get noMetricsForSport => 'Nema metrika za ovaj sport.';
+
+  @override
+  String stationCount(int count) {
+    return '$count stanica';
+  }
+
+  @override
+  String get noStationsInTestSet => 'Ovaj set još nema stanica';
+
+  @override
+  String get retiredStation => 'Povučen';
+
+  @override
+  String get recordResults => 'Unesi rezultate';
+
+  @override
+  String get recordResultsSubtitle => 'Unesite brojeve za svaku stanicu';
+
+  @override
+  String get recordStation => 'Unos na stanici';
+
+  @override
+  String get saveResults => 'Sačuvaj rezultate';
+
+  @override
+  String get resultsSaved => 'Rezultati su sačuvani';
+
+  @override
+  String someResultsFailed(int failed, int total) {
+    return '$failed od $total nije sačuvano';
+  }
+
+  @override
+  String recordedOf(int done, int total) {
+    return '$done od $total uneseno';
+  }
+
+  @override
+  String get noPlayersOnTestingDay => 'Nema sastava na ovom danu testiranja.';
+
+  @override
+  String get stationRetiredCannotRecord =>
+      'Ova stanica je povučena i ne može primati nove vrednosti.';
+
+  @override
+  String get madeLabel => 'Pogođeno';
+
+  @override
+  String get attemptedLabel => 'Pokušano';
+
+  @override
+  String get releaseResults => 'Objavi rezultate';
+
+  @override
+  String get resultsReleased => 'Rezultati su objavljeni u istoriju igrača';
+
+  @override
+  String get couldNotRecordResults => 'Rezultati se nisu mogli sačuvati';
+
+  @override
+  String get noValuesToSave => 'Unesite barem jednu vrednost pre čuvanja.';
+
+  @override
+  String get teamRequiredForRecording =>
+      'Unos treba dan testiranja vezan za tim.';
+
+  @override
+  String get tapStationToRecord =>
+      'Dodirnite stanicu da unesete brojeve za sastav.';
+
+  @override
+  String get noDraftsToRelease =>
+      'Još nema šta objaviti. Prvo sačuvajte rezultate stanice.';
 }
 
 /// The translations for Serbian, using the Latin script (`sr_Latn`).
@@ -2338,6 +2468,9 @@ class AppLocalizationsSrLatn extends AppLocalizationsSr {
   String get titleHintTraining => 'npr. U14 trening';
 
   @override
+  String get titleHintTesting => 'npr. U14 fizičko testiranje';
+
+  @override
   String get wholeClub => 'Ceo klub';
 
   @override
@@ -2391,6 +2524,9 @@ class AppLocalizationsSrLatn extends AppLocalizationsSr {
 
   @override
   String get eventTypeTournament => 'Turnir';
+
+  @override
+  String get eventTypeTesting => 'Testiranje';
 
   @override
   String get eventTypeEvent => 'Događaj';
@@ -3246,4 +3382,128 @@ class AppLocalizationsSrLatn extends AppLocalizationsSr {
 
   @override
   String get rsvpNotRequestedLabel => 'RSVP nije zatražen';
+
+  @override
+  String get sport => 'Sport';
+
+  @override
+  String get pickTestSet => 'Set testova';
+
+  @override
+  String get noTestSetsYet =>
+      'Još nema setova testova u ovom klubu. Kreirajte jedan da zakažete dan testiranja.';
+
+  @override
+  String get couldNotLoadTestSets => 'Setovi testova se nisu mogli učitati';
+
+  @override
+  String get createTestSet => 'Kreiraj set testova';
+
+  @override
+  String get testSetName => 'Naziv seta';
+
+  @override
+  String get testSetNameRequired => 'Unesite naziv seta';
+
+  @override
+  String get pickMetrics => 'Stanice (metrike)';
+
+  @override
+  String get pickAtLeastOneMetric => 'Izaberite barem jednu metriku';
+
+  @override
+  String get testSetRequired =>
+      'Izaberite set testova. Dan testiranja mora reći koje metrike se mere.';
+
+  @override
+  String get testSet => 'Set testova';
+
+  @override
+  String get couldNotLoadTestingDay => 'Dan testiranja se nije mogao učitati';
+
+  @override
+  String get couldNotCreateTestSet => 'Set testova se nije mogao kreirati';
+
+  @override
+  String get pickASport => 'Izaberite sport';
+
+  @override
+  String get noSportsForTestSets =>
+      'Ovaj klub još nema sportove. Prvo dodajte sekciju.';
+
+  @override
+  String get noMetricsForSport => 'Nema metrika za ovaj sport.';
+
+  @override
+  String stationCount(int count) {
+    return '$count stanica';
+  }
+
+  @override
+  String get noStationsInTestSet => 'Ovaj set još nema stanica';
+
+  @override
+  String get retiredStation => 'Povučen';
+
+  @override
+  String get recordResults => 'Unesi rezultate';
+
+  @override
+  String get recordResultsSubtitle => 'Unesite brojeve za svaku stanicu';
+
+  @override
+  String get recordStation => 'Unos na stanici';
+
+  @override
+  String get saveResults => 'Sačuvaj rezultate';
+
+  @override
+  String get resultsSaved => 'Rezultati su sačuvani';
+
+  @override
+  String someResultsFailed(int failed, int total) {
+    return '$failed od $total nije sačuvano';
+  }
+
+  @override
+  String recordedOf(int done, int total) {
+    return '$done od $total uneseno';
+  }
+
+  @override
+  String get noPlayersOnTestingDay => 'Nema sastava na ovom danu testiranja.';
+
+  @override
+  String get stationRetiredCannotRecord =>
+      'Ova stanica je povučena i ne može primati nove vrednosti.';
+
+  @override
+  String get madeLabel => 'Pogođeno';
+
+  @override
+  String get attemptedLabel => 'Pokušano';
+
+  @override
+  String get releaseResults => 'Objavi rezultate';
+
+  @override
+  String get resultsReleased => 'Rezultati su objavljeni u istoriju igrača';
+
+  @override
+  String get couldNotRecordResults => 'Rezultati se nisu mogli sačuvati';
+
+  @override
+  String get noValuesToSave => 'Unesite barem jednu vrednost pre čuvanja.';
+
+  @override
+  String get teamRequiredForRecording =>
+      'Unos treba dan testiranja vezan za tim.';
+
+  @override
+  String get tapStationToRecord =>
+      'Dodirnite stanicu da unesete brojeve za sastav.';
+
+  @override
+  String get noDraftsToRelease =>
+      'Još nema šta objaviti. Prvo sačuvajte rezultate stanice.';
 }

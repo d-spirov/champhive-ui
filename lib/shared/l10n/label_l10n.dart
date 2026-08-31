@@ -7,6 +7,7 @@ String eventTypeLabel(AppLocalizations l10n, EventType type) {
     EventType.match => l10n.eventTypeMatch,
     EventType.tournament => l10n.eventTypeTournament,
     EventType.meeting => l10n.eventTypeClubEvent,
+    EventType.testing => l10n.eventTypeTesting,
     EventType.other => l10n.eventTypeEvent,
   };
 }

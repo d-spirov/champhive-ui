@@ -1,6 +1,6 @@
 import 'dart:math';
 
-enum EventType { training, match, tournament, meeting, other }
+enum EventType { training, match, tournament, meeting, testing, other }
 
 enum AttendanceStatus { notMarked, present, absent, late, excused }
 
@@ -32,6 +32,9 @@ EventType parseEventType(String? raw) {
     case 'meeting':
     case 'MEETING':
       return EventType.meeting;
+    case 'testing':
+    case 'TESTING':
+      return EventType.testing;
     default:
       return EventType.other;
   }
@@ -92,6 +95,7 @@ extension EventTypeX on EventType {
     EventType.match => 'match',
     EventType.tournament => 'tournament',
     EventType.meeting => 'clubEvent',
+    EventType.testing => 'testing',
     EventType.other => 'clubEvent',
   };
 
@@ -101,6 +105,7 @@ extension EventTypeX on EventType {
     EventType.match => 'Match',
     EventType.tournament => 'Tournament',
     EventType.meeting => 'Club Event',
+    EventType.testing => 'Testing',
     EventType.other => 'Event',
   };
 }
@@ -243,6 +248,8 @@ class ClubEvent {
     this.coaches = const [],
     this.trainingPlanId,
     this.trainingPlanName,
+    this.metricBatteryId,
+    this.metricBatteryName,
   });
 
   final String id;
@@ -273,6 +280,8 @@ class ClubEvent {
   final List<OccurrenceCoach> coaches;
   final String? trainingPlanId;
   final String? trainingPlanName;
+  final String? metricBatteryId;
+  final String? metricBatteryName;
 
   /// Occurrence id (opaque).
   String get occurrenceId => id;
@@ -333,6 +342,43 @@ class ClubEvent {
       coaches: parseOccurrenceCoaches(json['coaches']),
       trainingPlanId: json['trainingPlanId']?.toString(),
       trainingPlanName: json['trainingPlanName'] as String?,
+      metricBatteryId: json['metricBatteryId']?.toString(),
+      metricBatteryName: json['metricBatteryName'] as String?,
+    );
+  }
+
+  ClubEvent copyWith({String? metricBatteryId, String? metricBatteryName}) {
+    return ClubEvent(
+      id: id,
+      clubId: clubId,
+      type: type,
+      title: title,
+      startAt: startAt,
+      endAt: endAt,
+      description: description,
+      timezone: timezone,
+      allDay: allDay,
+      isPast: isPast,
+      status: status,
+      teams: teams,
+      location: location,
+      opponentName: opponentName,
+      competitionName: competitionName,
+      seriesId: seriesId,
+      scopeName: scopeName,
+      clubName: clubName,
+      purpose: purpose,
+      note: note,
+      durationMin: durationMin,
+      rsvpRequested: rsvpRequested,
+      scopeKind: scopeKind,
+      scopeId: scopeId,
+      originalStartUtc: originalStartUtc,
+      coaches: coaches,
+      trainingPlanId: trainingPlanId,
+      trainingPlanName: trainingPlanName,
+      metricBatteryId: metricBatteryId ?? this.metricBatteryId,
+      metricBatteryName: metricBatteryName ?? this.metricBatteryName,
     );
   }
 

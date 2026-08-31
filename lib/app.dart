@@ -19,6 +19,7 @@ import 'features/compliance/screens/compliance_hub_screen.dart';
 import 'features/compliance/screens/member_compliance_screen.dart';
 import 'features/events/screens/event_detail_screen.dart';
 import 'features/events/screens/event_details_screen.dart';
+import 'features/events/screens/record_station_screen.dart';
 import 'features/home/screens/home_dashboard_screen.dart';
 import 'features/messages/screens/chat_thread_screen.dart';
 import 'features/messages/screens/compose_direct_message_screen.dart';
@@ -225,6 +226,14 @@ class _AppState extends ConsumerState<App> {
               path: 'details',
               builder: (context, state) => EventDetailsScreen(
                 occurrenceId: state.pathParameters['occurrenceId']!,
+                openTestSet: state.extra == 'testset',
+              ),
+            ),
+            GoRoute(
+              path: 'testing/:metricCode',
+              builder: (context, state) => RecordStationScreen(
+                occurrenceId: state.pathParameters['occurrenceId']!,
+                metricCode: state.pathParameters['metricCode']!,
               ),
             ),
             GoRoute(

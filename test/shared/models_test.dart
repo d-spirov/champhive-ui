@@ -6,6 +6,8 @@ import 'package:team_hive/shared/models/event_attendance.dart';
 import 'package:team_hive/shared/models/compliance.dart';
 import 'package:team_hive/shared/models/training_plan.dart';
 import 'package:team_hive/shared/models/team.dart';
+import 'package:team_hive/shared/models/event_series.dart';
+import 'package:team_hive/shared/models/performance.dart';
 
 void main() {
   test('User.fromMeJson maps ClubPlatform fields', () {
@@ -129,6 +131,19 @@ void main() {
     },
   );
 
+  test('ClubEvent.fromOccurrenceJson maps testing type', () {
+    final event = ClubEvent.fromOccurrenceJson({
+      'occurrenceId': 'o3',
+      'clubId': 'c1',
+      'type': 'testing',
+      'title': 'U16 physical',
+      'startsAtUtc': '2024-06-01T16:00:00Z',
+      'metricBatteryName': 'U16 physical',
+    });
+    expect(event.type, EventType.testing);
+    expect(event.metricBatteryName, 'U16 physical');
+  });
+
   test('Attendance batch entry uses lowercase status', () {
     final update = AttendanceUpdate(
       participantId: 'm1',
@@ -222,5 +237,103 @@ void main() {
       status: 'active',
     );
     expect(firstOnly.shortDisplayName, 'Ana');
+  });
+
+  test('parseEventType maps testing', () {
+    expect(parseEventType('testing'), EventType.testing);
+    expect(EventType.testing.apiValue, 'testing');
+  });
+
+  test('SaveEventSeriesRequest sends metricBatteryId for testing', () {
+    const request = SaveEventSeriesRequest(
+      scopeKind: 'team',
+      scopeId: 't1',
+      type: 'testing',
+      title: 'U14 physical',
+      firstStartLocal: '2026-09-02T17:00:00',
+      durationMin: 90,
+      metricBatteryId: 'b1',
+    );
+    final json = request.toJson();
+    expect(json['type'], 'testing');
+    expect(json['metricBatteryId'], 'b1');
+    expect(json.containsKey('trainingPlanId'), isFalse);
+  });
+
+  test('MetricBattery.fromJson maps stations in order', () {
+    final battery = MetricBattery.fromJson({
+      'id': 'b1',
+      'clubId': 'c1',
+      'sportCode': 'football',
+      'name': 'U16 physical',
+      'isArchived': false,
+      'metrics': [
+        {
+          'code': 'sprint_10m',
+          'name': '10m sprint',
+          'unit': 's',
+          'valueKind': 'scalar',
+          'isRetired': false,
+        },
+        {
+          'code': 'yo_yo',
+          'name': 'Yo-Yo',
+          'valueKind': 'scalar',
+          'isRetired': true,
+        },
+      ],
+    });
+    expect(battery.name, 'U16 physical');
+    expect(battery.metrics.map((m) => m.code).toList(), [
+      'sprint_10m',
+      'yo_yo',
+    ]);
+    expect(battery.metrics.last.isRetired, isTrue);
+  });
+
+  test('TestingDay.fromJson maps players and recorded values', () {
+    final day = TestingDay.fromJson({
+      'occurrenceId': 'o1',
+      'teamId': 't1',
+      'batteryId': 'b1',
+      'batteryName': 'U16 physical',
+      'sportCode': 'football',
+      'date': '2026-09-02',
+      'hasRoster': true,
+      'stations': [
+        {
+          'code': 'sprint_10m',
+          'name': '10m sprint',
+          'unit': 's',
+          'valueKind': 'scalar',
+          'decimalPlaces': 2,
+          'isRetired': false,
+          'options': <Map<String, dynamic>>[],
+        },
+      ],
+      'players': [
+        {
+          'memberId': 'm1',
+          'firstName': 'Ana',
+          'lastName': 'Kovač',
+          'values': {
+            'sprint_10m': {
+              'metricCode': 'sprint_10m',
+              'numericValue': 1.72,
+            },
+          },
+        },
+        {
+          'memberId': 'm2',
+          'firstName': 'Leo',
+          'lastName': 'N.',
+          'values': <String, dynamic>{},
+        },
+      ],
+    });
+    expect(day.players, hasLength(2));
+    expect(day.recordedCount('sprint_10m'), 1);
+    expect(day.players.first.values['sprint_10m']!.numericValue, 1.72);
+    expect(day.stations.single.canRecord, isTrue);
   });
 }

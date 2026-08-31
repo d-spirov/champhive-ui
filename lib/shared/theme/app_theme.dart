@@ -49,6 +49,7 @@ class AppColors {
   static const Color training = primary;
   static const Color meeting = Color(0xFF7C3AED);
   static const Color match = primaryNavy;
+  static const Color testing = Color(0xFF0D9488);
   static const Color present = success;
   static const Color late = warning;
   static const Color absent = danger;

@@ -210,6 +210,11 @@ class _OccurrenceBody extends StatelessWidget {
                     icon: Icons.public_outlined,
                     label: occurrence.timezone!,
                   ),
+                if ((occurrence.metricBatteryName ?? '').trim().isNotEmpty)
+                  _MetaRow(
+                    icon: Icons.speed_rounded,
+                    label: occurrence.metricBatteryName!.trim(),
+                  ),
                 if (lockAt != null)
                   _MetaRow(
                     icon: Icons.timer_outlined,
@@ -252,6 +257,19 @@ class _OccurrenceBody extends StatelessWidget {
                   ),
                 ],
                 const SizedBox(height: 28),
+                if (occurrence.type == EventType.testing) ...[
+                  _ActionTile(
+                    icon: Icons.speed_rounded,
+                    title: l10n.recordResults,
+                    subtitle: l10n.recordResultsSubtitle,
+                    color: AppColors.testing,
+                    onTap: () => context.push(
+                      '/occurrences/${occurrence.id}/details',
+                      extra: 'testset',
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                ],
                 _ActionTile(
                   icon: Icons.info_outline_rounded,
                   title: l10n.sessionDetails,
