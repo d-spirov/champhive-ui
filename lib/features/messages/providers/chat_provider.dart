@@ -108,3 +108,18 @@ final directMessageCandidatesProvider =
     ..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
   return list;
 });
+
+ChatChannel? teamChannelFor(List<ChatChannel> channels, String teamId) {
+  for (final channel in channels) {
+    if (channel.isGroup && channel.teamId == teamId) return channel;
+  }
+  return null;
+}
+
+/// Reloads the inbox (which backfills missing team channels) and returns the
+/// auto-provisioned team thread, if this caller is a member of it.
+Future<ChatChannel?> loadTeamChannel(WidgetRef ref, String teamId) async {
+  ref.invalidate(chatChannelsProvider);
+  final channels = await ref.read(chatChannelsProvider.future);
+  return teamChannelFor(channels, teamId);
+}

@@ -919,6 +919,56 @@ class AppLocalizationsIt extends AppLocalizations {
       'Nessuna sessione in arrivo per questa squadra.';
 
   @override
+  String get teamChat => 'Chat di squadra';
+
+  @override
+  String get couldNotOpenTeamChat =>
+      'La chat di questa squadra non è ancora disponibile.';
+
+  @override
+  String get quickActions => 'Azioni rapide';
+
+  @override
+  String get addEvent => 'Aggiungi evento';
+
+  @override
+  String get nextUp => 'Prossimo';
+
+  @override
+  String get viewAll => 'Vedi tutti';
+
+  @override
+  String get viewDetails => 'Dettagli';
+
+  @override
+  String get viewAllMembers => 'Tutti i membri';
+
+  @override
+  String get details => 'Dettagli';
+
+  @override
+  String get ageGroup => 'Fascia d\'età';
+
+  @override
+  String playersCount(int count) {
+    return '$count giocatori';
+  }
+
+  @override
+  String seasonNamed(String label) {
+    return 'Stagione $label';
+  }
+
+  @override
+  String goingAwaiting(int going, int awaiting) {
+    return '$going confermati • $awaiting in attesa';
+  }
+
+  @override
+  String get noSessionToTakeAttendance =>
+      'Nessuna sessione in arrivo per le presenze.';
+
+  @override
   String get playerProfile => 'Profilo giocatore';
 
   @override

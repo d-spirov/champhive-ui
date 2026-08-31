@@ -904,6 +904,55 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noUpcomingSessionsForTeam => 'No upcoming sessions for this team.';
 
   @override
+  String get teamChat => 'Team chat';
+
+  @override
+  String get couldNotOpenTeamChat => 'This team\'s chat is not available yet.';
+
+  @override
+  String get quickActions => 'Quick actions';
+
+  @override
+  String get addEvent => 'Add event';
+
+  @override
+  String get nextUp => 'Next up';
+
+  @override
+  String get viewAll => 'View all';
+
+  @override
+  String get viewDetails => 'View details';
+
+  @override
+  String get viewAllMembers => 'View all members';
+
+  @override
+  String get details => 'Details';
+
+  @override
+  String get ageGroup => 'Age group';
+
+  @override
+  String playersCount(int count) {
+    return '$count players';
+  }
+
+  @override
+  String seasonNamed(String label) {
+    return 'Season $label';
+  }
+
+  @override
+  String goingAwaiting(int going, int awaiting) {
+    return '$going going • $awaiting awaiting';
+  }
+
+  @override
+  String get noSessionToTakeAttendance =>
+      'No upcoming session to take attendance for.';
+
+  @override
   String get playerProfile => 'Player Profile';
 
   @override

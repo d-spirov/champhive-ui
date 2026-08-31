@@ -370,6 +370,44 @@
   "season": "Stagione",
   "noMembersOnTeamRoster": "Nessun membro nella rosa di questa squadra.",
   "noUpcomingSessionsForTeam": "Nessuna sessione in arrivo per questa squadra.",
+  "teamChat": "Chat di squadra",
+  "couldNotOpenTeamChat": "La chat di questa squadra non è ancora disponibile.",
+  "quickActions": "Azioni rapide",
+  "addEvent": "Aggiungi evento",
+  "nextUp": "Prossimo",
+  "viewAll": "Vedi tutti",
+  "viewDetails": "Dettagli",
+  "viewAllMembers": "Tutti i membri",
+  "details": "Dettagli",
+  "ageGroup": "Fascia d'età",
+  "playersCount": "{count} giocatori",
+  "@playersCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "seasonNamed": "Stagione {label}",
+  "@seasonNamed": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "goingAwaiting": "{going} confermati • {awaiting} in attesa",
+  "@goingAwaiting": {
+    "placeholders": {
+      "going": {
+        "type": "int"
+      },
+      "awaiting": {
+        "type": "int"
+      }
+    }
+  },
+  "noSessionToTakeAttendance": "Nessuna sessione in arrivo per le presenze.",
   "playerProfile": "Profilo giocatore",
   "noProfileDetailsYet": "Nessun dettaglio del profilo ancora.",
   "notAssignedToTeam": "Non assegnato a una squadra.",

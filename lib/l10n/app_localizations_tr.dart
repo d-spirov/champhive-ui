@@ -906,6 +906,56 @@ class AppLocalizationsTr extends AppLocalizations {
   String get noUpcomingSessionsForTeam => 'Bu takım için yaklaşan seans yok.';
 
   @override
+  String get teamChat => 'Takım sohbeti';
+
+  @override
+  String get couldNotOpenTeamChat =>
+      'Bu takımın sohbeti henüz kullanılabilir değil.';
+
+  @override
+  String get quickActions => 'Hızlı işlemler';
+
+  @override
+  String get addEvent => 'Etkinlik ekle';
+
+  @override
+  String get nextUp => 'Sıradaki';
+
+  @override
+  String get viewAll => 'Tümünü gör';
+
+  @override
+  String get viewDetails => 'Detaylar';
+
+  @override
+  String get viewAllMembers => 'Tüm üyeler';
+
+  @override
+  String get details => 'Detaylar';
+
+  @override
+  String get ageGroup => 'Yaş grubu';
+
+  @override
+  String playersCount(int count) {
+    return '$count oyuncu';
+  }
+
+  @override
+  String seasonNamed(String label) {
+    return 'Sezon $label';
+  }
+
+  @override
+  String goingAwaiting(int going, int awaiting) {
+    return '$going geliyor • $awaiting bekliyor';
+  }
+
+  @override
+  String get noSessionToTakeAttendance =>
+      'Yoklama alınacak yaklaşan seans yok.';
+
+  @override
   String get playerProfile => 'Oyuncu profili';
 
   @override

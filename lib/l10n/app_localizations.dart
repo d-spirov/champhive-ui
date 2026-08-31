@@ -1829,6 +1829,90 @@ abstract class AppLocalizations {
   /// **'No upcoming sessions for this team.'**
   String get noUpcomingSessionsForTeam;
 
+  /// No description provided for @teamChat.
+  ///
+  /// In en, this message translates to:
+  /// **'Team chat'**
+  String get teamChat;
+
+  /// No description provided for @couldNotOpenTeamChat.
+  ///
+  /// In en, this message translates to:
+  /// **'This team\'s chat is not available yet.'**
+  String get couldNotOpenTeamChat;
+
+  /// No description provided for @quickActions.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick actions'**
+  String get quickActions;
+
+  /// No description provided for @addEvent.
+  ///
+  /// In en, this message translates to:
+  /// **'Add event'**
+  String get addEvent;
+
+  /// No description provided for @nextUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Next up'**
+  String get nextUp;
+
+  /// No description provided for @viewAll.
+  ///
+  /// In en, this message translates to:
+  /// **'View all'**
+  String get viewAll;
+
+  /// No description provided for @viewDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'View details'**
+  String get viewDetails;
+
+  /// No description provided for @viewAllMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'View all members'**
+  String get viewAllMembers;
+
+  /// No description provided for @details.
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get details;
+
+  /// No description provided for @ageGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Age group'**
+  String get ageGroup;
+
+  /// No description provided for @playersCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} players'**
+  String playersCount(int count);
+
+  /// No description provided for @seasonNamed.
+  ///
+  /// In en, this message translates to:
+  /// **'Season {label}'**
+  String seasonNamed(String label);
+
+  /// No description provided for @goingAwaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'{going} going • {awaiting} awaiting'**
+  String goingAwaiting(int going, int awaiting);
+
+  /// No description provided for @noSessionToTakeAttendance.
+  ///
+  /// In en, this message translates to:
+  /// **'No upcoming session to take attendance for.'**
+  String get noSessionToTakeAttendance;
+
   /// No description provided for @playerProfile.
   ///
   /// In en, this message translates to:

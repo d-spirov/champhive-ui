@@ -909,6 +909,55 @@ class AppLocalizationsBs extends AppLocalizations {
       'Nema predstojećih sesija za ovaj tim.';
 
   @override
+  String get teamChat => 'Timski razgovor';
+
+  @override
+  String get couldNotOpenTeamChat => 'Timski razgovor još nije dostupan.';
+
+  @override
+  String get quickActions => 'Brze akcije';
+
+  @override
+  String get addEvent => 'Dodaj događaj';
+
+  @override
+  String get nextUp => 'Sljedeće';
+
+  @override
+  String get viewAll => 'Prikaži sve';
+
+  @override
+  String get viewDetails => 'Detalji';
+
+  @override
+  String get viewAllMembers => 'Svi članovi';
+
+  @override
+  String get details => 'Detalji';
+
+  @override
+  String get ageGroup => 'Uzrasna grupa';
+
+  @override
+  String playersCount(int count) {
+    return '$count igrača';
+  }
+
+  @override
+  String seasonNamed(String label) {
+    return 'Sezona $label';
+  }
+
+  @override
+  String goingAwaiting(int going, int awaiting) {
+    return '$going dolaze • $awaiting čekaju';
+  }
+
+  @override
+  String get noSessionToTakeAttendance =>
+      'Nema predstojeće sesije za evidenciju prisustva.';
+
+  @override
   String get playerProfile => 'Profil igrača';
 
   @override
