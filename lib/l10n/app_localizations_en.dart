@@ -1749,4 +1749,31 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get noDraftsToRelease =>
       'Nothing to release yet. Save station results first.';
+
+  @override
+  String get performance => 'Performance';
+
+  @override
+  String get noPerformanceYet =>
+      'No released measurements yet. Record a testing day, then Release results.';
+
+  @override
+  String previousResult(String value) {
+    return 'was $value';
+  }
+
+  @override
+  String get resultsThisSession => 'Numbers this session';
+
+  @override
+  String get releaseResultsHint =>
+      'Saving a station stores the numbers here as drafts. Release publishes them to each player\'s Performance tab.';
+
+  @override
+  String get couldNotLoadPerformance => 'Could not load performance';
+
+  @override
+  String resultsReleasedCount(int count) {
+    return 'Published $count sittings to player profiles';
+  }
 }

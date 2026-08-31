@@ -798,5 +798,22 @@
   "noValuesToSave": "Kaydetmeden önce en az bir değer girin.",
   "teamRequiredForRecording": "Kayıt için takıma bağlı bir test günü gerekir.",
   "tapStationToRecord": "Kadro için sayı girmek üzere bir istasyona dokunun.",
-  "noDraftsToRelease": "Yayınlanacak bir şey yok. Önce istasyon sonuçlarını kaydedin."
+  "noDraftsToRelease": "Yayınlanacak bir şey yok. Önce istasyon sonuçlarını kaydedin.",
+  "performance": "Performans",
+  "noPerformanceYet": "Henüz yayınlanmış ölçüm yok. Test gününü kaydedin, sonra Sonuçları yayınla.",
+  "previousResult": "önceki {value}",
+  "@previousResult": {
+    "placeholders": {
+      "value": { "type": "String" }
+    }
+  },
+  "resultsThisSession": "Bu seanstaki sayılar",
+  "releaseResultsHint": "İstasyonu kaydetmek sayıları burada taslak olarak tutar. Yayınlamak her oyuncunun Performans sekmesine gönderir.",
+  "couldNotLoadPerformance": "Performans yüklenemedi",
+  "resultsReleasedCount": "{count} oturum oyuncu profillerine yayınlandı",
+  "@resultsReleasedCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  }
 }

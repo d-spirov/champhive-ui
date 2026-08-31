@@ -798,5 +798,22 @@
   "noValuesToSave": "Внесете барем една вредност пред зачувување.",
   "teamRequiredForRecording": "Внесувањето бара ден за тестирање врзан за тим.",
   "tapStationToRecord": "Допрете станица за да внесете броеви за составот.",
-  "noDraftsToRelease": "Сè уште нема што да се објави. Прво зачувајте ги резултатите."
+  "noDraftsToRelease": "Сè уште нема што да се објави. Прво зачувајте ги резултатите.",
+  "performance": "Перформанси",
+  "noPerformanceYet": "Сè уште нема објавени мерења. Внесете ден за тестирање, потоа Објави резултати.",
+  "previousResult": "беше {value}",
+  "@previousResult": {
+    "placeholders": {
+      "value": { "type": "String" }
+    }
+  },
+  "resultsThisSession": "Броеви на оваа сесија",
+  "releaseResultsHint": "Зачувувањето на станица ги остава броевите тука како нацрти. Објавата ги испраќа на картичката Перформанси на секој играч.",
+  "couldNotLoadPerformance": "Перформансите не можеа да се вчитаат",
+  "resultsReleasedCount": "Објавени {count} мерења на профили",
+  "@resultsReleasedCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  }
 }

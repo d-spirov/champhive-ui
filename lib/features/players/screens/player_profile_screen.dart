@@ -12,6 +12,7 @@ import '../../auth/providers/auth_provider.dart';
 import '../../account/widgets/editable_member_photo.dart';
 import '../../clubs/providers/clubs_provider.dart';
 import '../providers/players_provider.dart';
+import '../widgets/player_performance_tab.dart';
 
 class PlayerProfileScreen extends ConsumerWidget {
   const PlayerProfileScreen({super.key, required this.playerId});
@@ -71,13 +72,15 @@ class _PlayerProfileBody extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
     final clubId = player.clubId ?? ref.watch(selectedClubIdProvider) ?? '';
     return DefaultTabController(
-      length: 3,
+      length: 4,
       child: Scaffold(
         appBar: AppBar(
           title: Text(l10n.playerProfile),
           bottom: TabBar(
+            isScrollable: true,
             tabs: [
               Tab(text: l10n.info),
+              Tab(text: l10n.performance),
               Tab(text: l10n.teams),
               Tab(text: l10n.notes),
             ],
@@ -127,6 +130,7 @@ class _PlayerProfileBody extends ConsumerWidget {
               child: TabBarView(
                 children: [
                   _InfoTab(player: player),
+                  PlayerPerformanceTab(memberId: player.id),
                   _TeamsTab(player: player),
                   _NotesTab(notes: player.notes),
                 ],

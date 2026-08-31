@@ -732,8 +732,50 @@ class _TestSetTab extends ConsumerWidget {
                     : null,
               ),
             ],
+            if (day.players.isNotEmpty) ...[
+              const SizedBox(height: 24),
+              Text(
+                l10n.resultsThisSession,
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              const SizedBox(height: 4),
+              Text(
+                l10n.releaseResultsHint,
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+              const SizedBox(height: 8),
+              for (final player in day.players) ...[
+                const Divider(height: 1),
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: Text(player.displayName),
+                  subtitle: Text(
+                    day.stations
+                        .map((station) {
+                          final value = player.values[station.code];
+                          final shown = value?.display(
+                            valueKind: station.valueKind,
+                          );
+                          final unit = station.unit;
+                          if (shown == null || shown.isEmpty) {
+                            return '${station.name}: —';
+                          }
+                          return [
+                            station.name,
+                            shown,
+                            if (unit != null && unit.isNotEmpty) unit,
+                          ].join(' ');
+                        })
+                        .join('\n'),
+                  ),
+                  isThreeLine: day.stations.length > 1,
+                  trailing: const Icon(Icons.chevron_right_rounded),
+                  onTap: () => context.push('/members/${player.memberId}'),
+                ),
+              ],
+            ],
             const SizedBox(height: 20),
-            _ReleaseResultsButton(occurrenceId: occurrence.id),
+            _ReleaseResultsButton(occurrence: occurrence),
           ],
         );
       },
@@ -742,9 +784,9 @@ class _TestSetTab extends ConsumerWidget {
 }
 
 class _ReleaseResultsButton extends ConsumerStatefulWidget {
-  const _ReleaseResultsButton({required this.occurrenceId});
+  const _ReleaseResultsButton({required this.occurrence});
 
-  final String occurrenceId;
+  final ClubEvent occurrence;
 
   @override
   ConsumerState<_ReleaseResultsButton> createState() =>
@@ -754,6 +796,11 @@ class _ReleaseResultsButton extends ConsumerStatefulWidget {
 class _ReleaseResultsButtonState extends ConsumerState<_ReleaseResultsButton> {
   bool _busy = false;
 
+  String _dateKey(DateTime d) {
+    String two(int n) => n.toString().padLeft(2, '0');
+    return '${d.year}-${two(d.month)}-${two(d.day)}';
+  }
+
   Future<void> _release() async {
     final l10n = AppLocalizations.of(context)!;
     final clubId = ref.read(selectedClubIdProvider);
@@ -762,9 +809,13 @@ class _ReleaseResultsButtonState extends ConsumerState<_ReleaseResultsButton> {
     try {
       final api = ref.read(performanceApiProvider);
       final drafts = await api.listMyDrafts(clubId: clubId);
-      final mine = drafts
-          .where((d) => d.occurrenceId == widget.occurrenceId)
-          .toList();
+      final occurrenceId = widget.occurrence.id;
+      final day = _dateKey(widget.occurrence.startAt);
+      final mine = drafts.where((d) {
+        if (d.occurrenceId == occurrenceId) return true;
+        final on = d.assessedOn;
+        return on != null && on.length >= 10 && on.substring(0, 10) == day;
+      }).toList();
       if (mine.isEmpty) {
         if (!mounted) return;
         ScaffoldMessenger.of(
@@ -776,12 +827,12 @@ class _ReleaseResultsButtonState extends ConsumerState<_ReleaseResultsButton> {
       for (final draft in mine) {
         await api.finalizeSitting(clubId: clubId, assessmentId: draft.id);
       }
-      ref.invalidate(testingDayProvider(widget.occurrenceId));
+      ref.invalidate(testingDayProvider(occurrenceId));
       if (!mounted) return;
       setState(() => _busy = false);
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(l10n.resultsReleased)));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.resultsReleasedCount(mine.length))),
+      );
     } catch (e) {
       if (!mounted) return;
       setState(() => _busy = false);

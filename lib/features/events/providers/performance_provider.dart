@@ -65,3 +65,21 @@ final testingDayProvider = FutureProvider.autoDispose
           .watch(performanceApiProvider)
           .getTestingDay(clubId: clubId, occurrenceId: occurrenceId);
     });
+
+typedef MemberPerformanceKey = ({String memberId, String sportCode});
+
+final memberPerformanceProvider = FutureProvider.autoDispose
+    .family<PlayerPerformance, MemberPerformanceKey>((ref, key) async {
+      final clubId = ref.watch(selectedClubIdProvider);
+      if (clubId == null || clubId.isEmpty || key.memberId.isEmpty) {
+        throw StateError('No club or member');
+      }
+      await ref.watch(authApiProvider.future);
+      return ref
+          .watch(performanceApiProvider)
+          .memberHistory(
+            clubId: clubId,
+            memberId: key.memberId,
+            sportCode: key.sportCode,
+          );
+    });

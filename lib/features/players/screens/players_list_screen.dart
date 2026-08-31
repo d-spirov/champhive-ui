@@ -71,75 +71,69 @@ class _PlayersListScreenState extends ConsumerState<PlayersListScreen> {
             child: isDemo
                 ? _DemoPlayersList()
                 : clubId == null
-                    ? Center(
-                        child: Text(l10n.selectClubToViewMembers),
-                      )
-                    : playersAsync.when(
-                        loading: () =>
-                            const Center(child: CircularProgressIndicator()),
-                        error: (e, _) => Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(24),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  apiErrorMessage(
-                                    e,
-                                    fallback: l10n.couldNotLoadMembers,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                                const SizedBox(height: 12),
-                                FilledButton(
-                                  onPressed: () =>
-                                      ref.invalidate(clubPlayersProvider),
-                                  child: Text(l10n.retry),
-                                ),
-                              ],
+                ? Center(child: Text(l10n.selectClubToViewMembers))
+                : playersAsync.when(
+                    loading: () =>
+                        const Center(child: CircularProgressIndicator()),
+                    error: (e, _) => Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(24),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              apiErrorMessage(
+                                e,
+                                fallback: l10n.couldNotLoadMembers,
+                              ),
+                              textAlign: TextAlign.center,
                             ),
-                          ),
+                            const SizedBox(height: 12),
+                            FilledButton(
+                              onPressed: () =>
+                                  ref.invalidate(clubPlayersProvider),
+                              child: Text(l10n.retry),
+                            ),
+                          ],
                         ),
-                        data: (players) {
-                          if (players.isEmpty) {
-                            return Center(
-                              child: Text(l10n.noMembersFound),
-                            );
-                          }
-                          return RefreshIndicator(
-                            onRefresh: () async {
-                              ref.invalidate(clubPlayersProvider);
-                              await ref.read(clubPlayersProvider.future);
-                            },
-                            child: ListView.separated(
-                              physics: const AlwaysScrollableScrollPhysics(),
-                              padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-                              itemCount: players.length,
-                              separatorBuilder: (_, _) =>
-                                  const SizedBox(height: 8),
-                              itemBuilder: (context, index) {
-                                final p = players[index];
-                                return Card(
-                                  child: ListTile(
-                                    leading: PlayerAvatar(
-                                      playerId: p.id,
-                                      label: p.name,
-                                      hasPhoto: p.hasPhoto,
-                                    ),
-                                    title: Text(p.name),
-                                    subtitle: Text(p.teamsLabel),
-                                    trailing: const Icon(
-                                      Icons.chevron_right_rounded,
-                                    ),
-                                    onTap: () =>
-                                        context.push('/members/${p.id}'),
-                                  ),
-                                );
-                              },
-                            ),
-                          );
-                        },
                       ),
+                    ),
+                    data: (players) {
+                      if (players.isEmpty) {
+                        return Center(child: Text(l10n.noMembersFound));
+                      }
+                      return RefreshIndicator(
+                        onRefresh: () async {
+                          ref.invalidate(clubPlayersProvider);
+                          await ref.read(clubPlayersProvider.future);
+                        },
+                        child: ListView.separated(
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+                          itemCount: players.length,
+                          separatorBuilder: (_, _) => const SizedBox(height: 8),
+                          itemBuilder: (context, index) {
+                            final p = players[index];
+                            return Card(
+                              child: ListTile(
+                                leading: PlayerAvatar(
+                                  playerId: p.id,
+                                  label: p.name,
+                                  hasPhoto: p.hasPhoto,
+                                ),
+                                title: Text(p.name),
+                                subtitle: Text(p.teamsLabel),
+                                trailing: const Icon(
+                                  Icons.chevron_right_rounded,
+                                ),
+                                onTap: () => context.push('/members/${p.id}'),
+                              ),
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  ),
           ),
         ],
       ),

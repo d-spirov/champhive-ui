@@ -1755,4 +1755,31 @@ class AppLocalizationsBs extends AppLocalizations {
   @override
   String get noDraftsToRelease =>
       'Još nema šta objaviti. Prvo sačuvajte rezultate stanice.';
+
+  @override
+  String get performance => 'Performanse';
+
+  @override
+  String get noPerformanceYet =>
+      'Još nema objavljenih mjerenja. Unesite dan testiranja, zatim Objavi rezultate.';
+
+  @override
+  String previousResult(String value) {
+    return 'bilo $value';
+  }
+
+  @override
+  String get resultsThisSession => 'Brojevi na ovoj sesiji';
+
+  @override
+  String get releaseResultsHint =>
+      'Čuvanje stanice ostavlja brojeve ovdje kao nacrte. Objava ih šalje na karticu Performanse svakog igrača.';
+
+  @override
+  String get couldNotLoadPerformance => 'Performanse se nisu mogle učitati';
+
+  @override
+  String resultsReleasedCount(int count) {
+    return 'Objavljeno $count mjerenja na profile igrača';
+  }
 }

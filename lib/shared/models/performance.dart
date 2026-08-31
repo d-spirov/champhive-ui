@@ -393,7 +393,8 @@ class ColumnEntry {
       if (number != null) 'number': number,
       if (attempted != null) 'attempted': attempted,
       if (made != null) 'made': made,
-      if (optionCode != null && optionCode!.isNotEmpty) 'optionCode': optionCode,
+      if (optionCode != null && optionCode!.isNotEmpty)
+        'optionCode': optionCode,
       if (text != null && text!.isNotEmpty) 'text': text,
     };
   }
@@ -425,8 +426,7 @@ class ColumnRecorded {
   final List<ColumnOutcome> outcomes;
 
   int get recordedCount => outcomes.where((o) => o.recorded).length;
-  List<ColumnOutcome> get failed =>
-      outcomes.where((o) => !o.recorded).toList();
+  List<ColumnOutcome> get failed => outcomes.where((o) => !o.recorded).toList();
 
   factory ColumnRecorded.fromJson(Map<String, dynamic> json) {
     final raw = json['outcomes'];
@@ -448,19 +448,143 @@ class PerformanceSitting {
     required this.memberId,
     required this.status,
     this.occurrenceId,
+    this.assessedOn,
   });
 
   final String id;
   final String memberId;
   final String status;
   final String? occurrenceId;
+  final String? assessedOn;
 
   factory PerformanceSitting.fromJson(Map<String, dynamic> json) {
     return PerformanceSitting(
-      id: json['id']?.toString() ?? '',
+      id: json['id']?.toString() ?? json['assessmentId']?.toString() ?? '',
       memberId: json['memberId']?.toString() ?? '',
       status: json['status'] as String? ?? 'draft',
       occurrenceId: json['occurrenceId']?.toString(),
+      assessedOn: json['assessedOn'] as String?,
+    );
+  }
+}
+
+class MetricPoint {
+  const MetricPoint({required this.on, this.value, this.attempted, this.made});
+
+  final DateTime? on;
+  final double? value;
+  final int? attempted;
+  final int? made;
+
+  factory MetricPoint.fromJson(Map<String, dynamic> json) {
+    return MetricPoint(
+      on: DateTime.tryParse(json['on'] as String? ?? ''),
+      value: _jsonDouble(json['value']),
+      attempted: _jsonInt(json['attempted']),
+      made: _jsonInt(json['made']),
+    );
+  }
+
+  String display({String valueKind = 'scalar', int decimalPlaces = 1}) {
+    if (valueKind == 'ratio' && made != null && attempted != null) {
+      return '$made / $attempted';
+    }
+    final v = value;
+    if (v == null) return '';
+    if (decimalPlaces <= 0 && v == v.roundToDouble()) return '${v.toInt()}';
+    return v.toStringAsFixed(decimalPlaces);
+  }
+}
+
+class PlayerMetricHistory {
+  const PlayerMetricHistory({
+    required this.metricCode,
+    required this.name,
+    required this.categoryName,
+    required this.valueKind,
+    required this.decimalPlaces,
+    required this.direction,
+    this.unit,
+    this.latest,
+    this.previous,
+    this.series = const [],
+  });
+
+  final String metricCode;
+  final String name;
+  final String categoryName;
+  final String valueKind;
+  final String? unit;
+  final int decimalPlaces;
+  final String direction;
+  final MetricPoint? latest;
+  final MetricPoint? previous;
+  final List<MetricPoint> series;
+
+  bool get hasValue => latest != null;
+
+  factory PlayerMetricHistory.fromJson(Map<String, dynamic> json) {
+    MetricPoint? point(Object? raw) {
+      if (raw is Map) {
+        return MetricPoint.fromJson(Map<String, dynamic>.from(raw));
+      }
+      return null;
+    }
+
+    final series = <MetricPoint>[];
+    final raw = json['series'];
+    if (raw is List) {
+      for (final item in raw) {
+        if (item is Map) {
+          series.add(MetricPoint.fromJson(Map<String, dynamic>.from(item)));
+        }
+      }
+    }
+    return PlayerMetricHistory(
+      metricCode: json['metricCode'] as String? ?? '',
+      name: json['name'] as String? ?? json['metricCode'] as String? ?? '',
+      categoryName: json['categoryName'] as String? ?? '',
+      valueKind: json['valueKind'] as String? ?? 'scalar',
+      unit: json['unit'] as String?,
+      decimalPlaces: _jsonInt(json['decimalPlaces']) ?? 1,
+      direction: json['direction'] as String? ?? '',
+      latest: point(json['latest']),
+      previous: point(json['previous']),
+      series: series,
+    );
+  }
+}
+
+class PlayerPerformance {
+  const PlayerPerformance({
+    required this.memberId,
+    required this.sportCode,
+    this.metrics = const [],
+  });
+
+  final String memberId;
+  final String sportCode;
+  final List<PlayerMetricHistory> metrics;
+
+  List<PlayerMetricHistory> get measured =>
+      metrics.where((m) => m.hasValue).toList();
+
+  factory PlayerPerformance.fromJson(Map<String, dynamic> json) {
+    final metrics = <PlayerMetricHistory>[];
+    final raw = json['metrics'];
+    if (raw is List) {
+      for (final item in raw) {
+        if (item is Map) {
+          metrics.add(
+            PlayerMetricHistory.fromJson(Map<String, dynamic>.from(item)),
+          );
+        }
+      }
+    }
+    return PlayerPerformance(
+      memberId: json['memberId']?.toString() ?? '',
+      sportCode: json['sportCode'] as String? ?? '',
+      metrics: metrics,
     );
   }
 }

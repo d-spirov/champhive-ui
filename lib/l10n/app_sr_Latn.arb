@@ -798,5 +798,22 @@
   "noValuesToSave": "Unesite barem jednu vrednost pre čuvanja.",
   "teamRequiredForRecording": "Unos treba dan testiranja vezan za tim.",
   "tapStationToRecord": "Dodirnite stanicu da unesete brojeve za sastav.",
-  "noDraftsToRelease": "Još nema šta objaviti. Prvo sačuvajte rezultate stanice."
+  "noDraftsToRelease": "Još nema šta objaviti. Prvo sačuvajte rezultate stanice.",
+  "performance": "Performanse",
+  "noPerformanceYet": "Još nema objavljenih merenja. Unesite dan testiranja, zatim Objavi rezultate.",
+  "previousResult": "bilo {value}",
+  "@previousResult": {
+    "placeholders": {
+      "value": { "type": "String" }
+    }
+  },
+  "resultsThisSession": "Brojevi na ovoj sesiji",
+  "releaseResultsHint": "Čuvanje stanice ostavlja brojeve ovde kao nacrte. Objava ih šalje na karticu Performanse svakog igrača.",
+  "couldNotLoadPerformance": "Performanse se nisu mogle učitati",
+  "resultsReleasedCount": "Objavljeno {count} merenja na profile igrača",
+  "@resultsReleasedCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  }
 }

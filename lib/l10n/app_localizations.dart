@@ -3358,6 +3358,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Nothing to release yet. Save station results first.'**
   String get noDraftsToRelease;
+
+  /// No description provided for @performance.
+  ///
+  /// In en, this message translates to:
+  /// **'Performance'**
+  String get performance;
+
+  /// No description provided for @noPerformanceYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No released measurements yet. Record a testing day, then Release results.'**
+  String get noPerformanceYet;
+
+  /// No description provided for @previousResult.
+  ///
+  /// In en, this message translates to:
+  /// **'was {value}'**
+  String previousResult(String value);
+
+  /// No description provided for @resultsThisSession.
+  ///
+  /// In en, this message translates to:
+  /// **'Numbers this session'**
+  String get resultsThisSession;
+
+  /// No description provided for @releaseResultsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Saving a station stores the numbers here as drafts. Release publishes them to each player\'s Performance tab.'**
+  String get releaseResultsHint;
+
+  /// No description provided for @couldNotLoadPerformance.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load performance'**
+  String get couldNotLoadPerformance;
+
+  /// No description provided for @resultsReleasedCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Published {count} sittings to player profiles'**
+  String resultsReleasedCount(int count);
 }
 
 class _AppLocalizationsDelegate

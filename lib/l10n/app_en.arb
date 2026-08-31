@@ -830,5 +830,22 @@
   "noValuesToSave": "Enter at least one value before saving.",
   "teamRequiredForRecording": "Recording needs a team-scoped testing day.",
   "tapStationToRecord": "Tap a station to enter numbers for the squad.",
-  "noDraftsToRelease": "Nothing to release yet. Save station results first."
+  "noDraftsToRelease": "Nothing to release yet. Save station results first.",
+  "performance": "Performance",
+  "noPerformanceYet": "No released measurements yet. Record a testing day, then Release results.",
+  "previousResult": "was {value}",
+  "@previousResult": {
+    "placeholders": {
+      "value": { "type": "String" }
+    }
+  },
+  "resultsThisSession": "Numbers this session",
+  "releaseResultsHint": "Saving a station stores the numbers here as drafts. Release publishes them to each player's Performance tab.",
+  "couldNotLoadPerformance": "Could not load performance",
+  "resultsReleasedCount": "Published {count} sittings to player profiles",
+  "@resultsReleasedCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  }
 }

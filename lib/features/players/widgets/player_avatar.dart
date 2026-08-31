@@ -35,8 +35,9 @@ class PlayerAvatar extends ConsumerWidget {
         }
         return CircleAvatar(
           radius: size / 2,
-          backgroundColor:
-              Theme.of(context).colorScheme.primary.withValues(alpha: 0.12),
+          backgroundColor: Theme.of(
+            context,
+          ).colorScheme.primary.withValues(alpha: 0.12),
           backgroundImage: MemoryImage(bytes),
         );
       },
@@ -73,8 +74,9 @@ class MemberPhotoAvatar extends ConsumerWidget {
         }
         return CircleAvatar(
           radius: size / 2,
-          backgroundColor:
-              Theme.of(context).colorScheme.primary.withValues(alpha: 0.12),
+          backgroundColor: Theme.of(
+            context,
+          ).colorScheme.primary.withValues(alpha: 0.12),
           backgroundImage: MemoryImage(bytes),
         );
       },

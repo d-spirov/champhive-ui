@@ -798,5 +798,22 @@
   "noValuesToSave": "Inserisci almeno un valore prima di salvare.",
   "teamRequiredForRecording": "La registrazione richiede un giorno di test della squadra.",
   "tapStationToRecord": "Tocca una stazione per inserire i numeri della squadra.",
-  "noDraftsToRelease": "Niente da pubblicare. Salva prima i risultati della stazione."
+  "noDraftsToRelease": "Niente da pubblicare. Salva prima i risultati della stazione.",
+  "performance": "Prestazioni",
+  "noPerformanceYet": "Nessuna misurazione pubblicata. Registra un giorno di test, poi pubblica i risultati.",
+  "previousResult": "era {value}",
+  "@previousResult": {
+    "placeholders": {
+      "value": { "type": "String" }
+    }
+  },
+  "resultsThisSession": "Numeri di questa sessione",
+  "releaseResultsHint": "Salvare una stazione tiene i numeri qui come bozze. Pubblicare li invia alla scheda Prestazioni di ogni giocatore.",
+  "couldNotLoadPerformance": "Impossibile caricare le prestazioni",
+  "resultsReleasedCount": "Pubblicate {count} rilevazioni sui profili",
+  "@resultsReleasedCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  }
 }

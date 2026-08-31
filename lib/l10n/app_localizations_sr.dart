@@ -1754,6 +1754,33 @@ class AppLocalizationsSr extends AppLocalizations {
   @override
   String get noDraftsToRelease =>
       'Još nema šta objaviti. Prvo sačuvajte rezultate stanice.';
+
+  @override
+  String get performance => 'Performanse';
+
+  @override
+  String get noPerformanceYet =>
+      'Još nema objavljenih merenja. Unesite dan testiranja, zatim Objavi rezultate.';
+
+  @override
+  String previousResult(String value) {
+    return 'bilo $value';
+  }
+
+  @override
+  String get resultsThisSession => 'Brojevi na ovoj sesiji';
+
+  @override
+  String get releaseResultsHint =>
+      'Čuvanje stanice ostavlja brojeve ovde kao nacrte. Objava ih šalje na karticu Performanse svakog igrača.';
+
+  @override
+  String get couldNotLoadPerformance => 'Performanse se nisu mogle učitati';
+
+  @override
+  String resultsReleasedCount(int count) {
+    return 'Objavljeno $count merenja na profile igrača';
+  }
 }
 
 /// The translations for Serbian, using the Latin script (`sr_Latn`).
@@ -3506,4 +3533,31 @@ class AppLocalizationsSrLatn extends AppLocalizationsSr {
   @override
   String get noDraftsToRelease =>
       'Još nema šta objaviti. Prvo sačuvajte rezultate stanice.';
+
+  @override
+  String get performance => 'Performanse';
+
+  @override
+  String get noPerformanceYet =>
+      'Još nema objavljenih merenja. Unesite dan testiranja, zatim Objavi rezultate.';
+
+  @override
+  String previousResult(String value) {
+    return 'bilo $value';
+  }
+
+  @override
+  String get resultsThisSession => 'Brojevi na ovoj sesiji';
+
+  @override
+  String get releaseResultsHint =>
+      'Čuvanje stanice ostavlja brojeve ovde kao nacrte. Objava ih šalje na karticu Performanse svakog igrača.';
+
+  @override
+  String get couldNotLoadPerformance => 'Performanse se nisu mogle učitati';
+
+  @override
+  String resultsReleasedCount(int count) {
+    return 'Objavljeno $count merenja na profile igrača';
+  }
 }

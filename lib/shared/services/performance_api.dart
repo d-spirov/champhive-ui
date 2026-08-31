@@ -113,8 +113,8 @@ class PerformanceApi {
     final list = raw is List
         ? raw
         : (raw is Map && raw['items'] is List)
-            ? raw['items'] as List
-            : const [];
+        ? raw['items'] as List
+        : const [];
     return list
         .whereType<Map>()
         .map((e) => PerformanceSitting.fromJson(Map<String, dynamic>.from(e)))
@@ -127,6 +127,22 @@ class PerformanceApi {
   }) async {
     await _dio.post<dynamic>(
       '/api/v1/clubs/$clubId/performance/assessments/$assessmentId/finalize',
+    );
+  }
+
+  Future<PlayerPerformance> memberHistory({
+    required String clubId,
+    required String memberId,
+    String? sportCode,
+  }) async {
+    final response = await _dio.get<dynamic>(
+      '/api/v1/clubs/$clubId/performance/members/$memberId',
+      queryParameters: {
+        if (sportCode != null && sportCode.isNotEmpty) 'sportCode': sportCode,
+      },
+    );
+    return PlayerPerformance.fromJson(
+      _asMap(response, 'Empty performance history'),
     );
   }
 

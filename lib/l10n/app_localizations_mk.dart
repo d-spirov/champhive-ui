@@ -1769,4 +1769,31 @@ class AppLocalizationsMk extends AppLocalizations {
   @override
   String get noDraftsToRelease =>
       'Сè уште нема што да се објави. Прво зачувајте ги резултатите.';
+
+  @override
+  String get performance => 'Перформанси';
+
+  @override
+  String get noPerformanceYet =>
+      'Сè уште нема објавени мерења. Внесете ден за тестирање, потоа Објави резултати.';
+
+  @override
+  String previousResult(String value) {
+    return 'беше $value';
+  }
+
+  @override
+  String get resultsThisSession => 'Броеви на оваа сесија';
+
+  @override
+  String get releaseResultsHint =>
+      'Зачувувањето на станица ги остава броевите тука како нацрти. Објавата ги испраќа на картичката Перформанси на секој играч.';
+
+  @override
+  String get couldNotLoadPerformance => 'Перформансите не можеа да се вчитаат';
+
+  @override
+  String resultsReleasedCount(int count) {
+    return 'Објавени $count мерења на профили';
+  }
 }

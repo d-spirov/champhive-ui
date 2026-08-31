@@ -1750,4 +1750,31 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get noDraftsToRelease =>
       'Yayınlanacak bir şey yok. Önce istasyon sonuçlarını kaydedin.';
+
+  @override
+  String get performance => 'Performans';
+
+  @override
+  String get noPerformanceYet =>
+      'Henüz yayınlanmış ölçüm yok. Test gününü kaydedin, sonra Sonuçları yayınla.';
+
+  @override
+  String previousResult(String value) {
+    return 'önceki $value';
+  }
+
+  @override
+  String get resultsThisSession => 'Bu seanstaki sayılar';
+
+  @override
+  String get releaseResultsHint =>
+      'İstasyonu kaydetmek sayıları burada taslak olarak tutar. Yayınlamak her oyuncunun Performans sekmesine gönderir.';
+
+  @override
+  String get couldNotLoadPerformance => 'Performans yüklenemedi';
+
+  @override
+  String resultsReleasedCount(int count) {
+    return '$count oturum oyuncu profillerine yayınlandı';
+  }
 }

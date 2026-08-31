@@ -1774,4 +1774,31 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get noDraftsToRelease =>
       'Niente da pubblicare. Salva prima i risultati della stazione.';
+
+  @override
+  String get performance => 'Prestazioni';
+
+  @override
+  String get noPerformanceYet =>
+      'Nessuna misurazione pubblicata. Registra un giorno di test, poi pubblica i risultati.';
+
+  @override
+  String previousResult(String value) {
+    return 'era $value';
+  }
+
+  @override
+  String get resultsThisSession => 'Numeri di questa sessione';
+
+  @override
+  String get releaseResultsHint =>
+      'Salvare una stazione tiene i numeri qui come bozze. Pubblicare li invia alla scheda Prestazioni di ogni giocatore.';
+
+  @override
+  String get couldNotLoadPerformance => 'Impossibile caricare le prestazioni';
+
+  @override
+  String resultsReleasedCount(int count) {
+    return 'Pubblicate $count rilevazioni sui profili';
+  }
 }

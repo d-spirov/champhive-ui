@@ -317,10 +317,7 @@ void main() {
           'firstName': 'Ana',
           'lastName': 'Kovač',
           'values': {
-            'sprint_10m': {
-              'metricCode': 'sprint_10m',
-              'numericValue': 1.72,
-            },
+            'sprint_10m': {'metricCode': 'sprint_10m', 'numericValue': 1.72},
           },
         },
         {
@@ -335,5 +332,41 @@ void main() {
     expect(day.recordedCount('sprint_10m'), 1);
     expect(day.players.first.values['sprint_10m']!.numericValue, 1.72);
     expect(day.stations.single.canRecord, isTrue);
+  });
+
+  test('PlayerPerformance.fromJson maps latest values', () {
+    final history = PlayerPerformance.fromJson({
+      'memberId': 'm1',
+      'sportCode': 'football',
+      'sittings': <Map<String, dynamic>>[],
+      'metrics': [
+        {
+          'metricCode': 'sprint_10m',
+          'name': '10m sprint',
+          'categoryCode': 'physical',
+          'categoryName': 'Physical',
+          'valueKind': 'scalar',
+          'unit': 's',
+          'decimalPlaces': 2,
+          'direction': 'lower_is_better',
+          'isHiddenByClub': false,
+          'isGroupRetired': false,
+          'latest': {'on': '2026-09-02', 'value': 1.72},
+          'previous': null,
+          'series': [
+            {'on': '2026-09-02', 'value': 1.72},
+          ],
+        },
+      ],
+    });
+    expect(history.measured, hasLength(1));
+    expect(history.measured.single.latest!.value, 1.72);
+    expect(
+      history.measured.single.latest!.display(
+        valueKind: 'scalar',
+        decimalPlaces: 2,
+      ),
+      '1.72',
+    );
   });
 }
