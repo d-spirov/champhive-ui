@@ -14,9 +14,14 @@ import '../../events/providers/training_plans_provider.dart';
 import '../../teams/providers/teams_provider.dart';
 
 class CreateScheduleScreen extends ConsumerStatefulWidget {
-  const CreateScheduleScreen({super.key, this.initialDate});
+  const CreateScheduleScreen({
+    super.key,
+    this.initialDate,
+    this.initialTeamId,
+  });
 
   final DateTime? initialDate;
+  final String? initialTeamId;
 
   @override
   ConsumerState<CreateScheduleScreen> createState() =>
@@ -46,6 +51,7 @@ class _CreateScheduleScreenState extends ConsumerState<CreateScheduleScreen> {
     super.initState();
     final seed = widget.initialDate ?? DateTime.now();
     _date = DateTime(seed.year, seed.month, seed.day);
+    _teamId = widget.initialTeamId;
     final now = TimeOfDay.now();
     if (widget.initialDate == null) {
       _time = TimeOfDay(hour: (now.hour + 1).clamp(0, 23), minute: 0);
@@ -174,6 +180,23 @@ class _CreateScheduleScreenState extends ConsumerState<CreateScheduleScreen> {
         if (!mounted || _teamId != null) return;
         setState(() => _teamId = teams.first.id);
       });
+    }
+
+    if (widget.initialTeamId != null &&
+        _locationCtrl.text.isEmpty &&
+        teams.isNotEmpty) {
+      for (final t in teams) {
+        final location = t.trainingLocation?.trim();
+        if (t.id == widget.initialTeamId &&
+            location != null &&
+            location.isNotEmpty) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (!mounted || _locationCtrl.text.isNotEmpty) return;
+            _locationCtrl.text = location;
+          });
+          break;
+        }
+      }
     }
 
     return Scaffold(

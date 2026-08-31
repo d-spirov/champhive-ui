@@ -5,6 +5,7 @@ import 'package:team_hive/shared/models/club.dart';
 import 'package:team_hive/shared/models/event_attendance.dart';
 import 'package:team_hive/shared/models/compliance.dart';
 import 'package:team_hive/shared/models/training_plan.dart';
+import 'package:team_hive/shared/models/team.dart';
 
 void main() {
   test('User.fromMeJson maps ClubPlatform fields', () {
@@ -201,5 +202,25 @@ void main() {
     expect(plan.durationMinutes, 90);
     expect(plan.exercises.single.exerciseName, 'Rondo');
     expect(plan.exercises.single.images.single.id, 'img1');
+  });
+
+  test('TeamRosterEntry.shortDisplayName uses first name and last initial', () {
+    const filip = TeamRosterEntry(
+      memberId: 'm1',
+      firstName: 'Filip',
+      lastName: 'Angelov',
+      status: 'active',
+      shirtNumber: '12',
+    );
+    expect(filip.shortDisplayName, 'Filip A.');
+    expect(filip.displayName, 'Filip Angelov');
+
+    const firstOnly = TeamRosterEntry(
+      memberId: 'm2',
+      firstName: 'Ana',
+      lastName: '',
+      status: 'active',
+    );
+    expect(firstOnly.shortDisplayName, 'Ana');
   });
 }

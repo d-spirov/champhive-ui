@@ -370,6 +370,44 @@
   "season": "Сезона",
   "noMembersOnTeamRoster": "Нема членови во составот на овој тим.",
   "noUpcomingSessionsForTeam": "Нема претстојни сесии за овој тим.",
+  "teamChat": "Тимски разговор",
+  "couldNotOpenTeamChat": "Тимскиот разговор сè уште не е достапен.",
+  "quickActions": "Брзи акции",
+  "addEvent": "Додај настан",
+  "nextUp": "Следно",
+  "viewAll": "Види сè",
+  "viewDetails": "Детали",
+  "viewAllMembers": "Сите членови",
+  "details": "Детали",
+  "ageGroup": "Возрасна група",
+  "playersCount": "{count} играчи",
+  "@playersCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "seasonNamed": "Сезона {label}",
+  "@seasonNamed": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "goingAwaiting": "{going} доаѓаат • {awaiting} чекаат",
+  "@goingAwaiting": {
+    "placeholders": {
+      "going": {
+        "type": "int"
+      },
+      "awaiting": {
+        "type": "int"
+      }
+    }
+  },
+  "noSessionToTakeAttendance": "Нема претстоен термин за евиденција.",
   "playerProfile": "Профил на играч",
   "noProfileDetailsYet": "Сè уште нема детали за профилот.",
   "notAssignedToTeam": "Не е распореден во тим.",

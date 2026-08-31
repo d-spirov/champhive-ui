@@ -370,6 +370,44 @@
   "season": "Season",
   "noMembersOnTeamRoster": "No members on this team roster.",
   "noUpcomingSessionsForTeam": "No upcoming sessions for this team.",
+  "teamChat": "Team chat",
+  "couldNotOpenTeamChat": "This team's chat is not available yet.",
+  "quickActions": "Quick actions",
+  "addEvent": "Add event",
+  "nextUp": "Next up",
+  "viewAll": "View all",
+  "viewDetails": "View details",
+  "viewAllMembers": "View all members",
+  "details": "Details",
+  "ageGroup": "Age group",
+  "playersCount": "{count} players",
+  "@playersCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "seasonNamed": "Season {label}",
+  "@seasonNamed": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "goingAwaiting": "{going} going • {awaiting} awaiting",
+  "@goingAwaiting": {
+    "placeholders": {
+      "going": {
+        "type": "int"
+      },
+      "awaiting": {
+        "type": "int"
+      }
+    }
+  },
+  "noSessionToTakeAttendance": "No upcoming session to take attendance for.",
   "playerProfile": "Player Profile",
   "noProfileDetailsYet": "No profile details yet.",
   "notAssignedToTeam": "Not assigned to a team.",

@@ -917,6 +917,55 @@ class AppLocalizationsMk extends AppLocalizations {
   String get noUpcomingSessionsForTeam => 'Нема претстојни сесии за овој тим.';
 
   @override
+  String get teamChat => 'Тимски разговор';
+
+  @override
+  String get couldNotOpenTeamChat => 'Тимскиот разговор сè уште не е достапен.';
+
+  @override
+  String get quickActions => 'Брзи акции';
+
+  @override
+  String get addEvent => 'Додај настан';
+
+  @override
+  String get nextUp => 'Следно';
+
+  @override
+  String get viewAll => 'Види сè';
+
+  @override
+  String get viewDetails => 'Детали';
+
+  @override
+  String get viewAllMembers => 'Сите членови';
+
+  @override
+  String get details => 'Детали';
+
+  @override
+  String get ageGroup => 'Возрасна група';
+
+  @override
+  String playersCount(int count) {
+    return '$count играчи';
+  }
+
+  @override
+  String seasonNamed(String label) {
+    return 'Сезона $label';
+  }
+
+  @override
+  String goingAwaiting(int going, int awaiting) {
+    return '$going доаѓаат • $awaiting чекаат';
+  }
+
+  @override
+  String get noSessionToTakeAttendance =>
+      'Нема претстоен термин за евиденција.';
+
+  @override
   String get playerProfile => 'Профил на играч';
 
   @override

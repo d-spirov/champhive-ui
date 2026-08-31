@@ -82,6 +82,15 @@ class TeamRosterEntry {
     return name.isEmpty ? 'Member' : name;
   }
 
+  /// First name plus last initial, e.g. "Filip A."
+  String get shortDisplayName {
+    final first = firstName.trim();
+    final last = lastName.trim();
+    if (first.isEmpty) return displayName;
+    if (last.isEmpty) return first;
+    return '$first ${last[0].toUpperCase()}.';
+  }
+
   String get subtitle {
     final parts = <String>[
       if (shirtNumber != null && shirtNumber!.isNotEmpty) '#$shirtNumber',

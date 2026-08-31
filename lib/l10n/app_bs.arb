@@ -370,6 +370,44 @@
   "season": "Sezona",
   "noMembersOnTeamRoster": "Nema članova u sastavu ovog tima.",
   "noUpcomingSessionsForTeam": "Nema predstojećih sesija za ovaj tim.",
+  "teamChat": "Timski razgovor",
+  "couldNotOpenTeamChat": "Timski razgovor još nije dostupan.",
+  "quickActions": "Brze akcije",
+  "addEvent": "Dodaj događaj",
+  "nextUp": "Sljedeće",
+  "viewAll": "Prikaži sve",
+  "viewDetails": "Detalji",
+  "viewAllMembers": "Svi članovi",
+  "details": "Detalji",
+  "ageGroup": "Uzrasna grupa",
+  "playersCount": "{count} igrača",
+  "@playersCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "seasonNamed": "Sezona {label}",
+  "@seasonNamed": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "goingAwaiting": "{going} dolaze • {awaiting} čekaju",
+  "@goingAwaiting": {
+    "placeholders": {
+      "going": {
+        "type": "int"
+      },
+      "awaiting": {
+        "type": "int"
+      }
+    }
+  },
+  "noSessionToTakeAttendance": "Nema predstojeće sesije za evidenciju prisustva.",
   "playerProfile": "Profil igrača",
   "noProfileDetailsYet": "Još nema detalja profila.",
   "notAssignedToTeam": "Nije dodijeljen timu.",

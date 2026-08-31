@@ -194,8 +194,16 @@ class _AppState extends ConsumerState<App> {
           path: '/schedule/create',
           builder: (context, state) {
             final extra = state.extra;
+            DateTime? initialDate;
+            String? initialTeamId;
+            if (extra is DateTime) {
+              initialDate = extra;
+            } else if (extra is String) {
+              initialTeamId = extra;
+            }
             return CreateScheduleScreen(
-              initialDate: extra is DateTime ? extra : null,
+              initialDate: initialDate,
+              initialTeamId: initialTeamId,
             );
           },
         ),

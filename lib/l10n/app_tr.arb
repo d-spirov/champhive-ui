@@ -370,6 +370,44 @@
   "season": "Sezon",
   "noMembersOnTeamRoster": "Bu takım kadrosunda üye yok.",
   "noUpcomingSessionsForTeam": "Bu takım için yaklaşan seans yok.",
+  "teamChat": "Takım sohbeti",
+  "couldNotOpenTeamChat": "Bu takımın sohbeti henüz kullanılabilir değil.",
+  "quickActions": "Hızlı işlemler",
+  "addEvent": "Etkinlik ekle",
+  "nextUp": "Sıradaki",
+  "viewAll": "Tümünü gör",
+  "viewDetails": "Detaylar",
+  "viewAllMembers": "Tüm üyeler",
+  "details": "Detaylar",
+  "ageGroup": "Yaş grubu",
+  "playersCount": "{count} oyuncu",
+  "@playersCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "seasonNamed": "Sezon {label}",
+  "@seasonNamed": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "goingAwaiting": "{going} geliyor • {awaiting} bekliyor",
+  "@goingAwaiting": {
+    "placeholders": {
+      "going": {
+        "type": "int"
+      },
+      "awaiting": {
+        "type": "int"
+      }
+    }
+  },
+  "noSessionToTakeAttendance": "Yoklama alınacak yaklaşan seans yok.",
   "playerProfile": "Oyuncu profili",
   "noProfileDetailsYet": "Henüz profil detayı yok.",
   "notAssignedToTeam": "Bir takıma atanmadı.",
