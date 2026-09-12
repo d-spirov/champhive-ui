@@ -33,6 +33,7 @@ import 'features/players/screens/player_profile_screen.dart';
 import 'features/players/screens/players_list_screen.dart';
 import 'features/shell/main_shell.dart';
 import 'features/stats/screens/statistics_screen.dart';
+import 'features/teams/screens/add_team_member_screen.dart';
 import 'features/teams/screens/team_details_screen.dart';
 import 'features/teams/screens/teams_screen.dart';
 import 'l10n/app_localizations.dart';
@@ -126,6 +127,13 @@ class _AppState extends ConsumerState<App> {
           path: '/teams/:teamId',
           builder: (context, state) =>
               TeamDetailsScreen(teamId: state.pathParameters['teamId']!),
+          routes: [
+            GoRoute(
+              path: 'members/add',
+              builder: (context, state) =>
+                  AddTeamMemberScreen(teamId: state.pathParameters['teamId']!),
+            ),
+          ],
         ),
         GoRoute(
           path: '/members',

@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'team.dart';
+
 enum EventType { training, match, tournament, meeting, testing, other }
 
 enum AttendanceStatus { notMarked, present, absent, late, excused }
@@ -555,6 +557,20 @@ class AttendanceParticipant {
         json['recordedAtClientUtc'] as String? ?? '',
       )?.toUtc(),
       rsvpStatus: json['rsvpStatus'] as String?,
+    );
+  }
+
+  factory AttendanceParticipant.fromTeamRoster(
+    TeamRosterEntry entry, {
+    String? teamName,
+  }) {
+    return AttendanceParticipant(
+      id: entry.memberId,
+      playerId: entry.memberId,
+      displayName: entry.displayName,
+      version: 0,
+      status: AttendanceStatus.notMarked,
+      teamName: teamName,
     );
   }
 

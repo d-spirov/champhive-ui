@@ -377,6 +377,22 @@
   "couldNotOpenTeamChat": "Тимскиот разговор сè уште не е достапен.",
   "quickActions": "Брзи акции",
   "addEvent": "Додај настан",
+  "addMember": "Додај член",
+  "couldNotAddMember": "Не можеше да се додаде членот",
+  "memberAddedNamed": "Додаден {name}",
+  "@memberAddedNamed": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "dateOfBirthRequired": "Датумот на раѓање е задолжителен",
+  "genderMale": "Машки",
+  "genderFemale": "Женски",
+  "genderUnspecified": "Не е наведено",
+  "duplicateMemberSuspected": "Веќе постои сличен член. Да се додаде сепак?",
+  "addAnyway": "Додај сепак",
   "nextUp": "Следно",
   "viewAll": "Види сè",
   "viewDetails": "Детали",

@@ -204,3 +204,36 @@ class TeamRoster {
     );
   }
 }
+
+class ClubSeason {
+  const ClubSeason({
+    required this.id,
+    required this.clubId,
+    required this.label,
+    this.startsOn,
+    this.endsOn,
+  });
+
+  final String id;
+  final String clubId;
+  final String label;
+  final DateTime? startsOn;
+  final DateTime? endsOn;
+
+  bool contains(DateTime day) {
+    final d = DateTime(day.year, day.month, day.day);
+    if (startsOn != null && d.isBefore(startsOn!)) return false;
+    if (endsOn != null && d.isAfter(endsOn!)) return false;
+    return startsOn != null || endsOn != null;
+  }
+
+  factory ClubSeason.fromJson(Map<String, dynamic> json) {
+    return ClubSeason(
+      id: json['id']?.toString() ?? '',
+      clubId: json['clubId']?.toString() ?? '',
+      label: json['label'] as String? ?? '',
+      startsOn: DateTime.tryParse(json['startsOn'] as String? ?? ''),
+      endsOn: DateTime.tryParse(json['endsOn'] as String? ?? ''),
+    );
+  }
+}

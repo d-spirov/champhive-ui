@@ -377,6 +377,22 @@
   "couldNotOpenTeamChat": "Timski razgovor još nije dostupan.",
   "quickActions": "Brze akcije",
   "addEvent": "Dodaj događaj",
+  "addMember": "Dodaj člana",
+  "couldNotAddMember": "Nije moguće dodati člana",
+  "memberAddedNamed": "Dodat {name}",
+  "@memberAddedNamed": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "dateOfBirthRequired": "Datum rođenja je obavezan",
+  "genderMale": "Muški",
+  "genderFemale": "Ženski",
+  "genderUnspecified": "Nije navedeno",
+  "duplicateMemberSuspected": "Sličan član već postoji. Dodati ovu osobu ipak?",
+  "addAnyway": "Dodaj ipak",
   "nextUp": "Sledeće",
   "viewAll": "Prikaži sve",
   "viewDetails": "Detalji",

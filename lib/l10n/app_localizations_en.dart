@@ -926,6 +926,36 @@ class AppLocalizationsEn extends AppLocalizations {
   String get addEvent => 'Add event';
 
   @override
+  String get addMember => 'Add member';
+
+  @override
+  String get couldNotAddMember => 'Could not add member';
+
+  @override
+  String memberAddedNamed(String name) {
+    return 'Added $name';
+  }
+
+  @override
+  String get dateOfBirthRequired => 'Date of birth is required';
+
+  @override
+  String get genderMale => 'Male';
+
+  @override
+  String get genderFemale => 'Female';
+
+  @override
+  String get genderUnspecified => 'Not specified';
+
+  @override
+  String get duplicateMemberSuspected =>
+      'A similar member already exists. Add this person anyway?';
+
+  @override
+  String get addAnyway => 'Add anyway';
+
+  @override
   String get nextUp => 'Next up';
 
   @override

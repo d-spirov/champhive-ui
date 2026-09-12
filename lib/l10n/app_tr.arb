@@ -377,6 +377,22 @@
   "couldNotOpenTeamChat": "Bu takımın sohbeti henüz kullanılabilir değil.",
   "quickActions": "Hızlı işlemler",
   "addEvent": "Etkinlik ekle",
+  "addMember": "Üye ekle",
+  "couldNotAddMember": "Üye eklenemedi",
+  "memberAddedNamed": "{name} eklendi",
+  "@memberAddedNamed": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "dateOfBirthRequired": "Doğum tarihi gerekli",
+  "genderMale": "Erkek",
+  "genderFemale": "Kadın",
+  "genderUnspecified": "Belirtilmedi",
+  "duplicateMemberSuspected": "Benzer bir üye zaten var. Bu kişiyi yine de ekle?",
+  "addAnyway": "Yine de ekle",
   "nextUp": "Sıradaki",
   "viewAll": "Tümünü gör",
   "viewDetails": "Detaylar",

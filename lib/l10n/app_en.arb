@@ -377,6 +377,22 @@
   "couldNotOpenTeamChat": "This team's chat is not available yet.",
   "quickActions": "Quick actions",
   "addEvent": "Add event",
+  "addMember": "Add member",
+  "couldNotAddMember": "Could not add member",
+  "memberAddedNamed": "Added {name}",
+  "@memberAddedNamed": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "dateOfBirthRequired": "Date of birth is required",
+  "genderMale": "Male",
+  "genderFemale": "Female",
+  "genderUnspecified": "Not specified",
+  "duplicateMemberSuspected": "A similar member already exists. Add this person anyway?",
+  "addAnyway": "Add anyway",
   "nextUp": "Next up",
   "viewAll": "View all",
   "viewDetails": "View details",

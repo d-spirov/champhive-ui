@@ -1871,6 +1871,60 @@ abstract class AppLocalizations {
   /// **'Add event'**
   String get addEvent;
 
+  /// No description provided for @addMember.
+  ///
+  /// In en, this message translates to:
+  /// **'Add member'**
+  String get addMember;
+
+  /// No description provided for @couldNotAddMember.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not add member'**
+  String get couldNotAddMember;
+
+  /// No description provided for @memberAddedNamed.
+  ///
+  /// In en, this message translates to:
+  /// **'Added {name}'**
+  String memberAddedNamed(String name);
+
+  /// No description provided for @dateOfBirthRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Date of birth is required'**
+  String get dateOfBirthRequired;
+
+  /// No description provided for @genderMale.
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get genderMale;
+
+  /// No description provided for @genderFemale.
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get genderFemale;
+
+  /// No description provided for @genderUnspecified.
+  ///
+  /// In en, this message translates to:
+  /// **'Not specified'**
+  String get genderUnspecified;
+
+  /// No description provided for @duplicateMemberSuspected.
+  ///
+  /// In en, this message translates to:
+  /// **'A similar member already exists. Add this person anyway?'**
+  String get duplicateMemberSuspected;
+
+  /// No description provided for @addAnyway.
+  ///
+  /// In en, this message translates to:
+  /// **'Add anyway'**
+  String get addAnyway;
+
   /// No description provided for @nextUp.
   ///
   /// In en, this message translates to:

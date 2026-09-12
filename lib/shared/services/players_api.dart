@@ -33,8 +33,8 @@ class PlayersApi {
     final list = raw is Map && raw['items'] is List
         ? raw['items'] as List
         : (raw is Map && raw['content'] is List)
-            ? raw['content'] as List
-            : (raw is List ? raw : const []);
+        ? raw['content'] as List
+        : (raw is List ? raw : const []);
     return list
         .whereType<Map>()
         .map((e) => ClubPlayer.fromMemberJson(Map<String, dynamic>.from(e)))
@@ -58,6 +58,53 @@ class PlayersApi {
       );
     }
     return ClubPlayer.fromMemberJson(Map<String, dynamic>.from(raw));
+  }
+
+  Future<ClubPlayer> createMember({
+    required String clubId,
+    required String firstName,
+    required String lastName,
+    required String dateOfBirth,
+    String? gender,
+    int? shirtNumber,
+    String? sectionId,
+    bool confirmDuplicate = false,
+  }) async {
+    final response = await _dio.post<dynamic>(
+      '/api/v1/clubs/$clubId/members',
+      queryParameters: {if (confirmDuplicate) 'confirmDuplicate': true},
+      data: {
+        'firstName': firstName,
+        'lastName': lastName,
+        'dateOfBirth': dateOfBirth,
+        if (gender != null && gender.isNotEmpty && gender != 'unspecified')
+          'gender': gender,
+        'shirtNumber': ?shirtNumber,
+        if (sectionId != null && sectionId.isNotEmpty) 'sectionId': sectionId,
+      },
+    );
+    final raw = response.data;
+    if (raw is! Map) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        type: DioExceptionType.badResponse,
+        response: response,
+        message: 'Empty member response',
+      );
+    }
+    return ClubPlayer.fromMemberJson(Map<String, dynamic>.from(raw));
+  }
+
+  Future<void> enrollMember({
+    required String clubId,
+    required String memberId,
+    required String teamId,
+    required String seasonId,
+  }) async {
+    await _dio.post<dynamic>(
+      '/api/v1/clubs/$clubId/members/$memberId/enrollments',
+      data: {'teamId': teamId, 'seasonId': seasonId},
+    );
   }
 
   /// Authenticated photo bytes. Prefers member photo route; falls back to
@@ -134,9 +181,7 @@ class PlayersApi {
     required String clubId,
     required String memberId,
   }) async {
-    await _dio.delete<dynamic>(
-      '/api/v1/clubs/$clubId/members/$memberId/photo',
-    );
+    await _dio.delete<dynamic>('/api/v1/clubs/$clubId/members/$memberId/photo');
   }
 
   static String _photoFilename(String raw) {

@@ -958,75 +958,92 @@ class _MembersTab extends ConsumerWidget {
         ),
       ),
       data: (roster) {
-        if (roster.entries.isEmpty) {
-          return Center(child: Text(l10n.noMembersOnTeamRoster));
-        }
         final entries = sortedRoster(roster.entries);
-        return RefreshIndicator(
-          onRefresh: () async {
-            ref.invalidate(teamRosterProvider(teamId));
-            await ref.read(teamRosterProvider(teamId).future);
-          },
-          child: ListView.separated(
-            physics: const AlwaysScrollableScrollPhysics(),
-            padding: const EdgeInsets.all(16),
-            itemCount: entries.length,
-            separatorBuilder: (_, _) => const SizedBox(height: 8),
-            itemBuilder: (context, index) {
-              final p = entries[index];
-              final number = p.shirtNumber?.trim();
-              return Card(
-                child: ListTile(
-                  leading: SizedBox(
-                    width: 48,
-                    height: 48,
-                    child: Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        MemberPhotoAvatar(
-                          memberId: p.memberId,
-                          label: p.displayName,
-                          size: 48,
-                        ),
-                        if (number != null && number.isNotEmpty)
-                          Positioned(
-                            right: -2,
-                            bottom: -2,
-                            child: Container(
-                              width: 18,
-                              height: 18,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                color: AppColors.primaryBright,
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                  color: Theme.of(
-                                    context,
-                                  ).scaffoldBackgroundColor,
-                                  width: 1.5,
-                                ),
-                              ),
-                              child: Text(
-                                number.replaceFirst('#', ''),
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 9,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                  title: Text(p.displayName),
-                  subtitle: Text(p.subtitle),
-                  trailing: const Icon(Icons.chevron_right_rounded),
-                  onTap: () => context.push('/members/${p.memberId}'),
+        return Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+              child: SizedBox(
+                width: double.infinity,
+                child: FilledButton.icon(
+                  onPressed: () => context.push('/teams/$teamId/members/add'),
+                  icon: const Icon(Icons.person_add_alt_1_rounded),
+                  label: Text(l10n.addMember),
                 ),
-              );
-            },
-          ),
+              ),
+            ),
+            Expanded(
+              child: entries.isEmpty
+                  ? Center(child: Text(l10n.noMembersOnTeamRoster))
+                  : RefreshIndicator(
+                      onRefresh: () async {
+                        ref.invalidate(teamRosterProvider(teamId));
+                        await ref.read(teamRosterProvider(teamId).future);
+                      },
+                      child: ListView.separated(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        padding: const EdgeInsets.all(16),
+                        itemCount: entries.length,
+                        separatorBuilder: (_, _) => const SizedBox(height: 8),
+                        itemBuilder: (context, index) {
+                          final p = entries[index];
+                          final number = p.shirtNumber?.trim();
+                          return Card(
+                            child: ListTile(
+                              leading: SizedBox(
+                                width: 48,
+                                height: 48,
+                                child: Stack(
+                                  clipBehavior: Clip.none,
+                                  children: [
+                                    MemberPhotoAvatar(
+                                      memberId: p.memberId,
+                                      label: p.displayName,
+                                      size: 48,
+                                    ),
+                                    if (number != null && number.isNotEmpty)
+                                      Positioned(
+                                        right: -2,
+                                        bottom: -2,
+                                        child: Container(
+                                          width: 18,
+                                          height: 18,
+                                          alignment: Alignment.center,
+                                          decoration: BoxDecoration(
+                                            color: AppColors.primaryBright,
+                                            shape: BoxShape.circle,
+                                            border: Border.all(
+                                              color: Theme.of(
+                                                context,
+                                              ).scaffoldBackgroundColor,
+                                              width: 1.5,
+                                            ),
+                                          ),
+                                          child: Text(
+                                            number.replaceFirst('#', ''),
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 9,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              ),
+                              title: Text(p.displayName),
+                              subtitle: Text(p.subtitle),
+                              trailing: const Icon(Icons.chevron_right_rounded),
+                              onTap: () =>
+                                  context.push('/members/${p.memberId}'),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+            ),
+          ],
         );
       },
     );

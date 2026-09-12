@@ -6,6 +6,8 @@ import '../../../l10n/app_localizations.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../../events/providers/events_provider.dart';
 import '../../../shared/models/event_attendance.dart';
+import '../../../shared/models/team.dart';
+import '../../teams/providers/teams_provider.dart';
 import '../../../shared/theme/app_theme.dart';
 import '../../../shared/utils/api_error_message.dart';
 import '../../../shared/widgets/ui_bits.dart';
@@ -46,8 +48,35 @@ class _MarkAttendanceScreenState extends ConsumerState<MarkAttendanceScreen>
   }
 
   void _syncFromSession(AttendanceSession session) {
+    final previous = _draft;
+    final next = {for (final p in session.participants) p.id: p};
+    if (previous != null) {
+      for (final entry in previous.entries) {
+        if (next.containsKey(entry.key)) {
+          next[entry.key] = entry.value;
+        }
+      }
+    }
     _session = session;
-    _draft = {for (final p in session.participants) p.id: p};
+    _draft = next;
+  }
+
+  void _includeTeamRoster(List<TeamRosterEntry> entries, String? teamName) {
+    final draft = _draft;
+    if (draft == null) return;
+    var changed = false;
+    for (final entry in entries) {
+      if (entry.memberId.isEmpty || draft.containsKey(entry.memberId)) {
+        continue;
+      }
+      if (entry.status.toLowerCase() != 'active') continue;
+      draft[entry.memberId] = AttendanceParticipant.fromTeamRoster(
+        entry,
+        teamName: teamName,
+      );
+      changed = true;
+    }
+    if (changed) setState(() {});
   }
 
   AttendanceSummaryCounts _counts() {
@@ -286,7 +315,12 @@ class _MarkAttendanceScreenState extends ConsumerState<MarkAttendanceScreen>
           ),
         ),
         data: (session) {
-          if (_draft == null || _session?.eventId != session.eventId) {
+          final missingFromDraft =
+              _draft != null &&
+              session.participants.any((p) => !_draft!.containsKey(p.id));
+          if (_draft == null ||
+              _session?.eventId != session.eventId ||
+              missingFromDraft) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               if (!mounted) return;
               setState(() => _syncFromSession(session));
@@ -294,6 +328,19 @@ class _MarkAttendanceScreenState extends ConsumerState<MarkAttendanceScreen>
           }
 
           final occurrence = occurrenceAsync.valueOrNull;
+          final teamId = (occurrence?.scopeKind ?? '').toLowerCase() == 'team'
+              ? occurrence?.scopeId
+              : null;
+          if (teamId != null && teamId.isNotEmpty && _draft != null) {
+            final roster = ref.watch(teamRosterProvider(teamId)).valueOrNull;
+            if (roster != null) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (!mounted) return;
+                _includeTeamRoster(roster.entries, roster.teamName);
+              });
+            }
+          }
+
           final counts = _counts();
           final members = (_draft?.values.toList() ?? session.participants)
             ..sort((a, b) => a.displayName.compareTo(b.displayName));

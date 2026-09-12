@@ -928,6 +928,36 @@ class AppLocalizationsTr extends AppLocalizations {
   String get addEvent => 'Etkinlik ekle';
 
   @override
+  String get addMember => 'Üye ekle';
+
+  @override
+  String get couldNotAddMember => 'Üye eklenemedi';
+
+  @override
+  String memberAddedNamed(String name) {
+    return '$name eklendi';
+  }
+
+  @override
+  String get dateOfBirthRequired => 'Doğum tarihi gerekli';
+
+  @override
+  String get genderMale => 'Erkek';
+
+  @override
+  String get genderFemale => 'Kadın';
+
+  @override
+  String get genderUnspecified => 'Belirtilmedi';
+
+  @override
+  String get duplicateMemberSuspected =>
+      'Benzer bir üye zaten var. Bu kişiyi yine de ekle?';
+
+  @override
+  String get addAnyway => 'Yine de ekle';
+
+  @override
   String get nextUp => 'Sıradaki';
 
   @override

@@ -377,6 +377,22 @@
   "couldNotOpenTeamChat": "La chat di questa squadra non è ancora disponibile.",
   "quickActions": "Azioni rapide",
   "addEvent": "Aggiungi evento",
+  "addMember": "Aggiungi membro",
+  "couldNotAddMember": "Impossibile aggiungere il membro",
+  "memberAddedNamed": "Aggiunto {name}",
+  "@memberAddedNamed": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "dateOfBirthRequired": "La data di nascita è obbligatoria",
+  "genderMale": "Maschio",
+  "genderFemale": "Femmina",
+  "genderUnspecified": "Non specificato",
+  "duplicateMemberSuspected": "Esiste già un membro simile. Aggiungere comunque questa persona?",
+  "addAnyway": "Aggiungi comunque",
   "nextUp": "Prossimo",
   "viewAll": "Vedi tutti",
   "viewDetails": "Dettagli",

@@ -14,8 +14,8 @@ class TeamsApi {
     final list = raw is List
         ? raw
         : (raw is Map && raw['items'] is List)
-            ? raw['items'] as List
-            : const [];
+        ? raw['items'] as List
+        : const [];
     return list
         .whereType<Map>()
         .map((e) => ClubTeam.fromJson(Map<String, dynamic>.from(e)))
@@ -66,6 +66,20 @@ class TeamsApi {
     return list
         .whereType<Map>()
         .map((e) => ClubEvent.fromOccurrenceJson(Map<String, dynamic>.from(e)))
+        .toList();
+  }
+
+  Future<List<ClubSeason>> listSeasons({required String clubId}) async {
+    final response = await _dio.get<dynamic>('/api/v1/clubs/$clubId/seasons');
+    final raw = response.data;
+    final list = raw is List
+        ? raw
+        : (raw is Map && raw['items'] is List)
+        ? raw['items'] as List
+        : const [];
+    return list
+        .whereType<Map>()
+        .map((e) => ClubSeason.fromJson(Map<String, dynamic>.from(e)))
         .toList();
   }
 }

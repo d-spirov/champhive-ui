@@ -939,6 +939,36 @@ class AppLocalizationsMk extends AppLocalizations {
   String get addEvent => 'Додај настан';
 
   @override
+  String get addMember => 'Додај член';
+
+  @override
+  String get couldNotAddMember => 'Не можеше да се додаде членот';
+
+  @override
+  String memberAddedNamed(String name) {
+    return 'Додаден $name';
+  }
+
+  @override
+  String get dateOfBirthRequired => 'Датумот на раѓање е задолжителен';
+
+  @override
+  String get genderMale => 'Машки';
+
+  @override
+  String get genderFemale => 'Женски';
+
+  @override
+  String get genderUnspecified => 'Не е наведено';
+
+  @override
+  String get duplicateMemberSuspected =>
+      'Веќе постои сличен член. Да се додаде сепак?';
+
+  @override
+  String get addAnyway => 'Додај сепак';
+
+  @override
   String get nextUp => 'Следно';
 
   @override

@@ -466,4 +466,17 @@ void main() {
       '1.72',
     );
   });
+
+  test('ClubSeason.fromJson maps current window', () {
+    final season = ClubSeason.fromJson({
+      'id': 's1',
+      'clubId': 'c1',
+      'label': '2026/2027',
+      'startsOn': '2026-08-01',
+      'endsOn': '2027-06-30',
+    });
+    expect(season.label, '2026/2027');
+    expect(season.contains(DateTime(2026, 9, 12)), isTrue);
+    expect(season.contains(DateTime(2026, 7, 1)), isFalse);
+  });
 }

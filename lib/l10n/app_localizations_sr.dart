@@ -931,6 +931,36 @@ class AppLocalizationsSr extends AppLocalizations {
   String get addEvent => 'Dodaj događaj';
 
   @override
+  String get addMember => 'Dodaj člana';
+
+  @override
+  String get couldNotAddMember => 'Nije moguće dodati člana';
+
+  @override
+  String memberAddedNamed(String name) {
+    return 'Dodat $name';
+  }
+
+  @override
+  String get dateOfBirthRequired => 'Datum rođenja je obavezan';
+
+  @override
+  String get genderMale => 'Muški';
+
+  @override
+  String get genderFemale => 'Ženski';
+
+  @override
+  String get genderUnspecified => 'Nije navedeno';
+
+  @override
+  String get duplicateMemberSuspected =>
+      'Sličan član već postoji. Dodati ovu osobu ipak?';
+
+  @override
+  String get addAnyway => 'Dodaj ipak';
+
+  @override
   String get nextUp => 'Sledeće';
 
   @override
@@ -2712,6 +2742,36 @@ class AppLocalizationsSrLatn extends AppLocalizationsSr {
 
   @override
   String get addEvent => 'Dodaj događaj';
+
+  @override
+  String get addMember => 'Dodaj člana';
+
+  @override
+  String get couldNotAddMember => 'Nije moguće dodati člana';
+
+  @override
+  String memberAddedNamed(String name) {
+    return 'Dodat $name';
+  }
+
+  @override
+  String get dateOfBirthRequired => 'Datum rođenja je obavezan';
+
+  @override
+  String get genderMale => 'Muški';
+
+  @override
+  String get genderFemale => 'Ženski';
+
+  @override
+  String get genderUnspecified => 'Nije navedeno';
+
+  @override
+  String get duplicateMemberSuspected =>
+      'Sličan član već postoji. Dodati ovu osobu ipak?';
+
+  @override
+  String get addAnyway => 'Dodaj ipak';
 
   @override
   String get nextUp => 'Sledeće';
