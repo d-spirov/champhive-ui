@@ -182,6 +182,7 @@
   "couldNotMarkAsRead": "Не можеше да се означи како прочитано",
   "couldNotRecordPayment": "Не можеше да се евидентира плаќањето",
   "signInToCreateSchedule": "Најави се за да креираш ставки во распоредот",
+  "cannotCreateEventInPast": "Не можеш да креираш настан во минатото.",
   "signInToOpenChat": "Најави се за да отвориш жив разговор",
   "signInToSeeNotifications": "Најави се за да ги видиш известувањата.",
   "signInToManagePayments": "Најави се за да ги управуваш плаќањата на клубот.",

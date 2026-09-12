@@ -9,6 +9,7 @@ import '../../attendance/widgets/attendance_ui.dart';
 import '../../../shared/demo/demo_data.dart';
 import '../../../shared/utils/api_error_message.dart';
 import '../../../shared/widgets/ui_bits.dart';
+import '../schedule_timing.dart';
 
 class CalendarScreen extends ConsumerStatefulWidget {
   const CalendarScreen({super.key});
@@ -61,6 +62,12 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
             );
             return;
           }
+          if (isPastCalendarDay(_selected)) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(l10n.cannotCreateEventInPast)),
+            );
+            return;
+          }
           context.push('/schedule/create', extra: _selected);
         },
         child: const Icon(Icons.add_rounded),
@@ -80,6 +87,10 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                     day.year == _selected.year &&
                     day.month == _selected.month &&
                     day.day == _selected.day;
+                final past = isPastCalendarDay(day);
+                final muted = Theme.of(
+                  context,
+                ).colorScheme.onSurface.withValues(alpha: past ? 0.35 : 0.55);
                 return InkWell(
                   borderRadius: BorderRadius.circular(28),
                   onTap: () => setState(() => _selected = day),
@@ -99,8 +110,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                             letterSpacing: 0.4,
                             color: selected
                                 ? Theme.of(context).colorScheme.primary
-                                : Theme.of(context).colorScheme.onSurface
-                                      .withValues(alpha: 0.55),
+                                : muted,
                           ),
                         ),
                         const SizedBox(height: 6),
@@ -121,7 +131,8 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                               fontSize: 15,
                               color: selected
                                   ? Theme.of(context).colorScheme.onPrimary
-                                  : Theme.of(context).colorScheme.onSurface,
+                                  : Theme.of(context).colorScheme.onSurface
+                                        .withValues(alpha: past ? 0.4 : 1),
                             ),
                           ),
                         ),

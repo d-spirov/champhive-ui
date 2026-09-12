@@ -12,6 +12,7 @@ import '../../clubs/providers/clubs_provider.dart';
 import '../../events/providers/events_provider.dart';
 import '../../events/providers/training_plans_provider.dart';
 import '../../teams/providers/teams_provider.dart';
+import '../schedule_timing.dart';
 import '../widgets/test_set_picker.dart';
 
 class CreateScheduleScreen extends ConsumerStatefulWidget {
@@ -48,12 +49,14 @@ class _CreateScheduleScreenState extends ConsumerState<CreateScheduleScreen> {
   void initState() {
     super.initState();
     final seed = widget.initialDate ?? DateTime.now();
-    _date = DateTime(seed.year, seed.month, seed.day);
     _teamId = widget.initialTeamId;
     final now = TimeOfDay.now();
-    if (widget.initialDate == null) {
-      _time = TimeOfDay(hour: (now.hour + 1).clamp(0, 23), minute: 0);
-    }
+    final defaultTime = widget.initialDate == null
+        ? TimeOfDay(hour: (now.hour + 1).clamp(0, 23), minute: 0)
+        : _time;
+    final snapped = snapEventStartToNow(date: seed, time: defaultTime);
+    _date = snapped.date;
+    _time = snapped.time;
   }
 
   @override
@@ -76,18 +79,46 @@ class _CreateScheduleScreenState extends ConsumerState<CreateScheduleScreen> {
   }
 
   Future<void> _pickDate() async {
+    final today = dateOnly(DateTime.now());
+    final initial = _date.isBefore(today) ? today : _date;
     final picked = await showDatePicker(
       context: context,
-      initialDate: _date,
-      firstDate: DateTime.now().subtract(const Duration(days: 1)),
+      initialDate: initial,
+      firstDate: today,
       lastDate: DateTime.now().add(const Duration(days: 365 * 2)),
     );
-    if (picked != null) setState(() => _date = picked);
+    if (picked == null) return;
+    if (isPastCalendarDay(picked)) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.cannotCreateEventInPast),
+        ),
+      );
+      return;
+    }
+    setState(() {
+      _date = dateOnly(picked);
+      final snapped = snapEventStartToNow(date: _date, time: _time);
+      _date = snapped.date;
+      _time = snapped.time;
+    });
   }
 
   Future<void> _pickTime() async {
     final picked = await showTimePicker(context: context, initialTime: _time);
-    if (picked != null) setState(() => _time = picked);
+    if (picked == null) return;
+    final start = eventStartAt(_date, picked);
+    if (isPastEventStart(start)) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.cannotCreateEventInPast),
+        ),
+      );
+      return;
+    }
+    setState(() => _time = picked);
   }
 
   Future<void> _save() async {
@@ -102,13 +133,17 @@ class _CreateScheduleScreenState extends ConsumerState<CreateScheduleScreen> {
       setState(() => _error = l10n.titleRequired);
       return;
     }
-    if (_scopeKind == 'team' && (_teamId == null || _teamId!.isEmpty)) {
-      setState(() => _error = l10n.pickATeam);
-      return;
-    }
     if (_type == 'testing' &&
         (_metricBatteryId == null || _metricBatteryId!.isEmpty)) {
       setState(() => _error = l10n.testSetRequired);
+      return;
+    }
+
+    final user = ref.read(authNotifierProvider).user;
+    final canScopeClub = user?.hasClubWideStaffGrant(clubId) ?? false;
+    final scopeKind = canScopeClub ? _scopeKind : 'team';
+    if (scopeKind == 'team' && (_teamId == null || _teamId!.isEmpty)) {
+      setState(() => _error = l10n.pickATeam);
       return;
     }
 
@@ -120,6 +155,10 @@ class _CreateScheduleScreenState extends ConsumerState<CreateScheduleScreen> {
       _time.hour,
       _time.minute,
     );
+    if (isPastEventStart(localStart) || isPastCalendarDay(_date)) {
+      setState(() => _error = l10n.cannotCreateEventInPast);
+      return;
+    }
 
     setState(() {
       _saving = true;
@@ -132,8 +171,8 @@ class _CreateScheduleScreenState extends ConsumerState<CreateScheduleScreen> {
           .createSeries(
             clubId: clubId,
             request: SaveEventSeriesRequest(
-              scopeKind: _scopeKind,
-              scopeId: _scopeKind == 'club' ? null : _teamId,
+              scopeKind: scopeKind,
+              scopeId: scopeKind == 'club' ? null : _teamId,
               type: _type,
               title: title,
               purpose: _purposeCtrl.text.trim().isEmpty
@@ -175,10 +214,14 @@ class _CreateScheduleScreenState extends ConsumerState<CreateScheduleScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final isDemo = ref.watch(authNotifierProvider).user?.id == 'demo';
+    final user = ref.watch(authNotifierProvider).user;
+    final isDemo = user?.id == 'demo';
     final clubId = ref.watch(selectedClubIdProvider);
     final teamsAsync = ref.watch(clubTeamsProvider);
     final teams = teamsAsync.valueOrNull ?? const <ClubTeam>[];
+    final canScopeClub =
+        clubId != null && (user?.hasClubWideStaffGrant(clubId) ?? false);
+    final scopeKind = canScopeClub ? _scopeKind : 'team';
 
     if (_teamId == null && teams.isNotEmpty) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -278,17 +321,18 @@ class _CreateScheduleScreenState extends ConsumerState<CreateScheduleScreen> {
                 const SizedBox(height: 20),
                 Text(l10n.scope, style: Theme.of(context).textTheme.titleSmall),
                 const SizedBox(height: 8),
-                SegmentedButton<String>(
-                  segments: [
-                    ButtonSegment(value: 'team', label: Text(l10n.team)),
-                    ButtonSegment(value: 'club', label: Text(l10n.wholeClub)),
-                  ],
-                  selected: {_scopeKind},
-                  onSelectionChanged: (s) =>
-                      setState(() => _scopeKind = s.first),
-                ),
-                if (_scopeKind == 'team') ...[
-                  const SizedBox(height: 12),
+                if (canScopeClub)
+                  SegmentedButton<String>(
+                    segments: [
+                      ButtonSegment(value: 'team', label: Text(l10n.team)),
+                      ButtonSegment(value: 'club', label: Text(l10n.wholeClub)),
+                    ],
+                    selected: {scopeKind},
+                    onSelectionChanged: (s) =>
+                        setState(() => _scopeKind = s.first),
+                  ),
+                if (scopeKind == 'team') ...[
+                  if (canScopeClub) const SizedBox(height: 12),
                   teamsAsync.when(
                     loading: () => const LinearProgressIndicator(),
                     error: (e, _) => Text(
@@ -414,7 +458,7 @@ class _CreateScheduleScreenState extends ConsumerState<CreateScheduleScreen> {
                   )
                 else
                   _TrainingPlanPicker(
-                    teamId: _scopeKind == 'team' ? _teamId : null,
+                    teamId: scopeKind == 'team' ? _teamId : null,
                     selectedId: _trainingPlanId,
                     onChanged: (id) => setState(() => _trainingPlanId = id),
                   ),

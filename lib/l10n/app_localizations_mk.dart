@@ -524,6 +524,10 @@ class AppLocalizationsMk extends AppLocalizations {
       'Најави се за да креираш ставки во распоредот';
 
   @override
+  String get cannotCreateEventInPast =>
+      'Не можеш да креираш настан во минатото.';
+
+  @override
   String get signInToOpenChat => 'Најави се за да отвориш жив разговор';
 
   @override

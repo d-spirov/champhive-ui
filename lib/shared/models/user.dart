@@ -15,17 +15,14 @@ class RoleGrant {
     return RoleGrant(
       role: json['role'] as String? ?? '',
       clubId: json['clubId']?.toString() ?? '',
-      scope: json['scope'] as String? ?? '',
+      scope: (json['scope'] as String? ?? json['scopeKind'] as String? ?? ''),
       scopeId: json['scopeId']?.toString() ?? '',
     );
   }
 }
 
 class ClubPermissions {
-  const ClubPermissions({
-    required this.clubId,
-    this.permissions = const [],
-  });
+  const ClubPermissions({required this.clubId, this.permissions = const []});
 
   final String clubId;
   final List<String> permissions;
@@ -89,10 +86,52 @@ class User {
   }
 
   List<String> rolesForClub(String clubId) {
-    return roles
-        .where((r) => r.clubId == clubId)
-        .map((r) => r.role)
-        .toList();
+    return roles.where((r) => r.clubId == clubId).map((r) => r.role).toList();
+  }
+
+  /// Club admins may see every team. A club-scoped coach does not.
+  bool hasClubWideStaffGrant(String clubId) {
+    if (isPlatformRoot) return true;
+    for (final r in roles) {
+      if (r.clubId != clubId) continue;
+      if (r.role.toLowerCase() == 'clubadmin') return true;
+    }
+    return false;
+  }
+
+  /// Explicit team ids from team-scoped staff grants in [clubId].
+  Set<String> staffTeamIdsForClub(String clubId) {
+    return {
+      for (final r in roles)
+        if (r.clubId == clubId &&
+            _isStaffRole(r.role) &&
+            r.scope.toLowerCase() == 'team' &&
+            r.scopeId.isNotEmpty)
+          r.scopeId,
+    };
+  }
+
+  /// Section ids from section-scoped staff grants in [clubId].
+  Set<String> staffSectionIdsForClub(String clubId) {
+    return {
+      for (final r in roles)
+        if (r.clubId == clubId &&
+            _isStaffRole(r.role) &&
+            r.scope.toLowerCase() == 'section' &&
+            r.scopeId.isNotEmpty)
+          r.scopeId,
+    };
+  }
+
+  static bool _isStaffRole(String role) {
+    switch (role.toLowerCase()) {
+      case 'clubadmin':
+      case 'sectionadmin':
+      case 'coach':
+        return true;
+      default:
+        return false;
+    }
   }
 
   bool hasClubPermission(String? clubId, String permission) {
@@ -123,18 +162,18 @@ class User {
       isPlatformRoot: json['isPlatformRoot'] as bool? ?? false,
       roles: rolesRaw is List
           ? rolesRaw
-              .whereType<Map>()
-              .map((e) => RoleGrant.fromJson(Map<String, dynamic>.from(e)))
-              .toList()
+                .whereType<Map>()
+                .map((e) => RoleGrant.fromJson(Map<String, dynamic>.from(e)))
+                .toList()
           : const [],
       fam: famRaw is List ? famRaw.map((e) => e.toString()).toList() : const [],
       clubPermissions: permsRaw is List
           ? permsRaw
-              .whereType<Map>()
-              .map(
-                (e) => ClubPermissions.fromJson(Map<String, dynamic>.from(e)),
-              )
-              .toList()
+                .whereType<Map>()
+                .map(
+                  (e) => ClubPermissions.fromJson(Map<String, dynamic>.from(e)),
+                )
+                .toList()
           : const [],
       createdAt: _parseDate(json['createdAtUtc'] ?? json['createdAt']),
     );

@@ -1,3 +1,29 @@
+class TeamCoach {
+  const TeamCoach({
+    required this.userAccountId,
+    required this.name,
+    required this.scopeKind,
+    this.assignmentId,
+  });
+
+  final String userAccountId;
+  final String name;
+  final String scopeKind;
+  final String? assignmentId;
+
+  bool get isDirect => scopeKind.toLowerCase() == 'team';
+  bool get isSection => scopeKind.toLowerCase() == 'section';
+
+  factory TeamCoach.fromJson(Map<String, dynamic> json) {
+    return TeamCoach(
+      userAccountId: json['userAccountId']?.toString() ?? '',
+      name: json['name'] as String? ?? '',
+      scopeKind: json['scopeKind'] as String? ?? '',
+      assignmentId: json['assignmentId']?.toString(),
+    );
+  }
+}
+
 class ClubTeam {
   const ClubTeam({
     required this.id,
@@ -8,6 +34,7 @@ class ClubTeam {
     this.birthYearFrom,
     this.birthYearTo,
     this.trainingLocation,
+    this.coaches = const [],
   });
 
   final String id;
@@ -18,6 +45,16 @@ class ClubTeam {
   final int? birthYearFrom;
   final int? birthYearTo;
   final String? trainingLocation;
+  final List<TeamCoach> coaches;
+
+  bool isAssignedTo(String userAccountId) {
+    if (userAccountId.isEmpty) return false;
+    for (final coach in coaches) {
+      if (coach.userAccountId != userAccountId) continue;
+      if (coach.isDirect || coach.isSection) return true;
+    }
+    return false;
+  }
 
   String get ageBandLabel {
     final from = birthYearFrom;
@@ -39,6 +76,15 @@ class ClubTeam {
   }
 
   factory ClubTeam.fromJson(Map<String, dynamic> json) {
+    final coaches = <TeamCoach>[];
+    final rawCoaches = json['coaches'];
+    if (rawCoaches is List) {
+      for (final item in rawCoaches) {
+        if (item is Map) {
+          coaches.add(TeamCoach.fromJson(Map<String, dynamic>.from(item)));
+        }
+      }
+    }
     return ClubTeam(
       id: json['id']?.toString() ?? '',
       clubId: json['clubId']?.toString() ?? '',
@@ -48,6 +94,7 @@ class ClubTeam {
       birthYearFrom: (json['birthYearFrom'] as num?)?.toInt(),
       birthYearTo: (json['birthYearTo'] as num?)?.toInt(),
       trainingLocation: json['trainingLocation'] as String?,
+      coaches: coaches,
     );
   }
 }

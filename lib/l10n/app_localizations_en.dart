@@ -519,6 +519,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get signInToCreateSchedule => 'Sign in to create schedule items';
 
   @override
+  String get cannotCreateEventInPast =>
+      'You can\'t create an event in the past.';
+
+  @override
   String get signInToOpenChat => 'Sign in to open live chat';
 
   @override

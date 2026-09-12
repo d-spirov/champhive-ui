@@ -182,6 +182,7 @@
   "couldNotMarkAsRead": "Impossibile segnare come letto",
   "couldNotRecordPayment": "Impossibile registrare il pagamento",
   "signInToCreateSchedule": "Accedi per creare voci del programma",
+  "cannotCreateEventInPast": "Non puoi creare un evento nel passato.",
   "signInToOpenChat": "Accedi per aprire la chat dal vivo",
   "signInToSeeNotifications": "Accedi per vedere le tue notifiche.",
   "signInToManagePayments": "Accedi per gestire i pagamenti del club.",

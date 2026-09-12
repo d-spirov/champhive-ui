@@ -182,6 +182,7 @@
   "couldNotMarkAsRead": "Okundu olarak işaretlenemedi",
   "couldNotRecordPayment": "Ödeme kaydedilemedi",
   "signInToCreateSchedule": "Program öğeleri oluşturmak için giriş yap",
+  "cannotCreateEventInPast": "Geçmişte bir etkinlik oluşturamazsın.",
   "signInToOpenChat": "Canlı sohbeti açmak için giriş yap",
   "signInToSeeNotifications": "Bildirimlerini görmek için giriş yap.",
   "signInToManagePayments": "Kulüp ödemelerini yönetmek için giriş yap.",

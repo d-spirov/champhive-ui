@@ -522,6 +522,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get signInToCreateSchedule => 'Accedi per creare voci del programma';
 
   @override
+  String get cannotCreateEventInPast =>
+      'Non puoi creare un evento nel passato.';
+
+  @override
   String get signInToOpenChat => 'Accedi per aprire la chat dal vivo';
 
   @override

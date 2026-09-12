@@ -521,6 +521,10 @@ class AppLocalizationsBs extends AppLocalizations {
   String get signInToCreateSchedule => 'Prijavi se da kreiraš stavke rasporeda';
 
   @override
+  String get cannotCreateEventInPast =>
+      'Ne možeš kreirati događaj u prošlosti.';
+
+  @override
   String get signInToOpenChat => 'Prijavi se da otvoriš živo ćaskanje';
 
   @override

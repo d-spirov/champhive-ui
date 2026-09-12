@@ -521,6 +521,10 @@ class AppLocalizationsSr extends AppLocalizations {
   String get signInToCreateSchedule => 'Prijavi se da kreiraš stavke rasporeda';
 
   @override
+  String get cannotCreateEventInPast =>
+      'Ne možeš da kreiraš događaj u prošlosti.';
+
+  @override
   String get signInToOpenChat => 'Prijavi se da otvoriš živo ćaskanje';
 
   @override
@@ -2298,6 +2302,10 @@ class AppLocalizationsSrLatn extends AppLocalizationsSr {
 
   @override
   String get signInToCreateSchedule => 'Prijavi se da kreiraš stavke rasporeda';
+
+  @override
+  String get cannotCreateEventInPast =>
+      'Ne možeš da kreiraš događaj u prošlosti.';
 
   @override
   String get signInToOpenChat => 'Prijavi se da otvoriš živo ćaskanje';

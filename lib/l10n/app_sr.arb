@@ -182,6 +182,7 @@
   "couldNotMarkAsRead": "Nije moguće označiti kao pročitano",
   "couldNotRecordPayment": "Nije moguće evidentirati plaćanje",
   "signInToCreateSchedule": "Prijavi se da kreiraš stavke rasporeda",
+  "cannotCreateEventInPast": "Ne možeš da kreiraš događaj u prošlosti.",
   "signInToOpenChat": "Prijavi se da otvoriš živo ćaskanje",
   "signInToSeeNotifications": "Prijavi se da vidiš svoja obaveštenja.",
   "signInToManagePayments": "Prijavi se da upravljaš plaćanjima kluba.",

@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../shared/models/event_attendance.dart';
 import '../../../shared/models/team.dart';
+import '../../../shared/models/user.dart';
 import '../../../shared/services/teams_api.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../../clubs/providers/clubs_provider.dart';
@@ -25,8 +26,31 @@ final clubTeamsProvider = FutureProvider.autoDispose<List<ClubTeam>>((
   if (clubId == null) return const [];
 
   await ref.watch(authApiProvider.future);
-  return ref.watch(teamsApiProvider).listTeams(clubId: clubId);
+  final teams = await ref.watch(teamsApiProvider).listTeams(clubId: clubId);
+  return teamsVisibleToUser(teams, user: auth.user, clubId: clubId);
 });
+
+/// Club admins see every team. Coaches only see teams they are assigned to.
+List<ClubTeam> teamsVisibleToUser(
+  List<ClubTeam> teams, {
+  required User? user,
+  required String clubId,
+}) {
+  if (user == null) return const [];
+  if (user.hasClubWideStaffGrant(clubId)) return teams;
+  final teamIds = user.staffTeamIdsForClub(clubId);
+  final sectionIds = user.staffSectionIdsForClub(clubId);
+  return teams
+      .where(
+        (t) =>
+            teamIds.contains(t.id) ||
+            (t.sectionId != null &&
+                t.sectionId!.isNotEmpty &&
+                sectionIds.contains(t.sectionId)) ||
+            t.isAssignedTo(user.id),
+      )
+      .toList();
+}
 
 final clubTeamProvider = Provider.autoDispose.family<ClubTeam?, String>((
   ref,

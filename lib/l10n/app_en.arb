@@ -182,6 +182,7 @@
   "couldNotMarkAsRead": "Could not mark as read",
   "couldNotRecordPayment": "Could not record payment",
   "signInToCreateSchedule": "Sign in to create schedule items",
+  "cannotCreateEventInPast": "You can't create an event in the past.",
   "signInToOpenChat": "Sign in to open live chat",
   "signInToSeeNotifications": "Sign in to see your notification feed.",
   "signInToManagePayments": "Sign in to manage club payments.",

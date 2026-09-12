@@ -520,6 +520,9 @@ class AppLocalizationsTr extends AppLocalizations {
       'Program öğeleri oluşturmak için giriş yap';
 
   @override
+  String get cannotCreateEventInPast => 'Geçmişte bir etkinlik oluşturamazsın.';
+
+  @override
   String get signInToOpenChat => 'Canlı sohbeti açmak için giriş yap';
 
   @override

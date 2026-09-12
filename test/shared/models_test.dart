@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:team_hive/features/teams/providers/teams_provider.dart';
 import 'package:team_hive/shared/models/user.dart';
 import 'package:team_hive/shared/models/club.dart';
 import 'package:team_hive/shared/models/event_attendance.dart';
@@ -38,6 +39,102 @@ void main() {
     expect(user.rolesForClub('c1'), ['coach']);
     expect(user.hasClubPermission('c1', 'attendance.mark'), isTrue);
     expect(user.hasClubPermission('c1', 'DOCUMENT_VERIFY'), isFalse);
+    expect(user.hasClubWideStaffGrant('c1'), isFalse);
+    expect(user.staffTeamIdsForClub('c1'), isEmpty);
+  });
+
+  test('teamsVisibleToUser keeps only the coach assigned teams', () {
+    const coach = User(
+      id: 'u2',
+      email: 'coach@b.com',
+      firstName: 'Ana',
+      lastName: 'Coach',
+      roles: [
+        RoleGrant(role: 'coach', clubId: 'c1', scope: 'club', scopeId: 'c1'),
+      ],
+    );
+    const teams = [
+      ClubTeam(
+        id: 't1',
+        clubId: 'c1',
+        name: 'U12',
+        sectionId: 's1',
+        coaches: [
+          TeamCoach(userAccountId: 'u2', name: 'Ana Coach', scopeKind: 'team'),
+        ],
+      ),
+      ClubTeam(
+        id: 't2',
+        clubId: 'c1',
+        name: 'U14',
+        sectionId: 's1',
+        coaches: [
+          TeamCoach(userAccountId: 'u2', name: 'Ana Coach', scopeKind: 'club'),
+        ],
+      ),
+      ClubTeam(id: 't3', clubId: 'c1', name: 'U16', sectionId: 's2'),
+    ];
+    expect(
+      teamsVisibleToUser(teams, user: coach, clubId: 'c1').map((t) => t.id),
+      ['t1'],
+    );
+
+    const teamScoped = User(
+      id: 'u5',
+      email: 't@b.com',
+      firstName: 'Tea',
+      lastName: 'Coach',
+      roles: [
+        RoleGrant(role: 'coach', clubId: 'c1', scope: 'team', scopeId: 't3'),
+      ],
+    );
+    expect(
+      teamsVisibleToUser(
+        teams,
+        user: teamScoped,
+        clubId: 'c1',
+      ).map((t) => t.id),
+      ['t3'],
+    );
+
+    const sectionAdmin = User(
+      id: 'u3',
+      email: 'sec@b.com',
+      firstName: 'Sek',
+      lastName: 'Admin',
+      roles: [
+        RoleGrant(
+          role: 'sectionAdmin',
+          clubId: 'c1',
+          scope: 'section',
+          scopeId: 's1',
+        ),
+      ],
+    );
+    expect(
+      teamsVisibleToUser(
+        teams,
+        user: sectionAdmin,
+        clubId: 'c1',
+      ).map((t) => t.id),
+      ['t1', 't2'],
+    );
+
+    const admin = User(
+      id: 'u4',
+      email: 'admin@b.com',
+      firstName: 'Ada',
+      lastName: 'Admin',
+      roles: [
+        RoleGrant(
+          role: 'clubAdmin',
+          clubId: 'c1',
+          scope: 'club',
+          scopeId: 'c1',
+        ),
+      ],
+    );
+    expect(teamsVisibleToUser(teams, user: admin, clubId: 'c1'), teams);
   });
 
   test('Club.fromJson maps ClubResponse fields', () {

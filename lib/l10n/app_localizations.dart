@@ -1115,6 +1115,12 @@ abstract class AppLocalizations {
   /// **'Sign in to create schedule items'**
   String get signInToCreateSchedule;
 
+  /// No description provided for @cannotCreateEventInPast.
+  ///
+  /// In en, this message translates to:
+  /// **'You can\'t create an event in the past.'**
+  String get cannotCreateEventInPast;
+
   /// No description provided for @signInToOpenChat.
   ///
   /// In en, this message translates to:
