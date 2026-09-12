@@ -153,6 +153,7 @@ class _CreateScheduleScreenState extends ConsumerState<CreateScheduleScreen> {
             ),
           );
       ref.invalidate(clubEventsProvider);
+      ref.invalidate(teamScheduleProvider);
       if (!mounted) return;
       ScaffoldMessenger.of(
         context,

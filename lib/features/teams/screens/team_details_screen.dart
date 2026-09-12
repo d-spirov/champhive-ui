@@ -26,6 +26,7 @@ class TeamDetailsScreen extends ConsumerWidget {
     ref.invalidate(clubTeamsProvider);
     ref.invalidate(teamRosterProvider(teamId));
     ref.invalidate(teamScheduleProvider(teamId));
+    ref.invalidate(clubEventsProvider);
     ref.invalidate(chatChannelsProvider);
   }
 
@@ -34,9 +35,7 @@ class TeamDetailsScreen extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
     final team = ref.watch(clubTeamProvider(teamId));
     final rosterAsync = ref.watch(teamRosterProvider(teamId));
-    final title = team?.name ??
-        rosterAsync.valueOrNull?.teamName ??
-        l10n.team;
+    final title = team?.name ?? rosterAsync.valueOrNull?.teamName ?? l10n.team;
 
     return DefaultTabController(
       length: 3,
@@ -85,18 +84,26 @@ class _OverviewTab extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
     final rosterAsync = ref.watch(teamRosterProvider(teamId));
     final scheduleAsync = ref.watch(teamScheduleProvider(teamId));
-    final sportTheme =
-        ref.watch(sportThemeForSectionProvider(team?.sectionId));
+    final clubEvents = ref.watch(clubEventsProvider).valueOrNull ?? const [];
+    final sportTheme = ref.watch(sportThemeForSectionProvider(team?.sectionId));
+    List<ClubEvent> merged(List<ClubEvent> teamEvents) => mergeTeamSchedule(
+      teamEvents: teamEvents,
+      clubEvents: clubEvents,
+      teamId: teamId,
+      sectionId: team?.sectionId,
+    );
 
     return RefreshIndicator(
       onRefresh: () async {
         ref.invalidate(clubTeamsProvider);
         ref.invalidate(teamRosterProvider(teamId));
         ref.invalidate(teamScheduleProvider(teamId));
+        ref.invalidate(clubEventsProvider);
         ref.invalidate(chatChannelsProvider);
         await Future.wait([
           ref.read(teamRosterProvider(teamId).future),
           ref.read(teamScheduleProvider(teamId).future),
+          ref.read(clubEventsProvider.future),
         ]);
       },
       child: ListView(
@@ -114,7 +121,9 @@ class _OverviewTab extends ConsumerWidget {
           SectionHeader(title: l10n.quickActions),
           _QuickActionsRow(
             teamId: teamId,
-            nextOccurrence: nextUpcomingEvent(scheduleAsync.valueOrNull),
+            nextOccurrence: nextUpcomingEvent(
+              merged(scheduleAsync.valueOrNull ?? const []),
+            ),
           ),
           const SizedBox(height: 22),
           SectionHeader(
@@ -134,7 +143,7 @@ class _OverviewTab extends ConsumerWidget {
               ),
             ),
             data: (events) {
-              final next = nextUpcomingEvent(events);
+              final next = nextUpcomingEvent(merged(events));
               if (next == null) {
                 return AppCard(
                   padding: const EdgeInsets.all(20),
@@ -162,9 +171,8 @@ class _OverviewTab extends ConsumerWidget {
               padding: EdgeInsets.symmetric(vertical: 16),
               child: Center(child: CircularProgressIndicator()),
             ),
-            error: (e, _) => Text(
-              apiErrorMessage(e, fallback: l10n.couldNotLoadRoster),
-            ),
+            error: (e, _) =>
+                Text(apiErrorMessage(e, fallback: l10n.couldNotLoadRoster)),
             data: (roster) {
               if (roster.entries.isEmpty) {
                 return AppCard(
@@ -179,10 +187,7 @@ class _OverviewTab extends ConsumerWidget {
             },
           ),
           const SizedBox(height: 22),
-          _TeamDetailsList(
-            team: team,
-            roster: rosterAsync.valueOrNull,
-          ),
+          _TeamDetailsList(team: team, roster: rosterAsync.valueOrNull),
         ],
       ),
     );
@@ -226,20 +231,15 @@ class _TeamHeroCard extends StatelessWidget {
             Image.asset(
               heroImage,
               fit: BoxFit.cover,
-              errorBuilder: (_, _, _) => Image.asset(
-                fallbackImage,
-                fit: BoxFit.cover,
-              ),
+              errorBuilder: (_, _, _) =>
+                  Image.asset(fallbackImage, fit: BoxFit.cover),
             ),
             const DecoratedBox(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [
-                    Color(0x33070E22),
-                    Color(0xE6070E22),
-                  ],
+                  colors: [Color(0x33070E22), Color(0xE6070E22)],
                 ),
               ),
             ),
@@ -265,20 +265,20 @@ class _TeamHeroCard extends StatelessWidget {
                   Text(
                     name,
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 28,
-                          height: 1.1,
-                        ),
+                      color: Colors.white,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 28,
+                      height: 1.1,
+                    ),
                   ),
                   if (subtitleParts.isNotEmpty) ...[
                     const SizedBox(height: 4),
                     Text(
                       subtitleParts.join(' • '),
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Colors.white.withValues(alpha: 0.82),
-                            fontWeight: FontWeight.w500,
-                          ),
+                        color: Colors.white.withValues(alpha: 0.82),
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ],
                   const SizedBox(height: 10),
@@ -335,10 +335,7 @@ class _HeroMeta extends StatelessWidget {
 }
 
 class _QuickActionsRow extends ConsumerWidget {
-  const _QuickActionsRow({
-    required this.teamId,
-    required this.nextOccurrence,
-  });
+  const _QuickActionsRow({required this.teamId, required this.nextOccurrence});
 
   final String teamId;
   final ClubEvent? nextOccurrence;
@@ -380,9 +377,9 @@ class _QuickActionsRow extends ConsumerWidget {
   void _openAttendance(BuildContext context, AppLocalizations l10n) {
     final next = nextOccurrence;
     if (next == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.noSessionToTakeAttendance)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.noSessionToTakeAttendance)));
       return;
     }
     context.push('/occurrences/${next.id}/attendance');
@@ -407,9 +404,9 @@ class _TeamChatActionState extends ConsumerState<_TeamChatAction> {
     final l10n = AppLocalizations.of(context)!;
     final auth = ref.read(authNotifierProvider);
     if (!auth.isAuthenticated || auth.user?.id == 'demo') {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.signInToOpenChat)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.signInToOpenChat)));
       return;
     }
     setState(() => _opening = true);
@@ -417,9 +414,9 @@ class _TeamChatActionState extends ConsumerState<_TeamChatAction> {
       final channel = await loadTeamChannel(ref, widget.teamId);
       if (!mounted) return;
       if (channel == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.couldNotOpenTeamChat)),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.couldNotOpenTeamChat)));
         return;
       }
       context.push('/messages/${channel.channelId}');
@@ -498,9 +495,9 @@ class _QuickActionCard extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          height: 1.2,
-                        ),
+                      fontWeight: FontWeight.w600,
+                      height: 1.2,
+                    ),
                   ),
                 ),
               ],
@@ -573,14 +570,10 @@ class _NextUpCard extends ConsumerWidget {
         : rsvp.participants.where((p) => isRsvpAwaiting(p.rsvpStatus)).length;
 
     final avatarEntries = going.isNotEmpty
-        ? going
-            .map(
-              (p) => (id: p.memberId, name: p.displayName),
-            )
-            .toList()
+        ? going.map((p) => (id: p.memberId, name: p.displayName)).toList()
         : (roster?.entries ?? const <TeamRosterEntry>[])
-            .map((e) => (id: e.memberId, name: e.displayName))
-            .toList();
+              .map((e) => (id: e.memberId, name: e.displayName))
+              .toList();
 
     return AppCard(
       padding: const EdgeInsets.fromLTRB(14, 14, 14, 12),
@@ -612,15 +605,18 @@ class _NextUpCard extends ConsumerWidget {
                     const SizedBox(height: 6),
                     Row(
                       children: [
-                        Icon(Icons.calendar_today_outlined, size: 14, color: muted),
+                        Icon(
+                          Icons.calendar_today_outlined,
+                          size: 14,
+                          color: muted,
+                        ),
                         const SizedBox(width: 6),
                         Expanded(
                           child: Text(
                             when,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodySmall
-                                ?.copyWith(color: muted),
+                            style: Theme.of(
+                              context,
+                            ).textTheme.bodySmall?.copyWith(color: muted),
                           ),
                         ),
                       ],
@@ -634,10 +630,9 @@ class _NextUpCard extends ConsumerWidget {
                           Expanded(
                             child: Text(
                               location,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall
-                                  ?.copyWith(color: muted),
+                              style: Theme.of(
+                                context,
+                              ).textTheme.bodySmall?.copyWith(color: muted),
                             ),
                           ),
                         ],
@@ -710,7 +705,8 @@ class _GoingRow extends StatelessWidget {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: Theme.of(context).cardTheme.color ??
+                          color:
+                              Theme.of(context).cardTheme.color ??
                               Theme.of(context).colorScheme.surface,
                           width: 2,
                         ),
@@ -727,15 +723,15 @@ class _GoingRow extends StatelessWidget {
                     left: shown.length * 16.0,
                     child: CircleAvatar(
                       radius: 13,
-                      backgroundColor: Theme.of(context)
-                          .colorScheme
-                          .surfaceContainerHighest,
+                      backgroundColor: Theme.of(
+                        context,
+                      ).colorScheme.surfaceContainerHighest,
                       child: Text(
                         '+$extra',
                         style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 10,
-                            ),
+                          fontWeight: FontWeight.w700,
+                          fontSize: 10,
+                        ),
                       ),
                     ),
                   ),
@@ -750,9 +746,9 @@ class _GoingRow extends StatelessWidget {
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: AppColors.success,
-                    fontWeight: FontWeight.w600,
-                  ),
+                color: AppColors.success,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
         ],
@@ -844,9 +840,9 @@ class _MemberAvatarTile extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w600),
             ),
           ],
         ),
@@ -877,14 +873,20 @@ class _TeamDetailsList extends StatelessWidget {
       if (age.isNotEmpty)
         (icon: Icons.person_outline, label: l10n.ageGroup, value: age),
       if (season.isNotEmpty)
-        (icon: Icons.calendar_today_outlined, label: l10n.season, value: season),
+        (
+          icon: Icons.calendar_today_outlined,
+          label: l10n.season,
+          value: season,
+        ),
     ];
 
     if (rows.isEmpty) {
       return const SizedBox.shrink();
     }
 
-    final muted = Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.65);
+    final muted = Theme.of(
+      context,
+    ).colorScheme.onSurface.withValues(alpha: 0.65);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -900,9 +902,9 @@ class _TeamDetailsList extends StatelessWidget {
                   leading: Icon(rows[i].icon, color: muted),
                   title: Text(
                     rows[i].label,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: muted,
-                        ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyMedium?.copyWith(color: muted),
                   ),
                   trailing: ConstrainedBox(
                     constraints: const BoxConstraints(maxWidth: 180),
@@ -910,8 +912,8 @@ class _TeamDetailsList extends StatelessWidget {
                       rows[i].value,
                       textAlign: TextAlign.end,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ),
@@ -998,8 +1000,9 @@ class _MembersTab extends ConsumerWidget {
                                 color: AppColors.primaryBright,
                                 shape: BoxShape.circle,
                                 border: Border.all(
-                                  color:
-                                      Theme.of(context).scaffoldBackgroundColor,
+                                  color: Theme.of(
+                                    context,
+                                  ).scaffoldBackgroundColor,
                                   width: 1.5,
                                 ),
                               ),
@@ -1039,6 +1042,8 @@ class _ScheduleTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final scheduleAsync = ref.watch(teamScheduleProvider(teamId));
+    final team = ref.watch(clubTeamProvider(teamId));
+    final clubEvents = ref.watch(clubEventsProvider).valueOrNull ?? const [];
 
     return scheduleAsync.when(
       loading: () => const Center(child: CircularProgressIndicator()),
@@ -1062,7 +1067,13 @@ class _ScheduleTab extends ConsumerWidget {
         ),
       ),
       data: (events) {
-        if (events.isEmpty) {
+        final merged = mergeTeamSchedule(
+          teamEvents: events,
+          clubEvents: clubEvents,
+          teamId: teamId,
+          sectionId: team?.sectionId,
+        );
+        if (merged.isEmpty) {
           return Center(
             child: Padding(
               padding: const EdgeInsets.all(24),
@@ -1088,14 +1099,18 @@ class _ScheduleTab extends ConsumerWidget {
         return RefreshIndicator(
           onRefresh: () async {
             ref.invalidate(teamScheduleProvider(teamId));
-            await ref.read(teamScheduleProvider(teamId).future);
+            ref.invalidate(clubEventsProvider);
+            await Future.wait([
+              ref.read(teamScheduleProvider(teamId).future),
+              ref.read(clubEventsProvider.future),
+            ]);
           },
           child: ListView.builder(
             physics: const AlwaysScrollableScrollPhysics(),
             padding: const EdgeInsets.all(16),
-            itemCount: events.length,
+            itemCount: merged.length,
             itemBuilder: (context, index) {
-              final e = events[index];
+              final e = merged[index];
               return ClubEventListTile(
                 event: e,
                 onTap: () => context.push('/occurrences/${e.id}'),
@@ -1124,11 +1139,14 @@ ClubEvent? nextUpcomingEvent(List<ClubEvent>? events) {
   final now = DateTime.now();
   final upcoming = events.where((e) {
     final status = (e.status ?? '').toLowerCase();
-    if (status == 'canceled' || status == 'cancelled') return false;
+    if (status == 'canceled' ||
+        status == 'cancelled' ||
+        status == 'completed') {
+      return false;
+    }
     final end = e.endAt ?? e.startAt.add(const Duration(hours: 2));
     return end.isAfter(now);
-  }).toList()
-    ..sort((a, b) => a.startAt.compareTo(b.startAt));
+  }).toList()..sort((a, b) => a.startAt.compareTo(b.startAt));
   return upcoming.isEmpty ? null : upcoming.first;
 }
 
