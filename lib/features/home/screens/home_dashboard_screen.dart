@@ -38,20 +38,23 @@ class HomeDashboardScreen extends ConsumerWidget {
     final clubsAsync = ref.watch(myClubsProvider);
     final eventsAsync = ref.watch(clubEventsProvider);
     final unread = ref.watch(unreadNotificationCountProvider);
+    final clubId = ref.watch(selectedClubIdProvider);
+    final isStaff = isDemo || (user?.isStaff(clubId) ?? false);
 
     return Scaffold(
       appBar: shellAppBar(
         context,
         title: '${_greeting(l10n)}, $first! 👋',
         actions: [
-          IconButton(
-            onPressed: () => context.push('/attendance/history'),
-            icon: Icon(
-              Icons.how_to_reg_outlined,
-              color: Theme.of(context).colorScheme.onSurface,
+          if (isStaff)
+            IconButton(
+              onPressed: () => context.push('/attendance/history'),
+              icon: Icon(
+                Icons.how_to_reg_outlined,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
+              tooltip: l10n.attendance,
             ),
-            tooltip: l10n.attendance,
-          ),
           IconButton(
             onPressed: () => context.push('/notifications'),
             tooltip: l10n.notifications,
@@ -135,10 +138,10 @@ class HomeDashboardScreen extends ConsumerWidget {
             const SizedBox(height: 24),
             SectionHeader(
               title: l10n.upcoming,
-              actionLabel: isDemo ? null : l10n.history,
-              onAction: isDemo
-                  ? null
-                  : () => context.push('/attendance/history'),
+              actionLabel: isStaff && !isDemo ? l10n.history : null,
+              onAction: isStaff && !isDemo
+                  ? () => context.push('/attendance/history')
+                  : null,
             ),
             if (isDemo)
               AppCard(

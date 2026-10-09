@@ -55,33 +55,61 @@ List<AppDestination> primaryDestinations(AppLocalizations l10n) {
   ];
 }
 
-/// Secondary destinations shown under More (excluding inline settings actions).
-List<AppDestination> moreManagementDestinations(AppLocalizations l10n) {
+/// Routes under More → Management, filtered by club role.
+List<String> moreManagementRoutes({
+  required bool isStaff,
+  required bool isClubAdmin,
+  required bool showPayments,
+}) {
   return [
-    AppDestination(
+    if (isStaff) '/members',
+    '/attendance/history',
+    if (isClubAdmin) '/statistics',
+    if (showPayments) '/payments',
+    if (isClubAdmin) '/compliance',
+  ];
+}
+
+/// Secondary destinations shown under More (excluding inline settings actions).
+List<AppDestination> moreManagementDestinations(
+  AppLocalizations l10n, {
+  required bool isStaff,
+  required bool isClubAdmin,
+  required bool showPayments,
+}) {
+  final byRoute = <String, AppDestination>{
+    '/members': AppDestination(
       label: l10n.members,
       icon: Icons.sports_outlined,
       route: '/members',
     ),
-    AppDestination(
+    '/attendance/history': AppDestination(
       label: l10n.attendance,
       icon: Icons.how_to_reg_outlined,
       route: '/attendance/history',
     ),
-    AppDestination(
+    '/statistics': AppDestination(
       label: l10n.statistics,
       icon: Icons.bar_chart_rounded,
       route: '/statistics',
     ),
-    AppDestination(
+    '/payments': AppDestination(
       label: l10n.payments,
       icon: Icons.payments_outlined,
       route: '/payments',
     ),
-    AppDestination(
+    '/compliance': AppDestination(
       label: l10n.documents,
       icon: Icons.folder_copy_outlined,
       route: '/compliance',
     ),
+  };
+  return [
+    for (final route in moreManagementRoutes(
+      isStaff: isStaff,
+      isClubAdmin: isClubAdmin,
+      showPayments: showPayments,
+    ))
+      if (byRoute[route] != null) byRoute[route]!,
   ];
 }

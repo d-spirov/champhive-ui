@@ -9,6 +9,7 @@ import '../../../shared/models/chat.dart';
 import '../../../shared/utils/api_error_message.dart';
 import '../../../shared/widgets/ui_bits.dart';
 import '../../auth/providers/auth_provider.dart';
+import '../../clubs/providers/clubs_provider.dart';
 import '../../shell/main_shell.dart';
 import '../providers/chat_provider.dart';
 
@@ -26,18 +27,22 @@ class _MessagesScreenState extends ConsumerState<MessagesScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final auth = ref.watch(authNotifierProvider);
-    final isDemo = auth.user?.id == 'demo';
+    final user = auth.user;
+    final isDemo = user?.id == 'demo';
+    final clubId = ref.watch(selectedClubIdProvider);
+    final isStaff = isDemo || (user?.isStaff(clubId) ?? false);
 
     return Scaffold(
       appBar: shellAppBar(
         context,
         title: l10n.messages,
         actions: [
-          IconButton(
-            onPressed: () => context.push('/messages/new'),
-            icon: const Icon(Icons.edit_square),
-            tooltip: l10n.newMessage,
-          ),
+          if (isStaff)
+            IconButton(
+              onPressed: () => context.push('/messages/new'),
+              icon: const Icon(Icons.edit_square),
+              tooltip: l10n.newMessage,
+            ),
         ],
       ),
       body: Column(

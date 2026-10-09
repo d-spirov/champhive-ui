@@ -8,6 +8,7 @@ import 'features/attendance/screens/attendance_report_screen.dart';
 import 'features/attendance/screens/attendance_saved_screen.dart';
 import 'features/attendance/screens/mark_attendance_screen.dart';
 import 'features/auth/providers/auth_provider.dart';
+import 'features/clubs/providers/clubs_provider.dart';
 import 'features/auth/session_expired_handler.dart';
 import 'features/auth/screens/login_screen.dart';
 import 'features/auth/screens/register_screen.dart';
@@ -39,6 +40,7 @@ import 'features/teams/screens/teams_screen.dart';
 import 'l10n/app_localizations.dart';
 import 'shared/models/event_attendance.dart';
 import 'shared/providers/locale_provider.dart';
+import 'shared/utils/staff_write_routes.dart';
 import 'shared/providers/theme_mode_provider.dart';
 import 'shared/theme/app_theme.dart';
 
@@ -336,6 +338,19 @@ class _AppState extends ConsumerState<App> {
     if (auth.isAuthenticated &&
         (loc == '/' || loc == '/login' || loc == '/register')) {
       return '/home';
+    }
+
+    if (auth.isAuthenticated) {
+      final user = auth.user;
+      final isDemo = user?.id == 'demo';
+      final clubId = ref.read(selectedClubIdProvider);
+      final blocked = staffWriteRedirect(
+        loc,
+        isStaff: isDemo || (user?.isStaff(clubId) ?? false),
+        isClubAdmin: isDemo || (user?.hasClubWideStaffGrant(clubId) ?? false),
+        canWriteMembers: isDemo || (user?.canWriteMembers(clubId) ?? false),
+      );
+      if (blocked != null) return blocked;
     }
 
     return null;

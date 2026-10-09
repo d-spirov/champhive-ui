@@ -8,6 +8,8 @@ import '../../../shared/providers/theme_mode_provider.dart';
 import '../../../shared/theme/app_theme.dart';
 import '../../../shared/widgets/ui_bits.dart';
 import '../../auth/logout.dart';
+import '../../auth/providers/auth_provider.dart';
+import '../../clubs/providers/clubs_provider.dart';
 import '../../shell/app_destinations.dart';
 import '../../shell/main_shell.dart';
 
@@ -19,26 +21,40 @@ class MoreScreen extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
     final themeMode = ref.watch(themeModeProvider) ?? ThemeMode.system;
     final locale = ref.watch(localeProvider);
+    final user = ref.watch(authNotifierProvider).user;
+    final clubId = ref.watch(selectedClubIdProvider);
+    final isDemo = user?.id == 'demo';
+    final isStaff = isDemo || (user?.isStaff(clubId) ?? false);
+    final isClubAdmin = isDemo || (user?.hasClubWideStaffGrant(clubId) ?? false);
+    final showPayments =
+        isDemo || isClubAdmin || (user?.isParent(clubId) ?? false);
 
-    final management = moreManagementDestinations(l10n);
+    final management = moreManagementDestinations(
+      l10n,
+      isStaff: isStaff,
+      isClubAdmin: isClubAdmin,
+      showPayments: showPayments,
+    );
 
     return Scaffold(
       appBar: shellAppBar(context, title: l10n.more),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
         children: [
-          _sectionHeader(context, l10n.moreManagement),
-          AppCard(
-            child: Column(
-              children: [
-                for (var i = 0; i < management.length; i++) ...[
-                  if (i > 0) const Divider(height: 1, indent: 56),
-                  _routeTile(context, management[i]),
+          if (management.isNotEmpty) ...[
+            _sectionHeader(context, l10n.moreManagement),
+            AppCard(
+              child: Column(
+                children: [
+                  for (var i = 0; i < management.length; i++) ...[
+                    if (i > 0) const Divider(height: 1, indent: 56),
+                    _routeTile(context, management[i]),
+                  ],
                 ],
-              ],
+              ),
             ),
-          ),
-          const SizedBox(height: 8),
+            const SizedBox(height: 8),
+          ],
           _sectionHeader(context, l10n.moreAccount),
           AppCard(
             child: Column(

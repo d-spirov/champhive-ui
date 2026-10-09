@@ -4,6 +4,7 @@ import 'package:team_hive/features/teams/providers/teams_provider.dart';
 import 'package:team_hive/shared/models/user.dart';
 import 'package:team_hive/shared/models/club.dart';
 import 'package:team_hive/shared/models/event_attendance.dart';
+import 'package:team_hive/shared/models/family.dart';
 import 'package:team_hive/shared/models/compliance.dart';
 import 'package:team_hive/shared/models/training_plan.dart';
 import 'package:team_hive/shared/models/team.dart';
@@ -80,6 +81,107 @@ void main() {
     );
     expect(coach.canWriteMembers('c1'), isTrue);
     expect(coach.canSetMemberSectionPolicy('c1', 's1'), isFalse);
+  });
+
+  test('role visibility: admin, coach, parent, combined, sectionAdmin', () {
+    const admin = User(
+      id: 'a1',
+      email: 'admin@b.com',
+      firstName: 'Ada',
+      lastName: 'Admin',
+      roles: [
+        RoleGrant(
+          role: 'clubAdmin',
+          clubId: 'c1',
+          scope: 'club',
+          scopeId: 'c1',
+        ),
+      ],
+      clubPermissions: [
+        ClubPermissions(clubId: 'c1', permissions: ['MEMBER_WRITE']),
+      ],
+    );
+    expect(admin.isStaff('c1'), isTrue);
+    expect(admin.hasClubWideStaffGrant('c1'), isTrue);
+    expect(admin.isParent('c1'), isFalse);
+    expect(admin.canWriteMembers('c1'), isTrue);
+    expect(admin.isStaff(null), isFalse);
+
+    const coach = User(
+      id: 'cch',
+      email: 'coach@b.com',
+      firstName: 'Ana',
+      lastName: 'Coach',
+      roles: [
+        RoleGrant(role: 'coach', clubId: 'c1', scope: 'team', scopeId: 't1'),
+      ],
+    );
+    expect(coach.isStaff('c1'), isTrue);
+    expect(coach.hasClubWideStaffGrant('c1'), isFalse);
+    expect(coach.canWriteMembers('c1'), isFalse);
+
+    const coachWithWrite = User(
+      id: 'cch2',
+      email: 'coach2@b.com',
+      firstName: 'Ana',
+      lastName: 'Coach',
+      roles: [
+        RoleGrant(role: 'coach', clubId: 'c1', scope: 'team', scopeId: 't1'),
+      ],
+      clubPermissions: [
+        ClubPermissions(clubId: 'c1', permissions: ['MEMBER_WRITE']),
+      ],
+    );
+    expect(coachWithWrite.canWriteMembers('c1'), isTrue);
+
+    const parent = User(
+      id: 'p1',
+      email: 'parent@b.com',
+      firstName: 'Pat',
+      lastName: 'Parent',
+      roles: [
+        RoleGrant(role: 'parent', clubId: 'c1', scope: 'club', scopeId: 'c1'),
+      ],
+    );
+    expect(parent.isStaff('c1'), isFalse);
+    expect(parent.hasClubWideStaffGrant('c1'), isFalse);
+    expect(parent.isParent('c1'), isTrue);
+    expect(parent.canWriteMembers('c1'), isFalse);
+
+    const both = User(
+      id: 'both',
+      email: 'both@b.com',
+      firstName: 'Bo',
+      lastName: 'Both',
+      roles: [
+        RoleGrant(role: 'coach', clubId: 'c1', scope: 'team', scopeId: 't1'),
+        RoleGrant(role: 'parent', clubId: 'c1', scope: 'club', scopeId: 'c1'),
+      ],
+      clubPermissions: [
+        ClubPermissions(clubId: 'c1', permissions: ['MEMBER_WRITE']),
+      ],
+    );
+    expect(both.isStaff('c1'), isTrue);
+    expect(both.isParent('c1'), isTrue);
+    expect(both.hasClubWideStaffGrant('c1'), isFalse);
+    expect(both.canWriteMembers('c1'), isTrue);
+
+    const sectionAdmin = User(
+      id: 's1',
+      email: 'sec@b.com',
+      firstName: 'Sam',
+      lastName: 'Section',
+      roles: [
+        RoleGrant(
+          role: 'sectionAdmin',
+          clubId: 'c1',
+          scope: 'section',
+          scopeId: 'sec1',
+        ),
+      ],
+    );
+    expect(sectionAdmin.isStaff('c1'), isTrue);
+    expect(sectionAdmin.hasClubWideStaffGrant('c1'), isFalse);
   });
 
   test('teamsVisibleToUser keeps only the coach assigned teams', () {
@@ -174,6 +276,117 @@ void main() {
       ],
     );
     expect(teamsVisibleToUser(teams, user: admin, clubId: 'c1'), teams);
+
+    const parent = User(
+      id: 'p1',
+      email: 'parent@b.com',
+      firstName: 'Pat',
+      lastName: 'Parent',
+      roles: [
+        RoleGrant(role: 'parent', clubId: 'c1', scope: 'club', scopeId: 'c1'),
+      ],
+    );
+    expect(
+      teamsVisibleToUser(teams, user: parent, clubId: 'c1').map((t) => t.id),
+      isEmpty,
+    );
+    expect(
+      teamsVisibleToUser(
+        teams,
+        user: parent,
+        clubId: 'c1',
+        familyTeams: const [
+          ClubTeam(id: 't2', clubId: 'c1', name: 'U14', sectionId: 's1'),
+        ],
+      ).map((t) => t.id),
+      ['t2'],
+    );
+    expect(
+      teamsVisibleToUser(
+        const [],
+        user: parent,
+        clubId: 'c1',
+        familyTeams: const [
+          ClubTeam(id: 't2', clubId: 'c1', name: 'U14', sectionId: 's1'),
+        ],
+      ).map((t) => t.id),
+      ['t2'],
+    );
+
+    const both = User(
+      id: 'both',
+      email: 'both@b.com',
+      firstName: 'Bo',
+      lastName: 'Both',
+      roles: [
+        RoleGrant(role: 'coach', clubId: 'c1', scope: 'team', scopeId: 't3'),
+        RoleGrant(role: 'parent', clubId: 'c1', scope: 'club', scopeId: 'c1'),
+      ],
+    );
+    expect(
+      teamsVisibleToUser(
+        teams,
+        user: both,
+        clubId: 'c1',
+        familyTeams: const [
+          ClubTeam(id: 't1', clubId: 'c1', name: 'U12', sectionId: 's1'),
+        ],
+      ).map((t) => t.id),
+      ['t1', 't3'],
+    );
+  });
+
+  test('clubTeamsFromChildren keeps one row per child team in the club', () {
+    final children = [
+      FamilyChild(
+        memberId: 'm1',
+        firstName: 'A',
+        lastName: 'B',
+        dateOfBirth: DateTime(2012, 1, 1),
+        status: 'Active',
+        clubId: 'c1',
+        clubName: 'Club',
+        hasActiveEnrollment: true,
+        consentGranted: true,
+        isSelf: false,
+        teamId: 't1',
+        teamName: 'M16',
+        sectionId: 's1',
+      ),
+      FamilyChild(
+        memberId: 'm2',
+        firstName: 'C',
+        lastName: 'D',
+        dateOfBirth: DateTime(2014, 1, 1),
+        status: 'Active',
+        clubId: 'c1',
+        clubName: 'Club',
+        hasActiveEnrollment: true,
+        consentGranted: true,
+        isSelf: false,
+        teamId: 't1',
+        teamName: 'M16',
+        sectionId: 's1',
+      ),
+      FamilyChild(
+        memberId: 'm3',
+        firstName: 'E',
+        lastName: 'F',
+        dateOfBirth: DateTime(2010, 1, 1),
+        status: 'Active',
+        clubId: 'other',
+        clubName: 'Other',
+        hasActiveEnrollment: true,
+        consentGranted: true,
+        isSelf: false,
+        teamId: 'tx',
+        teamName: 'Skip',
+      ),
+    ];
+    final teams = clubTeamsFromChildren(children, 'c1');
+    expect(teams, hasLength(1));
+    expect(teams.single.id, 't1');
+    expect(teams.single.name, 'M16');
   });
 
   test('Club.fromJson maps ClubResponse fields', () {

@@ -11,6 +11,7 @@ import '../../../shared/widgets/team_hive_logo.dart';
 import '../../../shared/widgets/ui_bits.dart';
 import '../../attendance/widgets/attendance_ui.dart';
 import '../../auth/providers/auth_provider.dart';
+import '../../clubs/providers/clubs_provider.dart';
 import '../../clubs/providers/sport_theme_provider.dart';
 import '../../events/providers/events_provider.dart';
 import '../../messages/providers/chat_provider.dart';
@@ -345,6 +346,10 @@ class _QuickActionsRow extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
     final channels = ref.watch(chatChannelsProvider).valueOrNull ?? const [];
     final unread = teamChannelFor(channels, teamId)?.unreadCount ?? 0;
+    final user = ref.watch(authNotifierProvider).user;
+    final clubId = ref.watch(selectedClubIdProvider);
+    final isDemo = user?.id == 'demo';
+    final isStaff = isDemo || (user?.isStaff(clubId) ?? false);
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -352,24 +357,26 @@ class _QuickActionsRow extends ConsumerWidget {
         Expanded(
           child: _TeamChatAction(teamId: teamId, unread: unread),
         ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: _QuickActionCard(
-            icon: Icons.check_circle_rounded,
-            iconColor: AppColors.success,
-            label: l10n.takeAttendance,
-            onTap: () => _openAttendance(context, l10n),
+        if (isStaff) ...[
+          const SizedBox(width: 10),
+          Expanded(
+            child: _QuickActionCard(
+              icon: Icons.check_circle_rounded,
+              iconColor: AppColors.success,
+              label: l10n.takeAttendance,
+              onTap: () => _openAttendance(context, l10n),
+            ),
           ),
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: _QuickActionCard(
-            icon: Icons.calendar_month_outlined,
-            iconColor: AppColors.warning,
-            label: l10n.addEvent,
-            onTap: () => context.push('/schedule/create', extra: teamId),
+          const SizedBox(width: 10),
+          Expanded(
+            child: _QuickActionCard(
+              icon: Icons.calendar_month_outlined,
+              iconColor: AppColors.warning,
+              label: l10n.addEvent,
+              onTap: () => context.push('/schedule/create', extra: teamId),
+            ),
           ),
-        ),
+        ],
       ],
     );
   }
@@ -959,19 +966,26 @@ class _MembersTab extends ConsumerWidget {
       ),
       data: (roster) {
         final entries = sortedRoster(roster.entries);
+        final user = ref.watch(authNotifierProvider).user;
+        final clubId = ref.watch(selectedClubIdProvider);
+        final isDemo = user?.id == 'demo';
+        final canAdd =
+            !isDemo && (user?.canWriteMembers(clubId) ?? false);
         return Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-              child: SizedBox(
-                width: double.infinity,
-                child: FilledButton.icon(
-                  onPressed: () => context.push('/teams/$teamId/members/add'),
-                  icon: const Icon(Icons.person_add_alt_1_rounded),
-                  label: Text(l10n.addMember),
+            if (canAdd)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: FilledButton.icon(
+                    onPressed: () =>
+                        context.push('/teams/$teamId/members/add'),
+                    icon: const Icon(Icons.person_add_alt_1_rounded),
+                    label: Text(l10n.addMember),
+                  ),
                 ),
               ),
-            ),
             Expanded(
               child: entries.isEmpty
                   ? Center(child: Text(l10n.noMembersOnTeamRoster))
@@ -1058,6 +1072,10 @@ class _ScheduleTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
+    final user = ref.watch(authNotifierProvider).user;
+    final clubId = ref.watch(selectedClubIdProvider);
+    final isDemo = user?.id == 'demo';
+    final isStaff = isDemo || (user?.isStaff(clubId) ?? false);
     final scheduleAsync = ref.watch(teamScheduleProvider(teamId));
     final team = ref.watch(clubTeamProvider(teamId));
     final clubEvents = ref.watch(clubEventsProvider).valueOrNull ?? const [];
@@ -1101,13 +1119,15 @@ class _ScheduleTab extends ConsumerWidget {
                     l10n.noUpcomingSessionsForTeam,
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 16),
-                  FilledButton.icon(
-                    onPressed: () =>
-                        context.push('/schedule/create', extra: teamId),
-                    icon: const Icon(Icons.add_rounded),
-                    label: Text(l10n.addEvent),
-                  ),
+                  if (isStaff) ...[
+                    const SizedBox(height: 16),
+                    FilledButton.icon(
+                      onPressed: () =>
+                          context.push('/schedule/create', extra: teamId),
+                      icon: const Icon(Icons.add_rounded),
+                      label: Text(l10n.addEvent),
+                    ),
+                  ],
                 ],
               ),
             ),

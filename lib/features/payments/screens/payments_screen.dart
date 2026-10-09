@@ -39,7 +39,31 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen>
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final isDemo = ref.watch(authNotifierProvider).user?.id == 'demo';
+    final user = ref.watch(authNotifierProvider).user;
+    final isDemo = user?.id == 'demo';
+    final clubId = ref.watch(selectedClubIdProvider);
+    final isClubAdmin = isDemo || (user?.hasClubWideStaffGrant(clubId) ?? false);
+
+    if (!isClubAdmin) {
+      return Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_rounded),
+            onPressed: () {
+              if (context.canPop()) {
+                context.pop();
+              } else {
+                context.go('/more');
+              }
+            },
+          ),
+          title: Text(l10n.payments),
+        ),
+        body: isDemo
+            ? Center(child: Text(l10n.signInToManagePayments))
+            : const _MyFeesTab(),
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(

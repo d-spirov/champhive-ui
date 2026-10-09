@@ -10,6 +10,7 @@ import '../../../shared/theme/app_theme.dart';
 import '../../../shared/utils/api_error_message.dart';
 import '../../../shared/widgets/ui_bits.dart';
 import '../../attendance/widgets/attendance_ui.dart';
+import '../../auth/providers/auth_provider.dart';
 import '../../clubs/providers/clubs_provider.dart';
 import '../providers/events_provider.dart';
 import '../providers/performance_provider.dart';
@@ -666,6 +667,10 @@ class _TestSetTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
+    final user = ref.watch(authNotifierProvider).user;
+    final clubId = ref.watch(selectedClubIdProvider);
+    final isDemo = user?.id == 'demo';
+    final isStaff = isDemo || (user?.isStaff(clubId) ?? false);
     final async = ref.watch(testingDayProvider(occurrence.id));
     return async.when(
       loading: () => const Center(child: CircularProgressIndicator()),
@@ -693,10 +698,11 @@ class _TestSetTab extends ConsumerWidget {
               style: Theme.of(context).textTheme.bodySmall,
             ),
             const SizedBox(height: 8),
-            Text(
-              l10n.tapStationToRecord,
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
+            if (isStaff)
+              Text(
+                l10n.tapStationToRecord,
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
             const SizedBox(height: 12),
             for (var i = 0; i < day.stations.length; i++) ...[
               if (i > 0) const Divider(height: 1),
@@ -722,10 +728,10 @@ class _TestSetTab extends ConsumerWidget {
                     if (day.stations[i].isRetired) l10n.retiredStation,
                   ].join(' · '),
                 ),
-                trailing: day.stations[i].canRecord
+                trailing: isStaff && day.stations[i].canRecord
                     ? const Icon(Icons.chevron_right_rounded)
                     : null,
-                onTap: day.stations[i].canRecord
+                onTap: isStaff && day.stations[i].canRecord
                     ? () => context.push(
                         '/occurrences/${occurrence.id}/testing/${Uri.encodeComponent(day.stations[i].code)}',
                       )
@@ -774,8 +780,10 @@ class _TestSetTab extends ConsumerWidget {
                 ),
               ],
             ],
-            const SizedBox(height: 20),
-            _ReleaseResultsButton(occurrence: occurrence),
+            if (isStaff) ...[
+              const SizedBox(height: 20),
+              _ReleaseResultsButton(occurrence: occurrence),
+            ],
           ],
         );
       },

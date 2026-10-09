@@ -90,11 +90,32 @@ class User {
   }
 
   /// Club admins may see every team. A club-scoped coach does not.
-  bool hasClubWideStaffGrant(String clubId) {
+  bool hasClubWideStaffGrant(String? clubId) {
+    if (clubId == null || clubId.isEmpty) return false;
     if (isPlatformRoot) return true;
     for (final r in roles) {
       if (r.clubId != clubId) continue;
       if (r.role.toLowerCase() == 'clubadmin') return true;
+    }
+    return false;
+  }
+
+  /// Club admin, section admin, or coach in [clubId] (union with other roles).
+  bool isStaff(String? clubId) {
+    if (clubId == null || clubId.isEmpty) return false;
+    if (isPlatformRoot) return true;
+    for (final r in roles) {
+      if (r.clubId != clubId) continue;
+      if (_isStaffRole(r.role)) return true;
+    }
+    return false;
+  }
+
+  bool isParent(String? clubId) {
+    if (clubId == null || clubId.isEmpty) return false;
+    for (final r in roles) {
+      if (r.clubId != clubId) continue;
+      if (r.role.toLowerCase() == 'parent') return true;
     }
     return false;
   }

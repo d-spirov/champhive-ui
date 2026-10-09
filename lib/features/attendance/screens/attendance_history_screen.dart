@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../l10n/app_localizations.dart';
+import '../../auth/providers/auth_provider.dart';
+import '../../clubs/providers/clubs_provider.dart';
 import '../../clubs/providers/sport_theme_provider.dart';
 import '../../events/providers/events_provider.dart';
 import '../../../shared/models/event_attendance.dart';
@@ -39,6 +41,10 @@ class _AttendanceHistoryScreenState
     final l10n = AppLocalizations.of(context)!;
     final pastAsync = ref.watch(pastClubEventsProvider);
     final openAsync = ref.watch(openAttendanceOccurrencesProvider);
+    final user = ref.watch(authNotifierProvider).user;
+    final clubId = ref.watch(selectedClubIdProvider);
+    final isDemo = user?.id == 'demo';
+    final isStaff = isDemo || (user?.isStaff(clubId) ?? false);
 
     return Scaffold(
       appBar: AppBar(
@@ -114,8 +120,11 @@ class _AttendanceHistoryScreenState
                           '${event.scopeName != null ? ' · ${event.scopeName}' : ''}',
                         ),
                         trailing: const Icon(Icons.chevron_right_rounded),
-                        onTap: () =>
-                            context.push('/occurrences/${event.id}/attendance'),
+                        onTap: () => context.push(
+                          isStaff
+                              ? '/occurrences/${event.id}/attendance'
+                              : '/occurrences/${event.id}',
+                        ),
                       ),
                     );
                   },
@@ -176,7 +185,9 @@ class _AttendanceHistoryScreenState
                                   Icons.chevron_right_rounded,
                                 ),
                                 onTap: () => context.push(
-                                  '/occurrences/${entry.value[i].id}/attendance/report',
+                                  isStaff
+                                      ? '/occurrences/${entry.value[i].id}/attendance/report'
+                                      : '/occurrences/${entry.value[i].id}',
                                 ),
                               ),
                             ],

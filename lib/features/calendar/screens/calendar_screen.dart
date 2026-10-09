@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../l10n/app_localizations.dart';
 import '../../auth/providers/auth_provider.dart';
+import '../../clubs/providers/clubs_provider.dart';
 import '../../events/providers/events_provider.dart';
 import '../../attendance/widgets/attendance_ui.dart';
 import '../../../shared/demo/demo_data.dart';
@@ -31,7 +32,10 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final isDemo = ref.watch(authNotifierProvider).user?.id == 'demo';
+    final user = ref.watch(authNotifierProvider).user;
+    final isDemo = user?.id == 'demo';
+    final clubId = ref.watch(selectedClubIdProvider);
+    final isStaff = isDemo || (user?.isStaff(clubId) ?? false);
     final eventsAsync = ref.watch(clubEventsProvider);
 
     final days = List.generate(14, (i) {
@@ -46,32 +50,34 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
         title: Text(appDateFormat(context, 'MMMM yyyy').format(_selected)),
         automaticallyImplyLeading: false,
         actions: [
-          IconButton(
-            onPressed: () => context.push('/attendance/history'),
-            icon: const Icon(Icons.how_to_reg_outlined),
-            tooltip: l10n.attendance,
-          ),
+          if (isStaff)
+            IconButton(
+              onPressed: () => context.push('/attendance/history'),
+              icon: const Icon(Icons.how_to_reg_outlined),
+              tooltip: l10n.attendance,
+            ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          final isDemo = ref.read(authNotifierProvider).user?.id == 'demo';
-          if (isDemo) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(l10n.signInToCreateSchedule)),
-            );
-            return;
-          }
-          if (isPastCalendarDay(_selected)) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(l10n.cannotCreateEventInPast)),
-            );
-            return;
-          }
-          context.push('/schedule/create', extra: _selected);
-        },
-        child: const Icon(Icons.add_rounded),
-      ),
+      floatingActionButton: isStaff
+          ? FloatingActionButton(
+              onPressed: () {
+                if (isDemo) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(l10n.signInToCreateSchedule)),
+                  );
+                  return;
+                }
+                if (isPastCalendarDay(_selected)) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(l10n.cannotCreateEventInPast)),
+                  );
+                  return;
+                }
+                context.push('/schedule/create', extra: _selected);
+              },
+              child: const Icon(Icons.add_rounded),
+            )
+          : null,
       body: Column(
         children: [
           SizedBox(

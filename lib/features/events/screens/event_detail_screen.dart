@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../../l10n/app_localizations.dart';
 import '../../attendance/widgets/attendance_ui.dart';
+import '../../auth/providers/auth_provider.dart';
+import '../../clubs/providers/clubs_provider.dart';
 import '../../clubs/providers/sport_theme_provider.dart';
 import '../../events/providers/events_provider.dart';
 import '../../../core/theme/sport_theme_config.dart';
@@ -69,7 +71,7 @@ class EventDetailScreen extends ConsumerWidget {
   }
 }
 
-class _OccurrenceBody extends StatelessWidget {
+class _OccurrenceBody extends ConsumerWidget {
   const _OccurrenceBody({
     required this.occurrence,
     required this.roster,
@@ -83,8 +85,12 @@ class _OccurrenceBody extends StatelessWidget {
   final VoidCallback onRetryRoster;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
+    final user = ref.watch(authNotifierProvider).user;
+    final clubId = ref.watch(selectedClubIdProvider);
+    final isDemo = user?.id == 'demo';
+    final isStaff = isDemo || (user?.isStaff(clubId) ?? false);
     final color = clubEventTypeColor(occurrence.type);
     final scope =
         occurrence.scopeName ??
@@ -257,7 +263,7 @@ class _OccurrenceBody extends StatelessWidget {
                   ),
                 ],
                 const SizedBox(height: 28),
-                if (occurrence.type == EventType.testing) ...[
+                if (isStaff && occurrence.type == EventType.testing) ...[
                   _ActionTile(
                     icon: Icons.speed_rounded,
                     title: l10n.recordResults,
@@ -278,39 +284,41 @@ class _OccurrenceBody extends StatelessWidget {
                   onTap: () =>
                       context.push('/occurrences/${occurrence.id}/details'),
                 ),
-                const SizedBox(height: 12),
-                if (!canceled && open)
-                  _ActionTile(
-                    icon: Icons.how_to_reg_rounded,
-                    title: l10n.takeAttendance,
-                    subtitle: snapshot == null
-                        ? l10n.loadRosterAndMark
-                        : l10n.rosterCount(snapshot.participants.length),
-                    color: AppColors.training,
-                    onTap: () => context.push(
-                      '/occurrences/${occurrence.id}/attendance',
+                if (isStaff) ...[
+                  const SizedBox(height: 12),
+                  if (!canceled && open)
+                    _ActionTile(
+                      icon: Icons.how_to_reg_rounded,
+                      title: l10n.takeAttendance,
+                      subtitle: snapshot == null
+                          ? l10n.loadRosterAndMark
+                          : l10n.rosterCount(snapshot.participants.length),
+                      color: AppColors.training,
+                      onTap: () => context.push(
+                        '/occurrences/${occurrence.id}/attendance',
+                      ),
+                    )
+                  else if (!canceled)
+                    _ActionTile(
+                      icon: Icons.lock_rounded,
+                      title: l10n.attendanceLocked,
+                      subtitle: l10n.viewLockedReport,
+                      color: AppColors.meeting,
+                      onTap: () => context.push(
+                        '/occurrences/${occurrence.id}/attendance/report',
+                      ),
                     ),
-                  )
-                else if (!canceled)
+                  const SizedBox(height: 12),
                   _ActionTile(
-                    icon: Icons.lock_rounded,
-                    title: l10n.attendanceLocked,
-                    subtitle: l10n.viewLockedReport,
-                    color: AppColors.meeting,
+                    icon: Icons.assignment_outlined,
+                    title: l10n.attendanceReport,
+                    subtitle: l10n.rosterWithStatuses,
+                    color: AppColors.match,
                     onTap: () => context.push(
                       '/occurrences/${occurrence.id}/attendance/report',
                     ),
                   ),
-                const SizedBox(height: 12),
-                _ActionTile(
-                  icon: Icons.assignment_outlined,
-                  title: l10n.attendanceReport,
-                  subtitle: l10n.rosterWithStatuses,
-                  color: AppColors.match,
-                  onTap: () => context.push(
-                    '/occurrences/${occurrence.id}/attendance/report',
-                  ),
-                ),
+                ],
                 const SizedBox(height: 12),
                 _ActionTile(
                   icon: Icons.history_rounded,
@@ -319,7 +327,7 @@ class _OccurrenceBody extends StatelessWidget {
                   color: AppColors.meeting,
                   onTap: () => context.push('/attendance/history'),
                 ),
-                if (snapshot == null) ...[
+                if (isStaff && snapshot == null) ...[
                   const SizedBox(height: 16),
                   TextButton(
                     onPressed: onRetryRoster,
