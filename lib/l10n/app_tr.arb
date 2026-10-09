@@ -832,5 +832,15 @@
     "placeholders": {
       "count": { "type": "int" }
     }
-  }
+  },
+  "clubPermissions": "Personel izinleri",
+  "coachCreatesMembers": "Antrenörler üye ekleyebilir",
+  "coachCreatesMembersHint": "Antrenörlerin yeni oyuncuları kaydetmesine ve kendi takımlarına eklemesine izin verir.",
+  "coachSeesPaymentStatus": "Antrenörler ödeme durumunu görebilir",
+  "coachSeesPaymentStatusHint": "Antrenörlerin aidatın ödenip ödenmediğini görmesine izin verir.",
+  "trainingPlanCoachScope": "Antrenörler antrenman planlarını yönetebilir",
+  "trainingPlanCoachScopeHint": "Antrenörlerin kendi takımları için antrenman planı oluşturmasına ve düzenlemesine izin verir.",
+  "coachCannotAddMembers": "Bu kulüp antrenörlerin üye eklemesine izin vermiyor. Bir yönetici bunu Kulüp → Personel izinleri altında açabilir.",
+  "couldNotLoadClubPermissions": "Personel izinleri yüklenemedi",
+  "couldNotSaveClubPermissions": "Personel izinleri kaydedilemedi"
 }

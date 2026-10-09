@@ -832,5 +832,15 @@
     "placeholders": {
       "count": { "type": "int" }
     }
-  }
+  },
+  "clubPermissions": "Dozvole osoblja",
+  "coachCreatesMembers": "Treneri mogu da dodaju članove",
+  "coachCreatesMembersHint": "Omogućava trenerima da registruju nove igrače i stave ih u svoje timove.",
+  "coachSeesPaymentStatus": "Treneri mogu da vide status plaćanja",
+  "coachSeesPaymentStatusHint": "Omogućava trenerima da vide da li je članarina plaćena.",
+  "trainingPlanCoachScope": "Treneri mogu da upravljaju planovima treninga",
+  "trainingPlanCoachScopeHint": "Omogućava trenerima da kreiraju i menjaju planove treninga za svoje timove.",
+  "coachCannotAddMembers": "Klub ne dozvoljava trenerima da dodaju članove. Administrator to može uključiti u Klub → Dozvole osoblja.",
+  "couldNotLoadClubPermissions": "Dozvole osoblja nisu mogle da se učitaju",
+  "couldNotSaveClubPermissions": "Dozvole osoblja nisu mogle da se sačuvaju"
 }

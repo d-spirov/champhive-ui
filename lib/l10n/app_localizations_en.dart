@@ -1810,4 +1810,38 @@ class AppLocalizationsEn extends AppLocalizations {
   String resultsReleasedCount(int count) {
     return 'Published $count sittings to player profiles';
   }
+
+  @override
+  String get clubPermissions => 'Staff permissions';
+
+  @override
+  String get coachCreatesMembers => 'Coaches can add members';
+
+  @override
+  String get coachCreatesMembersHint =>
+      'Lets coaches register new players and put them on their teams.';
+
+  @override
+  String get coachSeesPaymentStatus => 'Coaches can see payment status';
+
+  @override
+  String get coachSeesPaymentStatusHint =>
+      'Lets coaches see whether a member\'s fees are paid.';
+
+  @override
+  String get trainingPlanCoachScope => 'Coaches can manage training plans';
+
+  @override
+  String get trainingPlanCoachScopeHint =>
+      'Lets coaches create and edit training plans for their teams.';
+
+  @override
+  String get coachCannotAddMembers =>
+      'This club does not allow coaches to add members. A club admin can enable this under Club → Staff permissions.';
+
+  @override
+  String get couldNotLoadClubPermissions => 'Could not load staff permissions';
+
+  @override
+  String get couldNotSaveClubPermissions => 'Could not save staff permissions';
 }

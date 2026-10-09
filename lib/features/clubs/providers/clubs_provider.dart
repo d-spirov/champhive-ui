@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../shared/models/club.dart';
+import '../../../shared/models/permission_toggle.dart';
 import '../../auth/providers/auth_provider.dart';
 
 const _selectedClubKey = selectedClubPrefsKey;
@@ -75,4 +76,11 @@ final clubDetailProvider =
   await ref.watch(authApiProvider.future);
   final api = ref.watch(clubsApiProvider);
   return api.getClub(clubId);
+});
+
+final clubPermissionTogglesProvider = FutureProvider.autoDispose
+    .family<List<PermissionToggle>, String>((ref, clubId) async {
+  await ref.watch(authApiProvider.future);
+  final api = ref.watch(clubsApiProvider);
+  return api.listPermissionToggles(clubId);
 });

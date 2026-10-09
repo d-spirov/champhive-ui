@@ -864,5 +864,15 @@
     "placeholders": {
       "count": { "type": "int" }
     }
-  }
+  },
+  "clubPermissions": "Staff permissions",
+  "coachCreatesMembers": "Coaches can add members",
+  "coachCreatesMembersHint": "Lets coaches register new players and put them on their teams.",
+  "coachSeesPaymentStatus": "Coaches can see payment status",
+  "coachSeesPaymentStatusHint": "Lets coaches see whether a member's fees are paid.",
+  "trainingPlanCoachScope": "Coaches can manage training plans",
+  "trainingPlanCoachScopeHint": "Lets coaches create and edit training plans for their teams.",
+  "coachCannotAddMembers": "This club does not allow coaches to add members. A club admin can enable this under Club → Staff permissions.",
+  "couldNotLoadClubPermissions": "Could not load staff permissions",
+  "couldNotSaveClubPermissions": "Could not save staff permissions"
 }

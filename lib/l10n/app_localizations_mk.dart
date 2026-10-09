@@ -1830,4 +1830,42 @@ class AppLocalizationsMk extends AppLocalizations {
   String resultsReleasedCount(int count) {
     return 'Објавени $count мерења на профили';
   }
+
+  @override
+  String get clubPermissions => 'Дозволи на персоналот';
+
+  @override
+  String get coachCreatesMembers => 'Тренерите можат да додаваат членови';
+
+  @override
+  String get coachCreatesMembersHint =>
+      'Им дозволува на тренерите да регистрираат нови играчи и да ги стават во своите тимови.';
+
+  @override
+  String get coachSeesPaymentStatus =>
+      'Тренерите можат да го видат статусот на плаќање';
+
+  @override
+  String get coachSeesPaymentStatusHint =>
+      'Им дозволува на тренерите да видат дали членарината е платена.';
+
+  @override
+  String get trainingPlanCoachScope =>
+      'Тренерите можат да управуваат со планови за тренинг';
+
+  @override
+  String get trainingPlanCoachScopeHint =>
+      'Им дозволува на тренерите да создаваат и уредуваат планови за тренинг за своите тимови.';
+
+  @override
+  String get coachCannotAddMembers =>
+      'Клубот не дозволува тренерите да додаваат членови. Администратор може да го вклучи ова во Клуб → Дозволи на персоналот.';
+
+  @override
+  String get couldNotLoadClubPermissions =>
+      'Дозволите на персоналот не можеа да се вчитаат';
+
+  @override
+  String get couldNotSaveClubPermissions =>
+      'Дозволите на персоналот не можеа да се зачуваат';
 }

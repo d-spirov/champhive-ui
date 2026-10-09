@@ -1835,4 +1835,42 @@ class AppLocalizationsIt extends AppLocalizations {
   String resultsReleasedCount(int count) {
     return 'Pubblicate $count rilevazioni sui profili';
   }
+
+  @override
+  String get clubPermissions => 'Permessi dello staff';
+
+  @override
+  String get coachCreatesMembers => 'Gli allenatori possono aggiungere membri';
+
+  @override
+  String get coachCreatesMembersHint =>
+      'Consente agli allenatori di registrare nuovi giocatori e inserirli nelle proprie squadre.';
+
+  @override
+  String get coachSeesPaymentStatus =>
+      'Gli allenatori possono vedere lo stato dei pagamenti';
+
+  @override
+  String get coachSeesPaymentStatusHint =>
+      'Consente agli allenatori di vedere se le quote sono pagate.';
+
+  @override
+  String get trainingPlanCoachScope =>
+      'Gli allenatori possono gestire i piani di allenamento';
+
+  @override
+  String get trainingPlanCoachScopeHint =>
+      'Consente agli allenatori di creare e modificare i piani di allenamento delle proprie squadre.';
+
+  @override
+  String get coachCannotAddMembers =>
+      'Questo club non consente agli allenatori di aggiungere membri. Un amministratore può attivarlo in Club → Permessi dello staff.';
+
+  @override
+  String get couldNotLoadClubPermissions =>
+      'Impossibile caricare i permessi dello staff';
+
+  @override
+  String get couldNotSaveClubPermissions =>
+      'Impossibile salvare i permessi dello staff';
 }

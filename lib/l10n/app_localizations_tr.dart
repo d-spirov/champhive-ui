@@ -1810,4 +1810,39 @@ class AppLocalizationsTr extends AppLocalizations {
   String resultsReleasedCount(int count) {
     return '$count oturum oyuncu profillerine yayınlandı';
   }
+
+  @override
+  String get clubPermissions => 'Personel izinleri';
+
+  @override
+  String get coachCreatesMembers => 'Antrenörler üye ekleyebilir';
+
+  @override
+  String get coachCreatesMembersHint =>
+      'Antrenörlerin yeni oyuncuları kaydetmesine ve kendi takımlarına eklemesine izin verir.';
+
+  @override
+  String get coachSeesPaymentStatus => 'Antrenörler ödeme durumunu görebilir';
+
+  @override
+  String get coachSeesPaymentStatusHint =>
+      'Antrenörlerin aidatın ödenip ödenmediğini görmesine izin verir.';
+
+  @override
+  String get trainingPlanCoachScope =>
+      'Antrenörler antrenman planlarını yönetebilir';
+
+  @override
+  String get trainingPlanCoachScopeHint =>
+      'Antrenörlerin kendi takımları için antrenman planı oluşturmasına ve düzenlemesine izin verir.';
+
+  @override
+  String get coachCannotAddMembers =>
+      'Bu kulüp antrenörlerin üye eklemesine izin vermiyor. Bir yönetici bunu Kulüp → Personel izinleri altında açabilir.';
+
+  @override
+  String get couldNotLoadClubPermissions => 'Personel izinleri yüklenemedi';
+
+  @override
+  String get couldNotSaveClubPermissions => 'Personel izinleri kaydedilemedi';
 }

@@ -146,6 +146,20 @@ class User {
     return false;
   }
 
+  /// ClubPlatform `MEMBER_WRITE` — create/enroll members. Coaches only hold
+  /// this when the club has enabled `coachCreatesMembers`.
+  bool canWriteMembers(String? clubId) =>
+      hasClubPermission(clubId, 'MEMBER_WRITE');
+
+  /// `sectionId` on create-member selects that section's field policy.
+  /// A team-scoped coach grant does not cover a section-wide write, so
+  /// sending it would 403 even when the coach may register a player.
+  bool canSetMemberSectionPolicy(String clubId, String? sectionId) {
+    if (hasClubWideStaffGrant(clubId)) return true;
+    if (sectionId == null || sectionId.isEmpty) return false;
+    return staffSectionIdsForClub(clubId).contains(sectionId);
+  }
+
   factory User.fromMeJson(Map<String, dynamic> json) {
     final rolesRaw = json['roles'];
     final famRaw = json['fam'];

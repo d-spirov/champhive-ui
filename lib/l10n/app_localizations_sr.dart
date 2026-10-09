@@ -1815,6 +1815,43 @@ class AppLocalizationsSr extends AppLocalizations {
   String resultsReleasedCount(int count) {
     return 'Objavljeno $count merenja na profile igrača';
   }
+
+  @override
+  String get clubPermissions => 'Dozvole osoblja';
+
+  @override
+  String get coachCreatesMembers => 'Treneri mogu da dodaju članove';
+
+  @override
+  String get coachCreatesMembersHint =>
+      'Omogućava trenerima da registruju nove igrače i stave ih u svoje timove.';
+
+  @override
+  String get coachSeesPaymentStatus => 'Treneri mogu da vide status plaćanja';
+
+  @override
+  String get coachSeesPaymentStatusHint =>
+      'Omogućava trenerima da vide da li je članarina plaćena.';
+
+  @override
+  String get trainingPlanCoachScope =>
+      'Treneri mogu da upravljaju planovima treninga';
+
+  @override
+  String get trainingPlanCoachScopeHint =>
+      'Omogućava trenerima da kreiraju i menjaju planove treninga za svoje timove.';
+
+  @override
+  String get coachCannotAddMembers =>
+      'Klub ne dozvoljava trenerima da dodaju članove. Administrator to može uključiti u Klub → Dozvole osoblja.';
+
+  @override
+  String get couldNotLoadClubPermissions =>
+      'Dozvole osoblja nisu mogle da se učitaju';
+
+  @override
+  String get couldNotSaveClubPermissions =>
+      'Dozvole osoblja nisu mogle da se sačuvaju';
 }
 
 /// The translations for Serbian, using the Latin script (`sr_Latn`).
@@ -3628,4 +3665,41 @@ class AppLocalizationsSrLatn extends AppLocalizationsSr {
   String resultsReleasedCount(int count) {
     return 'Objavljeno $count merenja na profile igrača';
   }
+
+  @override
+  String get clubPermissions => 'Dozvole osoblja';
+
+  @override
+  String get coachCreatesMembers => 'Treneri mogu da dodaju članove';
+
+  @override
+  String get coachCreatesMembersHint =>
+      'Omogućava trenerima da registruju nove igrače i stave ih u svoje timove.';
+
+  @override
+  String get coachSeesPaymentStatus => 'Treneri mogu da vide status plaćanja';
+
+  @override
+  String get coachSeesPaymentStatusHint =>
+      'Omogućava trenerima da vide da li je članarina plaćena.';
+
+  @override
+  String get trainingPlanCoachScope =>
+      'Treneri mogu da upravljaju planovima treninga';
+
+  @override
+  String get trainingPlanCoachScopeHint =>
+      'Omogućava trenerima da kreiraju i menjaju planove treninga za svoje timove.';
+
+  @override
+  String get coachCannotAddMembers =>
+      'Klub ne dozvoljava trenerima da dodaju članove. Administrator to može uključiti u Klub → Dozvole osoblja.';
+
+  @override
+  String get couldNotLoadClubPermissions =>
+      'Dozvole osoblja nisu mogle da se učitaju';
+
+  @override
+  String get couldNotSaveClubPermissions =>
+      'Dozvole osoblja nisu mogle da se sačuvaju';
 }

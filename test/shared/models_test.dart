@@ -41,6 +41,45 @@ void main() {
     expect(user.hasClubPermission('c1', 'DOCUMENT_VERIFY'), isFalse);
     expect(user.hasClubWideStaffGrant('c1'), isFalse);
     expect(user.staffTeamIdsForClub('c1'), isEmpty);
+    expect(user.canWriteMembers('c1'), isFalse);
+    expect(user.canSetMemberSectionPolicy('c1', 's1'), isFalse);
+  });
+
+  test('clubAdmin can set member section policy; team coach cannot', () {
+    const admin = User(
+      id: 'u4',
+      email: 'admin@b.com',
+      firstName: 'Ada',
+      lastName: 'Admin',
+      roles: [
+        RoleGrant(
+          role: 'clubAdmin',
+          clubId: 'c1',
+          scope: 'club',
+          scopeId: 'c1',
+        ),
+      ],
+      clubPermissions: [
+        ClubPermissions(clubId: 'c1', permissions: ['MEMBER_WRITE']),
+      ],
+    );
+    expect(admin.canWriteMembers('c1'), isTrue);
+    expect(admin.canSetMemberSectionPolicy('c1', 's1'), isTrue);
+
+    const coach = User(
+      id: 'u2',
+      email: 'coach@b.com',
+      firstName: 'Ana',
+      lastName: 'Coach',
+      roles: [
+        RoleGrant(role: 'coach', clubId: 'c1', scope: 'team', scopeId: 't1'),
+      ],
+      clubPermissions: [
+        ClubPermissions(clubId: 'c1', permissions: ['MEMBER_WRITE']),
+      ],
+    );
+    expect(coach.canWriteMembers('c1'), isTrue);
+    expect(coach.canSetMemberSectionPolicy('c1', 's1'), isFalse);
   });
 
   test('teamsVisibleToUser keeps only the coach assigned teams', () {

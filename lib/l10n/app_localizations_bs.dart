@@ -1816,4 +1816,41 @@ class AppLocalizationsBs extends AppLocalizations {
   String resultsReleasedCount(int count) {
     return 'Objavljeno $count mjerenja na profile igrača';
   }
+
+  @override
+  String get clubPermissions => 'Dozvole osoblja';
+
+  @override
+  String get coachCreatesMembers => 'Treneri mogu dodati članove';
+
+  @override
+  String get coachCreatesMembersHint =>
+      'Omogućava trenerima da registruju nove igrače i stave ih u svoje timove.';
+
+  @override
+  String get coachSeesPaymentStatus => 'Treneri mogu vidjeti status plaćanja';
+
+  @override
+  String get coachSeesPaymentStatusHint =>
+      'Omogućava trenerima da vide da li je članarina plaćena.';
+
+  @override
+  String get trainingPlanCoachScope =>
+      'Treneri mogu upravljati planovima treninga';
+
+  @override
+  String get trainingPlanCoachScopeHint =>
+      'Omogućava trenerima da kreiraju i uređuju planove treninga za svoje timove.';
+
+  @override
+  String get coachCannotAddMembers =>
+      'Klub ne dozvoljava trenerima da dodaju članove. Administrator to može uključiti u Klub → Dozvole osoblja.';
+
+  @override
+  String get couldNotLoadClubPermissions =>
+      'Dozvole osoblja nisu se mogle učitati';
+
+  @override
+  String get couldNotSaveClubPermissions =>
+      'Dozvole osoblja nisu se mogle sačuvati';
 }

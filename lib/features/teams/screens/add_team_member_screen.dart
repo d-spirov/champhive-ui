@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../shared/l10n/date_l10n.dart';
 import '../../../shared/utils/api_error_message.dart';
+import '../../auth/providers/auth_provider.dart';
 import '../../clubs/providers/clubs_provider.dart';
 import '../../events/providers/events_provider.dart';
 import '../../players/providers/players_provider.dart';
@@ -99,6 +100,8 @@ class _AddTeamMemberScreenState extends ConsumerState<AddTeamMemberScreen> {
       return;
     }
 
+    final user = ref.read(authNotifierProvider).user;
+
     setState(() {
       _saving = true;
       _error = null;
@@ -107,6 +110,7 @@ class _AddTeamMemberScreenState extends ConsumerState<AddTeamMemberScreen> {
     try {
       final team = ref.read(clubTeamProvider(widget.teamId));
       final api = ref.read(playersApiProvider);
+      final sectionId = team?.sectionId;
       final member = await api.createMember(
         clubId: clubId,
         firstName: first,
@@ -114,7 +118,9 @@ class _AddTeamMemberScreenState extends ConsumerState<AddTeamMemberScreen> {
         dateOfBirth: _isoDate(dob),
         gender: _gender,
         shirtNumber: shirt,
-        sectionId: team?.sectionId,
+        sectionId: (user?.canSetMemberSectionPolicy(clubId, sectionId) ?? false)
+            ? sectionId
+            : null,
         confirmDuplicate: confirmDuplicate,
       );
       final seasonId = await _seasonId(clubId);
@@ -174,7 +180,11 @@ class _AddTeamMemberScreenState extends ConsumerState<AddTeamMemberScreen> {
       }
       setState(() {
         _saving = false;
-        _error = apiErrorMessage(e, fallback: l10n.couldNotAddMember);
+        final denied = e is DioException && e.response?.statusCode == 403;
+        final noWrite = !(user?.canWriteMembers(clubId) ?? false);
+        _error = denied && noWrite
+            ? l10n.coachCannotAddMembers
+            : apiErrorMessage(e, fallback: l10n.couldNotAddMember);
       });
     }
   }

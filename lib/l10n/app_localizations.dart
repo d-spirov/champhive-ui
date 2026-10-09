@@ -3460,6 +3460,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Published {count} sittings to player profiles'**
   String resultsReleasedCount(int count);
+
+  /// No description provided for @clubPermissions.
+  ///
+  /// In en, this message translates to:
+  /// **'Staff permissions'**
+  String get clubPermissions;
+
+  /// No description provided for @coachCreatesMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'Coaches can add members'**
+  String get coachCreatesMembers;
+
+  /// No description provided for @coachCreatesMembersHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Lets coaches register new players and put them on their teams.'**
+  String get coachCreatesMembersHint;
+
+  /// No description provided for @coachSeesPaymentStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Coaches can see payment status'**
+  String get coachSeesPaymentStatus;
+
+  /// No description provided for @coachSeesPaymentStatusHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Lets coaches see whether a member\'s fees are paid.'**
+  String get coachSeesPaymentStatusHint;
+
+  /// No description provided for @trainingPlanCoachScope.
+  ///
+  /// In en, this message translates to:
+  /// **'Coaches can manage training plans'**
+  String get trainingPlanCoachScope;
+
+  /// No description provided for @trainingPlanCoachScopeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Lets coaches create and edit training plans for their teams.'**
+  String get trainingPlanCoachScopeHint;
+
+  /// No description provided for @coachCannotAddMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'This club does not allow coaches to add members. A club admin can enable this under Club → Staff permissions.'**
+  String get coachCannotAddMembers;
+
+  /// No description provided for @couldNotLoadClubPermissions.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load staff permissions'**
+  String get couldNotLoadClubPermissions;
+
+  /// No description provided for @couldNotSaveClubPermissions.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not save staff permissions'**
+  String get couldNotSaveClubPermissions;
 }
 
 class _AppLocalizationsDelegate

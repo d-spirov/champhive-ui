@@ -832,5 +832,15 @@
     "placeholders": {
       "count": { "type": "int" }
     }
-  }
+  },
+  "clubPermissions": "Permessi dello staff",
+  "coachCreatesMembers": "Gli allenatori possono aggiungere membri",
+  "coachCreatesMembersHint": "Consente agli allenatori di registrare nuovi giocatori e inserirli nelle proprie squadre.",
+  "coachSeesPaymentStatus": "Gli allenatori possono vedere lo stato dei pagamenti",
+  "coachSeesPaymentStatusHint": "Consente agli allenatori di vedere se le quote sono pagate.",
+  "trainingPlanCoachScope": "Gli allenatori possono gestire i piani di allenamento",
+  "trainingPlanCoachScopeHint": "Consente agli allenatori di creare e modificare i piani di allenamento delle proprie squadre.",
+  "coachCannotAddMembers": "Questo club non consente agli allenatori di aggiungere membri. Un amministratore può attivarlo in Club → Permessi dello staff.",
+  "couldNotLoadClubPermissions": "Impossibile caricare i permessi dello staff",
+  "couldNotSaveClubPermissions": "Impossibile salvare i permessi dello staff"
 }
