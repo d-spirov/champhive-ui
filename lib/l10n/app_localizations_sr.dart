@@ -1852,6 +1852,67 @@ class AppLocalizationsSr extends AppLocalizations {
   @override
   String get couldNotSaveClubPermissions =>
       'Dozvole osoblja nisu mogle da se sačuvaju';
+
+  @override
+  String get rescheduleSession => 'Pomeri termin';
+
+  @override
+  String get rescheduleSessionSubtitle => 'Izaberi novi datum i vreme';
+
+  @override
+  String get cancelSession => 'Otkaži termin';
+
+  @override
+  String get cancelSessionSubtitle => 'Obavesti porodice da termin otpada';
+
+  @override
+  String get restoreSession => 'Vrati termin';
+
+  @override
+  String get restoreSessionSubtitle => 'Vrati ga na kalendar';
+
+  @override
+  String get cancelSessionTitle => 'Otkazati ovaj termin?';
+
+  @override
+  String get cancelSessionBody =>
+      'Biće označen kao otkazan. Porodice i dalje mogu da vide da je otkazan.';
+
+  @override
+  String get cancelSessionConfirm => 'Otkaži termin';
+
+  @override
+  String get restoreSessionTitle => 'Vratiti ovaj termin?';
+
+  @override
+  String get restoreSessionBody => 'Ponovo će se prikazati kao zakazan.';
+
+  @override
+  String get restoreSessionConfirm => 'Vrati';
+
+  @override
+  String get sessionCanceledToast => 'Termin je otkazan';
+
+  @override
+  String get sessionRescheduledToast => 'Termin je pomeren';
+
+  @override
+  String get sessionRestoredToast => 'Termin je vraćen';
+
+  @override
+  String get couldNotUpdateSession => 'Termin nije mogao da se ažurira';
+
+  @override
+  String get rescheduleTitle => 'Pomeri termin';
+
+  @override
+  String get reasonOptional => 'Razlog (opciono)';
+
+  @override
+  String get reasonHint => 'npr. sala nije slobodna';
+
+  @override
+  String get saveNewTime => 'Sačuvaj novo vreme';
 }
 
 /// The translations for Serbian, using the Latin script (`sr_Latn`).
@@ -3702,4 +3763,65 @@ class AppLocalizationsSrLatn extends AppLocalizationsSr {
   @override
   String get couldNotSaveClubPermissions =>
       'Dozvole osoblja nisu mogle da se sačuvaju';
+
+  @override
+  String get rescheduleSession => 'Pomeri termin';
+
+  @override
+  String get rescheduleSessionSubtitle => 'Izaberi novi datum i vreme';
+
+  @override
+  String get cancelSession => 'Otkaži termin';
+
+  @override
+  String get cancelSessionSubtitle => 'Obavesti porodice da termin otpada';
+
+  @override
+  String get restoreSession => 'Vrati termin';
+
+  @override
+  String get restoreSessionSubtitle => 'Vrati ga na kalendar';
+
+  @override
+  String get cancelSessionTitle => 'Otkazati ovaj termin?';
+
+  @override
+  String get cancelSessionBody =>
+      'Biće označen kao otkazan. Porodice i dalje mogu da vide da je otkazan.';
+
+  @override
+  String get cancelSessionConfirm => 'Otkaži termin';
+
+  @override
+  String get restoreSessionTitle => 'Vratiti ovaj termin?';
+
+  @override
+  String get restoreSessionBody => 'Ponovo će se prikazati kao zakazan.';
+
+  @override
+  String get restoreSessionConfirm => 'Vrati';
+
+  @override
+  String get sessionCanceledToast => 'Termin je otkazan';
+
+  @override
+  String get sessionRescheduledToast => 'Termin je pomeren';
+
+  @override
+  String get sessionRestoredToast => 'Termin je vraćen';
+
+  @override
+  String get couldNotUpdateSession => 'Termin nije mogao da se ažurira';
+
+  @override
+  String get rescheduleTitle => 'Pomeri termin';
+
+  @override
+  String get reasonOptional => 'Razlog (opciono)';
+
+  @override
+  String get reasonHint => 'npr. sala nije slobodna';
+
+  @override
+  String get saveNewTime => 'Sačuvaj novo vreme';
 }

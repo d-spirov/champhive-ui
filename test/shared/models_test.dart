@@ -759,6 +759,22 @@ void main() {
     expect(json.containsKey('trainingPlanId'), isFalse);
   });
 
+  test('PatchOccurrenceRequest sends cancel, move and restore', () {
+    expect(const PatchOccurrenceRequest.cancel(note: 'hall closed').toJson(), {
+      'action': 'cancel',
+      'note': 'hall closed',
+    });
+    expect(
+      const PatchOccurrenceRequest.move(
+        startUtc: '2026-10-20T18:00:00Z',
+      ).toJson(),
+      {'action': 'move', 'startUtc': '2026-10-20T18:00:00Z'},
+    );
+    expect(const PatchOccurrenceRequest.restore().toJson(), {
+      'action': 'restore',
+    });
+  });
+
   test('MetricBattery.fromJson maps stations in order', () {
     final battery = MetricBattery.fromJson({
       'id': 'b1',

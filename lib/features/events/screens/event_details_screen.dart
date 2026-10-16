@@ -15,6 +15,7 @@ import '../../clubs/providers/clubs_provider.dart';
 import '../providers/events_provider.dart';
 import '../providers/performance_provider.dart';
 import '../providers/training_plans_provider.dart';
+import '../widgets/occurrence_exception_actions.dart';
 import '../widgets/training_plan_panel.dart';
 import 'event_detail_screen.dart';
 
@@ -115,10 +116,46 @@ class _SessionDetailsBody extends ConsumerWidget {
         PopupMenuButton<String>(
           onSelected: (value) {
             if (value == 'refresh') refresh();
+            if (!isStaff) return;
+            if (value == 'reschedule') {
+              showRescheduleOccurrenceDialog(
+                context: context,
+                ref: ref,
+                occurrence: occurrence,
+              );
+            } else if (value == 'cancel') {
+              showCancelOccurrenceDialog(
+                context: context,
+                ref: ref,
+                occurrence: occurrence,
+              );
+            } else if (value == 'restore') {
+              showRestoreOccurrenceDialog(
+                context: context,
+                ref: ref,
+                occurrence: occurrence,
+              );
+            }
           },
-          itemBuilder: (context) => [
-            PopupMenuItem(value: 'refresh', child: Text(l10n.refresh)),
-          ],
+          itemBuilder: (context) {
+            final canceled =
+                (occurrence.status ?? '').toLowerCase() == 'canceled';
+            return [
+              PopupMenuItem(value: 'refresh', child: Text(l10n.refresh)),
+              if (isStaff && !canceled)
+                PopupMenuItem(
+                  value: 'reschedule',
+                  child: Text(l10n.rescheduleSession),
+                ),
+              if (isStaff && !canceled)
+                PopupMenuItem(value: 'cancel', child: Text(l10n.cancelSession)),
+              if (isStaff && canceled)
+                PopupMenuItem(
+                  value: 'restore',
+                  child: Text(l10n.restoreSession),
+                ),
+            ];
+          },
         ),
       ],
     );
@@ -458,10 +495,7 @@ class _HeroText extends StatelessWidget {
 }
 
 class _OverviewTab extends StatelessWidget {
-  const _OverviewTab({
-    required this.occurrence,
-    this.showStaffFields = true,
-  });
+  const _OverviewTab({required this.occurrence, this.showStaffFields = true});
 
   final ClubEvent occurrence;
   final bool showStaffFields;
@@ -642,8 +676,7 @@ class _OverviewTab extends StatelessWidget {
         label: l10n.requestRsvp,
         value: event.rsvpRequested ? l10n.rsvpYes : l10n.rsvpNo,
       ),
-      if (showStaffFields &&
-          (event.metricBatteryName ?? '').trim().isNotEmpty)
+      if (showStaffFields && (event.metricBatteryName ?? '').trim().isNotEmpty)
         _DetailCell(
           icon: Icons.speed_rounded,
           label: l10n.testSet,

@@ -1845,4 +1845,65 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get couldNotSaveClubPermissions => 'Personel izinleri kaydedilemedi';
+
+  @override
+  String get rescheduleSession => 'Yeniden planla';
+
+  @override
+  String get rescheduleSessionSubtitle => 'Yeni tarih ve saat seç';
+
+  @override
+  String get cancelSession => 'Seansı iptal et';
+
+  @override
+  String get cancelSessionSubtitle => 'Ailelere seansın iptal olduğunu söyle';
+
+  @override
+  String get restoreSession => 'Seansı geri al';
+
+  @override
+  String get restoreSessionSubtitle => 'Takvime geri koy';
+
+  @override
+  String get cancelSessionTitle => 'Bu seans iptal edilsin mi?';
+
+  @override
+  String get cancelSessionBody =>
+      'İptal olarak işaretlenecek. Aileler yine de iptal edildiğini görebilir.';
+
+  @override
+  String get cancelSessionConfirm => 'Seansı iptal et';
+
+  @override
+  String get restoreSessionTitle => 'Bu seans geri alınsın mı?';
+
+  @override
+  String get restoreSessionBody => 'Yeniden planlanmış olarak görünür.';
+
+  @override
+  String get restoreSessionConfirm => 'Geri al';
+
+  @override
+  String get sessionCanceledToast => 'Seans iptal edildi';
+
+  @override
+  String get sessionRescheduledToast => 'Seans yeniden planlandı';
+
+  @override
+  String get sessionRestoredToast => 'Seans geri alındı';
+
+  @override
+  String get couldNotUpdateSession => 'Seans güncellenemedi';
+
+  @override
+  String get rescheduleTitle => 'Seansı yeniden planla';
+
+  @override
+  String get reasonOptional => 'Neden (isteğe bağlı)';
+
+  @override
+  String get reasonHint => 'örn. salon müsait değil';
+
+  @override
+  String get saveNewTime => 'Yeni saati kaydet';
 }

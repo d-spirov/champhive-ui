@@ -107,6 +107,26 @@ class EventsApi {
     return EventSeries.fromJson(Map<String, dynamic>.from(raw));
   }
 
+  Future<ClubEvent> patchOccurrence({
+    required String occurrenceId,
+    required PatchOccurrenceRequest request,
+  }) async {
+    final response = await _dio.patch<dynamic>(
+      '/api/v1/occurrences/$occurrenceId',
+      data: request.toJson(),
+    );
+    final raw = response.data;
+    if (raw is! Map) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        type: DioExceptionType.badResponse,
+        response: response,
+        message: 'Empty occurrence response',
+      );
+    }
+    return ClubEvent.fromOccurrenceJson(Map<String, dynamic>.from(raw));
+  }
+
   List<ClubEvent> _parseOccurrences(Response<dynamic> response) {
     final raw = response.data;
     final list = raw is Map && raw['items'] is List

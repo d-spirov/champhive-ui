@@ -12,6 +12,7 @@ import '../../../core/theme/sport_theme_config.dart';
 import '../../../shared/models/event_attendance.dart';
 import '../../../shared/theme/app_theme.dart';
 import '../../../shared/utils/api_error_message.dart';
+import '../widgets/occurrence_exception_actions.dart';
 
 void popOrGoHome(BuildContext context) {
   if (context.canPop()) {
@@ -293,6 +294,45 @@ class _OccurrenceBody extends ConsumerWidget {
                 ),
                 if (isStaff) ...[
                   const SizedBox(height: 12),
+                  if (!canceled) ...[
+                    _ActionTile(
+                      icon: Icons.event_repeat_rounded,
+                      title: l10n.rescheduleSession,
+                      subtitle: l10n.rescheduleSessionSubtitle,
+                      color: AppColors.warning,
+                      onTap: () => showRescheduleOccurrenceDialog(
+                        context: context,
+                        ref: ref,
+                        occurrence: occurrence,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    _ActionTile(
+                      icon: Icons.event_busy_rounded,
+                      title: l10n.cancelSession,
+                      subtitle: l10n.cancelSessionSubtitle,
+                      color: AppColors.danger,
+                      onTap: () => showCancelOccurrenceDialog(
+                        context: context,
+                        ref: ref,
+                        occurrence: occurrence,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                  ] else ...[
+                    _ActionTile(
+                      icon: Icons.restore_rounded,
+                      title: l10n.restoreSession,
+                      subtitle: l10n.restoreSessionSubtitle,
+                      color: AppColors.success,
+                      onTap: () => showRestoreOccurrenceDialog(
+                        context: context,
+                        ref: ref,
+                        occurrence: occurrence,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                  ],
                   if (!canceled && open)
                     _ActionTile(
                       icon: Icons.how_to_reg_rounded,

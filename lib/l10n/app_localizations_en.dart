@@ -1844,4 +1844,65 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get couldNotSaveClubPermissions => 'Could not save staff permissions';
+
+  @override
+  String get rescheduleSession => 'Reschedule';
+
+  @override
+  String get rescheduleSessionSubtitle => 'Pick a new date and time';
+
+  @override
+  String get cancelSession => 'Cancel session';
+
+  @override
+  String get cancelSessionSubtitle => 'Tell families this session is off';
+
+  @override
+  String get restoreSession => 'Restore session';
+
+  @override
+  String get restoreSessionSubtitle => 'Put it back on the calendar';
+
+  @override
+  String get cancelSessionTitle => 'Cancel this session?';
+
+  @override
+  String get cancelSessionBody =>
+      'It will be marked canceled. Families can still see that it was called off.';
+
+  @override
+  String get cancelSessionConfirm => 'Cancel session';
+
+  @override
+  String get restoreSessionTitle => 'Restore this session?';
+
+  @override
+  String get restoreSessionBody => 'It will show as scheduled again.';
+
+  @override
+  String get restoreSessionConfirm => 'Restore';
+
+  @override
+  String get sessionCanceledToast => 'Session canceled';
+
+  @override
+  String get sessionRescheduledToast => 'Session rescheduled';
+
+  @override
+  String get sessionRestoredToast => 'Session restored';
+
+  @override
+  String get couldNotUpdateSession => 'Could not update this session';
+
+  @override
+  String get rescheduleTitle => 'Reschedule session';
+
+  @override
+  String get reasonOptional => 'Reason (optional)';
+
+  @override
+  String get reasonHint => 'e.g. hall unavailable';
+
+  @override
+  String get saveNewTime => 'Save new time';
 }

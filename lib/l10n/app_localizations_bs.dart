@@ -1853,4 +1853,65 @@ class AppLocalizationsBs extends AppLocalizations {
   @override
   String get couldNotSaveClubPermissions =>
       'Dozvole osoblja nisu se mogle sačuvati';
+
+  @override
+  String get rescheduleSession => 'Premjesti termin';
+
+  @override
+  String get rescheduleSessionSubtitle => 'Odaberi novi datum i vrijeme';
+
+  @override
+  String get cancelSession => 'Otkaži termin';
+
+  @override
+  String get cancelSessionSubtitle => 'Obavijesti porodice da termin otpada';
+
+  @override
+  String get restoreSession => 'Vrati termin';
+
+  @override
+  String get restoreSessionSubtitle => 'Vrati ga na kalendar';
+
+  @override
+  String get cancelSessionTitle => 'Otkazati ovaj termin?';
+
+  @override
+  String get cancelSessionBody =>
+      'Bit će označen kao otkazan. Porodice i dalje mogu vidjeti da je otkazan.';
+
+  @override
+  String get cancelSessionConfirm => 'Otkaži termin';
+
+  @override
+  String get restoreSessionTitle => 'Vratiti ovaj termin?';
+
+  @override
+  String get restoreSessionBody => 'Ponovo će se prikazati kao zakazan.';
+
+  @override
+  String get restoreSessionConfirm => 'Vrati';
+
+  @override
+  String get sessionCanceledToast => 'Termin je otkazan';
+
+  @override
+  String get sessionRescheduledToast => 'Termin je premješten';
+
+  @override
+  String get sessionRestoredToast => 'Termin je vraćen';
+
+  @override
+  String get couldNotUpdateSession => 'Termin se nije mogao ažurirati';
+
+  @override
+  String get rescheduleTitle => 'Premjesti termin';
+
+  @override
+  String get reasonOptional => 'Razlog (opcionalno)';
+
+  @override
+  String get reasonHint => 'npr. sala nije slobodna';
+
+  @override
+  String get saveNewTime => 'Sačuvaj novo vrijeme';
 }

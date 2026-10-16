@@ -134,6 +134,48 @@ class EventSeries {
   }
 }
 
+class PatchOccurrenceRequest {
+  const PatchOccurrenceRequest.cancel({this.note})
+    : action = 'cancel',
+      startUtc = null,
+      durationMin = null,
+      location = null,
+      title = null;
+
+  const PatchOccurrenceRequest.move({
+    required this.startUtc,
+    this.durationMin,
+    this.location,
+    this.title,
+    this.note,
+  }) : action = 'move';
+
+  const PatchOccurrenceRequest.restore({this.note})
+    : action = 'restore',
+      startUtc = null,
+      durationMin = null,
+      location = null,
+      title = null;
+
+  final String action;
+  final String? startUtc;
+  final int? durationMin;
+  final String? location;
+  final String? title;
+  final String? note;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'action': action,
+      if (startUtc != null) 'startUtc': startUtc,
+      if (durationMin != null) 'durationMin': durationMin,
+      if (location != null) 'location': location,
+      if (title != null) 'title': title,
+      if (note != null && note!.trim().isNotEmpty) 'note': note!.trim(),
+    };
+  }
+}
+
 /// Formats a local DateTime as wall-clock without offset for `firstStartLocal`.
 String formatFirstStartLocal(DateTime local) {
   String two(int n) => n.toString().padLeft(2, '0');
@@ -152,4 +194,11 @@ String weekdayToRrule(int weekday) {
     DateTime.sunday: 'SU',
   };
   return map[weekday] ?? 'MO';
+}
+
+String formatUtcInstant(DateTime local) {
+  final utc = local.toUtc();
+  String two(int n) => n.toString().padLeft(2, '0');
+  return '${utc.year}-${two(utc.month)}-${two(utc.day)}'
+      'T${two(utc.hour)}:${two(utc.minute)}:${two(utc.second)}Z';
 }

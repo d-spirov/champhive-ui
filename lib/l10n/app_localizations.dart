@@ -3520,6 +3520,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Could not save staff permissions'**
   String get couldNotSaveClubPermissions;
+
+  /// No description provided for @rescheduleSession.
+  ///
+  /// In en, this message translates to:
+  /// **'Reschedule'**
+  String get rescheduleSession;
+
+  /// No description provided for @rescheduleSessionSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a new date and time'**
+  String get rescheduleSessionSubtitle;
+
+  /// No description provided for @cancelSession.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel session'**
+  String get cancelSession;
+
+  /// No description provided for @cancelSessionSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell families this session is off'**
+  String get cancelSessionSubtitle;
+
+  /// No description provided for @restoreSession.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore session'**
+  String get restoreSession;
+
+  /// No description provided for @restoreSessionSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Put it back on the calendar'**
+  String get restoreSessionSubtitle;
+
+  /// No description provided for @cancelSessionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel this session?'**
+  String get cancelSessionTitle;
+
+  /// No description provided for @cancelSessionBody.
+  ///
+  /// In en, this message translates to:
+  /// **'It will be marked canceled. Families can still see that it was called off.'**
+  String get cancelSessionBody;
+
+  /// No description provided for @cancelSessionConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel session'**
+  String get cancelSessionConfirm;
+
+  /// No description provided for @restoreSessionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore this session?'**
+  String get restoreSessionTitle;
+
+  /// No description provided for @restoreSessionBody.
+  ///
+  /// In en, this message translates to:
+  /// **'It will show as scheduled again.'**
+  String get restoreSessionBody;
+
+  /// No description provided for @restoreSessionConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore'**
+  String get restoreSessionConfirm;
+
+  /// No description provided for @sessionCanceledToast.
+  ///
+  /// In en, this message translates to:
+  /// **'Session canceled'**
+  String get sessionCanceledToast;
+
+  /// No description provided for @sessionRescheduledToast.
+  ///
+  /// In en, this message translates to:
+  /// **'Session rescheduled'**
+  String get sessionRescheduledToast;
+
+  /// No description provided for @sessionRestoredToast.
+  ///
+  /// In en, this message translates to:
+  /// **'Session restored'**
+  String get sessionRestoredToast;
+
+  /// No description provided for @couldNotUpdateSession.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not update this session'**
+  String get couldNotUpdateSession;
+
+  /// No description provided for @rescheduleTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reschedule session'**
+  String get rescheduleTitle;
+
+  /// No description provided for @reasonOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Reason (optional)'**
+  String get reasonOptional;
+
+  /// No description provided for @reasonHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. hall unavailable'**
+  String get reasonHint;
+
+  /// No description provided for @saveNewTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Save new time'**
+  String get saveNewTime;
 }
 
 class _AppLocalizationsDelegate

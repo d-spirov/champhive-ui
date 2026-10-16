@@ -1868,4 +1868,66 @@ class AppLocalizationsMk extends AppLocalizations {
   @override
   String get couldNotSaveClubPermissions =>
       'Дозволите на персоналот не можеа да се зачуваат';
+
+  @override
+  String get rescheduleSession => 'Презакажи';
+
+  @override
+  String get rescheduleSessionSubtitle => 'Избери нов датум и време';
+
+  @override
+  String get cancelSession => 'Откажи термин';
+
+  @override
+  String get cancelSessionSubtitle =>
+      'Извести ги семејствата дека терминот отпаѓа';
+
+  @override
+  String get restoreSession => 'Врати термин';
+
+  @override
+  String get restoreSessionSubtitle => 'Врати го на календарот';
+
+  @override
+  String get cancelSessionTitle => 'Да се откаже овој термин?';
+
+  @override
+  String get cancelSessionBody =>
+      'Ќе биде означен како откажан. Семејствата сè уште ќе можат да видат дека е откажан.';
+
+  @override
+  String get cancelSessionConfirm => 'Откажи термин';
+
+  @override
+  String get restoreSessionTitle => 'Да се врати овој термин?';
+
+  @override
+  String get restoreSessionBody => 'Повторно ќе се прикаже како закажан.';
+
+  @override
+  String get restoreSessionConfirm => 'Врати';
+
+  @override
+  String get sessionCanceledToast => 'Терминот е откажан';
+
+  @override
+  String get sessionRescheduledToast => 'Терминот е презакажан';
+
+  @override
+  String get sessionRestoredToast => 'Терминот е вратен';
+
+  @override
+  String get couldNotUpdateSession => 'Терминот не можеше да се ажурира';
+
+  @override
+  String get rescheduleTitle => 'Презакажи термин';
+
+  @override
+  String get reasonOptional => 'Причина (опционално)';
+
+  @override
+  String get reasonHint => 'на пр. салата е зафатена';
+
+  @override
+  String get saveNewTime => 'Зачувај ново време';
 }

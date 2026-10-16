@@ -1873,4 +1873,67 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get couldNotSaveClubPermissions =>
       'Impossibile salvare i permessi dello staff';
+
+  @override
+  String get rescheduleSession => 'Riprogramma';
+
+  @override
+  String get rescheduleSessionSubtitle => 'Scegli una nuova data e ora';
+
+  @override
+  String get cancelSession => 'Annulla sessione';
+
+  @override
+  String get cancelSessionSubtitle =>
+      'Avvisa le famiglie che la sessione non si tiene';
+
+  @override
+  String get restoreSession => 'Ripristina sessione';
+
+  @override
+  String get restoreSessionSubtitle => 'Rimetti la sessione in calendario';
+
+  @override
+  String get cancelSessionTitle => 'Annullare questa sessione?';
+
+  @override
+  String get cancelSessionBody =>
+      'Verrà contrassegnata come annullata. Le famiglie potranno comunque vederlo.';
+
+  @override
+  String get cancelSessionConfirm => 'Annulla sessione';
+
+  @override
+  String get restoreSessionTitle => 'Ripristinare questa sessione?';
+
+  @override
+  String get restoreSessionBody =>
+      'Tornerà a essere mostrata come programmata.';
+
+  @override
+  String get restoreSessionConfirm => 'Ripristina';
+
+  @override
+  String get sessionCanceledToast => 'Sessione annullata';
+
+  @override
+  String get sessionRescheduledToast => 'Sessione riprogrammata';
+
+  @override
+  String get sessionRestoredToast => 'Sessione ripristinata';
+
+  @override
+  String get couldNotUpdateSession => 'Impossibile aggiornare la sessione';
+
+  @override
+  String get rescheduleTitle => 'Riprogramma sessione';
+
+  @override
+  String get reasonOptional => 'Motivo (facoltativo)';
+
+  @override
+  String get reasonHint => 'es. palestra non disponibile';
+
+  @override
+  String get saveNewTime => 'Salva nuovo orario';
 }
