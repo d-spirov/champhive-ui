@@ -1,10 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../shared/models/event_attendance.dart';
+import '../../../shared/models/team.dart';
 import '../../../shared/services/attendance_api.dart';
 import '../../../shared/services/events_api.dart';
+import '../../account/providers/account_extras_provider.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../../clubs/providers/clubs_provider.dart';
+import '../../teams/providers/teams_provider.dart';
 
 final eventsApiProvider = Provider<EventsApi>((ref) {
   final authApi = ref.watch(authApiProvider).valueOrNull;
@@ -34,11 +37,14 @@ final clubEventsProvider = FutureProvider.autoDispose<List<ClubEvent>>((
   if (clubId == null) return const [];
 
   await ref.watch(authApiProvider.future);
-  final api = ref.watch(eventsApiProvider);
   final now = DateTime.now();
-  final from = now.subtract(const Duration(days: 7));
-  final to = now.add(const Duration(days: 21));
-  return api.listEvents(clubId: clubId, from: from, to: to, size: 200);
+  return _loadVisibleSchedule(
+    ref,
+    clubId: clubId,
+    from: now.subtract(const Duration(days: 7)),
+    to: now.add(const Duration(days: 21)),
+    size: 200,
+  );
 });
 
 final pastClubEventsProvider = FutureProvider.autoDispose<List<ClubEvent>>((
@@ -52,17 +58,83 @@ final pastClubEventsProvider = FutureProvider.autoDispose<List<ClubEvent>>((
   if (clubId == null) return const [];
 
   await ref.watch(authApiProvider.future);
-  final api = ref.watch(eventsApiProvider);
+  final user = auth.user;
   final now = DateTime.now();
-  final from = now.subtract(const Duration(days: 60));
-  return api.listEvents(
+  final parentOnly = user != null && !user.isStaff(clubId);
+  return _loadVisibleSchedule(
+    ref,
     clubId: clubId,
-    from: from,
+    from: now.subtract(Duration(days: parentOnly ? 55 : 60)),
     to: now,
     sort: 'desc',
     size: 100,
   );
 });
+
+Future<List<ClubEvent>> _loadVisibleSchedule(
+  Ref ref, {
+  required String clubId,
+  required DateTime from,
+  required DateTime to,
+  String sort = 'asc',
+  int size = 200,
+}) async {
+  final api = ref.watch(eventsApiProvider);
+  final user = ref.watch(authNotifierProvider).user;
+  final parentOnly = user != null && !user.isStaff(clubId);
+  List<ClubEvent> events;
+  if (parentOnly) {
+    try {
+      events = [
+        for (final event in await api.listMySchedule(from: from, to: to))
+          if (event.clubId.toLowerCase() == clubId.toLowerCase()) event,
+      ];
+      if (sort == 'desc') {
+        events = events.reversed.toList();
+      }
+    } catch (_) {
+      events = await api.listEvents(
+        clubId: clubId,
+        from: from,
+        to: to,
+        sort: sort,
+        size: size,
+      );
+    }
+  } else {
+    events = await api.listEvents(
+      clubId: clubId,
+      from: from,
+      to: to,
+      sort: sort,
+      size: size,
+    );
+  }
+  return _eventsForViewer(ref, clubId: clubId, events: events);
+}
+
+Future<List<ClubEvent>> _eventsForViewer(
+  Ref ref, {
+  required String clubId,
+  required List<ClubEvent> events,
+}) async {
+  final user = ref.watch(authNotifierProvider).user;
+  if (user == null || user.isStaff(clubId)) return events;
+  List<ClubTeam> familyTeams = const [];
+  var familyMemberIds = const <String>{};
+  try {
+    final children = await ref.watch(familyChildrenProvider.future);
+    familyTeams = clubTeamsFromChildren(children, clubId);
+    familyMemberIds = familyMemberIdsInClub(children, clubId);
+  } catch (_) {}
+  return eventsVisibleToUser(
+    events,
+    user: user,
+    clubId: clubId,
+    familyTeams: familyTeams,
+    familyMemberIds: familyMemberIds,
+  );
+}
 
 final eventDetailProvider = FutureProvider.autoDispose
     .family<ClubEvent, String>((ref, eventId) async {

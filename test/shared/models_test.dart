@@ -389,6 +389,156 @@ void main() {
     expect(teams.single.name, 'M16');
   });
 
+  test('eventsVisibleToUser keeps parent calendar on child teams', () {
+    const parent = User(
+      id: 'p1',
+      email: 'parent@b.com',
+      firstName: 'Pat',
+      lastName: 'Parent',
+      roles: [
+        RoleGrant(role: 'parent', clubId: 'c1', scope: 'club', scopeId: 'c1'),
+      ],
+    );
+    const coach = User(
+      id: 'u2',
+      email: 'coach@b.com',
+      firstName: 'Ana',
+      lastName: 'Coach',
+      roles: [
+        RoleGrant(role: 'coach', clubId: 'c1', scope: 'team', scopeId: 't2'),
+      ],
+    );
+    final childTeam = ClubEvent.fromOccurrenceJson({
+      'occurrenceId': 'o-child',
+      'clubId': 'c1',
+      'scopeKind': 'team',
+      'scopeId': 't1',
+      'scopeName': 'M16',
+      'type': 'training',
+      'title': 'Child training',
+      'startsAtUtc': '2024-06-01T16:00:00Z',
+    });
+    final otherTeam = ClubEvent.fromOccurrenceJson({
+      'occurrenceId': 'o-other',
+      'clubId': 'c1',
+      'scopeKind': 'team',
+      'scopeId': 't2',
+      'scopeName': 'U14',
+      'type': 'training',
+      'title': 'Other team',
+      'startsAtUtc': '2024-06-01T17:00:00Z',
+    });
+    final clubWide = ClubEvent.fromOccurrenceJson({
+      'occurrenceId': 'o-club',
+      'clubId': 'c1',
+      'scopeKind': 'club',
+      'scopeId': 'c1',
+      'scopeName': 'Club',
+      'type': 'meeting',
+      'title': 'Parent meeting',
+      'startsAtUtc': '2024-06-02T16:00:00Z',
+    });
+    final sectionEvent = ClubEvent.fromOccurrenceJson({
+      'occurrenceId': 'o-section',
+      'clubId': 'c1',
+      'scopeKind': 'section',
+      'scopeId': 's1',
+      'scopeName': 'Youth',
+      'type': 'training',
+      'title': 'Section session',
+      'startsAtUtc': '2024-06-03T16:00:00Z',
+    });
+    const familyTeams = [
+      ClubTeam(id: 't1', clubId: 'c1', name: 'M16', sectionId: 's1'),
+    ];
+    final events = [childTeam, otherTeam, clubWide, sectionEvent];
+
+    expect(
+      eventsVisibleToUser(
+        events,
+        user: parent,
+        clubId: 'c1',
+        familyTeams: familyTeams,
+      ).map((e) => e.id),
+      ['o-child', 'o-club', 'o-section'],
+    );
+    expect(
+      eventsVisibleToUser(events, user: parent, clubId: 'c1').map((e) => e.id),
+      ['o-club'],
+    );
+    expect(
+      eventsVisibleToUser(
+        events,
+        user: coach,
+        clubId: 'c1',
+        familyTeams: familyTeams,
+      ),
+      events,
+    );
+
+    final relatedChild = ClubEvent.fromOccurrenceJson({
+      'occurrenceId': 'o-related',
+      'clubId': 'c1',
+      'scopeKind': 'team',
+      'scopeId': 'other-scope',
+      'scopeName': 'М16',
+      'type': 'training',
+      'title': 'Child via related members',
+      'startsAtUtc': '2024-06-04T16:00:00Z',
+      'relatedMemberIds': ['child-1'],
+    });
+    final relatedOther = ClubEvent.fromOccurrenceJson({
+      'occurrenceId': 'o-related-other',
+      'clubId': 'c1',
+      'scopeKind': 'team',
+      'scopeId': 't1',
+      'scopeName': 'M16',
+      'type': 'training',
+      'title': 'Someone else',
+      'startsAtUtc': '2024-06-04T17:00:00Z',
+      'relatedMemberIds': ['other-child'],
+    });
+    final cyrillicName = ClubEvent.fromOccurrenceJson({
+      'occurrenceId': 'o-cyrillic',
+      'clubId': 'c1',
+      'scopeKind': 'team',
+      'scopeId': 'unknown',
+      'scopeName': 'М16',
+      'type': 'training',
+      'title': 'Cyrillic team name',
+      'startsAtUtc': '2024-06-05T16:00:00Z',
+    });
+    final mixedCaseId = ClubEvent.fromOccurrenceJson({
+      'occurrenceId': 'o-case',
+      'clubId': 'c1',
+      'scopeKind': 'team',
+      'scopeId': 'T1',
+      'scopeName': 'm16',
+      'type': 'training',
+      'title': 'Case-insensitive team id',
+      'startsAtUtc': '2024-06-06T16:00:00Z',
+    });
+    expect(
+      eventsVisibleToUser(
+        [relatedChild, relatedOther, otherTeam],
+        user: parent,
+        clubId: 'c1',
+        familyTeams: familyTeams,
+        familyMemberIds: const {'child-1'},
+      ).map((e) => e.id),
+      ['o-related'],
+    );
+    expect(
+      eventsVisibleToUser(
+        [cyrillicName, mixedCaseId, otherTeam],
+        user: parent,
+        clubId: 'c1',
+        familyTeams: familyTeams,
+      ).map((e) => e.id),
+      ['o-cyrillic', 'o-case'],
+    );
+  });
+
   test('Club.fromJson maps ClubResponse fields', () {
     final club = Club.fromJson({
       'id': 'c1',

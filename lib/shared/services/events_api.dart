@@ -39,6 +39,18 @@ class EventsApi {
     return items;
   }
 
+  /// Actor-centric schedule (`GET /me/schedule`): staff reach plus children.
+  Future<List<ClubEvent>> listMySchedule({DateTime? from, DateTime? to}) async {
+    final response = await _dio.get<dynamic>(
+      '/api/v1/me/schedule',
+      queryParameters: {
+        if (from != null) 'from': from.toUtc().toIso8601String(),
+        if (to != null) 'to': to.toUtc().toIso8601String(),
+      },
+    );
+    return _parseOccurrences(response);
+  }
+
   Future<ClubEvent> getEvent({
     required String clubId,
     required String eventId,

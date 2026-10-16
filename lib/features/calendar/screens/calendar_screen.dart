@@ -8,6 +8,7 @@ import '../../clubs/providers/clubs_provider.dart';
 import '../../events/providers/events_provider.dart';
 import '../../attendance/widgets/attendance_ui.dart';
 import '../../../shared/demo/demo_data.dart';
+import '../../../shared/models/event_attendance.dart';
 import '../../../shared/utils/api_error_message.dart';
 import '../../../shared/widgets/ui_bits.dart';
 import '../schedule_timing.dart';
@@ -37,6 +38,10 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
     final clubId = ref.watch(selectedClubIdProvider);
     final isStaff = isDemo || (user?.isStaff(clubId) ?? false);
     final eventsAsync = ref.watch(clubEventsProvider);
+    final scheduledDays = {
+      for (final event in eventsAsync.valueOrNull ?? const <ClubEvent>[])
+        DateTime(event.startAt.year, event.startAt.month, event.startAt.day),
+    };
 
     final days = List.generate(14, (i) {
       final base = DateTime.now().subtract(
@@ -81,7 +86,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
       body: Column(
         children: [
           SizedBox(
-            height: 84,
+            height: 92,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
@@ -94,6 +99,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                     day.month == _selected.month &&
                     day.day == _selected.day;
                 final past = isPastCalendarDay(day);
+                final hasEvent = scheduledDays.contains(day);
                 final muted = Theme.of(
                   context,
                 ).colorScheme.onSurface.withValues(alpha: past ? 0.35 : 0.55);
@@ -140,6 +146,17 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                                   : Theme.of(context).colorScheme.onSurface
                                         .withValues(alpha: past ? 0.4 : 1),
                             ),
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Container(
+                          width: 6,
+                          height: 6,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: hasEvent
+                                ? Theme.of(context).colorScheme.primary
+                                : Colors.transparent,
                           ),
                         ),
                       ],

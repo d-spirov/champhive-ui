@@ -58,12 +58,12 @@ List<ClubTeam> clubTeamsFromChildren(
 ) {
   final byId = <String, ClubTeam>{};
   for (final child in children) {
-    if (child.clubId != clubId) continue;
+    if (!_sameId(child.clubId, clubId)) continue;
     final id = child.teamId?.trim() ?? '';
     if (id.isEmpty) continue;
     final name = child.teamName?.trim();
     byId.putIfAbsent(
-      id,
+      id.toLowerCase(),
       () => ClubTeam(
         id: id,
         clubId: clubId,
@@ -73,6 +73,14 @@ List<ClubTeam> clubTeamsFromChildren(
     );
   }
   return byId.values.toList()..sort((a, b) => a.name.compareTo(b.name));
+}
+
+Set<String> familyMemberIdsInClub(List<FamilyChild> children, String clubId) {
+  return {
+    for (final child in children)
+      if (_sameId(child.clubId, clubId) && child.memberId.trim().isNotEmpty)
+        child.memberId.trim(),
+  };
 }
 
 /// Club admins see every team. Coaches see assigned teams.
@@ -147,6 +155,59 @@ final teamScheduleProvider = FutureProvider.autoDispose
           );
     });
 
+/// Club calendar for a parent: child's teams (and their section / club-wide
+/// sessions). Staff keep the full list.
+List<ClubEvent> eventsVisibleToUser(
+  List<ClubEvent> events, {
+  required User? user,
+  required String clubId,
+  List<ClubTeam> familyTeams = const [],
+  Set<String> familyMemberIds = const {},
+}) {
+  if (user == null) return const [];
+  if (user.isStaff(clubId)) return events;
+  return events
+      .where((e) => _eventVisibleToFamily(e, familyTeams, familyMemberIds))
+      .toList();
+}
+
+bool _eventVisibleToFamily(
+  ClubEvent event,
+  List<ClubTeam> familyTeams,
+  Set<String> familyMemberIds,
+) {
+  final related = {
+    for (final id in event.relatedMemberIds)
+      if (id.trim().isNotEmpty) id.trim().toLowerCase(),
+  };
+  final members = {
+    for (final id in familyMemberIds)
+      if (id.trim().isNotEmpty) id.trim().toLowerCase(),
+  };
+  if (related.isNotEmpty) {
+    return related.intersection(members).isNotEmpty;
+  }
+  final kind = (event.scopeKind ?? '').toLowerCase();
+  if (kind == 'club') return true;
+  for (final team in familyTeams) {
+    if (_eventVisibleOnTeam(
+      event,
+      teamId: team.id,
+      sectionId: team.sectionId,
+    )) {
+      return true;
+    }
+  }
+  final names = {for (final team in familyTeams) _foldTeamName(team.name)}
+    ..removeWhere((name) => name.isEmpty);
+  if (names.isEmpty) return false;
+  if (names.contains(_foldTeamName(event.scopeName ?? ''))) return true;
+  for (final name in event.teams) {
+    if (names.contains(_foldTeamName(name))) return true;
+  }
+  return false;
+}
+
 /// Team endpoint plus club-calendar rows that belong on this team.
 List<ClubEvent> mergeTeamSchedule({
   required List<ClubEvent> teamEvents,
@@ -173,11 +234,49 @@ bool _eventVisibleOnTeam(
   required String teamId,
   String? sectionId,
 }) {
-  if (event.scopeId == teamId) return true;
+  if (_sameId(event.scopeId, teamId)) return true;
   final kind = (event.scopeKind ?? '').toLowerCase();
   if (kind == 'club') return true;
-  return kind == 'section' &&
-      sectionId != null &&
-      sectionId.isNotEmpty &&
-      event.scopeId == sectionId;
+  return kind == 'section' && _sameId(event.scopeId, sectionId);
+}
+
+bool _sameId(String? a, String? b) {
+  if (a == null || b == null) return false;
+  final left = a.trim();
+  final right = b.trim();
+  if (left.isEmpty || right.isEmpty) return false;
+  return left.toLowerCase() == right.toLowerCase();
+}
+
+/// Latin/Cyrillic lookalikes so "М16" and "M16" match.
+String _foldTeamName(String raw) {
+  const map = {
+    'А': 'A',
+    'В': 'B',
+    'Е': 'E',
+    'К': 'K',
+    'М': 'M',
+    'Н': 'H',
+    'О': 'O',
+    'Р': 'P',
+    'С': 'C',
+    'Т': 'T',
+    'Х': 'X',
+    'а': 'a',
+    'е': 'e',
+    'к': 'k',
+    'м': 'm',
+    'н': 'h',
+    'о': 'o',
+    'р': 'p',
+    'с': 'c',
+    'т': 't',
+    'х': 'x',
+  };
+  final folded = StringBuffer();
+  for (final rune in raw.runes) {
+    final ch = String.fromCharCode(rune);
+    folded.write(map[ch] ?? ch);
+  }
+  return folded.toString().trim().toLowerCase();
 }

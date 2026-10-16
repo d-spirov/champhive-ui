@@ -206,6 +206,15 @@ class OccurrenceCoach {
   }
 }
 
+List<String> _stringIds(Object? raw) {
+  if (raw is! List) return const [];
+  return [
+    for (final item in raw)
+      if (item != null && item.toString().trim().isNotEmpty)
+        item.toString().trim(),
+  ];
+}
+
 List<OccurrenceCoach> parseOccurrenceCoaches(Object? raw) {
   if (raw is! List) return const [];
   final coaches = <OccurrenceCoach>[];
@@ -252,6 +261,7 @@ class ClubEvent {
     this.trainingPlanName,
     this.metricBatteryId,
     this.metricBatteryName,
+    this.relatedMemberIds = const [],
   });
 
   final String id;
@@ -284,6 +294,7 @@ class ClubEvent {
   final String? trainingPlanName;
   final String? metricBatteryId;
   final String? metricBatteryName;
+  final List<String> relatedMemberIds;
 
   /// Occurrence id (opaque).
   String get occurrenceId => id;
@@ -346,6 +357,7 @@ class ClubEvent {
       trainingPlanName: json['trainingPlanName'] as String?,
       metricBatteryId: json['metricBatteryId']?.toString(),
       metricBatteryName: json['metricBatteryName'] as String?,
+      relatedMemberIds: _stringIds(json['relatedMemberIds']),
     );
   }
 
@@ -381,6 +393,7 @@ class ClubEvent {
       trainingPlanName: trainingPlanName,
       metricBatteryId: metricBatteryId ?? this.metricBatteryId,
       metricBatteryName: metricBatteryName ?? this.metricBatteryName,
+      relatedMemberIds: relatedMemberIds,
     );
   }
 
