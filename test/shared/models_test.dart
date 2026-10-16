@@ -336,6 +336,133 @@ void main() {
     );
   });
 
+  test('canManageOccurrence is only the coach assigned team', () {
+    ClubEvent teamEvent(String id) => ClubEvent.fromOccurrenceJson({
+      'occurrenceId': 'o-$id',
+      'clubId': 'c1',
+      'scopeKind': 'team',
+      'scopeId': id,
+      'scopeName': id,
+      'type': 'training',
+      'title': 'Session',
+      'startsAtUtc': '2026-10-20T18:00:00Z',
+    });
+    final clubWide = ClubEvent.fromOccurrenceJson({
+      'occurrenceId': 'o-club',
+      'clubId': 'c1',
+      'scopeKind': 'club',
+      'scopeId': 'c1',
+      'scopeName': 'Club',
+      'type': 'meeting',
+      'title': 'Club meeting',
+      'startsAtUtc': '2026-10-21T18:00:00Z',
+    });
+    const teams = [
+      ClubTeam(
+        id: 't1',
+        clubId: 'c1',
+        name: 'U12',
+        sectionId: 's1',
+        coaches: [
+          TeamCoach(userAccountId: 'u2', name: 'Ana Coach', scopeKind: 'team'),
+        ],
+      ),
+      ClubTeam(id: 't3', clubId: 'c1', name: 'U16', sectionId: 's2'),
+    ];
+    const assignedCoach = User(
+      id: 'u2',
+      email: 'coach@b.com',
+      firstName: 'Ana',
+      lastName: 'Coach',
+      roles: [
+        RoleGrant(role: 'coach', clubId: 'c1', scope: 'club', scopeId: 'c1'),
+      ],
+    );
+    const teamScoped = User(
+      id: 'u5',
+      email: 't@b.com',
+      firstName: 'Tea',
+      lastName: 'Coach',
+      roles: [
+        RoleGrant(role: 'coach', clubId: 'c1', scope: 'team', scopeId: 't3'),
+      ],
+    );
+    const admin = User(
+      id: 'u4',
+      email: 'admin@b.com',
+      firstName: 'Ada',
+      lastName: 'Admin',
+      roles: [
+        RoleGrant(
+          role: 'clubAdmin',
+          clubId: 'c1',
+          scope: 'club',
+          scopeId: 'c1',
+        ),
+      ],
+    );
+    const parent = User(
+      id: 'p1',
+      email: 'parent@b.com',
+      firstName: 'Pat',
+      lastName: 'Parent',
+      roles: [
+        RoleGrant(role: 'parent', clubId: 'c1', scope: 'club', scopeId: 'c1'),
+      ],
+    );
+
+    expect(
+      canManageOccurrence(
+        teamEvent('t1'),
+        user: assignedCoach,
+        clubId: 'c1',
+        teams: teams,
+      ),
+      isTrue,
+    );
+    expect(
+      canManageOccurrence(
+        teamEvent('t3'),
+        user: assignedCoach,
+        clubId: 'c1',
+        teams: teams,
+      ),
+      isFalse,
+    );
+    expect(
+      canManageOccurrence(
+        teamEvent('t3'),
+        user: teamScoped,
+        clubId: 'c1',
+        teams: teams,
+      ),
+      isTrue,
+    );
+    expect(
+      canManageOccurrence(
+        teamEvent('t1'),
+        user: teamScoped,
+        clubId: 'c1',
+        teams: teams,
+      ),
+      isFalse,
+    );
+    expect(
+      canManageOccurrence(clubWide, user: assignedCoach, clubId: 'c1'),
+      isFalse,
+    );
+    expect(canManageOccurrence(clubWide, user: admin, clubId: 'c1'), isTrue);
+    expect(
+      canManageOccurrence(
+        teamEvent('t1'),
+        user: parent,
+        clubId: 'c1',
+        teams: teams,
+      ),
+      isFalse,
+    );
+  });
+
   test('clubTeamsFromChildren keeps one row per child team in the club', () {
     final children = [
       FamilyChild(

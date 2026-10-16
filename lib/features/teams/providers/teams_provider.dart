@@ -114,6 +114,39 @@ List<ClubTeam> teamsVisibleToUser(
   return [...fromList, ...extra];
 }
 
+/// Club admins may change any session. Coaches and section admins only
+/// sessions in their assigned team / section. Parents never.
+bool canManageOccurrence(
+  ClubEvent event, {
+  required User? user,
+  required String? clubId,
+  List<ClubTeam> teams = const [],
+}) {
+  if (user == null || clubId == null || clubId.isEmpty) return false;
+  if (user.hasClubWideStaffGrant(clubId)) return true;
+  if (!user.isStaff(clubId)) return false;
+
+  final kind = (event.scopeKind ?? '').toLowerCase();
+  if (kind == 'club') return false;
+
+  final teamIds = user.staffTeamIdsForClub(clubId);
+  final sectionIds = user.staffSectionIdsForClub(clubId);
+  if (kind == 'section') {
+    return sectionIds.any((id) => _sameId(id, event.scopeId));
+  }
+  if (teamIds.any((id) => _sameId(id, event.scopeId))) return true;
+  for (final team in teams) {
+    if (!_sameId(team.id, event.scopeId)) continue;
+    if (team.sectionId != null &&
+        team.sectionId!.isNotEmpty &&
+        sectionIds.any((id) => _sameId(id, team.sectionId))) {
+      return true;
+    }
+    if (team.isAssignedTo(user.id)) return true;
+  }
+  return false;
+}
+
 final clubTeamProvider = Provider.autoDispose.family<ClubTeam?, String>((
   ref,
   teamId,

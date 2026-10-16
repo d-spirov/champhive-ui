@@ -12,6 +12,7 @@ import '../../../shared/widgets/ui_bits.dart';
 import '../../attendance/widgets/attendance_ui.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../../clubs/providers/clubs_provider.dart';
+import '../../teams/providers/teams_provider.dart';
 import '../providers/events_provider.dart';
 import '../providers/performance_provider.dart';
 import '../providers/training_plans_provider.dart';
@@ -90,6 +91,15 @@ class _SessionDetailsBody extends ConsumerWidget {
     final clubId = ref.watch(selectedClubIdProvider);
     final isDemo = user?.id == 'demo';
     final isStaff = isDemo || (user?.isStaff(clubId) ?? false);
+    final teams = ref.watch(clubTeamsProvider).valueOrNull ?? const [];
+    final canManageSession =
+        isDemo ||
+        canManageOccurrence(
+          occurrence,
+          user: user,
+          clubId: clubId,
+          teams: teams,
+        );
     final isTesting = occurrence.type == EventType.testing;
     final showPlanTabs = isStaff;
 
@@ -116,7 +126,7 @@ class _SessionDetailsBody extends ConsumerWidget {
         PopupMenuButton<String>(
           onSelected: (value) {
             if (value == 'refresh') refresh();
-            if (!isStaff) return;
+            if (!canManageSession) return;
             if (value == 'reschedule') {
               showRescheduleOccurrenceDialog(
                 context: context,
@@ -142,14 +152,14 @@ class _SessionDetailsBody extends ConsumerWidget {
                 (occurrence.status ?? '').toLowerCase() == 'canceled';
             return [
               PopupMenuItem(value: 'refresh', child: Text(l10n.refresh)),
-              if (isStaff && !canceled)
+              if (canManageSession && !canceled)
                 PopupMenuItem(
                   value: 'reschedule',
                   child: Text(l10n.rescheduleSession),
                 ),
-              if (isStaff && !canceled)
+              if (canManageSession && !canceled)
                 PopupMenuItem(value: 'cancel', child: Text(l10n.cancelSession)),
-              if (isStaff && canceled)
+              if (canManageSession && canceled)
                 PopupMenuItem(
                   value: 'restore',
                   child: Text(l10n.restoreSession),

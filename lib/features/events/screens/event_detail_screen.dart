@@ -8,6 +8,7 @@ import '../../auth/providers/auth_provider.dart';
 import '../../clubs/providers/clubs_provider.dart';
 import '../../clubs/providers/sport_theme_provider.dart';
 import '../../events/providers/events_provider.dart';
+import '../../teams/providers/teams_provider.dart';
 import '../../../core/theme/sport_theme_config.dart';
 import '../../../shared/models/event_attendance.dart';
 import '../../../shared/theme/app_theme.dart';
@@ -97,6 +98,15 @@ class _OccurrenceBody extends ConsumerWidget {
     final clubId = ref.watch(selectedClubIdProvider);
     final isDemo = user?.id == 'demo';
     final isStaff = isDemo || (user?.isStaff(clubId) ?? false);
+    final teams = ref.watch(clubTeamsProvider).valueOrNull ?? const [];
+    final canManageSession =
+        isDemo ||
+        canManageOccurrence(
+          occurrence,
+          user: user,
+          clubId: clubId,
+          teams: teams,
+        );
     final color = clubEventTypeColor(occurrence.type);
     final scope =
         occurrence.scopeName ??
@@ -292,7 +302,7 @@ class _OccurrenceBody extends ConsumerWidget {
                   onTap: () =>
                       context.push('/occurrences/${occurrence.id}/details'),
                 ),
-                if (isStaff) ...[
+                if (canManageSession) ...[
                   const SizedBox(height: 12),
                   if (!canceled) ...[
                     _ActionTile(
@@ -333,6 +343,9 @@ class _OccurrenceBody extends ConsumerWidget {
                     ),
                     const SizedBox(height: 12),
                   ],
+                ],
+                if (isStaff) ...[
+                  const SizedBox(height: 12),
                   if (!canceled && open)
                     _ActionTile(
                       icon: Icons.how_to_reg_rounded,
