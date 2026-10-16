@@ -31,8 +31,13 @@ class EventDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
+    final user = ref.watch(authNotifierProvider).user;
+    final clubId = ref.watch(selectedClubIdProvider);
+    final isStaff = user?.id == 'demo' || (user?.isStaff(clubId) ?? false);
     final async = ref.watch(eventDetailProvider(eventId));
-    final rosterAsync = ref.watch(attendanceSessionProvider(eventId));
+    final rosterAsync = isStaff
+        ? ref.watch(attendanceSessionProvider(eventId))
+        : null;
 
     return async.when(
       loading: () => Scaffold(
@@ -61,7 +66,7 @@ class EventDetailScreen extends ConsumerWidget {
       data: (occurrence) => Scaffold(
         body: _OccurrenceBody(
           occurrence: occurrence,
-          roster: rosterAsync.valueOrNull,
+          roster: rosterAsync?.valueOrNull,
           sportTheme: ref.watch(sportThemeProvider),
           onRetryRoster: () =>
               ref.invalidate(attendanceSessionProvider(eventId)),
@@ -173,15 +178,16 @@ class _OccurrenceBody extends ConsumerWidget {
                         ),
                         visualDensity: VisualDensity.compact,
                       ),
-                    Chip(
-                      avatar: Icon(
-                        open ? Icons.lock_open_rounded : Icons.lock_rounded,
-                        size: 16,
-                        color: open ? AppColors.present : AppColors.absent,
+                    if (isStaff)
+                      Chip(
+                        avatar: Icon(
+                          open ? Icons.lock_open_rounded : Icons.lock_rounded,
+                          size: 16,
+                          color: open ? AppColors.present : AppColors.absent,
+                        ),
+                        label: Text(lockLabel),
+                        visualDensity: VisualDensity.compact,
                       ),
-                      label: Text(lockLabel),
-                      visualDensity: VisualDensity.compact,
-                    ),
                   ],
                 ),
                 if (scope != null) ...[
@@ -216,12 +222,13 @@ class _OccurrenceBody extends ConsumerWidget {
                     icon: Icons.public_outlined,
                     label: occurrence.timezone!,
                   ),
-                if ((occurrence.metricBatteryName ?? '').trim().isNotEmpty)
+                if (isStaff &&
+                    (occurrence.metricBatteryName ?? '').trim().isNotEmpty)
                   _MetaRow(
                     icon: Icons.speed_rounded,
                     label: occurrence.metricBatteryName!.trim(),
                   ),
-                if (lockAt != null)
+                if (isStaff && lockAt != null)
                   _MetaRow(
                     icon: Icons.timer_outlined,
                     label: l10n.marksAcceptedUntil(

@@ -85,44 +85,75 @@ class _SessionDetailsBody extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
+    final user = ref.watch(authNotifierProvider).user;
+    final clubId = ref.watch(selectedClubIdProvider);
+    final isDemo = user?.id == 'demo';
+    final isStaff = isDemo || (user?.isStaff(clubId) ?? false);
     final isTesting = occurrence.type == EventType.testing;
+    final showPlanTabs = isStaff;
+
+    void refresh() {
+      ref.invalidate(eventDetailProvider(occurrenceId));
+      if (!showPlanTabs) return;
+      final planId = occurrence.trainingPlanId;
+      if (planId != null && planId.isNotEmpty) {
+        ref.invalidate(trainingPlanDetailProvider(planId));
+      }
+      if (isTesting) {
+        ref.invalidate(testingDayProvider(occurrenceId));
+      }
+    }
+
+    final appBar = AppBar(
+      centerTitle: true,
+      title: Text(l10n.sessionDetails),
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back_rounded),
+        onPressed: () => popOrGoHome(context),
+      ),
+      actions: [
+        PopupMenuButton<String>(
+          onSelected: (value) {
+            if (value == 'refresh') refresh();
+          },
+          itemBuilder: (context) => [
+            PopupMenuItem(value: 'refresh', child: Text(l10n.refresh)),
+          ],
+        ),
+      ],
+    );
+
+    final hero = Padding(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+      child: _SessionHero(occurrence: occurrence),
+    );
+
+    if (!showPlanTabs) {
+      return Scaffold(
+        appBar: appBar,
+        body: Column(
+          children: [
+            hero,
+            const SizedBox(height: 8),
+            Expanded(
+              child: _OverviewTab(
+                occurrence: occurrence,
+                showStaffFields: false,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     return DefaultTabController(
       length: isTesting ? 2 : 3,
       initialIndex: isTesting && openTestSet ? 1 : 0,
       child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text(l10n.sessionDetails),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_rounded),
-            onPressed: () => popOrGoHome(context),
-          ),
-          actions: [
-            PopupMenuButton<String>(
-              onSelected: (value) {
-                if (value == 'refresh') {
-                  ref.invalidate(eventDetailProvider(occurrenceId));
-                  final planId = occurrence.trainingPlanId;
-                  if (planId != null && planId.isNotEmpty) {
-                    ref.invalidate(trainingPlanDetailProvider(planId));
-                  }
-                  if (isTesting) {
-                    ref.invalidate(testingDayProvider(occurrenceId));
-                  }
-                }
-              },
-              itemBuilder: (context) => [
-                PopupMenuItem(value: 'refresh', child: Text(l10n.refresh)),
-              ],
-            ),
-          ],
-        ),
+        appBar: appBar,
         body: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-              child: _SessionHero(occurrence: occurrence),
-            ),
+            hero,
             const SizedBox(height: 8),
             TabBar(
               tabs: [
@@ -427,14 +458,23 @@ class _HeroText extends StatelessWidget {
 }
 
 class _OverviewTab extends StatelessWidget {
-  const _OverviewTab({required this.occurrence});
+  const _OverviewTab({
+    required this.occurrence,
+    this.showStaffFields = true,
+  });
 
   final ClubEvent occurrence;
+  final bool showStaffFields;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final cells = _detailCells(context, l10n, occurrence);
+    final cells = _detailCells(
+      context,
+      l10n,
+      occurrence,
+      showStaffFields: showStaffFields,
+    );
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
       children: [
@@ -521,8 +561,9 @@ class _OverviewTab extends StatelessWidget {
   List<_DetailCell> _detailCells(
     BuildContext context,
     AppLocalizations l10n,
-    ClubEvent event,
-  ) {
+    ClubEvent event, {
+    bool showStaffFields = true,
+  }) {
     final date = appDateFormat(
       context,
       'EEE, d MMM yyyy',
@@ -601,7 +642,8 @@ class _OverviewTab extends StatelessWidget {
         label: l10n.requestRsvp,
         value: event.rsvpRequested ? l10n.rsvpYes : l10n.rsvpNo,
       ),
-      if ((event.metricBatteryName ?? '').trim().isNotEmpty)
+      if (showStaffFields &&
+          (event.metricBatteryName ?? '').trim().isNotEmpty)
         _DetailCell(
           icon: Icons.speed_rounded,
           label: l10n.testSet,
