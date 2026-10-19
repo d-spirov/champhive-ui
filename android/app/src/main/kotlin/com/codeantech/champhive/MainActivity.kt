@@ -1,4 +1,4 @@
-package com.codeantech.team_hive
+package com.codeantech.champhive
 
 import io.flutter.embedding.android.FlutterActivity
 
