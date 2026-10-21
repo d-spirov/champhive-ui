@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:team_hive/features/teams/providers/teams_provider.dart';
+import 'package:team_hive/shared/models/chat.dart';
 import 'package:team_hive/shared/models/user.dart';
 import 'package:team_hive/shared/models/club.dart';
 import 'package:team_hive/shared/models/event_attendance.dart';
@@ -514,6 +515,109 @@ void main() {
     expect(teams, hasLength(1));
     expect(teams.single.id, 't1');
     expect(teams.single.name, 'M16');
+  });
+
+  test('parentVisibleRoster keeps own children on their team', () {
+    final children = [
+      FamilyChild(
+        memberId: 'aleks',
+        firstName: 'Aleksandar',
+        lastName: 'B',
+        dateOfBirth: DateTime(2012, 8, 19),
+        status: 'Active',
+        clubId: 'c1',
+        clubName: 'Club',
+        hasActiveEnrollment: true,
+        consentGranted: true,
+        isSelf: false,
+        teamId: 'm16',
+        teamName: 'M16',
+      ),
+      FamilyChild(
+        memberId: 'nenad',
+        firstName: 'Nenad',
+        lastName: 'B',
+        dateOfBirth: DateTime(2014, 9, 13),
+        status: 'Active',
+        clubId: 'c1',
+        clubName: 'Club',
+        hasActiveEnrollment: true,
+        consentGranted: true,
+        isSelf: false,
+        teamId: 'm14',
+        teamName: 'M14',
+      ),
+    ];
+    const directory = [
+      ChatDirectoryEntry(
+        memberId: null,
+        name: 'Kire',
+        role: 'clubAdmin',
+        messageable: true,
+      ),
+      ChatDirectoryEntry(
+        memberId: 'aleks',
+        name: 'Aleksandar B',
+        role: 'player',
+        messageable: false,
+      ),
+      ChatDirectoryEntry(
+        memberId: 'nenad',
+        name: 'Nenad B',
+        role: 'player',
+        messageable: false,
+      ),
+      ChatDirectoryEntry(
+        memberId: 'vasil',
+        name: 'Vasil Gocevski',
+        role: 'player',
+        messageable: false,
+      ),
+      ChatDirectoryEntry(
+        memberId: 'vasilij',
+        name: 'Vasilij Dasic',
+        role: 'player',
+        messageable: false,
+      ),
+    ];
+
+    final m16 = parentVisibleRoster(
+      clubId: 'c1',
+      teamId: 'm16',
+      teamName: 'M16',
+      children: children,
+      directory: directory,
+    );
+    expect(
+      m16.entries.map((e) => e.memberId).toSet(),
+      {'aleks', 'vasil', 'vasilij'},
+    );
+    expect(
+      m16.entries.firstWhere((e) => e.memberId == 'aleks').firstName,
+      'Aleksandar',
+    );
+
+    final m14 = parentVisibleRoster(
+      clubId: 'c1',
+      teamId: 'm14',
+      teamName: 'M14',
+      children: children,
+      directory: directory,
+    );
+    expect(
+      m14.entries.map((e) => e.memberId).toSet(),
+      {'nenad', 'vasil', 'vasilij'},
+    );
+
+    final ownOnly = parentVisibleRoster(
+      clubId: 'c1',
+      teamId: 'm14',
+      teamName: 'M14',
+      children: children,
+      directory: directory,
+      includeDirectoryPlayers: false,
+    );
+    expect(ownOnly.entries.map((e) => e.memberId).toSet(), {'nenad'});
   });
 
   test('eventsVisibleToUser keeps parent calendar on child teams', () {

@@ -47,6 +47,20 @@ final unreadChatCountProvider = Provider.autoDispose<int>((ref) {
   return channels.fold<int>(0, (sum, c) => sum + c.unreadCount);
 });
 
+/// Club people-picker. Parents can read this when the team roster cannot.
+final chatDirectoryProvider =
+    FutureProvider.autoDispose<List<ChatDirectoryEntry>>((ref) async {
+  final auth = ref.watch(authNotifierProvider);
+  if (!auth.isAuthenticated || auth.user?.id == 'demo') {
+    return const [];
+  }
+  final clubId = ref.watch(selectedClubIdProvider);
+  if (clubId == null || clubId.isEmpty) return const [];
+
+  await ref.watch(authApiProvider.future);
+  return ref.watch(chatApiProvider).listDirectory(clubId: clubId);
+});
+
 /// Adults the caller can open a 1:1 thread with (staff + known channel peers).
 final directMessageCandidatesProvider =
     FutureProvider.autoDispose<List<DirectMessageCandidate>>((ref) async {

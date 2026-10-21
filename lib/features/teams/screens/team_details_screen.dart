@@ -25,6 +25,7 @@ class TeamDetailsScreen extends ConsumerWidget {
 
   void _refresh(WidgetRef ref) {
     ref.invalidate(clubTeamsProvider);
+    ref.invalidate(chatDirectoryProvider);
     ref.invalidate(teamRosterProvider(teamId));
     ref.invalidate(teamScheduleProvider(teamId));
     ref.invalidate(clubEventsProvider);
@@ -97,6 +98,7 @@ class _OverviewTab extends ConsumerWidget {
     return RefreshIndicator(
       onRefresh: () async {
         ref.invalidate(clubTeamsProvider);
+        ref.invalidate(chatDirectoryProvider);
         ref.invalidate(teamRosterProvider(teamId));
         ref.invalidate(teamScheduleProvider(teamId));
         ref.invalidate(clubEventsProvider);
@@ -184,7 +186,10 @@ class _OverviewTab extends ConsumerWidget {
                   ),
                 );
               }
-              return _TeamMemberStrip(entries: sortedRoster(roster.entries));
+              return _TeamMemberStrip(
+                entries: sortedRoster(roster.entries),
+                openProfiles: _canOpenMemberProfiles(ref),
+              );
             },
           ),
           const SizedBox(height: 22),
@@ -765,9 +770,13 @@ class _GoingRow extends StatelessWidget {
 }
 
 class _TeamMemberStrip extends StatelessWidget {
-  const _TeamMemberStrip({required this.entries});
+  const _TeamMemberStrip({
+    required this.entries,
+    this.openProfiles = true,
+  });
 
   final List<TeamRosterEntry> entries;
+  final bool openProfiles;
 
   @override
   Widget build(BuildContext context) {
@@ -779,7 +788,10 @@ class _TeamMemberStrip extends StatelessWidget {
         separatorBuilder: (_, _) => const SizedBox(width: 14),
         itemBuilder: (context, index) {
           final member = entries[index];
-          return _MemberAvatarTile(member: member);
+          return _MemberAvatarTile(
+            member: member,
+            openProfile: openProfiles,
+          );
         },
       ),
     );
@@ -787,16 +799,22 @@ class _TeamMemberStrip extends StatelessWidget {
 }
 
 class _MemberAvatarTile extends StatelessWidget {
-  const _MemberAvatarTile({required this.member});
+  const _MemberAvatarTile({
+    required this.member,
+    this.openProfile = true,
+  });
 
   final TeamRosterEntry member;
+  final bool openProfile;
 
   @override
   Widget build(BuildContext context) {
     final number = member.shirtNumber?.trim();
     return InkWell(
       borderRadius: BorderRadius.circular(12),
-      onTap: () => context.push('/members/${member.memberId}'),
+      onTap: openProfile
+          ? () => context.push('/members/${member.memberId}')
+          : null,
       child: SizedBox(
         width: 76,
         child: Column(
@@ -971,6 +989,7 @@ class _MembersTab extends ConsumerWidget {
         final isDemo = user?.id == 'demo';
         final canAdd =
             !isDemo && (user?.canWriteMembers(clubId) ?? false);
+        final openProfiles = _canOpenMemberProfiles(ref);
         return Column(
           children: [
             if (canAdd)
@@ -991,6 +1010,7 @@ class _MembersTab extends ConsumerWidget {
                   ? Center(child: Text(l10n.noMembersOnTeamRoster))
                   : RefreshIndicator(
                       onRefresh: () async {
+                        ref.invalidate(chatDirectoryProvider);
                         ref.invalidate(teamRosterProvider(teamId));
                         await ref.read(teamRosterProvider(teamId).future);
                       },
@@ -1047,10 +1067,16 @@ class _MembersTab extends ConsumerWidget {
                                 ),
                               ),
                               title: Text(p.displayName),
-                              subtitle: Text(p.subtitle),
-                              trailing: const Icon(Icons.chevron_right_rounded),
-                              onTap: () =>
-                                  context.push('/members/${p.memberId}'),
+                              subtitle: p.subtitle.isEmpty
+                                  ? null
+                                  : Text(p.subtitle),
+                              trailing: openProfiles
+                                  ? const Icon(Icons.chevron_right_rounded)
+                                  : null,
+                              onTap: openProfiles
+                                  ? () =>
+                                      context.push('/members/${p.memberId}')
+                                  : null,
                             ),
                           );
                         },
@@ -1158,6 +1184,12 @@ class _ScheduleTab extends ConsumerWidget {
       },
     );
   }
+}
+
+bool _canOpenMemberProfiles(WidgetRef ref) {
+  final user = ref.watch(authNotifierProvider).user;
+  final clubId = ref.watch(selectedClubIdProvider);
+  return user?.id == 'demo' || (user?.isStaff(clubId) ?? false);
 }
 
 List<TeamRosterEntry> sortedRoster(List<TeamRosterEntry> entries) {

@@ -207,3 +207,73 @@ class ChatChannelPage {
     );
   }
 }
+
+/// One row from `GET /clubs/{clubId}/chat/directory` — people the caller
+/// can reach, including under-16 players who are not messageable.
+class ChatDirectoryEntry {
+  const ChatDirectoryEntry({
+    required this.name,
+    required this.role,
+    required this.messageable,
+    this.memberId,
+    this.userAccountId,
+    this.context,
+    this.reason,
+  });
+
+  final String? memberId;
+  final String? userAccountId;
+  final String name;
+  final String role;
+  final String? context;
+  final bool messageable;
+  final String? reason;
+
+  bool get isPlayer => role.toLowerCase() == 'player';
+
+  factory ChatDirectoryEntry.fromJson(Map<String, dynamic> json) {
+    return ChatDirectoryEntry(
+      memberId: json['memberId']?.toString(),
+      userAccountId: json['userAccountId']?.toString(),
+      name: json['name'] as String? ?? '',
+      role: json['role'] as String? ?? '',
+      context: json['context'] as String?,
+      messageable: json['messageable'] as bool? ?? false,
+      reason: json['reason'] as String?,
+    );
+  }
+}
+
+class ChatDirectoryPage {
+  const ChatDirectoryPage({
+    required this.items,
+    required this.page,
+    required this.pageSize,
+    required this.totalCount,
+  });
+
+  final List<ChatDirectoryEntry> items;
+  final int page;
+  final int pageSize;
+  final int totalCount;
+
+  factory ChatDirectoryPage.fromJson(Map<String, dynamic> json) {
+    final raw = json['items'];
+    final items = <ChatDirectoryEntry>[];
+    if (raw is List) {
+      for (final e in raw) {
+        if (e is Map) {
+          items.add(
+            ChatDirectoryEntry.fromJson(Map<String, dynamic>.from(e)),
+          );
+        }
+      }
+    }
+    return ChatDirectoryPage(
+      items: items,
+      page: (json['page'] as num?)?.toInt() ?? 1,
+      pageSize: (json['pageSize'] as num?)?.toInt() ?? 25,
+      totalCount: (json['totalCount'] as num?)?.toInt() ?? items.length,
+    );
+  }
+}

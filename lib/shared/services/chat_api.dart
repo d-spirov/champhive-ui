@@ -30,6 +30,41 @@ class ChatApi {
     return ChatChannel.fromJson(_asMap(response, 'Empty channel'));
   }
 
+  /// People the caller can reach in [clubId] (staff, parents, players).
+  /// Parents can read this even when `GET .../teams/{id}/roster` is 403.
+  Future<List<ChatDirectoryEntry>> listDirectory({
+    required String clubId,
+    String? search,
+    String? memberId,
+    int pageSize = 100,
+  }) async {
+    final all = <ChatDirectoryEntry>[];
+    var page = 1;
+    final size = pageSize.clamp(1, 100);
+    while (page <= 20) {
+      final response = await _dio.get<dynamic>(
+        '/api/v1/clubs/$clubId/chat/directory',
+        queryParameters: {
+          'page': page,
+          'pageSize': size,
+          if (search != null && search.isNotEmpty) 'search': search,
+          if (memberId != null && memberId.isNotEmpty) 'memberId': memberId,
+        },
+      );
+      final parsed = ChatDirectoryPage.fromJson(
+        _asMap(response, 'Empty directory'),
+      );
+      all.addAll(parsed.items);
+      if (parsed.items.isEmpty ||
+          all.length >= parsed.totalCount ||
+          parsed.items.length < size) {
+        break;
+      }
+      page++;
+    }
+    return all;
+  }
+
   Future<ChatChannel> openDirect({
     required String participantUserAccountId,
     String? onBehalfOfMemberId,
