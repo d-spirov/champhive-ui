@@ -673,7 +673,20 @@ class _FamilyChildTile extends StatelessWidget {
             contentPadding: const EdgeInsets.only(left: 12),
             title: Text(child.displayName),
             subtitle: Text(subtitle),
-            trailing: const Icon(Icons.chevron_right_rounded),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  tooltip: l10n.attendance,
+                  icon: const Icon(Icons.how_to_reg_outlined),
+                  onPressed: () => context.push(
+                    '/family/${child.memberId}/attendance'
+                    '?name=${Uri.encodeComponent(child.displayName)}',
+                  ),
+                ),
+                const Icon(Icons.chevron_right_rounded),
+              ],
+            ),
             onTap: () => context.push(
               '/compliance/members/${child.memberId}'
               '?name=${Uri.encodeComponent(child.displayName)}',

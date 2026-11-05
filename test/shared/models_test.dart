@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:team_hive/features/teams/providers/teams_provider.dart';
-import 'package:team_hive/shared/models/chat.dart';
 import 'package:team_hive/shared/models/user.dart';
+import 'package:team_hive/shared/models/member_attendance.dart';
 import 'package:team_hive/shared/models/club.dart';
 import 'package:team_hive/shared/models/event_attendance.dart';
 import 'package:team_hive/shared/models/family.dart';
@@ -517,7 +517,7 @@ void main() {
     expect(teams.single.name, 'M16');
   });
 
-  test('parentVisibleRoster keeps own children on their team', () {
+  test('parentVisibleRoster keeps only own children on their team', () {
     final children = [
       FamilyChild(
         memberId: 'aleks',
@@ -548,50 +548,14 @@ void main() {
         teamName: 'M14',
       ),
     ];
-    const directory = [
-      ChatDirectoryEntry(
-        memberId: null,
-        name: 'Kire',
-        role: 'clubAdmin',
-        messageable: true,
-      ),
-      ChatDirectoryEntry(
-        memberId: 'aleks',
-        name: 'Aleksandar B',
-        role: 'player',
-        messageable: false,
-      ),
-      ChatDirectoryEntry(
-        memberId: 'nenad',
-        name: 'Nenad B',
-        role: 'player',
-        messageable: false,
-      ),
-      ChatDirectoryEntry(
-        memberId: 'vasil',
-        name: 'Vasil Gocevski',
-        role: 'player',
-        messageable: false,
-      ),
-      ChatDirectoryEntry(
-        memberId: 'vasilij',
-        name: 'Vasilij Dasic',
-        role: 'player',
-        messageable: false,
-      ),
-    ];
 
     final m16 = parentVisibleRoster(
       clubId: 'c1',
       teamId: 'm16',
       teamName: 'M16',
       children: children,
-      directory: directory,
     );
-    expect(
-      m16.entries.map((e) => e.memberId).toSet(),
-      {'aleks', 'vasil', 'vasilij'},
-    );
+    expect(m16.entries.map((e) => e.memberId).toSet(), {'aleks'});
     expect(
       m16.entries.firstWhere((e) => e.memberId == 'aleks').firstName,
       'Aleksandar',
@@ -602,22 +566,68 @@ void main() {
       teamId: 'm14',
       teamName: 'M14',
       children: children,
-      directory: directory,
     );
-    expect(
-      m14.entries.map((e) => e.memberId).toSet(),
-      {'nenad', 'vasil', 'vasilij'},
-    );
+    expect(m14.entries.map((e) => e.memberId).toSet(), {'nenad'});
 
-    final ownOnly = parentVisibleRoster(
-      clubId: 'c1',
-      teamId: 'm14',
-      teamName: 'M14',
+    final limited = limitRosterToFamily(
+      const TeamRoster(
+        clubId: 'c1',
+        teamId: 'm16',
+        teamName: 'M16',
+        entries: [
+          TeamRosterEntry(
+            memberId: 'aleks',
+            firstName: 'Aleksandar',
+            lastName: 'B',
+            status: 'Active',
+          ),
+          TeamRosterEntry(
+            memberId: 'vasil',
+            firstName: 'Vasil',
+            lastName: 'G',
+            status: 'Active',
+          ),
+        ],
+      ),
       children: children,
-      directory: directory,
-      includeDirectoryPlayers: false,
+      clubId: 'c1',
     );
-    expect(ownOnly.entries.map((e) => e.memberId).toSet(), {'nenad'});
+    expect(limited.entries.map((e) => e.memberId).toSet(), {'aleks'});
+  });
+
+  test('MemberAttendance.fromJson maps the family history', () {
+    final history = MemberAttendance.fromJson({
+      'memberId': 'aleks',
+      'clubId': 'c1',
+      'fromUtc': '2026-08-01T00:00:00Z',
+      'toUtc': '2026-11-01T00:00:00Z',
+      'present': '3',
+      'late': 1,
+      'excused': 0,
+      'absent': 1,
+      'attendanceRate': '0.8',
+      'entries': [
+        {
+          'occurrenceId': 'o1',
+          'seriesId': 's1',
+          'title': 'Training',
+          'type': 'training',
+          'scopeKind': 'team',
+          'scopeId': 'm16',
+          'scopeName': 'M16',
+          'startsAtUtc': '2026-10-01T16:00:00Z',
+          'timeZone': 'Europe/Skopje',
+          'status': 'present',
+          'note': null,
+          'recordedAtClientUtc': '2026-10-01T18:00:00Z',
+          'receivedAtUtc': '2026-10-01T18:01:00Z',
+        },
+      ],
+    });
+    expect(history.present, 3);
+    expect(history.attendanceRate, 0.8);
+    expect(history.entries.single.status, AttendanceStatus.present);
+    expect(history.entries.single.scopeName, 'M16');
   });
 
   test('eventsVisibleToUser keeps parent calendar on child teams', () {

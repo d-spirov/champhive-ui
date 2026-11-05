@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../shared/models/chat.dart';
 import '../../../shared/models/event_attendance.dart';
 import '../../../shared/models/family.dart';
 import '../../../shared/models/team.dart';
@@ -10,7 +9,6 @@ import '../../../shared/services/teams_api.dart';
 import '../../account/providers/account_extras_provider.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../../clubs/providers/clubs_provider.dart';
-import '../../messages/providers/chat_provider.dart';
 
 final teamsApiProvider = Provider<TeamsApi>((ref) {
   final authApi = ref.watch(authApiProvider).valueOrNull;
@@ -87,46 +85,24 @@ Set<String> familyMemberIdsInClub(List<FamilyChild> children, String clubId) {
 
 /// Parent-readable stand-in for `GET .../teams/{id}/roster` (403 MEMBER_READ).
 ///
-/// Own children are placed on their enrolled team. Other directory players
-/// are teammates in the parent's messaging scope — the directory has no
-/// teamId, so they are included on every family team of this club.
+/// Only the caller's own children enrolled on this team. The chat directory
+/// lists every player the parent can message and has no team id, so it must
+/// not be used as a roster.
 TeamRoster parentVisibleRoster({
   required String clubId,
   required String teamId,
   required String teamName,
   required List<FamilyChild> children,
-  List<ChatDirectoryEntry> directory = const [],
   String? sectionId,
-  bool includeDirectoryPlayers = true,
 }) {
   final byId = <String, TeamRosterEntry>{};
-  final familyOnOtherTeams = <String>{};
-
-  void put(TeamRosterEntry entry) {
-    final id = entry.memberId.trim();
-    if (id.isEmpty) return;
-    byId.putIfAbsent(id.toLowerCase(), () => entry);
-  }
-
   for (final child in children) {
     if (!_sameId(child.clubId, clubId) || child.memberId.trim().isEmpty) {
       continue;
     }
-    if (_sameId(child.teamId, teamId)) {
-      put(_rosterEntryFromChild(child));
-    } else if ((child.teamId ?? '').trim().isNotEmpty) {
-      familyOnOtherTeams.add(child.memberId.trim().toLowerCase());
-    }
-  }
-
-  if (includeDirectoryPlayers) {
-    for (final person in directory) {
-      if (!person.isPlayer) continue;
-      final id = (person.memberId ?? '').trim();
-      if (id.isEmpty) continue;
-      if (familyOnOtherTeams.contains(id.toLowerCase())) continue;
-      put(_rosterEntryFromDirectory(person));
-    }
+    if (!_sameId(child.teamId, teamId)) continue;
+    final id = child.memberId.trim();
+    byId.putIfAbsent(id.toLowerCase(), () => _rosterEntryFromChild(child));
   }
 
   return TeamRoster(
@@ -138,6 +114,30 @@ TeamRoster parentVisibleRoster({
   );
 }
 
+/// Drops teammates a parent is not allowed to open. A successful roster read
+/// can still list the whole team; attendance and profiles stay on own children.
+TeamRoster limitRosterToFamily(
+  TeamRoster roster, {
+  required List<FamilyChild> children,
+  required String clubId,
+}) {
+  final ids = {
+    for (final id in familyMemberIdsInClub(children, clubId)) id.toLowerCase(),
+  };
+  return TeamRoster(
+    clubId: roster.clubId,
+    teamId: roster.teamId,
+    teamName: roster.teamName,
+    sectionId: roster.sectionId,
+    seasonId: roster.seasonId,
+    seasonLabel: roster.seasonLabel,
+    entries: [
+      for (final entry in roster.entries)
+        if (ids.contains(entry.memberId.trim().toLowerCase())) entry,
+    ],
+  );
+}
+
 TeamRosterEntry _rosterEntryFromChild(FamilyChild child) {
   return TeamRosterEntry(
     memberId: child.memberId,
@@ -146,18 +146,6 @@ TeamRosterEntry _rosterEntryFromChild(FamilyChild child) {
     status: child.status,
     dateOfBirth: child.dateOfBirth,
     complianceStatus: child.complianceStatus,
-  );
-}
-
-TeamRosterEntry _rosterEntryFromDirectory(ChatDirectoryEntry person) {
-  final parts = person.name.trim().split(RegExp(r'\s+'));
-  final first = parts.isEmpty ? person.name : parts.first;
-  final last = parts.length <= 1 ? '' : parts.sublist(1).join(' ');
-  return TeamRosterEntry(
-    memberId: person.memberId?.trim() ?? '',
-    firstName: first,
-    lastName: last,
-    status: '',
   );
 }
 
@@ -243,27 +231,24 @@ final teamRosterProvider = FutureProvider.autoDispose
         throw StateError('No club selected');
       }
       await ref.watch(authApiProvider.future);
-      try {
-        return await ref
-            .watch(teamsApiProvider)
-            .getRoster(clubId: clubId, teamId: teamId);
-      } on DioException catch (e) {
-        final code = e.response?.statusCode;
-        if (code != 403 && code != 404) rethrow;
-      }
-
       final user = ref.watch(authNotifierProvider).user;
       final parentOnly = user != null && !user.isStaff(clubId);
       List<FamilyChild> children = const [];
       try {
         children = await ref.watch(familyChildrenProvider.future);
       } catch (_) {}
-      List<ChatDirectoryEntry> directory = const [];
-      if (parentOnly) {
-        try {
-          directory = await ref.watch(chatDirectoryProvider.future);
-        } catch (_) {}
+
+      try {
+        final roster = await ref
+            .watch(teamsApiProvider)
+            .getRoster(clubId: clubId, teamId: teamId);
+        if (!parentOnly) return roster;
+        return limitRosterToFamily(roster, children: children, clubId: clubId);
+      } on DioException catch (e) {
+        final code = e.response?.statusCode;
+        if (code != 403 && code != 404) rethrow;
       }
+
       final team = ref.read(clubTeamProvider(teamId));
       return parentVisibleRoster(
         clubId: clubId,
@@ -271,8 +256,6 @@ final teamRosterProvider = FutureProvider.autoDispose
         teamName: team?.name ?? 'Team',
         sectionId: team?.sectionId,
         children: children,
-        directory: directory,
-        includeDirectoryPlayers: parentOnly,
       );
     });
 

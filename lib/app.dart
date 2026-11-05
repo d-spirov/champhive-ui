@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import 'features/account/screens/account_screen.dart';
 import 'features/attendance/screens/attendance_history_screen.dart';
+import 'features/attendance/screens/child_attendance_screen.dart';
 import 'features/attendance/screens/attendance_report_screen.dart';
 import 'features/attendance/screens/attendance_saved_screen.dart';
 import 'features/attendance/screens/mark_attendance_screen.dart';
@@ -305,6 +306,13 @@ class _AppState extends ConsumerState<App> {
         GoRoute(
           path: '/attendance/history',
           builder: (context, state) => const AttendanceHistoryScreen(),
+        ),
+        GoRoute(
+          path: '/family/:memberId/attendance',
+          builder: (context, state) => ChildAttendanceScreen(
+            memberId: state.pathParameters['memberId']!,
+            memberName: state.uri.queryParameters['name'],
+          ),
         ),
       ],
     );

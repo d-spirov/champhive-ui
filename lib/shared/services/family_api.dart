@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 
 import '../models/family.dart';
+import '../models/member_attendance.dart';
 
 class FamilyApi {
   FamilyApi(this._dio);
@@ -18,9 +19,18 @@ class FamilyApi {
         .toList();
   }
 
+  /// Marked sessions for one guarded child (or the caller's own member row).
+  Future<MemberAttendance> getChildAttendance(String memberId) async {
+    final response = await _dio.get<dynamic>(
+      '/api/v1/me/children/$memberId/attendance',
+    );
+    return MemberAttendance.fromJson(
+      _asMap(response, 'Empty child attendance'),
+    );
+  }
+
   Future<FamilyChild> getChild(String memberId) async {
-    final response =
-        await _dio.get<dynamic>('/api/v1/me/children/$memberId');
+    final response = await _dio.get<dynamic>('/api/v1/me/children/$memberId');
     return FamilyChild.fromJson(_asMap(response, 'Empty family child'));
   }
 
@@ -36,8 +46,9 @@ class FamilyApi {
   }
 
   Future<List<ConsentStatus>> listChildConsents(String memberId) async {
-    final response =
-        await _dio.get<dynamic>('/api/v1/me/children/$memberId/consents');
+    final response = await _dio.get<dynamic>(
+      '/api/v1/me/children/$memberId/consents',
+    );
     final raw = _asMap(response, 'Empty consent status');
     final list = raw['consents'];
     if (list is! List) return const [];

@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../shared/models/family.dart';
+import '../../../shared/models/member_attendance.dart';
 import '../../../shared/models/notification_preference.dart';
 import '../../../shared/models/player.dart';
 import '../../../shared/models/user.dart';
@@ -25,33 +26,43 @@ bool _isLiveAccount(Ref ref) {
   return auth.isAuthenticated && auth.user?.id != 'demo';
 }
 
-final familyChildrenProvider =
-    FutureProvider.autoDispose<List<FamilyChild>>((ref) async {
+final familyChildrenProvider = FutureProvider.autoDispose<List<FamilyChild>>((
+  ref,
+) async {
   if (!_isLiveAccount(ref)) return const [];
   await ref.watch(authApiProvider.future);
   return ref.watch(familyApiProvider).listChildren();
 });
 
+final childAttendanceProvider = FutureProvider.autoDispose
+    .family<MemberAttendance, String>((ref, memberId) async {
+      if (!_isLiveAccount(ref)) {
+        throw StateError('Not signed in');
+      }
+      await ref.watch(authApiProvider.future);
+      return ref.watch(familyApiProvider).getChildAttendance(memberId);
+    });
+
 final pendingConsentsProvider =
     FutureProvider.autoDispose<List<PendingConsent>>((ref) async {
-  if (!_isLiveAccount(ref)) return const [];
-  await ref.watch(authApiProvider.future);
-  return ref.watch(familyApiProvider).listPendingConsents();
-});
+      if (!_isLiveAccount(ref)) return const [];
+      await ref.watch(authApiProvider.future);
+      return ref.watch(familyApiProvider).listPendingConsents();
+    });
 
 /// Non-push channels only — device/push registration is not wired yet.
 final notificationPreferencesProvider =
     FutureProvider.autoDispose<List<NotificationPreference>>((ref) async {
-  if (!_isLiveAccount(ref)) return const [];
-  await ref.watch(authApiProvider.future);
-  final all = await ref.watch(notificationsApiProvider).getPreferences();
-  return all.where((p) => !p.isPushChannel).toList();
-});
+      if (!_isLiveAccount(ref)) return const [];
+      await ref.watch(authApiProvider.future);
+      final all = await ref.watch(notificationsApiProvider).getPreferences();
+      return all.where((p) => !p.isPushChannel).toList();
+    });
 
 final accountExtrasControllerProvider =
     Provider.autoDispose<AccountExtrasController>((ref) {
-  return AccountExtrasController(ref);
-});
+      return AccountExtrasController(ref);
+    });
 
 /// Club + member ids for the signed-in person's own photograph.
 class MemberPhotoTarget {
@@ -64,8 +75,9 @@ class MemberPhotoTarget {
 /// Resolves the caller's own member row for My Account photo upload.
 ///
 /// Prefers `/me/children` `isSelf`, then a selected-club roster match on email.
-final selfPhotoTargetProvider =
-    FutureProvider.autoDispose<MemberPhotoTarget?>((ref) async {
+final selfPhotoTargetProvider = FutureProvider.autoDispose<MemberPhotoTarget?>((
+  ref,
+) async {
   if (!_isLiveAccount(ref)) return null;
   await ref.watch(authApiProvider.future);
   final user = ref.watch(authNotifierProvider).user;
@@ -88,10 +100,9 @@ final selfPhotoTargetProvider =
       user: user,
     );
     if (match == null) return null;
-    final clubId =
-        (match.clubId != null && match.clubId!.isNotEmpty)
-            ? match.clubId!
-            : selectedClubId;
+    final clubId = (match.clubId != null && match.clubId!.isNotEmpty)
+        ? match.clubId!
+        : selectedClubId;
     return MemberPhotoTarget(clubId: clubId, memberId: match.id);
   } catch (_) {
     return null;
@@ -148,8 +159,7 @@ class AccountExtrasController {
 
   final Ref _ref;
 
-  NotificationsApi get _notifications =>
-      _ref.read(notificationsApiProvider);
+  NotificationsApi get _notifications => _ref.read(notificationsApiProvider);
 
   FamilyApi get _family => _ref.read(familyApiProvider);
 
